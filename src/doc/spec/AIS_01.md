@@ -164,7 +164,7 @@ The Location field is used as link to the status of the created resource. No oth
 | chosen_sca_method | authentication object  |	conditional |	This data element is only contained in the response if the APSPS has chosen the Embedded SCA Approach, if the PSU is already identified with the first relevant factor or alternatively an access token, if SCA is required and if the authentication method is implicitly selected.  |
 | sca_challenge_data | challenge | conditional | It is contained in addition to the data element chosen_sca_method if challenge data is needed for SCA. 
 | _links | links  |	Mandatory |	A list of hyperlinks to be recognized by the TPP. Type of links admitted in this response, (further links might be added for ASPSP defined extensions): *"redirect"* : In case of an SCA Redirect Approach, the ASPSP is transmitting the link  to which to redirect the PSU browser. *"update_psu_identification"* : The link to the payment initiation resource, which needs to be updated by the psu identification. This  might be used in a redirect or decoupled approach, where the PSU ID was missing in the first request. *"update_psu_authentication"* : The link to the payment initiation resource, which need to be updated by a psu password and  eventually the psu identification if not delivered yet. This is used in a case of the Embedded SCA approach.  *"select_authentication_method"* : This is a link to a resource, where the TPP can select  the applicable strong customer authentication methods for the PSU, if there  were several available authentication methods. This link contained under exactly the same conditions as the data element “authentication_methods”, see above. *“status”*: The link to retrieve the transaction status of the payment initiation |
-| psu_message | string  |	Optional | Text to be displayed to the PSU |
+| psu_message | String  |	Optional | Text to be displayed to the PSU |
 
 
 ##### Example
@@ -498,8 +498,8 @@ Remark: This account-id can be a tokenized identification due to data protection
 | Consent-ID | String | Conditional |  |
 | PSU-ID|	String	|Conditional	| To be used, if no OAuth Pre-Step was performed and if a list of account balances or a list of accounts is requested.|
 | Authorization Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed. |
-| signatue | details t.b.d. | Conditional | A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
-| certificate | details t.b.d | Conditional | The certificate used for signing the request. |
+| signatue | String ("details t.b.d." in the original specification) | Conditional | A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
+| certificate | String ("details t.b.d." in the original specification) | Conditional | The certificate used for signing the request. |
 | Date | DateTime | Mandatory | Standard https header element for Date and Time |
 
 
@@ -537,7 +537,7 @@ Remark: This account-id can be a tokenized identification due to data protection
      }
      
 
-### AIS_01_05_02 Read Transaction List
+### AIS_01_05_03 Read Transaction List
 
 ##### Call
 
@@ -564,8 +564,8 @@ Remark: If the ASPSP is not providing the "GET Account List" call, then the ASPS
 | PSU-ID|	String	|Conditional	| To be used, if no OAuth Pre-Step was performed and if a list of account balances or a list of accounts is requested.|
 | Authorization Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed. |
 | Accept | String | Conditional | The TPP can indicate the formats of account reports supported together with a priorisation following the http header definition. The supported formats are XML, JSON and text. |   
-| signatue | details t.b.d. | Conditional | A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
-| certificate | details t.b.d | Conditional | The certificate used for signing the request. |
+| signatue | String ("details t.b.d." in the original specification) | Conditional | A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
+| certificate | String ("details t.b.d." in the original specification) | Conditional | The certificate used for signing the request. |
 | Date | DateTime | Mandatory | Standard https header element for Date and Time |
 
 
