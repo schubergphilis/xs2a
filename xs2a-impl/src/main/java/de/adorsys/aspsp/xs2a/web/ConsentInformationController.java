@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.Resource;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +26,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @Api(value = "api/v1/consents", tags = "AISP Consents", description = "Provides access to the Psu Consents")
 public class ConsentInformationController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PaymentInitiationController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConsentInformationController.class);
     private ConsentService consentService;
 
     @Autowired
@@ -69,7 +68,7 @@ public class ConsentInformationController {
     }
 
     @ApiOperation(value = "Returns the content of an account information consent object")
-    @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = AccountConsents.class),
+    @ApiResponses(value = {@ApiResponse(code = 200, message = " OK", response = AccountConsents.class),
     @ApiResponse(code = 400, message = "Bad request")})
     @RequestMapping(value = "/{consent-id}", method = RequestMethod.GET)
     public ResponseEntity<AccountConsents> getAccountConsentsInformationById(
