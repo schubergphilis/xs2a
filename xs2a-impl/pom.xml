@@ -58,6 +58,20 @@
             <version>${jsr311.pi.version}</version>
         </dependency>
 
+
+       <dependency>
+            <groupId>com.google.auto.service</groupId>
+            <artifactId>auto-service</artifactId>
+           <version>${auto-service.version}</version>
+           <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>24.0-jre</version>
+        </dependency>
+
+
         <!--test-->
         <dependency>
             <groupId>com.google.code.gson</groupId>
