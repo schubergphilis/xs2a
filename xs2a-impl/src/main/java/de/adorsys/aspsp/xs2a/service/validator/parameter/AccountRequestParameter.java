@@ -14,15 +14,26 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.service.validator.header.impl;
+package de.adorsys.aspsp.xs2a.service.validator.parameter;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
-@ApiModel(description = "Funds confirmation request header", value = "FundsConfirmationRequestHeader")
-@JsonInclude(JsonInclude.Include.NON_NULL)
+import java.util.Date;
+
+@Data
+@ApiModel(description = "Account request parameter", value = "AccountRequestParameter")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class FundsConfirmationRequestHeader extends CommonRequestHeader {
+public class AccountRequestParameter extends CommonRequestParameter {
 
+    @ApiModelProperty(value = "Starting date of the account statement", example = "2017-10-30")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date dateFrom;
+
+    @ApiModelProperty(value = "End date of the account statement", example = "2017-11-30")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    private Date dateTo;
 }

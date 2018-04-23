@@ -20,6 +20,8 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.service.validator.aspect.ShouldValidate;
+import de.adorsys.aspsp.xs2a.service.validator.header.PaymentInitiationRequestHeader;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "api/v1/periodic-payments")
+@ShouldValidate(header = PaymentInitiationRequestHeader.class)
 @Api(value = "api/v1/periodic-payments", tags = "PISP, Payments", description = "Orders for periodic payments")
 public class PeriodicPaymentsController {
     private final PaymentService paymentService;

@@ -22,6 +22,8 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.service.validator.aspect.ShouldValidate;
+import de.adorsys.aspsp.xs2a.service.validator.header.PaymentRequestHeader;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @AllArgsConstructor
+@ShouldValidate(header = PaymentRequestHeader.class)
 @RequestMapping(path = "api/v1/payments/{payment-product}")
 @Api(value = "api/v1/payments/{payment-product}", tags = "PISP Payments", description = "Provides access to the PIS")
 public class PaymentInitiationController {

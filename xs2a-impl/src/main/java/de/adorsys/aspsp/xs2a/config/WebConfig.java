@@ -23,16 +23,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
-import de.adorsys.aspsp.xs2a.service.validator.RequestValidatorService;
-import de.adorsys.aspsp.xs2a.service.validator.parameter.ParametersFactory;
-import de.adorsys.aspsp.xs2a.web.interceptor.HandlerInterceptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -76,21 +72,6 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         objectMapper.registerModule(new JavaTimeModule()); // add support for java.time types
         objectMapper.registerModule(new ParameterNamesModule()); // support for multiargs constructors
         return objectMapper;
-    }
-
-    @Bean
-    public ParametersFactory parametersFactory(){
-        return new ParametersFactory(objectMapper());
-    }
-
-    @Bean
-    public RequestValidatorService requestValidatorService() {
-        return new RequestValidatorService(validator(), parametersFactory());
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new HandlerInterceptor(requestValidatorService()));
     }
 
     @Bean

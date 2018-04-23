@@ -23,6 +23,8 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.service.validator.aspect.ShouldValidate;
+import de.adorsys.aspsp.xs2a.service.validator.header.PaymentInitiationRequestHeader;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "api/v1/bulk-payments")
+@ShouldValidate(header = PaymentInitiationRequestHeader.class)
 @Api(value = "api/v1/consents", tags = "Bulk payment initiation", description = "Payment Initiation for Bulk Payments and Multiple Payments")
 public class BulkPaymentInitiationController {
     private final ResponseMapper responseMapper;

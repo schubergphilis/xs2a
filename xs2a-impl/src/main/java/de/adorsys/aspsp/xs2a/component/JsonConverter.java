@@ -44,9 +44,18 @@ public class JsonConverter {
         try {
             return Optional.ofNullable(objectMapper.readValue(json, target));
         } catch (JsonProcessingException e) {
-            log.error("Can't convert json to object: {}", e);
+            log.error("Can't convert: {} to object: {}, reason: {}", json, target, e);
         } catch (IOException e) {
-            log.error("Can't convert json to object: {}", e);
+            log.error("Can't convert: {} to object: {}, reason: {}", json, target, e);
+        }
+        return Optional.empty();
+    }
+
+    public <I, O> Optional<O> toObject(final I source, final Class<O> target){
+        try {
+            return Optional.ofNullable(objectMapper.convertValue(source, target));
+        } catch (IllegalArgumentException e) {
+            log.error("Can't convert: {} to object: {}, reason: {}", source, target, e);
         }
         return Optional.empty();
     }

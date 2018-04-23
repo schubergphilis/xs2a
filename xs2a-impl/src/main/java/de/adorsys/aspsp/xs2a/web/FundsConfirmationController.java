@@ -20,6 +20,8 @@ import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.service.validator.aspect.ShouldValidate;
+import de.adorsys.aspsp.xs2a.service.validator.header.FundsConfirmationRequestHeader;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "api/v1/funds-confirmations")
+@ShouldValidate(header = FundsConfirmationRequestHeader.class)
 @Api(value = "api/v1/funds-confirmations", tags = "AISP Funds confirmation", description = "Provides access to the funds confirmation")
 public class FundsConfirmationController {
     private final FundsConfirmationService fundsConfirmationService;
