@@ -9,7 +9,19 @@ Implementation of Mock ASPSP for XS2A Interface of Berlin Group
 * [Spring Boot](https://projects.spring.io/spring-boot/) - Spring boot as core Java framework
 
 
-## Deployment
+## Configuration and deployment
+To interact with keycloak server properly, please add following parameters to your application.properties file 
+```
+keycloak.auth-server-url=http://localhost:8081/auth
+keycloak.realm=xs2a
+keycloak.resource=aspsp-mock
+keycloak.public-client=true
+keycloak.principal-attribute=preferred_username
+keycloak.credentials.secret=70088701-3e98-4343-9573-21ed4334f477
+keycloak.bearer-only=true
+keycloak.cors=false
+```
+Some of these parameters you can obtain after install and run keycloak server (see 'Keycloak run and setting instruction' section below)
 
 To run Mock ASPSP app from command line
 
@@ -36,8 +48,8 @@ mvn spring-boot:run -Drun.profiles=fongo,data_test
 mvn clean install 
 mvn spring-boot:run -Drun.profiles=mongo 
  
-```
-# Keycloak run instruction
+``` 
+# Keycloak run and setting instruction
 ```
 - Download latest stable version (keycloak-3.4.3.Final) of Keycloak from 
 https://www.keycloak.org/downloads.html

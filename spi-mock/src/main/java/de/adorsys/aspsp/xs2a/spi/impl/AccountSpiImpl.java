@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @Profile("mockspi")
 public class AccountSpiImpl implements AccountSpi {
-
     private final RemoteSpiUrls remoteSpiUrls;
     private final RestTemplate restTemplate;
 
@@ -56,7 +55,6 @@ public class AccountSpiImpl implements AccountSpi {
     @Override
     public List<SpiBalances> readBalances(String accountId, boolean psuInvolved) {
         String getBalanceUrl = remoteSpiUrls.getUrl("getAccountBalances");
-
         ResponseEntity<List<SpiBalances>> response = restTemplate.exchange(getBalanceUrl, HttpMethod.GET, null,
                 new ParameterizedTypeReference<List<SpiBalances>>() {
                 }, accountId);
@@ -86,7 +84,8 @@ public class AccountSpiImpl implements AccountSpi {
 
     @Override
     public SpiAccountDetails readAccountDetails(String accountId, boolean withBalance, boolean psuInvolved) {
-        SpiAccountDetails spiAccountDetails = AccountMockData.getAccountsHashMap().get(accountId);
+        String url = remoteSpiUrls.getUrl("getAccountById");
+        SpiAccountDetails spiAccountDetails = restTemplate.getForObject(url, SpiAccountDetails.class, accountId);
 
         return Optional.ofNullable(spiAccountDetails)
                        .map(ad -> new SpiAccountDetails(

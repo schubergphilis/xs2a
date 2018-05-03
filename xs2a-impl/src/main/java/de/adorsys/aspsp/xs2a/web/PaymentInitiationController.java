@@ -34,13 +34,13 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "api/v1/payments/{payment-product}")
-@Api(value = "api/v1/payments/{payment-product}", tags = "PISP Payments", description = "Provides access to the PIS")
+@Api(value = "api/v1/payments/{payment-product}", tags = "PISP, Payments", description = "Provides access to the PIS")
 public class PaymentInitiationController {
 
     private final ResponseMapper responseMapper;
     private final PaymentService paymentService;
 
-    @ApiOperation(value = "Initialises a new payment ", notes = "debtor account, creditor accout, creditor name, remittance information unstructured")
+    @ApiOperation(value = "Initialises a new payment ", notes = "debtor account, creditor accout, creditor name, remittance information unstructured", authorizations = { @Authorization(value="oauth2", scopes = { @AuthorizationScope(scope = "read", description = "Access read API") }) })
     @ApiResponses(value = {@ApiResponse(code = 201, message = "transactions_status received, a list of hyperlinks to be recognized by the Tpp."),
     @ApiResponse(code = 400, message = "Bad request")})
     @RequestMapping(method = RequestMethod.POST)
@@ -52,7 +52,6 @@ public class PaymentInitiationController {
     @ApiImplicitParam(name = "psu-id-type", value = "Type of the PSU-ID", required = false, dataType = "String", paramType = "header"),
     @ApiImplicitParam(name = "psu-corporate-id", value = "Might be mandated in the ASPSP’s documentation", required = false, dataType = "String", paramType = "header"),
     @ApiImplicitParam(name = "psu-corporate-id-type", value = "Might be mandated in the ASPSP’s documentation", required = false, dataType = "String", paramType = "header"),
-    @ApiImplicitParam(name = "authorization bearer", value = "some bearer", required = false, dataType = "String", paramType = "header"),
     @ApiImplicitParam(name = "psu-consent-id", value = "This data element may be contained, if the payment initiation transaction is part of a session, i.e. combined AIS/PIS service", required = false, dataType = "String", paramType = "header"),
     @ApiImplicitParam(name = "psu-agent", value = "The forwarded Agent header field of the http request between PSU and TPP.", required = false, dataType = "String", paramType = "header"),
     @ApiImplicitParam(name = "psu-geo-location", value = "GEO:52.506931,13.1445588", required = false, dataType = "Geo Location", paramType = "header"),
@@ -68,14 +67,13 @@ public class PaymentInitiationController {
         return responseMapper.createdOrBadRequest(paymentService.createPaymentInitiation(singlePayment, PaymentProduct.forValue(paymentProduct), tppRedirectPreferred));
     }
 
-    @ApiOperation(value = "Get information  about the status of a payment initialisation ")
+    @ApiOperation(value = "Get information  about the status of a payment initialisation ", authorizations = { @Authorization(value="oauth2", scopes = { @AuthorizationScope(scope = "read", description = "Access read API") }) })
     @ApiResponses(value = {@ApiResponse(code = 200, message = "transactions_status Accepted Customer Profile.", response = Map.class),
     @ApiResponse(code = 404, message = "Not found")})
     @RequestMapping(value = "/{paymentId}/status", method = RequestMethod.GET)
     @ApiImplicitParams({
     @ApiImplicitParam(name = "tpp-transaction-id", value = "16d40f49-a110-4344-a949-f99828ae13c9", required = true, dataType = "UUID", paramType = "header"),
     @ApiImplicitParam(name = "tpp-request-id", value = "21d40f65-a150-8343-b539-b9a822ae98c0", required = true, dataType = "UUID", paramType = "header"),
-    @ApiImplicitParam(name = "authorization bearer", value = "Some bearer", required = false, dataType = "String", paramType = "header"),
     @ApiImplicitParam(name = "signature", value = "98c0", required = false, dataType = "String", paramType = "header"),
     @ApiImplicitParam(name = "tpp-certificate", value = "some certificate", required = false, dataType = "String", paramType = "header")})
     public ResponseEntity<Map<String, TransactionStatus>> getPaymentInitiationStatusById(
