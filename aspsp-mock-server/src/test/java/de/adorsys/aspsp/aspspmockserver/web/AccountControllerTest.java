@@ -35,8 +35,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -58,7 +57,11 @@ public class AccountControllerTest {
         accountList.add(getSpiAccountDetails_2());
         when(accountService.getAccount(ACCOUNT_ID))
             .thenReturn(Optional.of(getSpiAccountDetails_1()));
+        when(accountService.getAccountByConsentId(eq(ACCOUNT_ID), eq(CONSENT_ID), anyBoolean()))
+            .thenReturn(Optional.of(getSpiAccountDetails_1()));
         when(accountService.getAccount(WRONG_ACCOUNT_ID))
+            .thenReturn(Optional.empty());
+        when(accountService.getAccountByConsentId(eq(WRONG_ACCOUNT_ID), eq(CONSENT_ID), anyBoolean()))
             .thenReturn(Optional.empty());
         when(accountService.getAllAccounts(anyString(), anyBoolean()))
             .thenReturn(accountList);
@@ -96,7 +99,7 @@ public class AccountControllerTest {
         HttpStatus expectedStatusCode = HttpStatus.OK;
 
         //When:
-        ResponseEntity<SpiAccountDetails> actualResponse = accountController.readAccountById(ACCOUNT_ID);
+        ResponseEntity<SpiAccountDetails> actualResponse = accountController.readAccountById(ACCOUNT_ID, CONSENT_ID, false);
 
         //Then:
         HttpStatus actualStatusCode = actualResponse.getStatusCode();
@@ -109,10 +112,10 @@ public class AccountControllerTest {
     @Test
     public void readAccountById_wrongId() {
         //Given:
-        HttpStatus expectedStatusCode = HttpStatus.NOT_FOUND;
+        HttpStatus expectedStatusCode = HttpStatus.FORBIDDEN;
 
         //When:
-        ResponseEntity<SpiAccountDetails> actualResponse = accountController.readAccountById(WRONG_ACCOUNT_ID);
+        ResponseEntity<SpiAccountDetails> actualResponse = accountController.readAccountById(WRONG_ACCOUNT_ID, CONSENT_ID, true);
 
         //Then:
         HttpStatus actualStatusCode = actualResponse.getStatusCode();

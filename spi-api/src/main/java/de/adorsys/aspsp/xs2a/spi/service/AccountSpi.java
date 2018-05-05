@@ -26,11 +26,11 @@ import java.util.List;
 public interface AccountSpi {
     List<SpiAccountDetails> readAccounts(String consentId, boolean withBalance, boolean psuInvolved);
 
-    List<SpiBalances> readBalances(String accountId, boolean psuInvolved);
+    List<SpiBalances> readBalances(String accountId, String consentId, boolean psuInvolved);
 
-    List<SpiTransaction> readTransactionsByPeriod(String accountId, Date dateFrom, Date dateTo, boolean psuInvolved);
+    List<SpiTransaction> readTransactionsByPeriod(String accountId, String consentId, Date dateFrom, Date dateTo, boolean psuInvolved);
 
-    List<SpiTransaction> readTransactionsById(String accountId, String transactionId, boolean psuInvolved);
+    List<SpiTransaction> readTransactionsById(String accountId, String consentId, String transactionId, boolean psuInvolved);
 
-    SpiAccountDetails readAccountDetails(String accountId, boolean withBalance, boolean psuInvolved);
+    SpiAccountDetails readAccountDetails(String accountId, String consentId, boolean withBalance, boolean psuInvolved);
 }

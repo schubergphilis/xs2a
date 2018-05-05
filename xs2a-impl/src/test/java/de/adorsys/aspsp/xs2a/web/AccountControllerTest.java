@@ -49,6 +49,7 @@ import static org.mockito.Mockito.when;
 @SpringBootTest
 public class AccountControllerTest {
     private final String ACCOUNT_ID = "33333-999999999";
+    private final String CONSENT_ID = "232323";
     private final String TRANSACTION_ID = "1234578";
     private final String ACCOUNT_DETAILS_SOURCE = "/json/AccountDetailsTestData.json";
     private final String ACCOUNT_REPORT_SOURCE = "/json/AccountReportTestData.json";
@@ -70,9 +71,9 @@ public class AccountControllerTest {
     public void setUp() throws Exception {
         when(accountServiceMocked.getAccountDetailsList(anyString(), anyBoolean(), anyBoolean())).thenReturn(createAccountDetailsList(ACCOUNT_DETAILS_SOURCE));
         ResponseObject<List<Balances>> balances = readBalances();
-        when(accountServiceMocked.getBalances(any(String.class), anyBoolean())).thenReturn(balances);
-        when(accountServiceMocked.getAccountReport(any(String.class), any(Date.class), any(Date.class), any(String.class), anyBoolean(), any(), anyBoolean(), anyBoolean())).thenReturn(createAccountReport(ACCOUNT_REPORT_SOURCE));
-        when(accountServiceMocked.getAccountDetails(any(), anyBoolean(), anyBoolean())).thenReturn(getAccountDetails());
+        when(accountServiceMocked.getBalances(any(String.class), any(), anyBoolean())).thenReturn(balances);
+        when(accountServiceMocked.getAccountReport(any(String.class), any(), any(Date.class), any(Date.class), any(String.class), anyBoolean(), any(), anyBoolean(), anyBoolean())).thenReturn(createAccountReport(ACCOUNT_REPORT_SOURCE));
+        when(accountServiceMocked.getAccountDetails(any(), any(), anyBoolean(), anyBoolean())).thenReturn(getAccountDetails());
     }
 
     @Test
@@ -83,7 +84,7 @@ public class AccountControllerTest {
         ResponseObject<AccountDetails> expectedResult = getAccountDetails();
 
         //When
-        AccountDetails result = accountController.readAccountDetails(ACCOUNT_ID, withBalance, psuInvolved).getBody();
+        AccountDetails result = accountController.readAccountDetails(ACCOUNT_ID, CONSENT_ID, withBalance, psuInvolved).getBody();
 
         //Then:
         assertThat(result).isEqualTo(expectedResult.getBody());
@@ -112,7 +113,7 @@ public class AccountControllerTest {
         expectedResult.add(expectedBalances);
 
         //When:
-        List<Balances> result = accountController.getBalances(ACCOUNT_ID, psuInvolved).getBody();
+        List<Balances> result = accountController.getBalances(ACCOUNT_ID, CONSENT_ID, psuInvolved).getBody();
 
         //Then:
         assertThat(result).isEqualTo(expectedResult);
@@ -125,7 +126,7 @@ public class AccountControllerTest {
         AccountReport expectedResult = GSON.fromJson(IOUtils.resourceToString(ACCOUNT_REPORT_SOURCE, UTF_8), AccountReport.class);
 
         //When
-        AccountReport result = accountController.getTransactions(ACCOUNT_ID, null, null, TRANSACTION_ID, psuInvolved, "both", false, false).getBody();
+        AccountReport result = accountController.getTransactions(ACCOUNT_ID, CONSENT_ID,null, null, TRANSACTION_ID, psuInvolved, "both", false, false).getBody();
 
         //Then:
         assertThat(result).isEqualTo(expectedResult);

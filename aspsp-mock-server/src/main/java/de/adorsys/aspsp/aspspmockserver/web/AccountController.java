@@ -44,17 +44,19 @@ public class AccountController {
     public ResponseEntity<List<SpiAccountDetails>> readAllAccounts(@RequestParam(value = "consent-id", required = true) String consentId,
                                                                    @RequestParam(value = "withBalance", required = false) boolean withBalance) {
         List<SpiAccountDetails> result = accountService.getAllAccounts(consentId, withBalance);
-        return result != null
-            ? new ResponseEntity<>(result, HttpStatus.OK)
-            : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return result.isEmpty()
+                   ? new ResponseEntity<>(HttpStatus.FORBIDDEN)
+                   : new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @GetMapping(path = "/{accountId}")
-    public ResponseEntity<SpiAccountDetails> readAccountById(@PathVariable("accountId") String accountId) {
-        return accountService.getAccount(accountId)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<SpiAccountDetails> readAccountById(@PathVariable("accountId") String accountId,
+                                                             @RequestParam(value = "consent-id", required = true) String consentId,
+                                                             @RequestParam(value = "withBalance", required = false) boolean withBalance) {
+        return accountService.getAccountByConsentId(accountId, consentId, withBalance)
+                   .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+                   .orElse(new ResponseEntity<>(HttpStatus.FORBIDDEN));
     }
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
@@ -83,7 +85,7 @@ public class AccountController {
     @GetMapping(path = "/{accountId}/balances")
     public ResponseEntity<List<SpiBalances>> readBalancesById(@PathVariable("accountId") String accountId) {
         return accountService.getBalances(accountId)
-            .map(ResponseEntity::ok)
-            .orElseGet(() -> ResponseEntity.notFound().build());
+                   .map(ResponseEntity::ok)
+                   .orElseGet(() -> ResponseEntity.notFound().build());
     }
 }

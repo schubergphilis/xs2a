@@ -55,47 +55,62 @@ public class AccountService {
         accountDetailsMap.put("accountList", accountDetailsList);
 
         return ResponseObject.builder()
-            .body(accountDetailsMap).build();
+                   .body(accountDetailsMap).build();
     }
 
-    public ResponseObject<List<Balances>> getBalances(String accountId, boolean psuInvolved) {
-        List<SpiBalances> spiBalances = accountSpi.readBalances(accountId, psuInvolved);
+    public ResponseObject<List<Balances>> getBalances(String accountId, String consentId, boolean psuInvolved) {
+        List<SpiBalances> spiBalances = accountSpi.readBalances(accountId, consentId, psuInvolved);
 
         return Optional.ofNullable(spiBalances)
-            .map(sb -> ResponseObject.builder().body(accountMapper.mapFromSpiBalancesList(sb)).build())
-            .orElse(ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404)
-                .text("Wrong account ID"))).build());
+                   .map(sb -> ResponseObject.builder().body(accountMapper.mapFromSpiBalancesList(sb)).build())
+                   .orElse(ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404)
+                                                                              .text("Wrong account ID"))).build());
     }
 
-    public ResponseObject<AccountReport> getAccountReport(String accountId, Date dateFrom,
-                                                          Date dateTo, String transactionId,
+    public ResponseObject<AccountReport> getAccountReport(String accountId, String consentId,
+                                                          Date dateFrom, Date dateTo, String transactionId,
                                                           boolean psuInvolved, String bookingStatus, boolean withBalance, boolean deltaList) {
 
-        if (accountSpi.readAccountDetails(accountId, false, false) == null) {
+        if (accountSpi.readAccountDetails(accountId, consentId, false, false) == null) {
             return ResponseObject.builder()
-                .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+                       .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
         } else {
 
-            AccountReport accountReport = getAccountReport(accountId, dateFrom, dateTo, transactionId, psuInvolved, withBalance);
+            AccountReport accountReport = getAccountReport(accountId, consentId, dateFrom, dateTo, transactionId, psuInvolved, withBalance);
             return ResponseObject.builder()
-                .body(getReportAccordingMaxSize(accountReport, accountId)).build();
+                       .body(getReportAccordingMaxSize(accountReport, accountId)).build();
         }
     }
 
-    private AccountReport getAccountReport(String accountId, Date dateFrom, Date dateTo, String transactionId, boolean psuInvolved, boolean withBalance) {
+    public AccountReport getAccountReportWithDownloadLink(String accountId) {
+        // todo further we should implement real flow for downloading file
+        String urlToDownload = linkTo(AccountController.class).slash(accountId).slash("transactions/download").toString();
+        Links downloadLink = new Links();
+        downloadLink.setDownload(urlToDownload);
+        return new AccountReport(null, null, downloadLink);
+    }
+
+    public ResponseObject<AccountDetails> getAccountDetails(String accountId, String consentId, boolean withBalance, boolean psuInvolved) {
+        AccountDetails accountDetails = accountMapper.mapFromSpiAccountDetails(accountSpi.readAccountDetails(accountId, consentId, withBalance, psuInvolved));
+
+        return ResponseObject.builder()
+                   .body(accountDetails).build();
+    }
+
+    private AccountReport getAccountReport(String accountId, String consentId, Date dateFrom, Date dateTo, String transactionId, boolean psuInvolved, boolean withBalance) {
         return StringUtils.isEmpty(transactionId)
-            ? getAccountReportByPeriod(accountId, dateFrom, dateTo, psuInvolved, withBalance)
-            : getAccountReportByTransaction(accountId, transactionId, psuInvolved, withBalance);
+                   ? getAccountReportByPeriod(accountId, consentId, dateFrom, dateTo, psuInvolved, withBalance)
+                   : getAccountReportByTransaction(accountId, consentId, transactionId, psuInvolved, withBalance);
     }
 
-    private AccountReport getAccountReportByPeriod(String accountId, Date dateFrom, Date dateTo, boolean psuInvolved, boolean withBalance) {
+    private AccountReport getAccountReportByPeriod(String accountId, String consentId, Date dateFrom, Date dateTo, boolean psuInvolved, boolean withBalance) {
         validate_accountId_period(accountId, dateFrom, dateTo);
-        return readTransactionsByPeriod(accountId, dateFrom, dateTo, psuInvolved, withBalance);
+        return readTransactionsByPeriod(accountId, consentId, dateFrom, dateTo, psuInvolved, withBalance);
     }
 
-    private AccountReport getAccountReportByTransaction(String accountId, String transactionId, boolean psuInvolved, boolean withBalance) {
+    private AccountReport getAccountReportByTransaction(String accountId, String consentId, String transactionId, boolean psuInvolved, boolean withBalance) {
         validate_accountId_transactionId(accountId, transactionId);
-        return readTransactionsById(accountId, transactionId, psuInvolved, withBalance);
+        return readTransactionsById(accountId, consentId, transactionId, psuInvolved, withBalance);
     }
 
     private AccountReport getReportAccordingMaxSize(AccountReport accountReport, String accountId) {
@@ -111,38 +126,23 @@ public class AccountService {
         return accountReport;
     }
 
-    private AccountReport readTransactionsByPeriod(String accountId, Date dateFrom,
+    private AccountReport readTransactionsByPeriod(String accountId, String consentId, Date dateFrom,
                                                    Date dateTo, boolean psuInvolved, boolean withBalance) { //NOPMD TODO review and check PMD assertion
-        Optional<AccountReport> result = accountMapper.mapFromSpiAccountReport(accountSpi.readTransactionsByPeriod(accountId, dateFrom, dateTo, psuInvolved));
+        Optional<AccountReport> result = accountMapper.mapFromSpiAccountReport(accountSpi.readTransactionsByPeriod(accountId, consentId, dateFrom, dateTo, psuInvolved));
 
         return result.orElseGet(() -> new AccountReport(new Transactions[]{}, new Transactions[]{}, new Links()));
     }
 
-    private AccountReport readTransactionsById(String accountId, String transactionId,
+    private AccountReport readTransactionsById(String accountId, String consentId, String transactionId,
                                                boolean psuInvolved, boolean withBalance) { //NOPMD TODO review and check PMD assertion
-        Optional<AccountReport> result = accountMapper.mapFromSpiAccountReport(accountSpi.readTransactionsById(accountId, transactionId, psuInvolved));
+        Optional<AccountReport> result = accountMapper.mapFromSpiAccountReport(accountSpi.readTransactionsById(accountId, consentId, transactionId, psuInvolved));
 
         return result.orElseGet(() -> new AccountReport(new Transactions[]{},
             new Transactions[]{},
             new Links()
         ));
-
     }
 
-    public AccountReport getAccountReportWithDownloadLink(String accountId) {
-        // todo further we should implement real flow for downloading file
-        String urlToDownload = linkTo(AccountController.class).slash(accountId).slash("transactions/download").toString();
-        Links downloadLink = new Links();
-        downloadLink.setDownload(urlToDownload);
-        return new AccountReport(null, null, downloadLink);
-    }
-
-    public ResponseObject<AccountDetails> getAccountDetails(String accountId, boolean withBalance, boolean psuInvolved) {
-        AccountDetails accountDetails = accountMapper.mapFromSpiAccountDetails(accountSpi.readAccountDetails(accountId, withBalance, psuInvolved));
-
-        return ResponseObject.builder()
-            .body(accountDetails).build();
-    }
 
     // Validation
     private void validate_accountId_period(String accountId, Date dateFrom, Date dateTo) {

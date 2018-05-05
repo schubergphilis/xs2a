@@ -53,6 +53,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @SpringBootTest
 public class AccountServiceTest {
     private final String ACCOUNT_ID = "11111-999999999";
+    private final String CONSENT_ID = "232323";
     private final String TRANSACTION_ID = "Id-0001";
     private final Currency usd = Currency.getInstance("USD");
     private final String ACCOUNT_DETAILS_SOURCE = "/json/SpiAccountDetails.json";
@@ -69,10 +70,10 @@ public class AccountServiceTest {
 
     @Before
     public void setUp() throws IOException {
-        when(accountSpi.readTransactionsByPeriod(any(), any(), any(), anyBoolean())).thenReturn(getTransactionList());
-        when(accountSpi.readBalances(any(), anyBoolean())).thenReturn(getBalances());
-        when(accountSpi.readTransactionsById(any(), any(), anyBoolean())).thenReturn(getTransactionList());
-        when(accountSpi.readAccountDetails(any(), anyBoolean(), anyBoolean())).thenReturn(createSpiAccountDeatails());
+        when(accountSpi.readTransactionsByPeriod(any(), any(), any(), any(), anyBoolean())).thenReturn(getTransactionList());
+        when(accountSpi.readBalances(any(), any(), anyBoolean())).thenReturn(getBalances());
+        when(accountSpi.readTransactionsById(any(), any(),any(), anyBoolean())).thenReturn(getTransactionList());
+        when(accountSpi.readAccountDetails(any(), any(), anyBoolean(), anyBoolean())).thenReturn(createSpiAccountDeatails());
     }
 
     @Test
@@ -83,7 +84,7 @@ public class AccountServiceTest {
         AccountDetails expectedResult = new Gson().fromJson(IOUtils.resourceToString(ACCOUNT_DETAILS_SOURCE, UTF_8), AccountDetails.class);
 
         //When:
-        ResponseObject<AccountDetails> result = accountService.getAccountDetails(ACCOUNT_ID, withBalance, psuInvolved);
+        ResponseObject<AccountDetails> result = accountService.getAccountDetails(ACCOUNT_ID, CONSENT_ID, withBalance, psuInvolved);
 
         //Then:
         assertThat(result.getBody()).isEqualTo(expectedResult);
@@ -146,7 +147,7 @@ public class AccountServiceTest {
         AccountReport expectedResult = accountService.getAccountReportWithDownloadLink(ACCOUNT_ID);
 
         //When:
-        AccountReport actualResult = accountService.getAccountReport(ACCOUNT_ID, dateFrom, dateTo, null, psuInvolved, "both", true, false).getBody();
+        AccountReport actualResult = accountService.getAccountReport(ACCOUNT_ID, CONSENT_ID, dateFrom, dateTo, null, psuInvolved, "both", true, false).getBody();
 
         //Then:
         assertThat(actualResult).isEqualTo(expectedResult);
@@ -168,7 +169,7 @@ public class AccountServiceTest {
         //Given:
         AccountReport expectedReport = getAccountReport(accountId);
         //When:
-        AccountReport actualResult = accountService.getAccountReport(accountId, dateFrom, dateTo, null, psuInvolved, "both", false, false).getBody();
+        AccountReport actualResult = accountService.getAccountReport(accountId, CONSENT_ID, dateFrom, dateTo, null, psuInvolved, "both", false, false).getBody();
 
         //Then:
         assertThat(actualResult).isEqualTo(expectedReport);
@@ -180,7 +181,7 @@ public class AccountServiceTest {
         AccountReport expectedReport = getAccountReport(accountId);
 
         //When:
-        AccountReport actualResult = accountService.getAccountReport(accountId, new Date(), new Date(), transactionId, psuInvolved, "both", false, false).getBody();
+        AccountReport actualResult = accountService.getAccountReport(accountId, CONSENT_ID, new Date(), new Date(), transactionId, psuInvolved, "both", false, false).getBody();
 
         //Then:
         assertThat(actualResult).isEqualTo(expectedReport);
@@ -190,7 +191,7 @@ public class AccountServiceTest {
         //Given:
         List<Balances> expectedResult = accountMapper.mapFromSpiBalancesList(getBalances());
         //When:
-        List<Balances> actualResult = accountService.getBalances(accountId, psuInvolved).getBody();
+        List<Balances> actualResult = accountService.getBalances(accountId, CONSENT_ID, psuInvolved).getBody();
         //Then:
         assertThat(actualResult).isEqualTo(expectedResult);
     }

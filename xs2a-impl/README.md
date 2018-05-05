@@ -39,7 +39,7 @@ https://www.keycloak.org/downloads.html
 - Go to keycloak-3.4.3.Final/bin folder and run keycloak server:
 standalone.bat (for Windows users, *.sh for Linux)
 - Create realm with name: xs2a
-- Create client with name: xs2a-impl
+- Create client with Client Id: xs2a-impl
 - Go to 'xs2a-impl' client settings tab and set 'Valid redirect URIs' field to: http://localhost:8080/*
 - Set 'Web origins' field to: *
 - Set 'Access Type' field to: confidential

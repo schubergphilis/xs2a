@@ -55,13 +55,18 @@ mvn spring-boot:run -Drun.profiles=mongo
 https://www.keycloak.org/downloads.html
 - Go to keycloak-3.4.3.Final/bin folder and run keycloak server:
 standalone.bat (for Windows users, *.sh for Linux)
-- Create realm with name: xs2a
-- Create client with name: aspsp-mock
-- Go to 'aspsp-mock' client settings tab and set 'Valid redirect URIs' field to: http://localhost:28080/*
-- Set 'Web origins' field to: *
-- Set 'Access Type' field to: confidential
+- In your browser open page 'http://localhost:8080/auth/'
+- Create admin account by filling username and password fields
+- Go to administraion console.
+- Create realm with name: 'xs2a'
+- Create client with Client Id: aspsp-mock
+- Go to 'aspsp-mock' client settings tab and set 'Valid redirect URIs' field to: 'http://localhost:28080/*'
+- Set 'Access Type' field to: 'confidential'
+- Set 'Web origins' field to: '*'
+- Save client settings
 - Go to Credential tab, copy user secret and put it to keycloak.credentials.secret in application.properties file
-- Create user with name: aspsp
+- Create user with Username: 'aspsp'. Save user.
+- Go to Credentials tab and set new password, swich off Temporary flag and push Reset password button  
 - Create role 'user' and map it to 'aspsp' user 
 ```
 

@@ -60,8 +60,13 @@ public class AccountService {
         return accountDetailsList;
     }
 
-    public Optional<SpiAccountDetails> getAccount(String id) {
-        return Optional.ofNullable(accountRepository.findOne(id));
+    public Optional<SpiAccountDetails> getAccountByConsentId(String accountId, String consentId, boolean withBalance) {
+        return Optional.ofNullable(consentService.getConsent(consentId))
+                   .map(con -> getAccountByConsent(con, accountId, withBalance));
+    }
+
+    public Optional<SpiAccountDetails> getAccount(String accountId) {
+        return Optional.ofNullable(accountRepository.findOne(accountId));
     }
 
     public boolean deleteAccountById(String id) {
@@ -77,6 +82,17 @@ public class AccountService {
                    .map(SpiAccountDetails::getBalances);
     }
 
+    private SpiAccountDetails getAccountByConsent(SpiAccountConsent consent, String accountId, boolean withBalance) {
+        if (isPresentAccountIdInAccountReferences(consent.getAccess().getAccounts(), accountId)) {
+            return Optional.ofNullable(accountRepository.findOne(accountId))
+                       .map(acc -> (withBalance && consent.isWithBalance())
+                                       ? acc
+                                       : getAccountDetailsWithoutBalances(acc))
+                       .orElse(null);
+        }
+        return null;
+    }
+
     private SpiAccountDetails getAccountDetailsWithoutBalances(SpiAccountDetails accountDetails) {
         return new SpiAccountDetails(accountDetails.getId(), accountDetails.getIban(), accountDetails.getBban(), accountDetails.getPan(),
             accountDetails.getMaskedPan(), accountDetails.getMsisdn(), accountDetails.getCurrency(), accountDetails.getName(),
@@ -89,5 +105,9 @@ public class AccountService {
                                  .map(SpiAccountReference::getAccountId)
                                  .collect(Collectors.toSet()))
                    .orElse(Collections.emptySet());
+    }
+
+    private boolean isPresentAccountIdInAccountReferences(List<SpiAccountReference> accountReferences, String accountId) {
+        return accountReferences.stream().anyMatch(ref -> ref.getAccountId().equals(accountId));
     }
 }
