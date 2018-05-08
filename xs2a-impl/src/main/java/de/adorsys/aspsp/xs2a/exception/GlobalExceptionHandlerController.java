@@ -41,14 +41,14 @@ public class GlobalExceptionHandlerController {
         log.warn("ValidationException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
         return new ResponseEntity(new MessageError(new TppMessageInformation(ERROR, MessageCode.FORMAT_ERROR)
-                                                       .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
+                                                       .text(ex.getMessage())), BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public ResponseEntity httpMessageException(HttpMessageNotReadableException ex, HandlerMethod handlerMethod) {
         log.warn("HttpMessageNotReadableException handled in Controller: {}, message: {}, stackTrace: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage(), ex);
 
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = BAD_REQUEST;
         return new ResponseEntity(status.getReasonPhrase(), status);
     }
 

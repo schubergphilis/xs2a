@@ -62,7 +62,7 @@ public class AccountService {
 
     public Optional<SpiAccountDetails> getAccountByConsentId(String accountId, String consentId, boolean withBalance) {
         return Optional.ofNullable(consentService.getConsent(consentId))
-                   .map(con -> getAccountByConsent(con, accountId, withBalance));
+                   .flatMap(con -> getAccountByConsent(con, accountId, withBalance));
     }
 
     public Optional<SpiAccountDetails> getAccount(String accountId) {
@@ -82,15 +82,20 @@ public class AccountService {
                    .map(SpiAccountDetails::getBalances);
     }
 
-    private SpiAccountDetails getAccountByConsent(SpiAccountConsent consent, String accountId, boolean withBalance) {
+    private Optional<SpiAccountDetails> getAccountByConsent(SpiAccountConsent consent, String accountId, boolean withBalance) {
         if (isPresentAccountIdInAccountReferences(consent.getAccess().getAccounts(), accountId)) {
             return Optional.ofNullable(accountRepository.findOne(accountId))
-                       .map(acc -> (withBalance && consent.isWithBalance())
-                                       ? acc
-                                       : getAccountDetailsWithoutBalances(acc))
-                       .orElse(null);
+                       .map(acc -> getSpiAccountDetailsByAccountId(consent, withBalance, acc));
         }
-        return null;
+        return Optional.empty();
+    }
+
+    private SpiAccountDetails getSpiAccountDetailsByAccountId(SpiAccountConsent consent, boolean withBalance, SpiAccountDetails accountDetails) {
+        if(withBalance && consent.isWithBalance()) {
+            return accountDetails;
+        }
+
+        return getAccountDetailsWithoutBalances(accountDetails);
     }
 
     private SpiAccountDetails getAccountDetailsWithoutBalances(SpiAccountDetails accountDetails) {
