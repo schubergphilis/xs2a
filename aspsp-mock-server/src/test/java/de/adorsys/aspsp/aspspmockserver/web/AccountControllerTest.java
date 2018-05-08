@@ -187,7 +187,7 @@ public class AccountControllerTest {
     @Test
     public void readBalancesById_wrongID() {
         //Given:
-        HttpStatus expectedStatusCode = HttpStatus.NOT_FOUND;
+        HttpStatus expectedStatusCode = HttpStatus.FORBIDDEN;
 
         //When:
         ResponseEntity actualResponse = accountController.readBalancesById(WRONG_ACCOUNT_ID);

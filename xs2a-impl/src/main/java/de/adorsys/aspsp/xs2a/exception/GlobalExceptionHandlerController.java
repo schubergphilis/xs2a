@@ -30,9 +30,7 @@ import org.springframework.web.method.HandlerMethod;
 import javax.validation.ValidationException;
 
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
-import static org.springframework.http.HttpStatus.UNAUTHORIZED;
+import static org.springframework.http.HttpStatus.*;
 
 @Slf4j
 @RestControllerAdvice
@@ -43,7 +41,7 @@ public class GlobalExceptionHandlerController {
         log.warn("ValidationException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
         return new ResponseEntity(new MessageError(new TppMessageInformation(ERROR, MessageCode.FORMAT_ERROR)
-                                                                      .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
+                                                       .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
@@ -66,10 +64,11 @@ public class GlobalExceptionHandlerController {
     public ResponseEntity restException(RestException ex, HandlerMethod handlerMethod) {
         log.warn("RestException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
-        if("getAccounts".equals(handlerMethod.getMethod().getName())
-            ||"readAccountDetails".equals(handlerMethod.getMethod().getName())){
-
-            if(ex.getHttpStatus() == FORBIDDEN){
+        if ("getAccounts".equals(handlerMethod.getMethod().getName())
+                || "readAccountDetails".equals(handlerMethod.getMethod().getName())
+                || "getBalances".equals(handlerMethod.getMethod().getName())
+                || "getTransactions".equals(handlerMethod.getMethod().getName())) {
+            if (ex.getHttpStatus() == FORBIDDEN) {
                 return new ResponseEntity(new MessageError(new TppMessageInformation(ERROR, MessageCode.CONSENT_INVALID)
                                                                .text(MessageCode.CONSENT_INVALID.getName())), UNAUTHORIZED);
             }

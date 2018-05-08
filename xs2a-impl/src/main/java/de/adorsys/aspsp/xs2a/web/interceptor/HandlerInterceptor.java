@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static de.adorsys.aspsp.xs2a.domain.MessageCode.FORMAT_ERROR;
+import static de.adorsys.aspsp.xs2a.domain.MessageCode.*;
 
 @Component
 public class HandlerInterceptor extends HandlerInterceptorAdapter {
@@ -52,14 +52,22 @@ public class HandlerInterceptor extends HandlerInterceptorAdapter {
 
         if (violationsMap.isEmpty()) {
             return true;
+        } else if (violationsMap.get("acceptError") != null) {
+
+            response.sendError(REQUESTED_FORMATS_INVALID.getCode(), REQUESTED_FORMATS_INVALID.name());
+            return false;
+        } else if (violationsMap.get("consentIdExceededAccess") != null) {
+
+            response.sendError(ACCESS_EXCEEDED.getCode(), ACCESS_EXCEEDED.name());
+            return false;
         } else {
 
             final List<String> violations = violationsMap.entrySet().stream()
-                                   .map(entry -> entry.getKey() + " : " + entry.getValue()).collect(Collectors.toList());
+                                                .map(entry -> entry.getKey() + " : " + entry.getValue()).collect(Collectors.toList());
 
             LOGGER.debug(violations.toString());
 
-            response.sendError(FORMAT_ERROR.getCode(), FORMAT_ERROR.name()+": "+violations.toString());
+            response.sendError(FORMAT_ERROR.getCode(), FORMAT_ERROR.name() + ": " + violations.toString());
             return false;
         }
     }

@@ -86,6 +86,6 @@ public class AccountController {
     public ResponseEntity<List<SpiBalances>> readBalancesById(@PathVariable("accountId") String accountId) {
         return accountService.getBalances(accountId)
                    .map(ResponseEntity::ok)
-                   .orElseGet(() -> ResponseEntity.notFound().build());
+                   .orElse(new ResponseEntity<>(HttpStatus.FORBIDDEN));
     }
 }

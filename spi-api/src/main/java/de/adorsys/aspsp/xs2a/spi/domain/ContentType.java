@@ -37,4 +37,13 @@ public enum ContentType {
     public String getType() {
         return type;
     }
+
+    public static ContentType forValue(String type) {
+        for (ContentType content : values()) {
+            if (content.type.equals(type)) {
+                return content;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
 }

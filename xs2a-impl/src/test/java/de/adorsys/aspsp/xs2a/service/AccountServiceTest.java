@@ -84,10 +84,10 @@ public class AccountServiceTest {
         AccountDetails expectedResult = new Gson().fromJson(IOUtils.resourceToString(ACCOUNT_DETAILS_SOURCE, UTF_8), AccountDetails.class);
 
         //When:
-        ResponseObject<AccountDetails> result = accountService.getAccountDetails(ACCOUNT_ID, CONSENT_ID, withBalance, psuInvolved);
+        AccountDetails result = accountService.getAccountDetails(ACCOUNT_ID, CONSENT_ID, withBalance, psuInvolved);
 
         //Then:
-        assertThat(result.getBody()).isEqualTo(expectedResult);
+        assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test

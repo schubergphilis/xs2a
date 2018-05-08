@@ -42,8 +42,7 @@ public class ResponseMapper {
     }
 
     public ResponseEntity okOrBadRequest(ResponseObject response) {
-        return getEntity(response, response.getBody() != null
-                                   ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+        return getEntity(response, response.getBody() != null ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     public ResponseEntity deleteOrNotFound(ResponseObject response) {

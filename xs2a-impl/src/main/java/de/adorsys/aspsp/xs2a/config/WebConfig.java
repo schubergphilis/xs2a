@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.paramnames.ParameterNamesModule;
+import de.adorsys.aspsp.xs2a.service.validator.AccountExceedingService;
 import de.adorsys.aspsp.xs2a.service.validator.RequestValidatorService;
 import de.adorsys.aspsp.xs2a.service.validator.parameter.ParametersFactory;
 import de.adorsys.aspsp.xs2a.spi.domain.security.BearerToken;
@@ -34,6 +35,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -43,6 +46,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.util.HashMap;
+import java.util.List;
 
 import static de.adorsys.aspsp.xs2a.spi.domain.constant.AuthorizationConstant.AUTHORIZATION_HEADER;
 
@@ -55,13 +60,25 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Value("${application.link.redirect-to}")
     private String redirectLinkToSource;
 
+    @Value("${application.ais.account-access.max-frequency-per-day}")
+    private int accountAccessMaxFrequencyPerDay;
+
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")
-        .addResourceLocations("classpath:/META-INF/resources/");
+            .addResourceLocations("classpath:/META-INF/resources/");
 
         registry.addResourceHandler("/webjars/**")
-        .addResourceLocations("classpath:/META-INF/resources/webjars/");
+            .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        for (HttpMessageConverter converter : converters) {
+            if (converter instanceof MappingJackson2HttpMessageConverter) {
+                ((MappingJackson2HttpMessageConverter) converter).setObjectMapper(objectMapper());
+            }
+        }
     }
 
     @Bean
@@ -86,13 +103,18 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public ParametersFactory parametersFactory(){
+    public ParametersFactory parametersFactory() {
         return new ParametersFactory(objectMapper());
     }
 
     @Bean
     public RequestValidatorService requestValidatorService() {
-        return new RequestValidatorService(validator(), parametersFactory());
+        return new RequestValidatorService(validator(), parametersFactory(), accountExceedingService());
+    }
+
+    @Bean
+    public AccountExceedingService accountExceedingService() {
+        return new AccountExceedingService(accountAccessMaxFrequencyPerDay, new HashMap<>());
     }
 
     @Override
@@ -108,6 +130,11 @@ public class WebConfig extends WebMvcConfigurerAdapter {
     @Bean
     public String redirectLinkToSource() {
         return redirectLinkToSource;
+    }
+
+    @Bean
+    public int accountAccessMaxFrequencyPerDay() {
+        return accountAccessMaxFrequencyPerDay;
     }
 
     @Bean

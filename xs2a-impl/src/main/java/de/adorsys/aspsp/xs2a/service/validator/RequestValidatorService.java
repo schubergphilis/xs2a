@@ -23,8 +23,7 @@ import de.adorsys.aspsp.xs2a.service.validator.header.impl.ErrorMessageHeaderImp
 import de.adorsys.aspsp.xs2a.service.validator.parameter.ParametersFactory;
 import de.adorsys.aspsp.xs2a.service.validator.parameter.RequestParameter;
 import de.adorsys.aspsp.xs2a.service.validator.parameter.impl.ErrorMessageParameterImpl;
-import lombok.extern.log4j.Log4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.method.HandlerMethod;
 
@@ -38,16 +37,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-@Log4j
+@AllArgsConstructor
 public class RequestValidatorService {
-    private ParametersFactory parametersFactory;
-    private Validator validator;
-
-    @Autowired
-    public RequestValidatorService(Validator validator, ParametersFactory parametersFactory) {
-        this.validator = validator;
-        this.parametersFactory = parametersFactory;
-    }
+    private final Validator validator;
+    private final ParametersFactory parametersFactory;
+    private final AccountExceedingService accountExceedingService;
 
     public Map<String, String> getRequestViolationMap(HttpServletRequest request, Object handler) {
         Map<String, String> violationMap = new HashMap<>();
@@ -68,7 +62,7 @@ public class RequestValidatorService {
         }
 
         Map<String, String> requestParameterViolationsMap = validator.validate(parameterImpl).stream()
-                                                            .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage));
+                                                                .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage));
 
         return requestParameterViolationsMap;
     }
@@ -84,9 +78,35 @@ public class RequestValidatorService {
         }
 
         Map<String, String> requestHeaderViolationsMap = validator.validate(headerImpl).stream()
-                                                         .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage));
+                                                             .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage));
+
+        requestHeaderViolationsMap.putAll(validAcceptHeaderValue(requestHeadersMap));
+        requestHeaderViolationsMap.putAll(validConsentIdHeaderValue(requestHeadersMap));
 
         return requestHeaderViolationsMap;
+    }
+
+    private Map<String, String> validConsentIdHeaderValue(Map<String, String> requestHeadersMap) {
+        String consentIdValue = requestHeadersMap.get("consent-id");
+
+        if (consentIdValue != null && accountExceedingService.exceededAccessPerDay(consentIdValue)) {
+            return Collections.singletonMap("consentIdExceededAccess", "Wrong request");
+        }
+
+        return Collections.EMPTY_MAP;
+    }
+
+    private Map<String, String> validAcceptHeaderValue(Map<String, String> requestHeadersMap) {
+        String acceptValue = requestHeadersMap.get("accept");
+
+        if (acceptValue == null
+                || acceptValue.equals("application/json")
+                || acceptValue.equals("*/*")) {
+
+            return Collections.EMPTY_MAP;
+        }
+
+        return Collections.singletonMap("acceptError", "Wrong accept");
     }
 
     private Map<String, String> getRequestHeadersMap(HttpServletRequest request) {
@@ -108,8 +128,8 @@ public class RequestValidatorService {
 
     private Map<String, String> getRequestParametersMap(HttpServletRequest request) {
         return request.getParameterMap().entrySet().stream()
-               .collect(Collectors.toMap(
-               Map.Entry::getKey,
-               e -> String.join(",", e.getValue())));
+                   .collect(Collectors.toMap(
+                       Map.Entry::getKey,
+                       e -> String.join(",", e.getValue())));
     }
 }

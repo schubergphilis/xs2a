@@ -18,10 +18,7 @@ package de.adorsys.aspsp.xs2a.web;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import de.adorsys.aspsp.xs2a.domain.AccountDetails;
-import de.adorsys.aspsp.xs2a.domain.AccountReport;
-import de.adorsys.aspsp.xs2a.domain.Balances;
-import de.adorsys.aspsp.xs2a.domain.ResponseObject;
+import de.adorsys.aspsp.xs2a.domain.*;
 import de.adorsys.aspsp.xs2a.service.AccountService;
 import de.adorsys.aspsp.xs2a.util.GsonUtcDateAdapter;
 import de.adorsys.aspsp.xs2a.util.GsonUtcInstantAdapter;
@@ -68,7 +65,7 @@ public class AccountControllerTest {
     private AccountService accountServiceMocked;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws IOException {
         when(accountServiceMocked.getAccountDetailsList(anyString(), anyBoolean(), anyBoolean())).thenReturn(createAccountDetailsList(ACCOUNT_DETAILS_SOURCE));
         ResponseObject<List<Balances>> balances = readBalances();
         when(accountServiceMocked.getBalances(any(String.class), any(), anyBoolean())).thenReturn(balances);
@@ -81,13 +78,13 @@ public class AccountControllerTest {
         //Given
         boolean withBalance = true;
         boolean psuInvolved = true;
-        ResponseObject<AccountDetails> expectedResult = getAccountDetails();
+        AccountDetails expectedResult = getAccountDetails();
 
         //When
         AccountDetails result = accountController.readAccountDetails(ACCOUNT_ID, CONSENT_ID, withBalance, psuInvolved).getBody();
 
         //Then:
-        assertThat(result).isEqualTo(expectedResult.getBody());
+        assertThat(result).isEqualTo(expectedResult);
     }
 
     @Test
@@ -202,10 +199,9 @@ public class AccountControllerTest {
             .body(result).build();
     }
 
-    private ResponseObject<AccountDetails> getAccountDetails() throws IOException {
+    private AccountDetails getAccountDetails() throws IOException {
         Map<String, List<AccountDetails>> map = createAccountDetailsList(ACCOUNT_DETAILS_SOURCE).getBody();
-        return ResponseObject.builder()
-            .body(map.get("accountList").get(0)).build();
+        return map.get("accountList").get(0);
     }
 
     private ResponseObject<AccountReport> createAccountReport(String path) throws IOException {

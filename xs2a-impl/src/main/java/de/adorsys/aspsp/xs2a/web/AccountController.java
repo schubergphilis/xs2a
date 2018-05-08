@@ -16,10 +16,8 @@
 
 package de.adorsys.aspsp.xs2a.web;
 
-import de.adorsys.aspsp.xs2a.domain.AccountDetails;
-import de.adorsys.aspsp.xs2a.domain.AccountReport;
-import de.adorsys.aspsp.xs2a.domain.Balances;
-import de.adorsys.aspsp.xs2a.domain.ResponseObject;
+import de.adorsys.aspsp.xs2a.domain.*;
+import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AccountService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import io.swagger.annotations.*;
@@ -31,6 +29,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static de.adorsys.aspsp.xs2a.domain.MessageCode.RESOURCE_UNKNOWN_404;
+import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 
 @RestController
 @AllArgsConstructor
@@ -77,8 +79,13 @@ public class AccountController {
     @RequestParam(name = "with-balance", required = false) boolean withBalance,
     @ApiParam(name = "psu-involved", value = "If contained, it is indicated that a Psu has directly asked this account access in real-time. The Psu then might be involved in an additional consent process, if the given consent is not any more sufficient.")
     @RequestParam(name = "psu-involved", required = false) boolean psuInvolved) {
-        ResponseObject<AccountDetails> responseObject = accountService.getAccountDetails(accountId, consentId, withBalance, psuInvolved);
-
+        ResponseObject responseObject = Optional.ofNullable(accountService.getAccountDetails(accountId, consentId, withBalance, psuInvolved))
+                                            .map(acc -> {
+                                                acc.setBalanceAndTransactionLinksByDefault("/api/v1/accounts");
+                                                return ResponseObject.builder().body(acc).build();
+                                            })
+                                            .orElse(ResponseObject.builder()
+                                                        .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build());
         return responseMapper.okOrNotFound(responseObject);
     }
 
@@ -107,15 +114,16 @@ public class AccountController {
     @ApiResponse(code = 400, message = "Bad request")})
     @RequestMapping(value = "/{account-id}/transactions", method = RequestMethod.GET)
     @ApiImplicitParams({
+    @ApiImplicitParam(name = "accept",  allowableValues = "application/xml, application/json, text/plain, */*", paramType = "header"),
     @ApiImplicitParam(name = "consent-id", value = "7f53031f-3cd8-4270-b07f-4ea1456ba124", required = true, paramType = "header"),
     @ApiImplicitParam(name = "tpp-transaction-id", value = "16d40f49-a110-4344-a949-f99828ae13c9", required = true, dataType = "UUID", paramType = "header"),
     @ApiImplicitParam(name = "tpp-request-id", value = "21d40f65-a150-8343-b539-b9a822ae98c0", required = true, dataType = "UUID", paramType = "header")})
     public ResponseEntity<AccountReport> getTransactions(@ApiParam(name = "account-id", value = "The account consent identification assigned to the created resource")
                                                          @PathVariable(name = "account-id") String accountId,
                                                          @RequestHeader(name = "consent-id", required = false) String consentId,
-                                                         @ApiParam(name = "dateFrom", value = "Starting date of the account statement", example = "2017-10-30")
+                                                         @ApiParam(name = "dateFrom", value = "Starting date of the account statement. Example: 2017-10-30", example = "2017-10-30")
                                                          @RequestParam(name = "dateFrom", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFrom,
-                                                         @ApiParam(name = "dateTo", value = "End date of the account statement", example = "2017-11-30")
+                                                         @ApiParam(name = "dateTo", value = "End date of the account statement. Example: 2017-11-30", example = "2017-11-30")
                                                          @RequestParam(name = "dateTo", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateTo,
                                                          @ApiParam(name = "transactionId", value = "Transaction identification", example = "1234567")
                                                          @RequestParam(name = "transactionId", required = false) String transactionId,

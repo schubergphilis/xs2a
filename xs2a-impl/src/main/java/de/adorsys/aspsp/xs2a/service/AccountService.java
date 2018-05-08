@@ -29,7 +29,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.*;
 
@@ -39,7 +38,6 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @Slf4j
 @Service
-@Validated
 @AllArgsConstructor
 public class AccountService {
 
@@ -49,7 +47,8 @@ public class AccountService {
     private final ValueValidatorService validatorService;
     private final JsonConverter jsonConverter;
 
-    public ResponseObject<Map<String, List<AccountDetails>>> getAccountDetailsList(String consentId, boolean withBalance, boolean psuInvolved) {
+    public ResponseObject<Map<String, List<AccountDetails>>> getAccountDetailsList( String consentId, boolean withBalance, boolean psuInvolved) {
+
         List<AccountDetails> accountDetailsList = accountMapper.mapFromSpiAccountDetailsList(accountSpi.readAccounts(consentId, withBalance, psuInvolved));
         Map<String, List<AccountDetails>> accountDetailsMap = new HashMap<>();
         accountDetailsMap.put("accountList", accountDetailsList);
@@ -90,11 +89,8 @@ public class AccountService {
         return new AccountReport(null, null, downloadLink);
     }
 
-    public ResponseObject<AccountDetails> getAccountDetails(String accountId, String consentId, boolean withBalance, boolean psuInvolved) {
-        AccountDetails accountDetails = accountMapper.mapFromSpiAccountDetails(accountSpi.readAccountDetails(accountId, consentId, withBalance, psuInvolved));
-
-        return ResponseObject.builder()
-                   .body(accountDetails).build();
+    public AccountDetails getAccountDetails(String accountId, String consentId, boolean withBalance, boolean psuInvolved) {
+        return accountMapper.mapFromSpiAccountDetails(accountSpi.readAccountDetails(accountId, consentId, withBalance, psuInvolved));
     }
 
     private AccountReport getAccountReport(String accountId, String consentId, Date dateFrom, Date dateTo, String transactionId, boolean psuInvolved, boolean withBalance) {
@@ -142,7 +138,6 @@ public class AccountService {
             new Links()
         ));
     }
-
 
     // Validation
     private void validate_accountId_period(String accountId, Date dateFrom, Date dateTo) {
