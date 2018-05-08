@@ -65,13 +65,12 @@ public class GlobalExceptionHandlerController {
         log.warn("RestException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
         if ("getAccounts".equals(handlerMethod.getMethod().getName())
-                || "readAccountDetails".equals(handlerMethod.getMethod().getName())
-                || "getBalances".equals(handlerMethod.getMethod().getName())
-                || "getTransactions".equals(handlerMethod.getMethod().getName())) {
-            if (ex.getHttpStatus() == FORBIDDEN) {
-                return new ResponseEntity(new MessageError(new TppMessageInformation(ERROR, MessageCode.CONSENT_INVALID)
-                                                               .text(MessageCode.CONSENT_INVALID.getName())), UNAUTHORIZED);
-            }
+                 || "readAccountDetails".equals(handlerMethod.getMethod().getName())
+                 || "getBalances".equals(handlerMethod.getMethod().getName())
+                 || "getTransactions".equals(handlerMethod.getMethod().getName())
+                && (ex.getHttpStatus() == FORBIDDEN)) {
+            return new ResponseEntity(new MessageError(new TppMessageInformation(ERROR, MessageCode.CONSENT_INVALID)
+                                                           .text(MessageCode.CONSENT_INVALID.getName())), UNAUTHORIZED);
         }
 
         return new ResponseEntity(new MessageError(new TppMessageInformation(ERROR, MessageCode.INTERNAL_SERVER_ERROR)
