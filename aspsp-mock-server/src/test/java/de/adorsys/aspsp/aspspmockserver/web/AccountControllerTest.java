@@ -71,9 +71,9 @@ public class AccountControllerTest {
             .thenReturn(true);
         when(accountService.deleteAccountById(WRONG_ACCOUNT_ID))
             .thenReturn(false);
-        when(accountService.getBalances(ACCOUNT_ID))
+        when(accountService.getBalancesByAccountId(ACCOUNT_ID))
             .thenReturn(Optional.of(getNewBalanceList()));
-        when(accountService.getBalances(WRONG_ACCOUNT_ID))
+        when(accountService.getBalancesByAccountId(WRONG_ACCOUNT_ID))
             .thenReturn(Optional.empty());
     }
 

@@ -157,7 +157,7 @@ public class AccountServiceTest {
         List<SpiBalances> expectedBalance = spiAccountDetails.getBalances();
 
         //When
-        Optional<List<SpiBalances>> actualBalanceList = accountService.getBalances(spiAccountDetailsId);
+        Optional<List<SpiBalances>> actualBalanceList = accountService.getBalancesByAccountId(spiAccountDetailsId);
 
         //Then
         assertThat(actualBalanceList.get()).isEqualTo(expectedBalance);

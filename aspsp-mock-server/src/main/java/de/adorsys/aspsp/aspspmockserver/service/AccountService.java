@@ -42,13 +42,13 @@ public class AccountService {
 
     public List<SpiAccountDetails> getAllAccounts(String consentId) {
         return Optional.ofNullable(consentService.getConsent(consentId))
-                   .map(con -> getSpiAccountDetailsByConsent(con))
+                   .map(con -> getSpiAccountDetailsListByConsent(con))
                    .orElse(Collections.emptyList());
     }
 
     public Optional<SpiAccountDetails> getAccountByConsentId(String accountId, String consentId) {
         return Optional.ofNullable(consentService.getConsent(consentId))
-                   .flatMap(con -> getAccountByConsent(con, accountId));
+                   .flatMap(con -> getSpiAccountDetailsByConsent(con, accountId));
     }
 
     public Optional<SpiAccountDetails> getAccount(String accountId) {
@@ -63,47 +63,27 @@ public class AccountService {
         return false;
     }
 
-    public Optional<List<SpiBalances>> getBalances(String accountId) {
+    public Optional<List<SpiBalances>> getBalancesByAccountId(String accountId) {
         return Optional.ofNullable(accountRepository.findOne(accountId))
                    .map(SpiAccountDetails::getBalances);
     }
 
-    private List<SpiAccountDetails> getSpiAccountDetailsByConsent(SpiAccountConsent consent) {
-        Set<String> accounts = getAccounts(consent.getAccess().getAccounts());
-        accounts.addAll(getAccounts(consent.getAccess().getBalances()));
-        accounts.addAll(getAccounts(consent.getAccess().getTransactions()));
-        List<SpiAccountDetails> accountDetailsList = accountRepository.findByIbanIn(accounts);
+    private List<SpiAccountDetails> getSpiAccountDetailsListByConsent(SpiAccountConsent consent) {
+        Set<String> accounts = getIbanListFromSpiAccountsReferences(consent.getAccess().getAccounts());
+        accounts.addAll(getIbanListFromSpiAccountsReferences(consent.getAccess().getBalances()));
+        accounts.addAll(getIbanListFromSpiAccountsReferences(consent.getAccess().getTransactions()));
 
-//        if (!withBalance || !consent.isWithBalance()) {
-//            return accountDetailsList.stream()
-//                       .map(this::getAccountDetailsWithoutBalances)
-//                       .collect(Collectors.toList());
-//        }
-        return accountDetailsList;
+        return accountRepository.findByIbanIn(accounts);
     }
 
-    private Optional<SpiAccountDetails> getAccountByConsent(SpiAccountConsent consent, String accountId) {
+    private Optional<SpiAccountDetails> getSpiAccountDetailsByConsent(SpiAccountConsent consent, String accountId) {
         if (isPresentAccountIdInAccountReferences(consent.getAccess().getAccounts(), accountId)) {
             return Optional.ofNullable(accountRepository.findOne(accountId));
         }
         return Optional.empty();
     }
 
-//    private SpiAccountDetails getSpiAccountDetailsByAccountId(SpiAccountConsent consent, boolean withBalance, SpiAccountDetails accountDetails) {
-//        if(withBalance && consent.isWithBalance()) {
-//            return accountDetails;
-//        }
-//
-//        return getAccountDetailsWithoutBalances(accountDetails);
-//    }
-
-//    private SpiAccountDetails getAccountDetailsWithoutBalances(SpiAccountDetails accountDetails) {
-//        return new SpiAccountDetails(accountDetails.getId(), accountDetails.getIban(), accountDetails.getBban(), accountDetails.getPan(),
-//            accountDetails.getMaskedPan(), accountDetails.getMsisdn(), accountDetails.getCurrency(), accountDetails.getName(),
-//            accountDetails.getAccountType(), accountDetails.getCashSpiAccountType(), accountDetails.getBic(), null);
-//    }
-
-    private Set<String> getAccounts(List<SpiAccountReference> list) {
+    private Set<String> getIbanListFromSpiAccountsReferences(List<SpiAccountReference> list) {
         return Optional.ofNullable(list)
                    .map(l -> l.stream()
                                  .map(SpiAccountReference::getIban)
@@ -112,6 +92,7 @@ public class AccountService {
     }
 
     private boolean isPresentAccountIdInAccountReferences(List<SpiAccountReference> accountReferences, String accountId) {
-        return accountReferences.stream().anyMatch(ref -> ref.getIban().equals(accountId));
+        return accountReferences.stream()
+                   .anyMatch(ref -> ref.getIban().equals(accountId));
     }
 }

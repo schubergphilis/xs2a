@@ -82,7 +82,7 @@ public class AccountController {
     @ApiOperation(value = "", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @GetMapping(path = "/{accountId}/balances")
     public ResponseEntity<List<SpiBalances>> readBalancesById(@PathVariable("accountId") String accountId) {
-        return accountService.getBalances(accountId)
+        return accountService.getBalancesByAccountId(accountId)
                    .map(ResponseEntity::ok)
                    .orElse(new ResponseEntity<>(HttpStatus.FORBIDDEN));
     }
