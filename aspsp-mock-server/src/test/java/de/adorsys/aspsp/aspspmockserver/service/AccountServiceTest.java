@@ -77,7 +77,7 @@ public class AccountServiceTest {
         SpiAccountDetails expectedSpiAccountDetails2 = getSpiAccountDetails_2();
 
         //When
-        List<SpiAccountDetails> actualListSpiAccountDetails = accountService.getAllAccounts(CONSENT_ID_WITH_BALANCE_FALSE, false);
+        List<SpiAccountDetails> actualListSpiAccountDetails = accountService.getAllAccounts(CONSENT_ID_WITH_BALANCE_FALSE);
 
         //Then
         assertThat(actualListSpiAccountDetails).isNotNull();

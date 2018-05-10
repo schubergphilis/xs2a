@@ -43,19 +43,18 @@ public class AccountSpiImpl implements AccountSpi {
     private final RestTemplate restTemplate;
 
     @Override
-    public List<SpiAccountDetails> readAccounts(String consentId, boolean withBalance, boolean psuInvolved) {
+    public List<SpiAccountDetails> readAccounts(String consentId) {
         String url = remoteSpiUrls.getUrl("getAllAccounts");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
         builder.queryParam("consent-id", consentId);
-        builder.queryParam("withBalance", withBalance);
 
         ResponseEntity<SpiAccountDetails[]> response = restTemplate.getForEntity(builder.build().encode().toUri(), SpiAccountDetails[].class);
         return Arrays.asList(response.getBody());
     }
 
     @Override
-    public List<SpiBalances> readBalances(String accountId, String consentId, boolean psuInvolved) {
+    public List<SpiBalances> readBalances(String accountId, String consentId) {
         String getBalanceUrl = remoteSpiUrls.getUrl("getAccountBalances");
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(getBalanceUrl);
@@ -69,7 +68,7 @@ public class AccountSpiImpl implements AccountSpi {
     }
 
     @Override
-    public List<SpiTransaction> readTransactionsByPeriod(String accountId, String consentId, Date dateFrom, Date dateTo, boolean psuInvolved) {
+    public List<SpiTransaction> readTransactionsByPeriod(String accountId, String consentId, Date dateFrom, Date dateTo) {
         List<SpiTransaction> spiTransactions = AccountMockData.getSpiTransactions();
 
         List<SpiTransaction> validSpiTransactions = filterValidTransactionsByAccountId(spiTransactions, accountId);
@@ -79,7 +78,7 @@ public class AccountSpiImpl implements AccountSpi {
     }
 
     @Override
-    public List<SpiTransaction> readTransactionsById(String accountId, String consentId, String transactionId, boolean psuInvolved) {
+    public List<SpiTransaction> readTransactionsById(String accountId, String consentId, String transactionId) {
         List<SpiTransaction> spiTransactions = AccountMockData.getSpiTransactions();
 
         List<SpiTransaction> validSpiTransactions = filterValidTransactionsByAccountId(spiTransactions, accountId);
@@ -89,11 +88,10 @@ public class AccountSpiImpl implements AccountSpi {
     }
 
     @Override
-    public SpiAccountDetails readAccountDetails(String accountId,  String consentId, boolean withBalance, boolean psuInvolved) {
+    public SpiAccountDetails readAccountDetails(String accountId,  String consentId) {
         String url = remoteSpiUrls.getUrl("getAccountById");
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
         builder.queryParam("consent-id", consentId);
-        builder.queryParam("withBalance", withBalance);
 
         return restTemplate.getForObject(builder.buildAndExpand(accountId).toUri(), SpiAccountDetails.class);
     }

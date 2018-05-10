@@ -21,7 +21,6 @@ import de.adorsys.aspsp.xs2a.domain.code.BankTransactionCode;
 import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
 import de.adorsys.aspsp.xs2a.spi.domain.account.*;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
-import de.adorsys.aspsp.xs2a.web.AccountController;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -31,38 +30,33 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
 @Component
 public class AccountMapper {
     public List<AccountDetails> mapFromSpiAccountDetailsList(List<SpiAccountDetails> spiAccountDetailsList) {
-        String urlToAccount = linkTo(AccountController.class).toUriComponentsBuilder().build().getPath();
-
         return Optional.ofNullable(spiAccountDetailsList)
-               .map(acl -> acl.stream()
-                           .map(this::mapFromSpiAccountDetails)
-                           .peek(account -> account.setBalanceAndTransactionLinksByDefault(urlToAccount))
-                           .collect(Collectors.toList()))
-               .orElse(Collections.emptyList());
+                   .map(acl -> acl.stream()
+                                   .map(this::mapFromSpiAccountDetails)
+                                   .collect(Collectors.toList()))
+                   .orElse(Collections.emptyList());
     }
 
     public AccountDetails mapFromSpiAccountDetails(SpiAccountDetails accountDetails) {
         return Optional.ofNullable(accountDetails)
-               .map(ad -> new AccountDetails(
-               ad.getId(),
-               ad.getIban(),
-               ad.getBban(),
-               ad.getPan(),
-               ad.getMaskedPan(),
-               ad.getMsisdn(),
-               ad.getCurrency(),
-               ad.getName(),
-               ad.getAccountType(),
-               mapFromSpiAccountType(ad.getCashSpiAccountType()),
-               ad.getBic(),
-               mapFromSpiBalancesList(ad.getBalances()),
-               new Links()))
-               .orElse(null);
+                   .map(ad -> new AccountDetails(
+                       ad.getId(),
+                       ad.getIban(),
+                       ad.getBban(),
+                       ad.getPan(),
+                       ad.getMaskedPan(),
+                       ad.getMsisdn(),
+                       ad.getCurrency(),
+                       ad.getName(),
+                       ad.getAccountType(),
+                       mapFromSpiAccountType(ad.getCashSpiAccountType()),
+                       ad.getBic(),
+                       mapFromSpiBalancesList(ad.getBalances()),
+                       new Links()))
+                   .orElse(null);
     }
 
     private CashAccountType mapFromSpiAccountType(SpiAccountType spiAccountType) {

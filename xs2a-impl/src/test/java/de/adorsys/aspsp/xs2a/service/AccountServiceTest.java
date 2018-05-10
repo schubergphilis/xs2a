@@ -70,10 +70,10 @@ public class AccountServiceTest {
 
     @Before
     public void setUp() throws IOException {
-        when(accountSpi.readTransactionsByPeriod(any(), any(), any(), any(), anyBoolean())).thenReturn(getTransactionList());
-        when(accountSpi.readBalances(any(), any(), anyBoolean())).thenReturn(getBalances());
-        when(accountSpi.readTransactionsById(any(), any(),any(), anyBoolean())).thenReturn(getTransactionList());
-        when(accountSpi.readAccountDetails(any(), any(), anyBoolean(), anyBoolean())).thenReturn(createSpiAccountDeatails());
+        when(accountSpi.readTransactionsByPeriod(any(), any(), any(), any())).thenReturn(getTransactionList());
+        when(accountSpi.readBalances(any(), any())).thenReturn(getBalances());
+        when(accountSpi.readTransactionsById(any(), any(),any())).thenReturn(getTransactionList());
+        when(accountSpi.readAccountDetails(any(), any())).thenReturn(createSpiAccountDeatails());
     }
 
     @Test
@@ -197,7 +197,7 @@ public class AccountServiceTest {
     }
 
     private void checkAccountResults(boolean withBalance, boolean psuInvolved) {
-        List<SpiAccountDetails> list = accountSpi.readAccounts("id", withBalance, psuInvolved);
+        List<SpiAccountDetails> list = accountSpi.readAccounts("id");
         List<AccountDetails> accountDetails = new ArrayList<>();
         for (SpiAccountDetails s : list) {
             accountDetails.add(accountMapper.mapFromSpiAccountDetails(s));

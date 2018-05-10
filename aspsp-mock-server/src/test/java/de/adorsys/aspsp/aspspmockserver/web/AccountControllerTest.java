@@ -57,13 +57,13 @@ public class AccountControllerTest {
         accountList.add(getSpiAccountDetails_2());
         when(accountService.getAccount(ACCOUNT_ID))
             .thenReturn(Optional.of(getSpiAccountDetails_1()));
-        when(accountService.getAccountByConsentId(eq(ACCOUNT_ID), eq(CONSENT_ID), anyBoolean()))
+        when(accountService.getAccountByConsentId(eq(ACCOUNT_ID), eq(CONSENT_ID)))
             .thenReturn(Optional.of(getSpiAccountDetails_1()));
         when(accountService.getAccount(WRONG_ACCOUNT_ID))
             .thenReturn(Optional.empty());
-        when(accountService.getAccountByConsentId(eq(WRONG_ACCOUNT_ID), eq(CONSENT_ID), anyBoolean()))
+        when(accountService.getAccountByConsentId(eq(WRONG_ACCOUNT_ID), eq(CONSENT_ID)))
             .thenReturn(Optional.empty());
-        when(accountService.getAllAccounts(anyString(), anyBoolean()))
+        when(accountService.getAllAccounts(anyString()))
             .thenReturn(accountList);
         when(accountService.addOrUpdateAccount(getSpiAccountDetails_1()))
             .thenReturn(getSpiAccountDetails_1());
@@ -83,7 +83,7 @@ public class AccountControllerTest {
         HttpStatus expectedStatusCode = HttpStatus.OK;
 
         //When:
-        ResponseEntity<List<SpiAccountDetails>> actualResponse = accountController.readAllAccounts(CONSENT_ID, false);
+        ResponseEntity<List<SpiAccountDetails>> actualResponse = accountController.readAllAccounts(CONSENT_ID);
 
         //Then:
         HttpStatus actualStatusCode = actualResponse.getStatusCode();
@@ -99,7 +99,7 @@ public class AccountControllerTest {
         HttpStatus expectedStatusCode = HttpStatus.OK;
 
         //When:
-        ResponseEntity<SpiAccountDetails> actualResponse = accountController.readAccountById(ACCOUNT_ID, CONSENT_ID, false);
+        ResponseEntity<SpiAccountDetails> actualResponse = accountController.readAccountById(ACCOUNT_ID, CONSENT_ID);
 
         //Then:
         HttpStatus actualStatusCode = actualResponse.getStatusCode();
@@ -115,7 +115,7 @@ public class AccountControllerTest {
         HttpStatus expectedStatusCode = HttpStatus.FORBIDDEN;
 
         //When:
-        ResponseEntity<SpiAccountDetails> actualResponse = accountController.readAccountById(WRONG_ACCOUNT_ID, CONSENT_ID, true);
+        ResponseEntity<SpiAccountDetails> actualResponse = accountController.readAccountById(WRONG_ACCOUNT_ID, CONSENT_ID);
 
         //Then:
         HttpStatus actualStatusCode = actualResponse.getStatusCode();

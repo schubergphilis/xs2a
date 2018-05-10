@@ -31,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageCode.RESOURCE_UNKNOWN_404;
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
@@ -47,18 +48,24 @@ public class AccountService {
     private final ValueValidatorService validatorService;
     private final JsonConverter jsonConverter;
 
-    public ResponseObject<Map<String, List<AccountDetails>>> getAccountDetailsList( String consentId, boolean withBalance, boolean psuInvolved) {
+    public ResponseObject<Map<String, List<AccountDetails>>> getAccountDetailsList(String consentId, boolean withBalance, boolean psuInvolved) {
+        List<AccountDetails> accountDetailsList = accountMapper.mapFromSpiAccountDetailsList(accountSpi.readAccounts(consentId));
 
-        List<AccountDetails> accountDetailsList = accountMapper.mapFromSpiAccountDetailsList(accountSpi.readAccounts(consentId, withBalance, psuInvolved));
+        if (!withBalance) {
+            accountDetailsList = accountDetailsList.stream()
+                                     .map(this::getAccountDetailsWithoutBalances)
+                                     .collect(Collectors.toList());
+        }
+
         Map<String, List<AccountDetails>> accountDetailsMap = new HashMap<>();
-        accountDetailsMap.put("accountList", accountDetailsList);
+        accountDetailsMap.put("accountList",accountDetailsList);
 
         return ResponseObject.builder()
                    .body(accountDetailsMap).build();
     }
 
     public ResponseObject<List<Balances>> getBalances(String accountId, String consentId, boolean psuInvolved) {
-        List<SpiBalances> spiBalances = accountSpi.readBalances(accountId, consentId, psuInvolved);
+        List<SpiBalances> spiBalances = accountSpi.readBalances(accountId, consentId);
 
         return Optional.ofNullable(spiBalances)
                    .map(sb -> ResponseObject.builder().body(accountMapper.mapFromSpiBalancesList(sb)).build())
@@ -70,7 +77,7 @@ public class AccountService {
                                                           Date dateFrom, Date dateTo, String transactionId,
                                                           boolean psuInvolved, String bookingStatus, boolean withBalance, boolean deltaList) {
 
-        if (accountSpi.readAccountDetails(accountId, consentId, false, false) == null) {
+        if (accountSpi.readAccountDetails(accountId, consentId) == null) {
             return ResponseObject.builder()
                        .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
         } else {
@@ -90,7 +97,8 @@ public class AccountService {
     }
 
     public AccountDetails getAccountDetails(String accountId, String consentId, boolean withBalance, boolean psuInvolved) {
-        return accountMapper.mapFromSpiAccountDetails(accountSpi.readAccountDetails(accountId, consentId, withBalance, psuInvolved));
+        AccountDetails accountDetails = accountMapper.mapFromSpiAccountDetails(accountSpi.readAccountDetails(accountId, consentId));
+        return withBalance ? accountDetails : getAccountDetailsWithoutBalances(accountDetails);
     }
 
     private AccountReport getAccountReport(String accountId, String consentId, Date dateFrom, Date dateTo, String transactionId, boolean psuInvolved, boolean withBalance) {
@@ -124,19 +132,25 @@ public class AccountService {
 
     private AccountReport readTransactionsByPeriod(String accountId, String consentId, Date dateFrom,
                                                    Date dateTo, boolean psuInvolved, boolean withBalance) { //NOPMD TODO review and check PMD assertion
-        Optional<AccountReport> result = accountMapper.mapFromSpiAccountReport(accountSpi.readTransactionsByPeriod(accountId, consentId, dateFrom, dateTo, psuInvolved));
+        Optional<AccountReport> result = accountMapper.mapFromSpiAccountReport(accountSpi.readTransactionsByPeriod(accountId, consentId, dateFrom, dateTo));
 
         return result.orElseGet(() -> new AccountReport(new Transactions[]{}, new Transactions[]{}, new Links()));
     }
 
     private AccountReport readTransactionsById(String accountId, String consentId, String transactionId,
                                                boolean psuInvolved, boolean withBalance) { //NOPMD TODO review and check PMD assertion
-        Optional<AccountReport> result = accountMapper.mapFromSpiAccountReport(accountSpi.readTransactionsById(accountId, consentId, transactionId, psuInvolved));
+        Optional<AccountReport> result = accountMapper.mapFromSpiAccountReport(accountSpi.readTransactionsById(accountId, consentId, transactionId));
 
         return result.orElseGet(() -> new AccountReport(new Transactions[]{},
             new Transactions[]{},
             new Links()
         ));
+    }
+
+    private AccountDetails getAccountDetailsWithoutBalances(AccountDetails accountDetails) {
+        return new AccountDetails(accountDetails.getId(), accountDetails.getIban(), accountDetails.getBban(), accountDetails.getPan(),
+            accountDetails.getMaskedPan(), accountDetails.getMsisdn(), accountDetails.getCurrency(), accountDetails.getName(),
+            accountDetails.getAccountType(), accountDetails.getCashAccountType(), accountDetails.getBic(), null, null);
     }
 
     // Validation

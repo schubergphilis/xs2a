@@ -41,9 +41,8 @@ public class AccountController {
 
     @ApiOperation(value = "", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @GetMapping(path = "/")
-    public ResponseEntity<List<SpiAccountDetails>> readAllAccounts(@RequestParam(value = "consent-id", required = true) String consentId,
-                                                                   @RequestParam(value = "withBalance", required = false) boolean withBalance) {
-        List<SpiAccountDetails> result = accountService.getAllAccounts(consentId, withBalance);
+    public ResponseEntity<List<SpiAccountDetails>> readAllAccounts(@RequestParam(value = "consent-id", required = true) String consentId) {
+        List<SpiAccountDetails> result = accountService.getAllAccounts(consentId);
         return result.isEmpty()
                    ? new ResponseEntity<>(HttpStatus.FORBIDDEN)
                    : new ResponseEntity<>(result, HttpStatus.OK);
@@ -52,9 +51,8 @@ public class AccountController {
     @ApiOperation(value = "", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @GetMapping(path = "/{accountId}")
     public ResponseEntity<SpiAccountDetails> readAccountById(@PathVariable("accountId") String accountId,
-                                                             @RequestParam(value = "consent-id", required = true) String consentId,
-                                                             @RequestParam(value = "withBalance", required = false) boolean withBalance) {
-        return accountService.getAccountByConsentId(accountId, consentId, withBalance)
+                                                             @RequestParam(value = "consent-id", required = true) String consentId) {
+        return accountService.getAccountByConsentId(accountId, consentId)
                    .map(result -> new ResponseEntity<>(result, HttpStatus.OK))
                    .orElse(new ResponseEntity<>(HttpStatus.FORBIDDEN));
     }
