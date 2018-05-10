@@ -176,7 +176,6 @@ public class AccountMapper {
         return Optional.ofNullable(spiAccountReference)
                    .map(ar -> {
                        AccountReference accountReference = new AccountReference();
-                       accountReference.setAccountId(ar.getAccountId());
                        accountReference.setIban(ar.getIban());
                        accountReference.setBban(ar.getBban());
                        accountReference.setPan(ar.getPan());
@@ -191,7 +190,7 @@ public class AccountMapper {
 
     public SpiAccountReference toSpi(AccountReference account) {
         return Optional.ofNullable(account)
-                   .map(ac -> new SpiAccountReference(ac.getAccountId(),
+                   .map(ac -> new SpiAccountReference(
                        ac.getIban(),
                        ac.getBban(),
                        ac.getPan(),
