@@ -113,6 +113,6 @@ public class AccountService {
     }
 
     private boolean isPresentAccountIdInAccountReferences(List<SpiAccountReference> accountReferences, String accountId) {
-        return accountReferences.stream().anyMatch(ref -> ref.getAccountId().equals(accountId));
+        return accountReferences.stream().anyMatch(ref -> ref.getIban().equals(accountId));
     }
 }

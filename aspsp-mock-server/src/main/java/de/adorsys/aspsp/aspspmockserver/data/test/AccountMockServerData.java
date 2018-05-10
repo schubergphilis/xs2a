@@ -78,7 +78,7 @@ public class AccountMockServerData {
     }
 
     private SpiAccountReference mapDetailsToRef(SpiAccountDetails det) {
-        return new SpiAccountReference(det.getId(), det.getIban(), det.getBban(), det.getPan(), det.getMaskedPan(), det.getMsisdn(), det.getCurrency());
+        return new SpiAccountReference(det.getIban(), det.getBban(), det.getPan(), det.getMaskedPan(), det.getMsisdn(), det.getCurrency());
     }
 
     private void fillAccounts() {
