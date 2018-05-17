@@ -28,6 +28,7 @@
         <module>spi-mock</module>
         <module>aspsp-mock-server</module>
         <module>xs2a-impl</module>
+        <module>consent-management</module>
     </modules>
     <packaging>pom</packaging>
 
