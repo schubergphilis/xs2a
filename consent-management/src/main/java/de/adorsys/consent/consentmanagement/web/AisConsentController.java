@@ -16,22 +16,27 @@
 
 package de.adorsys.consent.consentmanagement.web;
 
-import de.adorsys.consent.consentmanagement.domain.AisConsent;
+import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiCreateConsentRequest;
 import de.adorsys.consent.consentmanagement.service.AisConsentService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@AllArgsConstructor
-@RequestMapping(path = "api/v1/ais/consent")
+@RequiredArgsConstructor
+@RequestMapping(path = "consent")
 public class AisConsentController {
-    private AisConsentService aisConsentService;
+    private final AisConsentService aisConsentService;
 
-    @GetMapping(path = "/create")
-    public ResponseEntity<AisConsent> create() {
-        return ResponseEntity.ok(aisConsentService.createConsent());
+    @PostMapping(path = "/create")
+    public ResponseEntity<String> create(@RequestBody SpiCreateConsentRequest request,
+                                             @RequestParam(required = false) String psuId,
+                                             @RequestParam(required = false) String tppId,
+                                             @RequestParam(required = false) boolean withBalance,
+                                             @RequestParam(required = false) boolean tppRedirectPreferred) {
+        return aisConsentService.createConsent(request, psuId, tppId, withBalance)
+            .map(consentId -> new ResponseEntity<>(consentId, HttpStatus.CREATED))
+            .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 }

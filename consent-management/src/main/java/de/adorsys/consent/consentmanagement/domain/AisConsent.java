@@ -17,44 +17,58 @@
 package de.adorsys.consent.consentmanagement.domain;
 
 import lombok.Data;
-import org.hibernate.resource.transaction.spi.TransactionStatus;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Data
 @Entity(name = "ais_consent")
 public class AisConsent {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true, nullable = false, updatable = false )
-    protected Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ais_consent_generator")
+    @SequenceGenerator(name="ais_consent_generator", sequenceName = "ais_consent_id_seq")
+    private Long id;
+
+    @Column(name = "external_id", nullable = false)
+    private String externalId;
 
     @Column(name = "recurring_indicator")
     private boolean recurringIndicator;
 
-    @Column(name = "request_date")
-    private Date requestDate;
+    @Column(name = "request_date", nullable = false)
+    private LocalDateTime requestDate;
 
     @Column(name = "expire_date")
-    private Date expireDate;
+    private LocalDateTime expireDate;
 
-    @Column(name = "transaction_status")
+    @Column(name = "psu_id")
+    private String psuId;
+
+    @Column(name = "tpp_id", nullable = false)
+    private String tppId;
+
+    @Column(name = "consent_status", nullable = false, insertable = false, updatable = false)
     @Enumerated(value = EnumType.STRING)
-    private TransactionStatus transactionStatus;
+    private AisConsentStatus consentStatus;
 
-    @Column(name = "consent_status")
+    @Column(name = "consent_status", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private ConsentStatus consentStatus;
+    private ConsentType consentType = ConsentType.AIS;
 
+    @Column(name = "frequency_per_day")
     private int frequencyPerDay;
-    private boolean withBalance;
-    private boolean tppRedirectPreferred;
 
-    @OneToMany(mappedBy = "сonsent", orphanRemoval = true)
+    @Column(name = "usage_counter")
+    private int usageCounter;
+
+    @OneToMany(mappedBy = "сonsent", cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<AisAccount> accounts = new ArrayList<>();
+
+    public void addAccounts(List<AisAccount> accounts) {
+        accounts.forEach(a -> addAccount(a));
+    }
 
     public void addAccount(AisAccount account) {
         this.accounts.add(account);

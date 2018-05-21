@@ -16,11 +16,11 @@
 
 package de.adorsys.consent.consentmanagement.domain;
 
-public enum ConsentStatus {
-    received,
-    rejected,
-    valid,
-    revokedByPsu,
-    expired,
-    terminatedByTpp
+public enum AisConsentStatus {
+    RECEIVED,
+    REJECTED,
+    VALID,
+    REVOKED_BY_PSU,
+    EXPIRED,
+    TERMINATED_BY_TPP
 }

@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package de.adorsys.consent.consentmanagement.domain;
+package de.adorsys.consent.consentmanagement.config;
 
-public enum TypeAccess {
-    ACCOUNT,
-    BALANCE,
-    TRANSACTION,
-    PAYMENT
+import org.springframework.stereotype.Component;
+
+@Component
+public class ProfileSetting {
 }

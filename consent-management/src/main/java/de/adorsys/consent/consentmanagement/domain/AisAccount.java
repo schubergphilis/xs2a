@@ -17,34 +17,57 @@
 package de.adorsys.consent.consentmanagement.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Currency;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity(name = "ais_account")
 public class AisAccount {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", unique = true, nullable = false, updatable = false )
-    protected Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "ais_account_generator")
+    @SequenceGenerator(name="ais_account_generator", sequenceName = "ais_account_id_seq")
+    private Long id;
 
-    @Column(name = "psu_id")
-    private String psuId;
+    @Column(name = "iban", nullable = false)
     private String iban;
-    private String bban;
-    private String pan;
-    private String msisdn;
 
-    @Column(name ="masked_pan")
-    private String maskedPan;
+    @ElementCollection
+    @CollectionTable(name="ais_account_currency", joinColumns=@JoinColumn(name="account_id"))
+    private Set<AisAccountCurrency> aisAccountCurrencies = new HashSet<>();
 
     @ElementCollection
     @CollectionTable(name="ais_account_access", joinColumns=@JoinColumn(name="account_id"))
-    private List<AisAccountAccess> accesses;
+    private Set<AisAccountAccess> aisAccountAccesses = new HashSet<>();
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "consent_id")
+    @JoinColumn(name = "consent_id", nullable = false)
     private AisConsent сonsent;
+
+    public AisAccount() {}
+
+    public AisAccount(String iban) {
+        this.iban = iban;
+    }
+
+    public void addAccesses(Set<TypeAccess> typeAccesses){
+        typeAccesses.forEach(t -> addAccess(t));
+    }
+
+    public void addAccess(TypeAccess typeAccess){
+        aisAccountAccesses.add(new AisAccountAccess(typeAccess));
+    }
+
+    public void addCurrencies(Set<Currency> currencies){
+        currencies.forEach(c -> addCurrency(c));
+    }
+
+    public void addCurrency(Currency currency){
+        aisAccountCurrencies.add(new AisAccountCurrency(currency));
+    }
 }

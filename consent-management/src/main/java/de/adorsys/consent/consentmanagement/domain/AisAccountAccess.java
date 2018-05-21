@@ -30,4 +30,10 @@ public class AisAccountAccess {
     @Column(name = "type_access", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private TypeAccess typeAccess;
+
+    public AisAccountAccess(){}
+
+    public AisAccountAccess(TypeAccess typeAccess) {
+        this.typeAccess = typeAccess;
+    }
 }

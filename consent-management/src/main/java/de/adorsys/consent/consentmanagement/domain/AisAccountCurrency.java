@@ -16,9 +16,21 @@
 
 package de.adorsys.consent.consentmanagement.domain;
 
-public enum TypeAccess {
-    ACCOUNT,
-    BALANCE,
-    TRANSACTION,
-    PAYMENT
+import lombok.Data;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.util.Currency;
+
+@Data
+@Embeddable
+public class AisAccountCurrency {
+    @Column(name = "currency", nullable = false)
+    private Currency currency;
+
+    public AisAccountCurrency(){}
+
+    public AisAccountCurrency(Currency currency) {
+        this.currency = currency;
+    }
 }
