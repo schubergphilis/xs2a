@@ -19,5 +19,9 @@ package de.adorsys.consent.consentmanagement.repository;
 import de.adorsys.consent.consentmanagement.domain.AisConsent;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 public interface AisConsentRepository extends CrudRepository<AisConsent, Long> {
+
+    Optional<AisConsent> findAisConsentByExternalId(String externalId);
 }

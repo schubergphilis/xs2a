@@ -17,6 +17,8 @@
 package de.adorsys.consent.consentmanagement.web;
 
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiCreateConsentRequest;
+import de.adorsys.consent.consentmanagement.domain.AisConsent;
+import de.adorsys.consent.consentmanagement.domain.AisConsentStatus;
 import de.adorsys.consent.consentmanagement.service.AisConsentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,12 +33,26 @@ public class AisConsentController {
 
     @PostMapping(path = "/create")
     public ResponseEntity<String> create(@RequestBody SpiCreateConsentRequest request,
-                                             @RequestParam(required = false) String psuId,
-                                             @RequestParam(required = false) String tppId,
-                                             @RequestParam(required = false) boolean withBalance,
-                                             @RequestParam(required = false) boolean tppRedirectPreferred) {
+                                         @RequestParam(required = false) String psuId,
+                                         @RequestParam(required = false) String tppId,
+                                         @RequestParam(required = false) boolean withBalance,
+                                         @RequestParam(required = false) boolean tppRedirectPreferred) {
         return aisConsentService.createConsent(request, psuId, tppId, withBalance)
-            .map(consentId -> new ResponseEntity<>(consentId, HttpStatus.CREATED))
-            .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+                   .map(consentId -> new ResponseEntity<>(consentId, HttpStatus.CREATED))
+                   .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+    @GetMapping(path = "/{consent-id}/status")
+    public ResponseEntity<AisConsentStatus> getAccountConsentsStatusById(@PathVariable("consent-id") String consentId) {
+        return aisConsentService.getConsentStatusById(consentId)
+                   .map(status -> new ResponseEntity<>(status, HttpStatus.OK))
+                   .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
+    }
+
+    @PostMapping(path = "/{consent-id}/status/revoke")
+    public ResponseEntity<AisConsent> setRevokeStatusById(@PathVariable("consent-id") String consentId) {
+        return aisConsentService.updateConsentStatusById(consentId, AisConsentStatus.REVOKED_BY_PSU)
+                   .map(con -> new ResponseEntity<>(con, HttpStatus.OK))
+                   .orElse(new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 }

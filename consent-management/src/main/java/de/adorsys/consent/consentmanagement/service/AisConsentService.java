@@ -20,10 +20,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiAccountAccess;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiAccountAccessType;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiCreateConsentRequest;
-import de.adorsys.consent.consentmanagement.domain.AisAccount;
-import de.adorsys.consent.consentmanagement.domain.AisConsent;
-import de.adorsys.consent.consentmanagement.domain.AisConsentStatus;
-import de.adorsys.consent.consentmanagement.domain.TypeAccess;
+import de.adorsys.consent.consentmanagement.domain.*;
 import de.adorsys.consent.consentmanagement.repository.AisConsentRepository;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -34,17 +31,17 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.ofNullable;
 
 @Service
 @RequiredArgsConstructor
 public class AisConsentService {
     private final AisConsentRepository aisConsentRepository;
 
-    public Optional<String> createConsent(SpiCreateConsentRequest request, String psuId, String tppId, boolean withBalance){
+    public Optional<String> createConsent(SpiCreateConsentRequest request, String psuId, String tppId, boolean withBalance) {
         AisConsent consent = new AisConsent();
         consent.setExternalId(UUID.randomUUID().toString());
         consent.setConsentStatus(AisConsentStatus.RECEIVED);
+        consent.setConsentType(ConsentType.AIS);
         consent.setFrequencyPerDay(request.getFrequencyPerDay());
         consent.setUsageCounter(request.getFrequencyPerDay());
         consent.setRequestDate(LocalDateTime.now());
@@ -59,14 +56,34 @@ public class AisConsentService {
         return Optional.of(consent.getExternalId());
     }
 
+    public Optional<AisConsentStatus> getConsentStatusById(String consentId) {
+        return getAisConsentById(consentId)
+                   .map(AisConsent::getConsentStatus);
+    }
+
+    public Optional<AisConsent> updateConsentStatusById(String consentId, AisConsentStatus status) {
+        return getAisConsentById(consentId)
+                   .map(con -> setStatusAndSaveConsent(con, status));
+    }
+
+    private AisConsent setStatusAndSaveConsent(AisConsent consent, AisConsentStatus status) {
+        consent.setConsentStatus(status);
+        return aisConsentRepository.save(consent);
+    }
+
+    private Optional<AisConsent> getAisConsentById(String consentId) {
+        return Optional.ofNullable(consentId)
+                   .flatMap(aisConsentRepository::findAisConsentByExternalId);
+    }
+
     private AccountInfoDetail buildAccountInfoDetail(SpiAccountAccess access) {
         List<SpiAccountReference> accounts = access.getAccounts();
         List<SpiAccountReference> balances = access.getBalances();
         List<SpiAccountReference> transactions = access.getTransactions();
 
-        // TODO check
-        SpiAccountAccessType allPsd2 = access.getAllPsd2();
-        SpiAccountAccessType availableAccounts = access.getAvailableAccounts();
+
+        SpiAccountAccessType allPsd2 = access.getAllPsd2();  //NOPMD TODO check
+        SpiAccountAccessType availableAccounts = access.getAvailableAccounts(); //NOPMD TODO check
 
         AccountInfoDetail info = new AccountInfoDetail();
         fillAccountInfoDetail(accounts, info, TypeAccess.ACCOUNT);
@@ -81,10 +98,10 @@ public class AisConsentService {
 
     private List<AisAccount> buildAccounts(AccountInfoDetail info) {
         return info.getIbansAccess()
-            .entrySet()
-            .stream()
-            .map(e -> buildAccount(e.getKey(), e.getValue()))
-            .collect(Collectors.toList());
+                   .entrySet()
+                   .stream()
+                   .map(e -> buildAccount(e.getKey(), e.getValue()))
+                   .collect(Collectors.toList());
     }
 
     private AisAccount buildAccount(String iban, AccountInfoDetail.InfoDetail info) {
@@ -99,9 +116,9 @@ public class AisConsentService {
     class AccountInfoDetail {
         private Map<String, InfoDetail> ibansAccess = new HashMap<>();
 
-        public void addIbanAccess(String iban, Currency currency, TypeAccess typeAccess){
+        public void addIbanAccess(String iban, Currency currency, TypeAccess typeAccess) {
             InfoDetail detail = ibansAccess.get(iban);
-            if(detail == null){
+            if (detail == null) {
                 detail = new InfoDetail();
                 ibansAccess.put(iban, detail);
             }
@@ -115,15 +132,15 @@ public class AisConsentService {
             private Set<TypeAccess> accesses = new HashSet<>();
             private Set<Currency> currencies = new HashSet<>();
 
-            public void addAccess(TypeAccess typeAccess){
+            public void addAccess(TypeAccess typeAccess) {
                 accesses.add(typeAccess);
-                if(EnumSet.of(TypeAccess.BALANCE, TypeAccess.TRANSACTION).contains(typeAccess)){
+                if (EnumSet.of(TypeAccess.BALANCE, TypeAccess.TRANSACTION).contains(typeAccess)) {
                     accesses.add(TypeAccess.ACCOUNT);
                 }
             }
 
-            public void addCurrency(Currency currency){
-                ofNullable(currency).ifPresent(c -> currencies.add(c));
+            public void addCurrency(Currency currency) {
+                Optional.ofNullable(currency).ifPresent(c -> currencies.add(c));
             }
         }
     }
