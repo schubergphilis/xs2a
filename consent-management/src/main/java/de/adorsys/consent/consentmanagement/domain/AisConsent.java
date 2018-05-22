@@ -49,11 +49,11 @@ public class AisConsent {
     @Column(name = "tpp_id", nullable = false)
     private String tppId;
 
-    @Column(name = "consent_status", nullable = false, insertable = false, updatable = false)
+    @Column(name = "consent_status", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private AisConsentStatus consentStatus;
 
-    @Column(name = "consent_status", nullable = false)
+    @Column(name = "consent_type", nullable = false)
     @Enumerated(value = EnumType.STRING)
     private ConsentType consentType = ConsentType.AIS;
 
