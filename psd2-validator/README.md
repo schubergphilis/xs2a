@@ -21,9 +21,9 @@ In some case, some ASPSP may need to verify signature of the incoming TPP reques
 TppSignatureValidator.verifySignature(signature, encodedCert, headers) -> true | false
 
 ```
-signature is the signature included in the request
-encodedCert is the certificate used to sign
-headers is the map of headers request, the header variable name is the key and the contain is the value.
+- signature is the signature included in the request
+- encodedCert is the certificate used to sign
+- headers is the map of headers request, the header variable name is the key and the contain is the value.
 
 ## Role Validator
 XS2A must be able to check if each TPP incoming request should be processed 
