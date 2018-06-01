@@ -16,13 +16,13 @@
 
 package de.adorsys.aspsp.xs2a.spi.domain.consent.ais;
 
-import lombok.Data;
+import lombok.Value;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Data
+@Value
 public class AvailableAccessRequest {
     private String consentId;
     private Map<String, Set<AccessAccountInfo>> accountsAccesses = new HashMap<>();

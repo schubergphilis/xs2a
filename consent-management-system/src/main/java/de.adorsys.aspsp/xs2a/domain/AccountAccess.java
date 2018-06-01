@@ -28,7 +28,7 @@ import java.util.Currency;
 @Data
 @Embeddable
 public class AccountAccess {
-    @Column(name = "currency", nullable = false, length = 5)
+    @Column(name = "currency", nullable = false, length = 3)
     private Currency currency;
 
     @Column(name = "type_access", nullable = false, length = 15)

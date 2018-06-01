@@ -17,11 +17,11 @@
 package de.adorsys.aspsp.xs2a.spi.domain.consent.ais;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
+import lombok.Value;
 
 import java.time.LocalDateTime;
 
-@Data
+@Value
 public class AisConsentRequest {
     private String psuId;
     private String tppId;
