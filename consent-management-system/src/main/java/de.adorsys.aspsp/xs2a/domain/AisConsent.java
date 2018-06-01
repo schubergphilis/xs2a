@@ -55,7 +55,7 @@ public class AisConsent {
     @Column(name = "psu_id")
     private String psuId;
 
-    @Column(name = "tpp_id", nullable = false)
+    @Column(name = "tpp_id")
     private String tppId;
 
     @Column(name = "consent_status", nullable = false)

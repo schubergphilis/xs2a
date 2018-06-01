@@ -32,7 +32,7 @@ public class AisAccount {
     @SequenceGenerator(name="ais_account_generator", sequenceName = "ais_account_id_seq")
     private Long id;
 
-    @Column(name = "iban", nullable = false)
+    @Column(name = "iban", nullable = false, length = 34)
     private String iban;
 
     @ElementCollection
