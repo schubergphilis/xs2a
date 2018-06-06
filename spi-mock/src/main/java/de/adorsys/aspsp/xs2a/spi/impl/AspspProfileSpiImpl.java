@@ -20,7 +20,6 @@ import de.adorsys.aspsp.xs2a.spi.config.RemoteSpiUrls;
 import de.adorsys.aspsp.xs2a.spi.service.AspspProfileSpi;
 import lombok.AllArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
