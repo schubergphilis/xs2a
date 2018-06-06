@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service.validator;
 
 
+import de.adorsys.aspsp.xs2a.domain.MessageCode;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
@@ -40,9 +41,6 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static de.adorsys.aspsp.xs2a.domain.MessageCode.PARAMETER_NOT_SUPPORTED;
-import static de.adorsys.aspsp.xs2a.domain.MessageCode.PRODUCT_UNKNOWN;
 
 @Log4j
 @Service
@@ -118,7 +116,6 @@ public class RequestValidatorService {
     }
 
     private Map<String, String> getRequestHeadersMap(HttpServletRequest request) {
-
         Map<String, String> requestHeaderMap = new HashMap<>();
         if (request == null) {
             return requestHeaderMap;
@@ -154,19 +151,19 @@ public class RequestValidatorService {
         return Optional.ofNullable(paymentProduct)
                    .flatMap(PaymentProduct::getByCode)
                    .map(this::getViolationMapForPaymentProduct)
-                   .orElse(Collections.singletonMap(PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct));
+                   .orElse(Collections.singletonMap(MessageCode.PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct));
     }
 
     private Map<String, String> getViolationMapForPaymentProduct(PaymentProduct paymentProduct) {
         return isPaymentProductAvailable(paymentProduct)
                    ? Collections.emptyMap()
-                   : Collections.singletonMap(PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct.getCode());
+                   : Collections.singletonMap(MessageCode.PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct.getCode());
     }
 
     private Map<String, String> getViolationMapForPaymentType(PaymentType paymentType) {
         return isPaymentTypeAvailable(paymentType)
                    ? Collections.emptyMap()
-                   : Collections.singletonMap(PARAMETER_NOT_SUPPORTED.getName(), "Wrong payment type: " + paymentType.getValue());
+                   : Collections.singletonMap(MessageCode.PARAMETER_NOT_SUPPORTED.getName(), "Wrong payment type: " + paymentType.getValue());
     }
 
     private boolean isPaymentProductAvailable(PaymentProduct paymentProduct) {
