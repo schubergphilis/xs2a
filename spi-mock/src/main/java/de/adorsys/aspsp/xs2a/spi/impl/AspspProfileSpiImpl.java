@@ -36,14 +36,14 @@ public class AspspProfileSpiImpl implements AspspProfileSpi {
     @Override
     public List<String> getAvailablePaymentProducts() {
         return restTemplate.exchange(
-            remoteSpiUrls.getAvailablePaymentProducts(), HttpMethod.GET, new HttpEntity<>(null), new ParameterizedTypeReference<List<String>>() {
+            remoteSpiUrls.getAvailablePaymentProducts(), HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {
             }).getBody();
     }
 
     @Override
     public List<String> getAvailablePaymentTypes() {
         return restTemplate.exchange(
-            remoteSpiUrls.getAvailablePaymentTypes(), HttpMethod.GET, new HttpEntity<>(null), new ParameterizedTypeReference<List<String>>() {
+            remoteSpiUrls.getAvailablePaymentTypes(), HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {
             }).getBody();
     }
 }
