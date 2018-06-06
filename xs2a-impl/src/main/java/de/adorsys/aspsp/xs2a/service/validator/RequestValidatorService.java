@@ -73,6 +73,20 @@ public class RequestValidatorService {
         return violationMap;
     }
 
+    public Map<String, String> getRequestHeaderViolationMap(HttpServletRequest request, Object handler) {
+        Map<String, String> requestHeadersMap = getRequestHeadersMap(request);
+
+        RequestHeader headerImpl = HeadersFactory.getHeadersImpl(requestHeadersMap, ((HandlerMethod) handler).getBeanType());
+
+        if (headerImpl instanceof ErrorMessageHeaderImpl) {
+            return Collections.singletonMap("Wrong header arguments: ", ((ErrorMessageHeaderImpl) headerImpl).getErrorMessage());
+        }
+
+        Map<String, String> requestHeaderViolationsMap = validator.validate(headerImpl).stream()
+                                                             .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage));
+
+        return requestHeaderViolationsMap;
+    }
     public Map<String, String> getRequestParametersViolationMap(HttpServletRequest request, Object handler) {
 
         Map<String, String> requestParameterMap = getRequestParametersMap(request);
@@ -101,22 +115,6 @@ public class RequestValidatorService {
         return Optional.ofNullable(classMap.get(((HandlerMethod) handler).getBeanType()))
                    .map(this::getViolationMapForPaymentType)
                    .orElse(Collections.emptyMap());
-    }
-
-    public Map<String, String> getRequestHeaderViolationMap(HttpServletRequest request, Object handler) {
-
-        Map<String, String> requestHeadersMap = getRequestHeadersMap(request);
-
-        RequestHeader headerImpl = HeadersFactory.getHeadersImpl(requestHeadersMap, ((HandlerMethod) handler).getBeanType());
-
-        if (headerImpl instanceof ErrorMessageHeaderImpl) {
-            return Collections.singletonMap("Wrong header arguments: ", ((ErrorMessageHeaderImpl) headerImpl).getErrorMessage());
-        }
-
-        Map<String, String> requestHeaderViolationsMap = validator.validate(headerImpl).stream()
-                                                             .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage));
-
-        return requestHeaderViolationsMap;
     }
 
     private Map<String, String> getRequestHeadersMap(HttpServletRequest request) {
