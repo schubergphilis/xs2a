@@ -78,4 +78,13 @@ public class AspspProfileController {
     public ResponseEntity<String> getScaApproach() {
         return new ResponseEntity<>(aspspProfileService.getScaApproach(), HttpStatus.OK);
     }
+
+    @GetMapping(path = "/http-signature")
+    @ApiOperation(value = "Reads http signature value", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = String.class),
+        @ApiResponse(code = 400, message = "Bad request")})
+    public ResponseEntity<Boolean> getHttpSignature() {
+        return new ResponseEntity<>(aspspProfileService.isHttpSignature(), HttpStatus.OK);
+    }
 }

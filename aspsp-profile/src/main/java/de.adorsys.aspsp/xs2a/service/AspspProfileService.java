@@ -71,4 +71,12 @@ public class AspspProfileService {
     public int getMinFrequencyPerDay(int tppFrequency) {
         return Math.min(Math.abs(tppFrequency), profileConfiguration.getFrequencyPerDay());
     }
+
+    public boolean isHttpSignature() {
+        return profileConfiguration.isHttpSignature();
+    }
+
+    public void updateHttpSignature(boolean httpSignature) {
+        profileConfiguration.setHttpSignature(httpSignature);
+    }
 }

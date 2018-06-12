@@ -38,6 +38,7 @@ public class ProfileConfiguration {
     private List<String> availablePaymentProducts;
     private List<String> availablePaymentTypes;
     private String scaApproach;
+    private boolean httpSignature;
 
     @PostConstruct
     private void addNecessaryPaymentTypesByDefault() { //NOPMD It is necessary for set single payment available bu default

@@ -86,4 +86,14 @@ public class AspspProfileUpdateController {
         aspspProfileService.updateScaApproach(scaApproach);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PutMapping(path = "/http-signature")
+    @ApiOperation(value = "Updates http signature for TPP. Only for DEBUG!", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = String.class),
+        @ApiResponse(code = 400, message = "Bad request")})
+    public ResponseEntity<Void> updateHttpSignature(@RequestBody boolean httpSignature) {
+        aspspProfileService.updateHttpSignature(httpSignature);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
