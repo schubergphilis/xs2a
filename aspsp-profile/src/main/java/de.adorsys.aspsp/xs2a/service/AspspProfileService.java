@@ -72,11 +72,11 @@ public class AspspProfileService {
         return Math.min(Math.abs(tppFrequency), profileConfiguration.getFrequencyPerDay());
     }
 
-    public boolean isHttpSignature() {
-        return profileConfiguration.isHttpSignature();
+    public boolean isTtpSignature() {
+        return profileConfiguration.isTtpSignature();
     }
 
-    public void updateHttpSignature(boolean httpSignature) {
-        profileConfiguration.setHttpSignature(httpSignature);
+    public void updateTtpSignature(boolean ttpSignature) {
+        profileConfiguration.setTtpSignature(ttpSignature);
     }
 }

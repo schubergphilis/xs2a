@@ -38,7 +38,12 @@ public class ProfileConfiguration {
     private List<String> availablePaymentProducts;
     private List<String> availablePaymentTypes;
     private String scaApproach;
-    private boolean httpSignature;
+    /*
+     * A signature of the request by the TPP on application level.
+     * If the value is `true`, the signature is mandated by ASPSP.
+     * If the value is `false`, the signature can be omitted.
+     */
+    private boolean ttpSignature;
 
     @PostConstruct
     private void addNecessaryPaymentTypesByDefault() { //NOPMD It is necessary for set single payment available bu default

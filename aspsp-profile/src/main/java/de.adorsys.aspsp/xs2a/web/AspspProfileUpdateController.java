@@ -87,13 +87,13 @@ public class AspspProfileUpdateController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(path = "/http-signature")
-    @ApiOperation(value = "Updates http signature for TPP. Only for DEBUG!", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @PutMapping(path = "/ttp-signature")
+    @ApiOperation(value = "Updates signature of the request by the TPP. Only for DEBUG!", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = String.class),
         @ApiResponse(code = 400, message = "Bad request")})
-    public ResponseEntity<Void> updateHttpSignature(@RequestBody boolean httpSignature) {
-        aspspProfileService.updateHttpSignature(httpSignature);
+    public ResponseEntity<Void> updateTtpSignature(@RequestBody boolean ttpSignature) {
+        aspspProfileService.updateTtpSignature(ttpSignature);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
