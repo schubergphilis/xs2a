@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "api/v1/periodic-payments/{payment-product}")
-@Api(value = "api/v1/periodic-payments/{payment-product}", tags = "PISP, Periodic Payments", description = "Orders for periodic payments")
+@RequestMapping(path = "periodic-payments/{payment-product}")
+@Api(value = "periodic-payments/{payment-product}", tags = "PISP, Periodic Payments", description = "Orders for periodic payments")
 public class PeriodicPaymentsController {
     private final PaymentService paymentService;
     private final ResponseMapper responseMapper;

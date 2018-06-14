@@ -30,8 +30,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "api/v1/payments/{payment-product}")
-@Api(value = "api/v1/payments/{payment-product}", tags = "PISP, Payments", description = "Provides access to the PIS")
+@RequestMapping(path = "payments/{payment-product}")
+@Api(value = "payments/{payment-product}", tags = "PISP, Payments", description = "Provides access to the PIS")
 public class PaymentInitiationController {
     private final ResponseMapper responseMapper;
     private final PaymentService paymentService;

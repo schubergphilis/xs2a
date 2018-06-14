@@ -31,8 +31,8 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "api/v1/accounts")
-@Api(value = "api/v1/accounts", tags = "AISP, Accounts", description = "Provides access to the Psu account")
+@RequestMapping(path = "accounts")
+@Api(value = "accounts", tags = "AISP, Accounts", description = "Provides access to the Psu account")
 public class AccountController {
     private final AccountService accountService;
     private final ResponseMapper responseMapper;

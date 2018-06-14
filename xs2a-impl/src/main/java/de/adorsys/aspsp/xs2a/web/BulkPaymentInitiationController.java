@@ -30,8 +30,8 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "api/v1/bulk-payments/{payment-product}")
-@Api(value = "api/v1/consents", tags = "PISP, Bulk payment initiation", description = "Payment Initiation for Bulk Payments and Multiple Payments")
+@RequestMapping(path = "bulk-payments/{payment-product}")
+@Api(value = "bulk-payments/{payment-product}", tags = "PISP, Bulk payment initiation", description = "Payment Initiation for Bulk Payments and Multiple Payments")
 public class BulkPaymentInitiationController {
     private final ResponseMapper responseMapper;
     private final PaymentService paymentService;

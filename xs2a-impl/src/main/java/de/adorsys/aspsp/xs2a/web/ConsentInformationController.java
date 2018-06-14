@@ -34,8 +34,8 @@ import javax.validation.Valid;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@RequestMapping(path = "api/v1/consents")
-@Api(value = "api/v1/consents", tags = "AISP, Consents", description = "Provides access to the Psu Consents")
+@RequestMapping(path = "consents")
+@Api(value = "consents", tags = "AISP, Consents", description = "Provides access to the Psu Consents")
 public class ConsentInformationController {
     private final ConsentService consentService;
     private final ResponseMapper responseMapper;
