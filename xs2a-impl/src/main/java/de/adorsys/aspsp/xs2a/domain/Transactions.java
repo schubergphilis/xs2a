@@ -17,10 +17,11 @@
 package de.adorsys.aspsp.xs2a.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import de.adorsys.aspsp.xs2a.component.JsonDateDeserializer;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.code.BankTransactionCode;
 import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
-import de.adorsys.aspsp.xs2a.web.util.JsonFormatDateUTC;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -50,11 +51,11 @@ public class Transactions {
     private String creditorId;
 
     @ApiModelProperty(value = "Booking Date", example = "2017-01-01")
-    @JsonFormatDateUTC
+    @JsonDeserialize(using = JsonDateDeserializer.class)
     private Instant bookingDate;
 
     @ApiModelProperty(value = "Value Date", example = "2017-01-01")
-    @JsonFormatDateUTC
+    @JsonDeserialize(using = JsonDateDeserializer.class)
     private Instant valueDate;
 
     @ApiModelProperty(value = "Amount", required = true)

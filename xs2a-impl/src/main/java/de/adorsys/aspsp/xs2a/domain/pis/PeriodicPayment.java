@@ -17,7 +17,7 @@
 package de.adorsys.aspsp.xs2a.domain.pis;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import de.adorsys.aspsp.xs2a.component.CustomDeserializer;
+import de.adorsys.aspsp.xs2a.component.JsonDateDeserializer;
 import de.adorsys.aspsp.xs2a.domain.code.FrequencyCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -32,14 +32,14 @@ import java.time.Instant;
 public class PeriodicPayment extends SinglePayments {
 
     @ApiModelProperty(name = "startDate", required = true, example = "2017-03-03")
-    @JsonDeserialize(using = CustomDeserializer.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
     private Instant startDate;
 
     @ApiModelProperty(name = "executionRule", required = false, example = "preceeding")
     private String executionRule;
 
     @ApiModelProperty(name = "endDate", required = false, example = "2018-03-03")
-    @JsonDeserialize(using = CustomDeserializer.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
     private Instant endDate;
 
     @ApiModelProperty(name = "frequency", required = true, example = "ANNUAL")

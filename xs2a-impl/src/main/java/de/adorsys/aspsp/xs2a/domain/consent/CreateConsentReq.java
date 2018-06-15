@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.domain.consent;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import de.adorsys.aspsp.xs2a.component.CustomDeserializer;
+import de.adorsys.aspsp.xs2a.component.JsonDateDeserializer;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -40,7 +40,7 @@ public class CreateConsentReq {
     private boolean recurringIndicator;
 
     @ApiModelProperty(value = "This parameter is requesting a valid until date for the requested consent. The content is the local ASPSP date in ISODate Format", required = true, example = "2017-10-30")
-    @JsonDeserialize(using = CustomDeserializer.class)
+    @JsonDeserialize(using = JsonDateDeserializer.class)
     @NotNull
     private Instant validUntil;
 

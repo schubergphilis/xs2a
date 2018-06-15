@@ -10,8 +10,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-public class CustomDeserializer extends JsonDeserializer<Instant> {
-    
+public class JsonDateDeserializer extends JsonDeserializer<Instant> {
+
     @Override
     public Instant deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         LocalDate localDate = LocalDate.parse(p.getText());
