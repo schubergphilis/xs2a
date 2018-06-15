@@ -27,6 +27,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.Currency;
 import java.util.Date;
 import java.util.List;
@@ -67,8 +68,8 @@ public class TransactionController {
     @ApiOperation(value = "", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @GetMapping(path = "/{iban}/{currency}")
     public ResponseEntity<List<SpiTransaction>> readTransactionsByPeriod(@PathVariable("iban") String iban, @PathVariable("currency") Currency currency,
-                                                                         @RequestParam(value = "dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateFrom,
-                                                                         @RequestParam(value = "dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateTo) {
+                                                                         @RequestParam(value = "dateFrom") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant dateFrom,
+                                                                         @RequestParam(value = "dateTo") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Instant dateTo) {
         List<SpiTransaction> response = transactionService.getTransactionsByPeriod(iban, currency, dateFrom, dateTo);
         return CollectionUtils.isEmpty(response)
                    ? ResponseEntity.notFound().build()

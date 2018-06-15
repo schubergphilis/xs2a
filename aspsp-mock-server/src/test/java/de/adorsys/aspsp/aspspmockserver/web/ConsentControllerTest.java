@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -104,6 +104,6 @@ public class ConsentControllerTest {
         return new SpiAccountConsent(
             consentId,
             new SpiAccountAccess(),
-            false, new Date(), 4, new Date(), SpiConsentStatus.VALID,true,false);
+            false, Instant.now(), 4, Instant.now(), SpiConsentStatus.VALID,true,false);
     }
 }

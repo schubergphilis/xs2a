@@ -18,13 +18,13 @@ package de.adorsys.aspsp.xs2a.spi.domain.payment;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 public class SpiPeriodicPayment extends SpiSinglePayments {
 
-    private Date startDate;
-    private Date endDate;
+    private Instant startDate;
+    private Instant endDate;
     private String executionRule;
     private String frequency; // TODO consider using an enum similar to FrequencyCode based on the the "EventFrequency7Code" of ISO 20022
     private int dayOfExecution; //Day here max 31

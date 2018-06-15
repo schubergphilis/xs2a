@@ -71,7 +71,7 @@ public class AccountControllerTest {
         when(accountService.getAccountDetailsList(anyString(), anyBoolean(), anyBoolean())).thenReturn(createAccountDetailsList(ACCOUNT_DETAILS_SOURCE));
         ResponseObject<List<Balances>> balances = readBalances();
         when(accountService.getBalances(anyString(),anyString(), anyBoolean())).thenReturn(balances);
-        when(accountService.getAccountReport(any(String.class), any(String.class), any(Date.class), any(Date.class), any(String.class), anyBoolean(), any(), anyBoolean(), anyBoolean())).thenReturn(createAccountReport(ACCOUNT_REPORT_SOURCE));
+        when(accountService.getAccountReport(any(String.class), any(String.class), any(Instant.class), any(Instant.class), any(String.class), anyBoolean(), any(), anyBoolean(), anyBoolean())).thenReturn(createAccountReport(ACCOUNT_REPORT_SOURCE));
         when(accountService.getAccountDetails(anyString(), any(), anyBoolean(), anyBoolean())).thenReturn(getAccountDetails());
     }
 

@@ -20,7 +20,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @AllArgsConstructor
@@ -28,7 +28,7 @@ import java.util.Date;
 public class SpiCreateConsentRequest {
     private SpiAccountAccess access;
     private boolean recurringIndicator;
-    private Date validUntil;
+    private Instant validUntil;
     private int frequencyPerDay;
     private boolean combinedServiceIndicator;
 }

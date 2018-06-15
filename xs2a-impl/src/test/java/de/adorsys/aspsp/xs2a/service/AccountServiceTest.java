@@ -36,6 +36,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.*;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageCode.CONSENT_INVALID;
@@ -57,8 +58,7 @@ public class AccountServiceTest {
     private final String CONSENT_ID_WOB = "333222111";
     private final String WRONG_CONSENT_ID = "Wromg consent id";
     private final String TRANSACTION_ID = "0001";
-    private final String WRONG_TRANSACTION_ID = "Wrong transaction id";
-    private final Date DATE = new Date(123456789L);
+    private final Instant DATE = Instant.parse("2019-12-03T10:15:30.00Z");
 
     @Autowired
     private AccountService accountService;

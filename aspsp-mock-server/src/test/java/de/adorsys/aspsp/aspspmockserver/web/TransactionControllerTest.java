@@ -31,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.Date;
@@ -42,7 +43,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class TransactionControllerTest {
-    private static Date DATE = new Date(1122334455);
+    private static Instant DATE = Instant.parse("2019-12-03T10:15:30.00Z");
     private static final String TRANSACTION_ID = "00001";
     private static final String WRONG_TRANSACTION_ID = "00002";
     private static final String IBAN = "DE12345";

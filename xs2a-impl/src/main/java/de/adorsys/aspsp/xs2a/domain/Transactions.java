@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @ApiModel(description = "TransactionsCreditorResponse information", value = "TransactionsCreditorResponse")
@@ -50,11 +50,11 @@ public class Transactions {
 
     @ApiModelProperty(value = "Booking Date", example = "2017-01-01")
     @JsonFormatDateUTC
-    private Date bookingDate;
+    private Instant bookingDate;
 
     @ApiModelProperty(value = "Value Date", example = "2017-01-01")
     @JsonFormatDateUTC
-    private Date valueDate;
+    private Instant valueDate;
 
     @ApiModelProperty(value = "Amount", required = true)
     private Amount amount;

@@ -46,9 +46,9 @@
     "referenceType": "string"
   },
   "remittanceInformationUnstructured": "Ref. Number TELEKOM-1222",
-  "requestedExecutionDate": "2017-01-01",
-  "requestedExecutionTime": "2017-10-25T15:30:35.035Z",
-  "startDate": "2017-03-03",
+  "requestedExecutionDate": "2019-12-03",
+  "requestedExecutionTime": "2019-12-03T10:15:30.00Z",
+  "startDate": "2019-12-03",
   "ultimateCreditor": "Telekom",
   "ultimateDebtor": "Mueller"
 }

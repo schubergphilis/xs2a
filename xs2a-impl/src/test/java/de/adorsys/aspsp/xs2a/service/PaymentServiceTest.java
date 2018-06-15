@@ -16,7 +16,8 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.*;
 import de.adorsys.aspsp.xs2a.domain.code.BICFI;
 import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
@@ -59,6 +60,8 @@ public class PaymentServiceTest {
 
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private JsonConverter jsonConverter;
 
     @MockBean(name = "paymentSpi")
     private PaymentSpi paymentSpi;
@@ -191,7 +194,7 @@ public class PaymentServiceTest {
     }
 
     private PeriodicPayment readPeriodicPayment() throws IOException {
-        return new Gson().fromJson(IOUtils.resourceToString(PERIODIC_PAYMENT_DATA, UTF_8), PeriodicPayment.class);
+        return jsonConverter.toObject(IOUtils.resourceToString(PERIODIC_PAYMENT_DATA, UTF_8), PeriodicPayment.class).get();
     }
 
     private PaymentInitialisationResponse getPaymentInitializationResponse() {
@@ -200,5 +203,4 @@ public class PaymentServiceTest {
         resp.setLinks(new Links());
         return resp;
     }
-
 }

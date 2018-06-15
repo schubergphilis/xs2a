@@ -3,8 +3,8 @@
   "endToEndId": "123456789",
   "mandateId": "12345",
   "creditorId": "12346",
-  "bookingDate": "2017-01-01",
-  "valueDate": "2017-01-01",
+  "bookingDate": "2019-12-03T00:00:00.00Z",
+  "valueDate": "2019-12-03T00:00:00.00Z",
   "spiAmount":
   {
     "currency": "EUR",

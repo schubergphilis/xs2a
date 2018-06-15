@@ -16,6 +16,8 @@
 
 package de.adorsys.aspsp.xs2a.domain.pis;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import de.adorsys.aspsp.xs2a.component.CustomDeserializer;
 import de.adorsys.aspsp.xs2a.domain.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.address.Address;
@@ -28,7 +30,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.Size;
-import java.util.Date;
+import java.time.Instant;
 
 @Data
 @ApiModel(description = "Payment Initialisation Request", value = "SinglePayments")
@@ -76,11 +78,10 @@ public class SinglePayments {
     private Remittance remittanceInformationStructured;
 
     @ApiModelProperty(value = "requested execution date", required = false, example = "2017-01-01")
-    @JsonFormatDateUTC
-    private Date requestedExecutionDate;
+    @JsonDeserialize(using = CustomDeserializer.class)
+    private Instant requestedExecutionDate;
 
-    @ApiModelProperty(value = "requested execution time", required = false, example = "2017-10-25T15:30:35.035Z")
-    @JsonFormatDateTimeUTC
-    private Date requestedExecutionTime;
+    @ApiModelProperty(value = "requested execution time", required = false, example = "2017-10-25T15:30:35.03Z")
+    private Instant requestedExecutionTime;
 
 }

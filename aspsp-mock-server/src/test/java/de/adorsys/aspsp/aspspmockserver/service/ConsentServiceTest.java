@@ -28,8 +28,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.Instant;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class ConsentServiceTest {
-    private static Date DATE = new Date(1122334455);
+    private static Instant DATE = Instant.parse("2019-12-03T10:15:30.00Z");
     private static final String CONSENT_ID = "777-888-999";
     private static final String WRONG_CONSENT_ID = "Wrong consent id";
     private static final String WRONG_ACCOUNT_ID = "Really wrong id";

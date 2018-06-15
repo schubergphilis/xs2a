@@ -35,6 +35,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -109,8 +110,8 @@ public class AccountService {
                          .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
     }
 
-    public ResponseObject<AccountReport> getAccountReport(String consentId, String accountId, Date dateFrom,
-                                                          Date dateTo, String transactionId,
+    public ResponseObject<AccountReport> getAccountReport(String consentId, String accountId, Instant dateFrom,
+                                                          Instant dateTo, String transactionId,
                                                           boolean psuInvolved, BookingStatus bookingStatus, boolean withBalance, boolean deltaList) {
 
         AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId));
@@ -168,14 +169,14 @@ public class AccountService {
             details.getAccountType(), details.getCashAccountType(), details.getBic(), null);
     }
 
-    private AccountReport getAccountReport(String accountId, Date dateFrom, Date dateTo, String transactionId, boolean psuInvolved, boolean withBalance, BookingStatus bookingStatus, Map<String, Set<AccessAccountInfo>> allowedAccountData) {
-        Date dateToChecked = dateTo == null ? new Date() : dateTo; //TODO Migrate Date to Instant. Task #126 https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/126
+    private AccountReport getAccountReport(String accountId, Instant dateFrom, Instant dateTo, String transactionId, boolean psuInvolved, boolean withBalance, BookingStatus bookingStatus, Map<String, Set<AccessAccountInfo>> allowedAccountData) {
+        Instant dateToChecked = dateTo == null ? Instant.now() : dateTo;
         return StringUtils.isBlank(transactionId)
                    ? getAccountReportByPeriod(accountId, dateFrom, dateToChecked, psuInvolved, withBalance, bookingStatus, allowedAccountData)
                    : getAccountReportByTransaction(accountId, transactionId, psuInvolved, withBalance, allowedAccountData);
     }
 
-    private AccountReport getAccountReportByPeriod(String accountId, Date dateFrom, Date dateTo, boolean psuInvolved, boolean withBalance, BookingStatus bookingStatus, Map<String, Set<AccessAccountInfo>> allowedAccountData) {
+    private AccountReport getAccountReportByPeriod(String accountId, Instant dateFrom, Instant dateTo, boolean psuInvolved, boolean withBalance, BookingStatus bookingStatus, Map<String, Set<AccessAccountInfo>> allowedAccountData) {
         validate_accountId_period(accountId, dateFrom, dateTo);
         return getAllowedTransactionsByAccess(readTransactionsByPeriod(accountId, dateFrom, dateTo, psuInvolved, withBalance, bookingStatus), allowedAccountData);
     }
@@ -206,8 +207,8 @@ public class AccountService {
                           && allowedAccountData.get(transaction.getDebtorAccount().getIban()).contains(new AccessAccountInfo(transaction.getAmount().getCurrency().getCurrencyCode(), TypeAccess.TRANSACTION));
     }
 
-    private AccountReport readTransactionsByPeriod(String accountId, Date dateFrom,
-                                                   Date dateTo, boolean psuInvolved, boolean withBalance, BookingStatus bookingStatus) { //NOPMD TODO to be reviewed upon change to v1.1
+    private AccountReport readTransactionsByPeriod(String accountId, Instant dateFrom,
+                                                   Instant dateTo, boolean psuInvolved, boolean withBalance, BookingStatus bookingStatus) { //NOPMD TODO to be reviewed upon change to v1.1
         Optional<AccountReport> result = accountMapper.mapToAccountReport(accountSpi.readTransactionsByPeriod(accountId, dateFrom, dateTo, SpiBookingStatus.valueOf(bookingStatus.name())));
 
         return result.orElseGet(() -> new AccountReport(new Transactions[]{}, new Transactions[]{}));
@@ -222,7 +223,7 @@ public class AccountService {
     }
 
     // Validation
-    private void validate_accountId_period(String accountId, Date dateFrom, Date dateTo) {
+    private void validate_accountId_period(String accountId, Instant dateFrom, Instant dateTo) {
         ValidationGroup fieldValidator = new ValidationGroup();
         fieldValidator.setAccountId(accountId);
         fieldValidator.setDateFrom(dateFrom);

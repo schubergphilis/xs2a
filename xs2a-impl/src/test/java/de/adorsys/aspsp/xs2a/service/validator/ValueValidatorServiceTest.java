@@ -24,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.validation.ValidationException;
+import java.time.Instant;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -33,8 +34,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class ValueValidatorServiceTest {
     private static final String ACCOUNT_ID = "11111111";
     private static final String TRANSACTION_ID = "22222222";
-    private static final Date DATE_FROM = new Date();
-    private static final Date DATE_TO = new Date();
+    private static final Instant DATE_FROM = Instant.parse("2019-12-03T10:15:30.00Z");
+    private static final Instant DATE_TO = Instant.parse("2019-12-03T10:15:30.00Z");
 
     @Autowired
     private ValueValidatorService valueValidatorService;

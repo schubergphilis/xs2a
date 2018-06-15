@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -109,19 +110,6 @@ public class SpiAccountConsentModelsTest {
     }
 
     @Test
-    public void createConsentAllAccountsAvailableReq_jsonTest() throws IOException {
-        //Given:
-        String requestStringJson = IOUtils.resourceToString(ALL_ACCOUNTS_AVAILABLE_REQ_PATH, UTF_8);
-        CreateConsentReq expectedRequest = getAicAvailableAccountsRequest();
-
-        //When:
-        CreateConsentReq actualRequest = mapper.readValue(requestStringJson, CreateConsentReq.class);
-
-        //Then:
-//        assertThat(actualRequest).isEqualTo(expectedRequest);
-    }
-
-    @Test
     public void createConsentNoDedicateAccountReq_jsonTest() throws IOException {
         //Given:
         String requestStringJson = IOUtils.resourceToString(NO_DEDICATE_REQ_PATH, UTF_8);
@@ -141,21 +129,8 @@ public class SpiAccountConsentModelsTest {
         CreateConsentReq aicRequestObj = new CreateConsentReq();
         aicRequestObj.setAccess(accountAccess);
         aicRequestObj.setRecurringIndicator(true);
-        aicRequestObj.setValidUntil(getDateFromDateString("2017-11-01"));
+        aicRequestObj.setValidUntil(Instant.parse("2019-12-03T00:00:00.00Z"));
         aicRequestObj.setFrequencyPerDay(4);
-
-        return aicRequestObj;
-    }
-
-    private CreateConsentReq getAicAvailableAccountsRequest() {
-
-        AccountAccess accountAccess = new AccountAccess(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), AccountAccessType.ALL_ACCOUNTS, null);
-
-        CreateConsentReq aicRequestObj = new CreateConsentReq();
-        aicRequestObj.setAccess(accountAccess);
-        aicRequestObj.setRecurringIndicator(false);
-        aicRequestObj.setValidUntil(getDateFromDateString("2017-08-06"));
-        aicRequestObj.setFrequencyPerDay(1);
 
         return aicRequestObj;
     }
@@ -186,19 +161,9 @@ public class SpiAccountConsentModelsTest {
         CreateConsentReq aicRequestObj = new CreateConsentReq();
         aicRequestObj.setAccess(accountAccess);
         aicRequestObj.setRecurringIndicator(true);
-        aicRequestObj.setValidUntil(getDateFromDateString("2017-11-01"));
+        aicRequestObj.setValidUntil(Instant.parse("2019-12-03T00:00:00.00Z"));
         aicRequestObj.setFrequencyPerDay(4);
 
         return aicRequestObj;
-    }
-
-    private static Date getDateFromDateString(String dateString) {
-        try {
-            SimpleDateFormat dateFormat = new SimpleDateFormat(ApiDateConstants.DATE_PATTERN);
-            dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-            return dateFormat.parse(dateString);
-        } catch (ParseException e) {
-            return null;
-        }
     }
 }

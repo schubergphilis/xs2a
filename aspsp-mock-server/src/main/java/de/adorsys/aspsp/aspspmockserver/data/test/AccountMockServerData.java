@@ -32,6 +32,7 @@ import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -79,7 +80,7 @@ public class AccountMockServerData {
 
     private SpiTransaction getTransaction(String transactionId, Psu creditor, Psu debtor, BigDecimal amount, Currency currency, String bookingDate, String valueDate) {
         return new SpiTransaction(
-            transactionId, "", "", creditor.getId(), getDateFromString(bookingDate), getDateFromString(valueDate),
+            transactionId, "", "", creditor.getId(), Instant.parse(bookingDate), Instant.parse(valueDate),
             new SpiAmount(currency, amount), getFirstElementName(creditor), getRef(creditor, currency), getFirstElementName(creditor),
             getFirstElementName(debtor), getRef(debtor, currency), getFirstElementName(debtor), "",
             "", "", "");
@@ -100,37 +101,37 @@ public class AccountMockServerData {
             new SpiAccountConsent("AllWB",
                 new SpiAccountAccess(
                     references, references, references, SpiAccountAccessType.ALL_ACCOUNTS, SpiAccountAccessType.ALL_ACCOUNTS),
-                false, new Date(), 100, new Date(), SpiConsentStatus.VALID, true, false)
+                false, Instant.now(), 100, Instant.now(), SpiConsentStatus.VALID, true, false)
         );
         consentRepository.save(
             new SpiAccountConsent("AllWOB",
                 new SpiAccountAccess(
                     references, Collections.emptyList(), Collections.emptyList(), SpiAccountAccessType.ALL_ACCOUNTS, SpiAccountAccessType.ALL_ACCOUNTS),
-                false, new Date(), 100, new Date(), SpiConsentStatus.VALID, true, false)
+                false, Instant.now(), 100, Instant.now(), SpiConsentStatus.VALID, true, false)
         );
 
         consentRepository.save(
             new SpiAccountConsent("Acc1WB",
                 new SpiAccountAccess(
                     Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(0))), Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(0))), Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(0))), null, null),
-                false, new Date(), 100, new Date(), SpiConsentStatus.VALID, true, false)
+                false, Instant.now(), 100, Instant.now(), SpiConsentStatus.VALID, true, false)
         );
         consentRepository.save(
             new SpiAccountConsent("Acc1WOB",
                 new SpiAccountAccess(
                     Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(0))), Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(0))), Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(0))), null, null),
-                false, new Date(), 100, new Date(), SpiConsentStatus.VALID, false, false));
+                false, Instant.now(), 100, Instant.now(), SpiConsentStatus.VALID, false, false));
         consentRepository.save(
             new SpiAccountConsent("Acc2WB",
                 new SpiAccountAccess(
                     Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(1))), Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(1))), Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(1))), null, null),
-                false, new Date(), 100, new Date(), SpiConsentStatus.VALID, true, false)
+                false, Instant.now(), 100, Instant.now(), SpiConsentStatus.VALID, true, false)
         );
         consentRepository.save(
             new SpiAccountConsent("Acc2WOB",
                 new SpiAccountAccess(
                     Collections.singletonList(mapToReferenceFromDetails(accountDetails.get(1))), Collections.emptyList(), Collections.emptyList(), null, null),
-                false, new Date(), 100, new Date(), SpiConsentStatus.VALID, false, false)
+                false, Instant.now(), 100, Instant.now(), SpiConsentStatus.VALID, false, false)
         );
     }
 
@@ -181,8 +182,8 @@ public class AccountMockServerData {
     private SpiAccountBalance getBalance(Currency currency, BigDecimal amount) {
         SpiAccountBalance balance = new SpiAccountBalance();
         balance.setSpiAmount(new SpiAmount(currency, amount));
-        balance.setDate(new Date());
-        balance.setLastActionDateTime(new Date());
+        balance.setDate(Instant.now());
+        balance.setLastActionDateTime(Instant.now());
         return balance;
     }
 
@@ -194,17 +195,5 @@ public class AccountMockServerData {
 
     private SpiAccountReference mapToReferenceFromDetails(SpiAccountDetails details) {
         return new SpiAccountReference(details.getIban(), details.getBban(), details.getPan(), details.getMaskedPan(), details.getMsisdn(), details.getCurrency());
-    }
-
-    private Date getDateFromString(String date) {
-        date = Optional.ofNullable(date).orElse("24/01/2019");
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-        try {
-            return df.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }

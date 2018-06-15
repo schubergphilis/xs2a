@@ -22,9 +22,9 @@
     ]
   },
   "recurringIndicator": "true",
-  "validUntil": "2017-11-01",
+  "validUntil": "2019-12-03T10:00:00.00Z",
   "frequencyPerDay": "4",
-  "lastActionDate": "2017-11-01",
+  "lastActionDate": "2019-12-03T10:00:00.00Z",
   "spiTransactionStatus": "ACCP",
   "spiConsentStatus": "VALID"
 }

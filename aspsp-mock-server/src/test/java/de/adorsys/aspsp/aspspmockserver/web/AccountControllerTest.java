@@ -32,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -258,9 +259,9 @@ public class AccountControllerTest {
 
     private SpiAccountBalance getNewSingleBalances(SpiAmount spiAmount) {
         SpiAccountBalance sb = new SpiAccountBalance();
-        sb.setDate(new Date(1523951451537L));
+        sb.setDate(Instant.parse("2019-12-03T10:15:30.00Z"));
         sb.setSpiAmount(spiAmount);
-        sb.setLastActionDateTime(new Date(1523951451537L));
+        sb.setLastActionDateTime(Instant.parse("2019-12-03T10:15:30.00Z"));
         return sb;
     }
 }

@@ -21,15 +21,15 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiBalances;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiBookingStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiTransaction;
 
+import java.time.Instant;
 import java.util.Collection;
-import java.util.Date;
 import java.util.List;
 
 public interface AccountSpi {
 
     List<SpiBalances> readBalances(String accountId);
 
-    List<SpiTransaction> readTransactionsByPeriod(String accountId, Date dateFrom, Date dateTo, SpiBookingStatus bookingStatus);
+    List<SpiTransaction> readTransactionsByPeriod(String accountId, Instant dateFrom, Instant dateTo, SpiBookingStatus bookingStatus);
 
     List<SpiTransaction> readTransactionsById(String transactionId);
 
