@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.web.util;
+package de.adorsys.aspsp.xs2a.repository;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import de.adorsys.aspsp.xs2a.domain.AisConsentAction;
+import org.springframework.data.repository.CrudRepository;
 
-@JsonFormat(pattern = ApiDateConstants.DATE_TIME_PATTERN, timezone = ApiDateConstants.UTC)
-public @interface JsonFormatDateTimeUTC {
+public interface AisConsentActionRepository extends CrudRepository<AisConsentAction, Long> {
 }

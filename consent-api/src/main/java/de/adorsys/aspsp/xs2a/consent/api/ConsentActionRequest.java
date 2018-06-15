@@ -14,11 +14,19 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain.consent.ais;
+package de.adorsys.aspsp.xs2a.consent.api;
 
-public enum TypeAccess {
-    ACCOUNT,
-    BALANCE,
-    TRANSACTION,
-    PAYMENT
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.util.Set;
+
+@Data
+@AllArgsConstructor
+public class ConsentActionRequest {
+    private String accountId;
+    private String tppId;
+    private String consentId;
+    private ActionStatus actionStatus;
+    private Set<TypeAccess> typeAccess;
 }

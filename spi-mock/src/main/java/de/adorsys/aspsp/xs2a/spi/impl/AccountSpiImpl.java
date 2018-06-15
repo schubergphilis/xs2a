@@ -32,9 +32,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.time.Instant;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 
@@ -67,39 +67,36 @@ public class AccountSpiImpl implements AccountSpi {
     }
 
     @Override
-    public List<SpiTransaction> readTransactionsByPeriod(String accountId, Instant dateFrom, Instant dateTo, SpiBookingStatus bookingStatus) {
-        SpiAccountDetails details = readAccountDetails(accountId);
-
-        return Optional.ofNullable(details)
-                   .map(det -> getTransactionsByPeriod(det.getIban(), det.getCurrency(), dateFrom, dateTo, bookingStatus))
-                   .orElse(Collections.emptyList());
+    public List<SpiTransaction> readTransactionsByPeriod(String iban, Currency currency, Date dateFrom, Date dateTo, SpiBookingStatus bookingStatus) {
+        return getTransactionsByPeriod(iban, currency, dateFrom, dateTo, bookingStatus);
     }
 
-    private List<SpiTransaction> getTransactionsByPeriod(String iban, Currency currency, Instant dateFrom, Instant dateTo, SpiBookingStatus bookingStatus) {
+    private List<SpiTransaction> getTransactionsByPeriod(String iban, Currency currency, Date dateFrom, Date dateTo, SpiBookingStatus bookingStatus) {
         Map<String, String> uriParams = new ObjectHolder<String, String>()
                                             .addValue("iban", iban)
                                             .addValue("currency", currency.toString())
                                             .getValues();
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(remoteSpiUrls.readTransactionsByPeriod())
-                                           .queryParam("dateFrom", dateFrom.atZone(ZoneId.systemDefault()).toLocalDate())
-                                           .queryParam("dateTo", dateTo.atZone(ZoneId.systemDefault()).toLocalDate());
+                                           .queryParam("dateFrom", dateFrom.toInstant().atZone(ZoneId.systemDefault()).toLocalDate())
+                                           .queryParam("dateTo", dateTo.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 
         List<SpiTransaction> spiTransactions = restTemplate.exchange(
             builder.buildAndExpand(uriParams).toUriString(), HttpMethod.GET, null, new ParameterizedTypeReference<List<SpiTransaction>>() {
             }).getBody();
 
-        if (SpiBookingStatus.PENDING.equals(bookingStatus)) {
-            return getFilteredPendingTransactions(spiTransactions);
-        } else if (SpiBookingStatus.BOOKED.equals(bookingStatus)) {
-            return getFilteredBookedTransactions(spiTransactions);
+        Predicate<SpiTransaction> pendingTransactionPredicate = SpiTransaction::isPendingTransaction;
+        if (SpiBookingStatus.PENDING == bookingStatus) {
+            return getFilteredTransactions(spiTransactions, pendingTransactionPredicate);
+        } else if (SpiBookingStatus.BOOKED == bookingStatus) {
+            return getFilteredTransactions(spiTransactions, pendingTransactionPredicate.negate());
         }
         return spiTransactions;
     }
 
     @Override
-    public List<SpiTransaction> readTransactionsById(String transactionId) {
-        return Collections.singletonList(restTemplate.getForObject(remoteSpiUrls.readTransactionById(), SpiTransaction.class, transactionId));
+    public SpiTransaction readTransactionsById(String transactionId) {
+        return restTemplate.getForObject(remoteSpiUrls.readTransactionById(), SpiTransaction.class, transactionId);
     }
 
     @Override
@@ -123,20 +120,11 @@ public class AccountSpiImpl implements AccountSpi {
                    .collect(Collectors.toList());
     }
 
-    private List<SpiTransaction> getFilteredPendingTransactions(List<SpiTransaction> spiTransactions) {
-        return spiTransactions.parallelStream()
-                   .filter(this::isPendingTransaction)
-                   .collect(Collectors.toList());
+    private List<SpiTransaction> getFilteredTransactions(List<SpiTransaction> spiTransactions, Predicate<SpiTransaction> predicate) {
+        return Optional.ofNullable(spiTransactions)
+                   .map(t->t.stream()
+                   .filter(predicate)
+                   .collect(Collectors.toList()))
+            .orElse(Collections.emptyList());
     }
-
-    private List<SpiTransaction> getFilteredBookedTransactions(List<SpiTransaction> spiTransactions) {
-        return spiTransactions.parallelStream()
-                   .filter(transaction -> !isPendingTransaction(transaction))
-                   .collect(Collectors.toList());
-    }
-
-    private boolean isPendingTransaction(SpiTransaction spiTransaction) {
-        return spiTransaction.getBookingDate() == null;
-    }
-
 }

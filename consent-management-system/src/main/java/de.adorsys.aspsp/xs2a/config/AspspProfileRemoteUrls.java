@@ -14,12 +14,23 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain.consent.ais;
+package de.adorsys.aspsp.xs2a.config;
 
-import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@Data
-public class AccountInfo {
-    private String iban;
-    private String currency;
+@Component
+public class AspspProfileRemoteUrls {
+
+    @Value("${aspsp-profile.baseurl:http://localhost:48080/api/v1}")
+    private String aspspProfileBaseUrl;
+
+    /**
+     * Returns URL-string in order to get frequency per day
+     *
+     * @return String
+     */
+    public String getFrequencyPerDay() {
+        return aspspProfileBaseUrl + "/aspsp-profile/frequency-per-day";
+    }
 }

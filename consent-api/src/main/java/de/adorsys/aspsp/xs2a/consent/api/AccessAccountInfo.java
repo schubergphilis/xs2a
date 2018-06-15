@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain.consent.ais;
+package de.adorsys.aspsp.xs2a.consent.api;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.time.Instant;
+import lombok.NoArgsConstructor;
 
 @Data
-public class AisConsentRequest {
-    private String psuId;
-    private String tppId;
-    private int frequencyPerDay;
-    private AisAccountAccessInfo access;
-    private Instant validUntil;
-    private boolean recurringIndicator;
-    private boolean tppRedirectPreferred;
-    private boolean combinedServiceIndicator;
+@AllArgsConstructor
+@NoArgsConstructor
+public class AccessAccountInfo {
+    private String currency;
+    private TypeAccess typeAccess;
 }

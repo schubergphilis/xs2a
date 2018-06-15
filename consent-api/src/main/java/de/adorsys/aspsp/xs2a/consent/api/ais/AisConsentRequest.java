@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.rest.exception;
+package de.adorsys.aspsp.xs2a.consent.api.ais;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
+import lombok.Data;
 
-import java.io.IOException;
+import java.time.Instant;
 
-public class AspspProfileRestTemplateErrorHandler extends DefaultResponseErrorHandler {
-
-    @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
-        HttpStatus statusCode = response.getStatusCode();
-        throw new RestException(statusCode, statusCode.getReasonPhrase());
-    }
+@Data
+public class AisConsentRequest {
+    private String psuId;
+    private String tppId;
+    private int frequencyPerDay;
+    private AisAccountAccessInfo access;
+    private Instant validUntil;
+    private boolean recurringIndicator;
+    private boolean tppRedirectPreferred;
+    private boolean combinedServiceIndicator;
 }

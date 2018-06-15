@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.web.util;
+package de.adorsys.aspsp.xs2a.consent.api;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
-@JsonFormat(pattern = ApiDateConstants.DATE_PATTERN, timezone = ApiDateConstants.UTC)
-public @interface JsonFormatDateUTC {
+@Data
+public class AccountInfo {
+    private String iban;
+    private String currency;
 }
