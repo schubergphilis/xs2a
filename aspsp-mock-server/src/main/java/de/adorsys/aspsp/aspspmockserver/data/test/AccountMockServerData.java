@@ -25,9 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -69,7 +67,7 @@ public class AccountMockServerData {
 
     private SpiTransaction getTransaction(String transactionId, Psu creditor, Psu debtor, BigDecimal amount, Currency currency, String bookingDate, String valueDate) {
         return new SpiTransaction(
-            transactionId, "", "", creditor.getId(), getDateFromString(bookingDate), getDateFromString(valueDate),
+            transactionId, "", "", creditor.getId(), Instant.parse(bookingDate), Instant.parse(valueDate),
             new SpiAmount(currency, amount), getFirstElementName(creditor), getRef(creditor, currency), getFirstElementName(creditor),
             getFirstElementName(debtor), getRef(debtor, currency), getFirstElementName(debtor), "",
             "", "", "");
@@ -132,24 +130,12 @@ public class AccountMockServerData {
     private SpiAccountBalance getBalance(Currency currency, BigDecimal amount) {
         SpiAccountBalance balance = new SpiAccountBalance();
         balance.setSpiAmount(new SpiAmount(currency, amount));
-        balance.setDate(new Date());
-        balance.setLastActionDateTime(new Date());
+        balance.setDate(Instant.now());
+        balance.setLastActionDateTime(Instant.now());
         return balance;
     }
 
     private SpiAccountReference mapToReferenceFromDetails(SpiAccountDetails details) {
         return new SpiAccountReference(details.getIban(), details.getBban(), details.getPan(), details.getMaskedPan(), details.getMsisdn(), details.getCurrency());
-    }
-
-    private Date getDateFromString(String date) {
-        date = Optional.ofNullable(date).orElse("24/01/2019");
-        DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-
-        try {
-            return df.parse(date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 }
