@@ -59,8 +59,8 @@ public class FutureBookingsService {
     private SpiBalances getNewBalance(SpiAccountDetails account, SpiBalances balance) {
         SpiAccountBalance newAccountBalance = new SpiAccountBalance();
         newAccountBalance.setSpiAmount(getNewAmount(account, balance));
-        newAccountBalance.setLastActionDateTime(Instant.parse("2019-12-03T10:15:30.00Z"));
-        newAccountBalance.setDate(Instant.parse("2019-12-03T10:15:30.00Z"));
+        newAccountBalance.setLastActionDateTime(Instant.now());
+        newAccountBalance.setDate(Instant.now());
         balance.setInterimAvailable(newAccountBalance);
         return balance;
     }
