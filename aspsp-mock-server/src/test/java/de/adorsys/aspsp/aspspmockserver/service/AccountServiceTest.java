@@ -47,7 +47,7 @@ public class AccountServiceTest {
     private static final String WRONG_ACCOUNT_ID = "Really wrong id";
     private static final String IBAN = "DE1789232872";
     private static final String WRONG_IBAN = "Wrongest iban ever";
-    private static final Currency EUR = Currency.getInstance("EUR");
+    private static final Instant DATE = Instant.parse("2019-12-03T10:15:30.00Z");
 
     @Autowired
     private AccountService accountService;
@@ -201,9 +201,9 @@ public class AccountServiceTest {
 
     private SpiAccountBalance getNewSingleBalances(SpiAmount spiAmount) {
         SpiAccountBalance sb = new SpiAccountBalance();
-        sb.setDate(Instant.parse("2019-12-03T10:15:30.00Z"));
+        sb.setDate(DATE);
         sb.setSpiAmount(spiAmount);
-        sb.setLastActionDateTime(Instant.parse("2019-12-03T10:15:30.00Z"));
+        sb.setLastActionDateTime(DATE);
         return sb;
     }
 
