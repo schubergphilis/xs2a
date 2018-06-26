@@ -18,16 +18,19 @@ package de.adorsys.aspsp.aspspmockserver.data.test;
 
 import de.adorsys.aspsp.aspspmockserver.repository.PsuRepository;
 import de.adorsys.aspsp.aspspmockserver.repository.TransactionRepository;
-import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
 import de.adorsys.aspsp.xs2a.spi.domain.account.*;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
+import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Currency;
+import java.util.List;
 
 /**
  * AccountMockServerData is used to create test data in DB.
@@ -43,6 +46,7 @@ public class AccountMockServerData {
     private TransactionRepository transactionRepository;
     private List<SpiAccountDetails> accountDetails;
     private List<Psu> psus;
+    private List<String> ALLOWED_PAYMENTS = Collections.singletonList("sepa-credit-transfers");
     private final Currency EUR = Currency.getInstance("EUR");
     private final Currency USD = Currency.getInstance("USD");
 
@@ -86,9 +90,9 @@ public class AccountMockServerData {
 
     private List<Psu> fillPsu() {
         return Arrays.asList(
-            psuRepository.save(new Psu("PSU_001", "test1@gmail.com", Arrays.asList(accountDetails.get(0), accountDetails.get(1), accountDetails.get(2)))),
-            psuRepository.save(new Psu("PSU_002", "test2@gmail.com", Arrays.asList(accountDetails.get(3), accountDetails.get(4)))),
-            psuRepository.save(new Psu("PSU_003", "test3@gmail.com", Arrays.asList(accountDetails.get(5), accountDetails.get(6)))));
+            psuRepository.save(new Psu("PSU_001", "test1@gmail.com", Arrays.asList(accountDetails.get(0), accountDetails.get(1), accountDetails.get(2)), ALLOWED_PAYMENTS)),
+            psuRepository.save(new Psu("PSU_002", "test2@gmail.com", Arrays.asList(accountDetails.get(3), accountDetails.get(4)),ALLOWED_PAYMENTS)),
+            psuRepository.save(new Psu("PSU_003", "test3@gmail.com", Arrays.asList(accountDetails.get(5), accountDetails.get(6)),ALLOWED_PAYMENTS)));
     }
 
     private List<SpiAccountDetails> fillAccounts() {

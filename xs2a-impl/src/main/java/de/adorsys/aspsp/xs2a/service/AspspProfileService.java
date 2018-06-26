@@ -16,8 +16,8 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.config.rest.profile.AspspProfileRemoteUrls;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.pis.PaymentType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -40,6 +40,11 @@ public class AspspProfileService {
     private final RestTemplate aspspProfileRestTemplate;
     private final AspspProfileRemoteUrls aspspProfileRemoteUrls;
 
+    /**
+     * Gets a list of payment products allowed by current ASPSP
+     *
+     * @return List of payment products supported by current ASPSP
+     */
     public List<PaymentProduct> getAvailablePaymentProducts() {
         return Optional.ofNullable(readAvailablePaymentProducts())
                    .map(list -> list.stream()
@@ -50,6 +55,11 @@ public class AspspProfileService {
                    .orElse(Collections.emptyList());
     }
 
+    /**
+     * Gets a list of payment types available at current ASPSP
+     *
+     * @return List of payment types allowed by ASPSP
+     */
     public List<PaymentType> getAvailablePaymentTypes() {
         return Optional.ofNullable(readAvailablePaymentTypes())
                    .map(list -> list.stream()
@@ -60,17 +70,37 @@ public class AspspProfileService {
                    .orElse(Collections.emptyList());
     }
 
+    /**
+     * Checks if payment product is allowed by ASPSP
+     *
+     * @param product Payment product to be checked for availability at ASPSP
+     * @return Boolean representing if the payment product is supported by ASPSP
+     */
+    public boolean isSupportedPaymentProduct(PaymentProduct product) {
+        return getAvailablePaymentProducts().contains(product);
+    }
+
+    /**
+     * Checks if payment type is allowed by ASPSP
+     *
+     * @param type Payment type to be checked for availability at ASPSP
+     * @return
+     */
+    public boolean isSupportedPaymentType(PaymentType type) {
+        return getAvailablePaymentTypes().contains(type);
+    }
+
     private List<String> readAvailablePaymentProducts() {
         return aspspProfileRestTemplate.exchange(
             aspspProfileRemoteUrls.getAvailablePaymentProducts(), HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {
             }).getBody();
     }
-    
-   
-	public Boolean getTppSignatureRequired() {
-		return aspspProfileRestTemplate.exchange(
-	            aspspProfileRemoteUrls.getTppSignatureRequired(), HttpMethod.GET, null, Boolean.class).getBody();
-	}
+
+
+    public Boolean getTppSignatureRequired() {
+        return aspspProfileRestTemplate.exchange(
+            aspspProfileRemoteUrls.getTppSignatureRequired(), HttpMethod.GET, null, Boolean.class).getBody();
+    }
 
 
     private List<String> readAvailablePaymentTypes() {

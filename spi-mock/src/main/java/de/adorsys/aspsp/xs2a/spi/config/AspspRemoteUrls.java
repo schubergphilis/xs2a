@@ -176,4 +176,13 @@ public class AspspRemoteUrls {
     public String createTransaction() {
         return spiMockBaseUrl + "/transaction";
     }
+
+    /**
+     * Returns URL-string to ASPSP-Mock endpoint that GETs list of allowed payment products for PSU by one of its account ibans
+     *
+     * @return URL
+     */
+    public String getAllowedPaymentProducts() {
+        return spiMockBaseUrl + "/psu/allowedPaymentProducts/{iban}";
+    }
 }

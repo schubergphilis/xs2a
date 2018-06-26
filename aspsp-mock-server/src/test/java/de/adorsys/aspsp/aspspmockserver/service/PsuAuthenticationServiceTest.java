@@ -16,8 +16,8 @@
 
 package de.adorsys.aspsp.aspspmockserver.service;
 
-import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
 import de.adorsys.aspsp.aspspmockserver.repository.PsuRepository;
+import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus;
@@ -29,9 +29,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -118,11 +115,11 @@ public class PsuAuthenticationServiceTest {
     }
 
     private Psu getPsu1() {
-        return new Psu(PSU_ID_1, "test1@gmail.com", null);
+        return new Psu(PSU_ID_1, "test1@gmail.com", null, null);
     }
 
     private Psu getPsu2() {
-        return new Psu(PSU_ID_2, "test2@gmail.com", null);
+        return new Psu(PSU_ID_2, "test2@gmail.com", null, null);
     }
 
     private Tan getUnusedTan() {

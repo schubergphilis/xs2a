@@ -30,7 +30,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Currency;
@@ -55,7 +54,7 @@ public class PaymentControllerTest {
     private PaymentService paymentService;
 
     @Before
-    public void setUpPaymentServiceMock() throws IOException {
+    public void setUpPaymentServiceMock() {
         SpiSinglePayments response = getSpiSinglePayment();
         response.setPaymentId(PAYMENT_ID);
         List<SpiSinglePayments> responseList = new ArrayList<>();
@@ -71,7 +70,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createPayment() throws Exception {
+    public void createPayment() {
         //Given
         HttpStatus expectedStatus = HttpStatus.CREATED;
 
@@ -86,7 +85,7 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void createBulkPayments() throws Exception {
+    public void createBulkPayments() {
         //Given
         HttpStatus expectedStatus = HttpStatus.CREATED;
         List<SpiSinglePayments> expectedRequest = new ArrayList<>();
@@ -103,32 +102,22 @@ public class PaymentControllerTest {
     }
 
     @Test
-    public void getPaymentStatusById_Success() throws Exception {
-        //Given
-        HttpStatus expectedStatus = HttpStatus.OK;
-
+    public void getPaymentStatusById_Success() {
         //When
-        ResponseEntity<SpiSinglePayments> actualResponse = paymentController.getPaymentStatusById(PAYMENT_ID);
+        ResponseEntity actualResponse = paymentController.getPaymentStatusById(PAYMENT_ID);
 
         //Then
-        HttpStatus actualStatus = actualResponse.getStatusCode();
-        assertThat(actualStatus).isEqualTo(expectedStatus);
-        assertThat(actualResponse.getBody()).isNotNull();
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actualResponse.getBody()).isEqualTo(ACCP);
     }
 
     @Test
-    public void getPaymentStatusById_WrongId() throws Exception {
-        //Given
-        HttpStatus expectedStatus = HttpStatus.OK;
-
+    public void getPaymentStatusById_WrongId() {
         //When
-        ResponseEntity<SpiSinglePayments> actualResponse = paymentController.getPaymentStatusById(WRONG_PAYMENT_ID);
+        ResponseEntity actualResponse = paymentController.getPaymentStatusById(WRONG_PAYMENT_ID);
 
         //Then
-        HttpStatus actualStatus = actualResponse.getStatusCode();
-        assertThat(actualStatus).isEqualTo(expectedStatus);
-        assertThat(actualResponse.getBody()).isNotNull();
+        assertThat(actualResponse.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(actualResponse.getBody()).isEqualTo(RJCT);
     }
 

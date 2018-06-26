@@ -119,7 +119,7 @@ public class PaymentSpiImpl implements PaymentSpi {
                    : null;
     }
 
-    public List<SpiPaymentInitialisationResponse> createBulkPaymentAndGetResponse(List<SpiSinglePayments> payments, String paymentProduct, boolean tppRedirectPreferred) {
+    private List<SpiPaymentInitialisationResponse> createBulkPaymentAndGetResponse(List<SpiSinglePayments> payments, String paymentProduct, boolean tppRedirectPreferred) { //TODO //NOPMD unused due to poor mock
         ResponseEntity<List<SpiSinglePayments>> responseEntity = aspspRestTemplate.exchange(aspspRemoteUrls.createBulkPayment(), HttpMethod.POST, new HttpEntity<>(payments, null), new ParameterizedTypeReference<List<SpiSinglePayments>>() {
         });
         return (responseEntity.getStatusCode() == CREATED)
@@ -129,7 +129,7 @@ public class PaymentSpiImpl implements PaymentSpi {
                    : Collections.emptyList();
     }
 
-    public SpiPaymentInitialisationResponse createPeriodicPaymentAndGetResponse(SpiPeriodicPayment periodicPayment, String paymentProduct, boolean tppRedirectPreferred) {
+    private SpiPaymentInitialisationResponse createPeriodicPaymentAndGetResponse(SpiPeriodicPayment periodicPayment, String paymentProduct, boolean tppRedirectPreferred) {//TODO //NOPMD unused due to poor mock
         ResponseEntity<SpiPeriodicPayment> responseEntity = aspspRestTemplate.postForEntity(aspspRemoteUrls.createPeriodicPayment(), periodicPayment, SpiPeriodicPayment.class);
         return responseEntity.getStatusCode() == CREATED ? mapToSpiPaymentResponse(responseEntity.getBody(), tppRedirectPreferred) : null;
     }

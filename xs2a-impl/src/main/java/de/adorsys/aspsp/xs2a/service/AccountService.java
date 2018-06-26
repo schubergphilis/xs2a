@@ -110,11 +110,11 @@ public class AccountService {
         ResponseObject.ResponseBuilder<AccountDetails> builder = ResponseObject.builder();
         if (isValid) {
             builder = withBalance
-                           ? builder.body(accountDetails)
-                           : builder.body(getAccountDetailNoBalances(accountDetails));
+                          ? builder.body(accountDetails)
+                          : builder.body(getAccountDetailNoBalances(accountDetails));
         } else {
             builder = builder
-                           .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID)));
+                          .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID)));
         }
         aisConsentService.consentActionLog(tppId, consentId, withBalance, TypeAccess.ACCOUNT, builder.build());
         return builder.build();
@@ -189,6 +189,10 @@ public class AccountService {
 
         aisConsentService.consentActionLog(tppId, consentId, withBalance, TypeAccess.TRANSACTION, response);
         return response;
+    }
+
+    List<String> getPaymentProductsAllowedToPsuByReference(AccountReference reference) {
+        return accountSpi.readPsuAllowedPaymentProductList(accountMapper.mapToSpiAccountReference(reference));
     }
 
     List<Balances> getAccountBalancesByAccountReference(AccountReference reference) {

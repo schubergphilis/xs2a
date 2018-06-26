@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service.validator;
 
 
+import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import de.adorsys.aspsp.xs2a.service.validator.header.HeadersFactory;
@@ -25,7 +26,6 @@ import de.adorsys.aspsp.xs2a.service.validator.header.impl.ErrorMessageHeaderImp
 import de.adorsys.aspsp.xs2a.service.validator.parameter.ParametersFactory;
 import de.adorsys.aspsp.xs2a.service.validator.parameter.RequestParameter;
 import de.adorsys.aspsp.xs2a.service.validator.parameter.impl.ErrorMessageParameterImpl;
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.web.BulkPaymentInitiationController;
 import de.adorsys.aspsp.xs2a.web.PaymentInitiationController;
@@ -111,10 +111,8 @@ public class RequestValidatorService {
             return Collections.singletonMap("Wrong header arguments: ", ((ErrorMessageHeaderImpl) headerImpl).getErrorMessage());
         }
 
-        Map<String, String> requestHeaderViolationsMap = validator.validate(headerImpl).stream()
+        return validator.validate(headerImpl).stream()
                                                              .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage));
-
-        return requestHeaderViolationsMap;
     }
 
     private Map<String, String> getRequestHeadersMap(HttpServletRequest request) {
