@@ -28,7 +28,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
-import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
+import de.adorsys.aspsp.xs2a.service.consent.pis.PisConsentService;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
@@ -62,6 +62,7 @@ public class PaymentServiceTest {
     private final String PERIODIC_PAYMENT_DATA = "/json/PeriodicPaymentTestData.json";
     private final Charset UTF_8 = Charset.forName("utf-8");
     private static final String PAYMENT_ID = "12345";
+    private static final String PAYMENT_CONSENT_ID = "12345678";
     private static final String WRONG_PAYMENT_ID = "0";
     private static final String IBAN = "DE123456789";
     private static final String WRONG_IBAN = "wrong_iban";
@@ -80,6 +81,12 @@ public class PaymentServiceTest {
     private PaymentSpi paymentSpi;
     @MockBean(name = "accountService")
     private AccountService accountService;
+
+    @MockBean(name = "pisConsentService")
+    private PisConsentService pisConsentService;
+
+    @MockBean(name = "aspspProfileService")
+    private AspspProfileService aspspProfileService;
 
     @Before
     public void setUp() throws IOException {
@@ -113,6 +120,14 @@ public class PaymentServiceTest {
             .thenReturn(Collections.singletonList("sepa-credit-transfers"));
         when(accountService.getPaymentProductsAllowedToPsuByReference(readPeriodicPayment().getDebtorAccount()))
             .thenReturn(Collections.singletonList("sepa-credit-transfers"));
+        when(pisConsentService.createPisConsentForSinglePaymentAndGetId(any()))
+            .thenReturn(PAYMENT_CONSENT_ID);
+        when(pisConsentService.createPisConsentForBulkPaymentAndGetId(any()))
+            .thenReturn(PAYMENT_CONSENT_ID);
+        when(pisConsentService.createPisConsentForPeriodicPaymentAndGetId(any()))
+            .thenReturn(PAYMENT_CONSENT_ID);
+        when(aspspProfileService.isRedirectMode())
+            .thenReturn(true);
     }
 
     @Test

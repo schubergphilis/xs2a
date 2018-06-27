@@ -14,13 +14,11 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain.consent.pis;
+package de.adorsys.aspsp.xs2a.domain;
 
-import io.swagger.annotations.ApiModel;
-
-@ApiModel(description = "Type of the pis consent", value = "PisConsentType")
-public enum PisConsentType {
-    BULK,
-    SINGLE,
-    PERIODIC
+public enum ScaApproach {
+    REDIRECT,
+    OAUTH,
+    DECOUPLED,
+    EMBEDDED
 }

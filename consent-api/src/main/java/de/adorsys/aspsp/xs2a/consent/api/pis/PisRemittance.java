@@ -14,23 +14,13 @@
  * limitations under the License.
  */
 
-package de.adorsys.psd2.validator.certificate;
+package de.adorsys.aspsp.xs2a.consent.api.pis;
 
-import no.difi.certvalidator.api.CertificateValidationException;
-import no.difi.certvalidator.rule.CRLRule;
+import lombok.Value;
 
-import java.security.cert.X509Certificate;
-
-public class CRLRuleExt extends CRLRule {
-
-    @Override
-	public void validate(X509Certificate certificate) throws FailedCertValidationException {
-
-		try {
-			super.validate(certificate);
-		} catch (CertificateValidationException e) {
-			throw new FailedCertValidationException(CertificateErrorMsgCode.CERTIFICATE_REVOKED.name(),
-					CertificateErrorMsgCode.CERTIFICATE_REVOKED.toString());
-		}
-	}
+@Value
+public class PisRemittance {
+    private String reference;
+    private String referenceType;
+    private String referenceIssuer;
 }
