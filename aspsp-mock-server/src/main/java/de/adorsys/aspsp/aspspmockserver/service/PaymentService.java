@@ -45,7 +45,7 @@ public class PaymentService {
      * @return Optional of saved single payment
      */
     public Optional<SpiSinglePayments> addPayment(@NotNull SpiSinglePayments payment) {
-        return isFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getContent())
+        return areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getContent())
                    ? Optional.ofNullable(paymentRepository.save(payment))
                    : Optional.empty();
     }
@@ -87,22 +87,22 @@ public class PaymentService {
                    .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    private boolean isFundsSufficient(SpiAccountReference reference, BigDecimal amount) {
+    private boolean areFundsSufficient(SpiAccountReference reference, BigDecimal amount) {
         Optional<SpiAccountBalance> balance = Optional.ofNullable(reference)
-                                                  .flatMap(this::getBalance);
+                                                  .flatMap(this::getInterimAvailableBalanceByReference);
         return balance
                    .map(b -> b.getSpiAmount().getContent().compareTo(amount) > 0)
                    .orElse(false);
     }
 
-    private Optional<SpiAccountBalance> getBalance(SpiAccountReference reference) {
+    private Optional<SpiAccountBalance> getInterimAvailableBalanceByReference(SpiAccountReference reference) {
         List<SpiAccountDetails> accountsByIban = accountService.getAccountsByIban(reference.getIban());
-        return getDetails(accountsByIban, reference)
+        return filterDetailsByReference(accountsByIban, reference)
                    .flatMap(SpiAccountDetails::getFirstBalance)
                    .map(SpiBalances::getInterimAvailable);
     }
 
-    private Optional<SpiAccountDetails> getDetails(List<SpiAccountDetails> accounts, SpiAccountReference reference) {
+    private Optional<SpiAccountDetails> filterDetailsByReference(List<SpiAccountDetails> accounts, SpiAccountReference reference) {
         return Optional.ofNullable(accounts)
                    .flatMap(accs -> accs.stream()
                                         .filter(ac -> ac.getCurrency() == reference.getCurrency())

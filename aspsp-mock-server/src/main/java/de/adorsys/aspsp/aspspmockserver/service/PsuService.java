@@ -34,11 +34,11 @@ public class PsuService {
     /**
      * Returns PSU by its primary ASPSP identifier
      *
-     * @param id String representation of ASPSP identifier for specific PSU
+     * @param psuId String representation of ASPSP identifier for specific PSU
      * @return PSU
      */
-    public Optional<Psu> getPsuById(String id) {
-        return Optional.ofNullable(psuRepository.findOne(id));
+    public Optional<Psu> getPsuById(String psuId) {
+        return Optional.ofNullable(psuRepository.findOne(psuId));
     }
 
     /**
@@ -53,12 +53,12 @@ public class PsuService {
     /**
      * Removes PSU for ASPSP by its ASPSP primary identifier
      *
-     * @param id String representation of ASPSP identifier for specific PSU
+     * @param psuId String representation of ASPSP identifier for specific PSU
      * @return boolean representation of successful deletion(true) or its failure(false)
      */
-    public boolean deletePsuById(String id) {
-        if (id != null && psuRepository.exists(id)) {
-            psuRepository.delete(id);
+    public boolean deletePsuById(String psuId) {
+        if (psuId != null && psuRepository.exists(psuId)) {
+            psuRepository.delete(psuId);
             return true;
         }
         return false;
@@ -79,12 +79,12 @@ public class PsuService {
     /**
      * Adds an allowed payment product to corresponding PSU`s list
      *
-     * @param id      String representation of ASPSP identifier for specific PSU
+     * @param psuId      String representation of ASPSP identifier for specific PSU
      * @param product String representation of product to be added
      * @return boolean representation of successful update(true) or its failure(false)
      */
-    public boolean addAllowedProduct(String id, String product) {
-        Psu psu = getPsuById(id).orElse(null);
+    public boolean addAllowedProduct(String psuId, String product) {
+        Psu psu = getPsuById(psuId).orElse(null);
         if (psu != null && psu.isValid()) {
             List<String> allowedProducts = psu.getPermittedPaymentProducts();
             if (!allowedProducts.contains(product)) {

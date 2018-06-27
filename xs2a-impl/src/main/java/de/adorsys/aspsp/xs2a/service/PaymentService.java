@@ -68,9 +68,9 @@ public class PaymentService {
      * @return Payment initiation response or corresponding error
      */
     public ResponseObject<PaymentInitialisationResponse> initiatePeriodicPayment(PeriodicPayment periodicPayment, String paymentProduct, boolean tppRedirectPreferred) {
-        ResponseObject containsPaymentRelatedErrors = containsPaymentRelatedErrors(periodicPayment, paymentProduct);
-        if (containsPaymentRelatedErrors.hasError()) {
-            return ResponseObject.<PaymentInitialisationResponse>builder().fail(containsPaymentRelatedErrors.getError()).build();
+        ResponseObject paymentRelatedErrors = containsPaymentRelatedErrors(periodicPayment, paymentProduct);
+        if (paymentRelatedErrors.hasError()) {
+            return ResponseObject.<PaymentInitialisationResponse>builder().fail(paymentRelatedErrors.getError()).build();
         }
 
         SpiPaymentInitialisationResponse spiPeriodicPayment = paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(periodicPayment), paymentProduct, tppRedirectPreferred);
@@ -121,9 +121,9 @@ public class PaymentService {
      * @return Payment initiation response or corresponding error
      */
     public ResponseObject<PaymentInitialisationResponse> createPaymentInitiation(SinglePayments singlePayment, String paymentProduct, boolean tppRedirectPreferred) {
-        ResponseObject containsPaymentRelatedErrors = containsPaymentRelatedErrors(singlePayment, paymentProduct);
-        if (containsPaymentRelatedErrors.hasError()) {
-            return ResponseObject.<PaymentInitialisationResponse>builder().fail(containsPaymentRelatedErrors.getError()).build();
+        ResponseObject paymentRelatedErrors = containsPaymentRelatedErrors(singlePayment, paymentProduct);
+        if (paymentRelatedErrors.hasError()) {
+            return ResponseObject.<PaymentInitialisationResponse>builder().fail(paymentRelatedErrors.getError()).build();
         }
 
         Optional<PaymentInitialisationResponse> paymentInitResp = Optional.ofNullable(

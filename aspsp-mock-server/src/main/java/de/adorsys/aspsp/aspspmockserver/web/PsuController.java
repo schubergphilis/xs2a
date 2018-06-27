@@ -35,9 +35,9 @@ public class PsuController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = List.class),
         @ApiResponse(code = 204, message = "Not Content")})
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<Psu> readPsuById(@PathVariable("id") String id) {
-        return psuService.getPsuById(id)
+    @GetMapping(path = "/{psu-id}")
+    public ResponseEntity<Psu> readPsuById(@PathVariable("psu-id") String psuId) {
+        return psuService.getPsuById(psuId)
                    .map(ResponseEntity::ok)
                    .orElse(ResponseEntity.noContent().build());
     }
@@ -57,9 +57,9 @@ public class PsuController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = List.class),
         @ApiResponse(code = 400, message = "Bad Request")})
-    @GetMapping(path = "/allowedPaymentProducts/add/{id}/{product}")
-    public ResponseEntity addPaymentProduct(@PathVariable("id") String id, @PathVariable(value = "product") String product) {
-        return psuService.addAllowedProduct(id, product)
+    @PutMapping(path = "/allowedPaymentProducts/add/{psu-id}/{product}")
+    public ResponseEntity addPaymentProduct(@PathVariable("psu-id") String psuId, @PathVariable(value = "product") String product) {
+        return psuService.addAllowedProduct(psuId, product)
                    ? ResponseEntity.ok().build()
                    : ResponseEntity.badRequest().build();
     }
@@ -80,9 +80,9 @@ public class PsuController {
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 404, message = "Not Found")})
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity deletePsu(@PathVariable("id") String id) {
-        return psuService.deletePsuById(id)
+    @DeleteMapping(path = "/{psu-id}")
+    public ResponseEntity deletePsu(@PathVariable("psu-id") String psuId) {
+        return psuService.deletePsuById(psuId)
                    ? ResponseEntity.noContent().build()
                    : ResponseEntity.notFound().build();
     }
