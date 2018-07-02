@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.Amount;
-import de.adorsys.aspsp.xs2a.domain.Links;
+import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
@@ -29,10 +29,10 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.consent.pis.PisConsentService;
+import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,9 +41,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Currency;
 import java.util.List;
@@ -52,15 +51,12 @@ import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class PaymentServiceTest {
 
-    private final String PERIODIC_PAYMENT_DATA = "/json/PeriodicPaymentTestData.json";
-    private final Charset UTF_8 = Charset.forName("utf-8");
     private static final String PAYMENT_ID = "12345";
     private static final String PAYMENT_CONSENT_ID = "12345678";
     private static final String WRONG_PAYMENT_ID = "0";
@@ -89,45 +85,51 @@ public class PaymentServiceTest {
     private AspspProfileService aspspProfileService;
 
     @Before
-    public void setUp() throws IOException {
-        List<SpiPaymentInitialisationResponse> responseList = new ArrayList<>();
-        responseList.add(getSpiPaymentResponse(ACCP));
-        when(paymentSpi.initiatePeriodicPayment(any(), any(), anyBoolean()))
-            .thenReturn(getSpiPaymentResponse(ACCP));
+    public void setUp() {
         //SinglePayment
         when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, AMOUNT)), "sepa-credit-transfers", false))
             .thenReturn(getSpiPaymentResponse(RCVD));
         when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT)), "sepa-credit-transfers", false))
             .thenReturn(null);
         //Bulk
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, AMOUNT))), "sepa-credit-transfers", false))
+            .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(ACCP)));
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT))), "sepa-credit-transfers", false))
+            .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(ACCP)));
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT))), "sepa-credit-transfers", false))
+            .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(RJCT)));
         when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Collections.singletonList(getPaymentInitiationRequest(IBAN, AMOUNT))), "sepa-credit-transfers", false))
-            .thenReturn(responseList);
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Collections.singletonList(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT))), "sepa-credit-transfers", false))
-            .thenReturn(Collections.emptyList());
+            .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP)));
+
+        //Periodic
+        when((paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(getPeriodicPayment(IBAN, AMOUNT)), "sepa-credit-transfers", false)))
+            .thenReturn(getSpiPaymentResponse(ACCP));
+        when((paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT)), "sepa-credit-transfers", false)))
+            .thenReturn(null);
+
+        //Status by ID
         when(paymentSpi.getPaymentStatusById(PAYMENT_ID, PaymentProduct.SCT.getCode()))
             .thenReturn(ACCP);
         when(paymentSpi.getPaymentStatusById(WRONG_PAYMENT_ID, PaymentProduct.SCT.getCode()))
             .thenReturn(RJCT);
-        when(accountService.isAccountExists(readPeriodicPayment().getDebtorAccount()))
-            .thenReturn(true);
-        when(accountService.isAccountExists(readPeriodicPayment().getCreditorAccount()))
-            .thenReturn(true);
+
+        //AccountExists
         when(accountService.isAccountExists(getReference(IBAN)))
             .thenReturn(true);
         when(accountService.isAccountExists(getReference(WRONG_IBAN)))
             .thenReturn(false);
+
+        //Allowed PP
         when(accountService.getPaymentProductsAllowedToPsuByReference(getPaymentInitiationRequest(IBAN, AMOUNT).getDebtorAccount()))
             .thenReturn(Collections.singletonList("sepa-credit-transfers"));
-        when(accountService.getPaymentProductsAllowedToPsuByReference(readPeriodicPayment().getDebtorAccount()))
-            .thenReturn(Collections.singletonList("sepa-credit-transfers"));
+
+        //Consents
         when(pisConsentService.createPisConsentForSinglePaymentAndGetId(any()))
             .thenReturn(PAYMENT_CONSENT_ID);
         when(pisConsentService.createPisConsentForBulkPaymentAndGetId(any()))
             .thenReturn(PAYMENT_CONSENT_ID);
         when(pisConsentService.createPisConsentForPeriodicPaymentAndGetId(any()))
             .thenReturn(PAYMENT_CONSENT_ID);
-        when(aspspProfileService.isRedirectMode())
-            .thenReturn(true);
     }
 
     @Test
@@ -156,67 +158,228 @@ public class PaymentServiceTest {
         assertThat(actualResponse.getBody()).isEqualTo(expectedTransactionStatus);
     }
 
+    //Bulk Tests
     @Test
-    public void createBulkPayments_Success() {
-        // Given
-        List<SinglePayments> payments = Collections.singletonList(getPaymentInitiationRequest(IBAN, AMOUNT));
+    public void createBulkPayments_Success_Complete_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, AMOUNT));
         PaymentProduct paymentProduct = PaymentProduct.SCT;
-        boolean tppRedirectPreferred = false;
+        //Then
+        createBulkSuccess(redirect, payments, paymentProduct);
+        createBulkSuccess(oauth, payments, paymentProduct);
+    }
 
+    private void createBulkSuccess(boolean redirect, List<SinglePayments> payments, PaymentProduct product) {
+        when(aspspProfileService.isRedirectMode()).thenReturn(redirect);
         //When:
-        ResponseObject<List<PaymentInitialisationResponse>> actualResponse = paymentService.createBulkPayments(payments, paymentProduct.getCode(), tppRedirectPreferred);
-
+        ResponseObject<List<PaymentInitialisationResponse>> actualResponse = paymentService.createBulkPayments(payments, product.getCode(), false);
         //Then:
+        assertThat(actualResponse.getBody()).isNotEmpty();
+        assertThat(actualResponse.getBody().stream()
+                       .map(PaymentInitialisationResponse::getTransactionStatus)
+                       .allMatch(t -> t.equals(TransactionStatus.ACCP))).isTrue();
+    }
+
+    @Test
+    public void createBulkPayments_Success_Partial_wrong_iban_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT));
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.RESOURCE_UNKNOWN_400;
+        //Then
+        createBulkPartial(redirect, payments, paymentProduct, errorCode);
+        createBulkPartial(oauth, payments, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createBulkPayments_Success_Partial_null_payment_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), null);
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.FORMAT_ERROR;
+        //Then
+        createBulkPartial(redirect, payments, paymentProduct, errorCode);
+        createBulkPartial(oauth, payments, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createBulkPayments_Success_Partial_payment_rejected_by_ASPSP_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT));
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
+        //Then
+        createBulkPartial(redirect, payments, paymentProduct, errorCode);
+        createBulkPartial(oauth, payments, paymentProduct, errorCode);
+    }
+
+    private void createBulkPartial(boolean redirect, List<SinglePayments> payments, PaymentProduct product, MessageErrorCode errorCode) {
+        when(aspspProfileService.isRedirectMode()).thenReturn(redirect);
+        //When:
+        ResponseObject<List<PaymentInitialisationResponse>> actualResponse = paymentService.createBulkPayments(payments, product.getCode(), false);
+        //Then:
+        assertThat(actualResponse.getBody()).isNotEmpty();
+        assertThat(actualResponse.getBody().get(0).getTransactionStatus() == TransactionStatus.ACCP && actualResponse.getBody().get(0).getTppMessages().length == 0).isTrue();
+        assertThat(actualResponse.getBody().get(1).getTransactionStatus() == TransactionStatus.RJCT && actualResponse.getBody().get(1).getTppMessages()[0] == errorCode).isTrue();
+    }
+
+    @Test
+    public void createBulkPayments_Fail_wrong_product_PSU_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, AMOUNT));
+        PaymentProduct paymentProduct = PaymentProduct.CBCT;
+        MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
+        //Then
+        createBulkTotal_fail(redirect, payments, paymentProduct, errorCode);
+        createBulkTotal_fail(oauth, payments, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createBulkPayments_Fail_wrong_acc_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(WRONG_IBAN, AMOUNT), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT));
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
+        //Then
+        createBulkTotal_fail(redirect, payments, paymentProduct, errorCode);
+        createBulkTotal_fail(oauth, payments, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createBulkPayments_Fail_rejected_by_ASPSP_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT));
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
+        //Then
+        createBulkTotal_fail(redirect, payments, paymentProduct, errorCode);
+        createBulkTotal_fail(oauth, payments, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createBulkPayments_Fail_null_payment_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(null, null);
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
+        //Then
+        createBulkTotal_fail(redirect, payments, paymentProduct, errorCode);
+        createBulkTotal_fail(oauth, payments, paymentProduct, errorCode);
+    }
+
+    private void createBulkTotal_fail(boolean redirect, List<SinglePayments> payments, PaymentProduct product, MessageErrorCode errorCode) {
+        when(aspspProfileService.isRedirectMode()).thenReturn(redirect);
+        //When:
+        ResponseObject<List<PaymentInitialisationResponse>> actualResponse = paymentService.createBulkPayments(payments, product.getCode(), false);
+        //Then:
+        assertThat(actualResponse.getBody()).isNullOrEmpty();
+        assertThat(actualResponse.getError()).isNotNull();
+        assertThat(actualResponse.getError().getTppMessage().getCode()).isEqualTo(errorCode);
+    }
+
+    //Periodic Tests
+    @Test
+    public void initiatePeriodicPayment_Success_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        PeriodicPayment payment = getPeriodicPayment(IBAN, AMOUNT);
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        //Then
+        createPeriodic_Success(redirect, payment, paymentProduct);
+        createPeriodic_Success(oauth, payment, paymentProduct);
+    }
+
+    private void createPeriodic_Success(boolean redirect, PeriodicPayment payment, PaymentProduct product) {
+        when(aspspProfileService.isRedirectMode()).thenReturn(redirect);
+        //When:
+        ResponseObject<PaymentInitialisationResponse> actualResponse = paymentService.initiatePeriodicPayment(payment, product.getCode(), false);
+        //Then:
+        assertThat(actualResponse.getError()).isNull();
         assertThat(actualResponse.getBody()).isNotNull();
-        assertThat(actualResponse.getBody().get(0).getTransactionStatus()).isEqualTo(TransactionStatus.ACCP);
+        assertThat(actualResponse.getBody().getTransactionStatus()).isEqualTo(TransactionStatus.ACCP);
+        assertThat(actualResponse.getBody().getPaymentId()).isEqualTo(PAYMENT_ID);
     }
 
     @Test
-    public void createBulkPayments_Failure_account_does_not_exist() {
-        // Given
-        List<SinglePayments> payments = Collections.singletonList(getPaymentInitiationRequest(WRONG_IBAN, AMOUNT));
+    public void createPeriodic_Fail_wrong_acc_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        PeriodicPayment payment = getPeriodicPayment(WRONG_IBAN, AMOUNT);
         PaymentProduct paymentProduct = PaymentProduct.SCT;
-        boolean tppRedirectPreferred = false;
+        MessageErrorCode errorCode = MessageErrorCode.RESOURCE_UNKNOWN_400;
+        //Then
+        createPeriodic_Fail(redirect, payment, paymentProduct, errorCode);
+        createPeriodic_Fail(oauth, payment, paymentProduct, errorCode);
+    }
 
+    @Test
+    public void createPeriodic_Fail_wrong_product_invalid_for_PSU_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        PeriodicPayment payment = getPeriodicPayment(IBAN, AMOUNT);
+        PaymentProduct paymentProduct = PaymentProduct.CBCT;
+        MessageErrorCode errorCode = MessageErrorCode.PRODUCT_INVALID;
+        //Then
+        createPeriodic_Fail(redirect, payment, paymentProduct, errorCode);
+        createPeriodic_Fail(oauth, payment, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createPeriodic_Fail_null_payment_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        PeriodicPayment payment = null;
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.FORMAT_ERROR;
+        //Then
+        createPeriodic_Fail(redirect, payment, paymentProduct, errorCode);
+        createPeriodic_Fail(oauth, payment, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createPeriodic_Fail_ASPSP_rejected_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        PeriodicPayment payment = getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT);
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
+        //Then
+        createPeriodic_Fail(redirect, payment, paymentProduct, errorCode);
+        createPeriodic_Fail(oauth, payment, paymentProduct, errorCode);
+    }
+
+    private void createPeriodic_Fail(boolean redirect, PeriodicPayment payment, PaymentProduct product, MessageErrorCode errorCode) {
+        when(aspspProfileService.isRedirectMode()).thenReturn(redirect);
         //When:
-        ResponseObject<List<PaymentInitialisationResponse>> actualResponse = paymentService.createBulkPayments(payments, paymentProduct.getCode(), tppRedirectPreferred);
-
+        ResponseObject<PaymentInitialisationResponse> actualResponse = paymentService.initiatePeriodicPayment(payment, product.getCode(), false);
         //Then:
-        assertThat(actualResponse.hasError()).isTrue();
-        assertThat(actualResponse.getError().getTppMessage().getCode()).isEqualTo(RESOURCE_UNKNOWN_400);
+        assertThat(actualResponse.getBody()).isNull();
+        assertThat(actualResponse.getError()).isNotNull();
+        assertThat(actualResponse.getError().getTppMessage().getCode()).isEqualTo(errorCode);
     }
 
-    @Test
-    public void createBulkPayments_Failure_ASPSP_rejected() {
-        // Given
-        List<SinglePayments> payments = Collections.singletonList(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT));
-        PaymentProduct paymentProduct = PaymentProduct.SCT;
-        boolean tppRedirectPreferred = false;
-
-        //When:
-        ResponseObject<List<PaymentInitialisationResponse>> actualResponse = paymentService.createBulkPayments(payments, paymentProduct.getCode(), tppRedirectPreferred);
-
-        //Then:
-        assertThat(actualResponse.hasError()).isTrue();
-        assertThat(actualResponse.getError().getTppMessage().getCode()).isEqualTo(PAYMENT_FAILED);
-    }
-
-    @Test
-    public void initiatePeriodicPayment() throws IOException { //TODO MORE TESTS SHOULD BE PRESENT FOR EACH USECASE
-        //Given:
-        PaymentProduct paymentProduct = PaymentProduct.SCT;
-        boolean tppRedirectPreferred = false;
-        PeriodicPayment periodicPayment = readPeriodicPayment();
-        ResponseObject<PaymentInitialisationResponse> expectedResult = readResponseObject();
-
-        //When:
-        ResponseObject<PaymentInitialisationResponse> result = paymentService.initiatePeriodicPayment(periodicPayment, paymentProduct.getCode(), tppRedirectPreferred);
-
-        //Than:
-        assertThat(result.getError()).isEqualTo(expectedResult.getError());
-        assertThat(result.getBody().getTransactionStatus()).isEqualTo(expectedResult.getBody().getTransactionStatus());
-    }
-
+    //Single Tests
     @Test
     public void createPaymentInitiation_Success() {
         // Given
@@ -292,6 +455,7 @@ public class PaymentServiceTest {
         assertThat(actualResponse.getError().getTppMessage().getCode()).isEqualTo(PAYMENT_FAILED);
     }
 
+    //Test additional methods
     private SpiPaymentInitialisationResponse getSpiPaymentResponse(SpiTransactionStatus status) {
         SpiPaymentInitialisationResponse spiPaymentInitialisationResponse = new SpiPaymentInitialisationResponse();
         spiPaymentInitialisationResponse.setTransactionStatus(status);
@@ -326,21 +490,26 @@ public class PaymentServiceTest {
         return reference;
     }
 
+    private PeriodicPayment getPeriodicPayment(String iban, String amountToPay) {
+        PeriodicPayment payment = new PeriodicPayment();
+        Amount amount = new Amount();
+        amount.setCurrency(CURRENCY);
+        amount.setContent(amountToPay);
+        BICFI bicfi = new BICFI();
+        bicfi.setCode("vnldkvn");
+        payment.setInstructedAmount(amount);
+        payment.setDebtorAccount(getReference(iban));
+        payment.setCreditorName("Merchant123");
+        payment.setPurposeCode(new PurposeCode("BEQNSD"));
+        payment.setCreditorAgent(bicfi);
+        payment.setCreditorAccount(getReference(iban));
+        payment.setPurposeCode(new PurposeCode("BCENECEQ"));
+        payment.setRemittanceInformationUnstructured("Ref Number Merchant");
 
-    private ResponseObject<PaymentInitialisationResponse> readResponseObject() {
-
-        return ResponseObject.<PaymentInitialisationResponse>builder()
-                   .body(getPaymentInitializationResponse()).build();
-    }
-
-    private PeriodicPayment readPeriodicPayment() throws IOException {
-        return jsonConverter.toObject(IOUtils.resourceToString(PERIODIC_PAYMENT_DATA, UTF_8), PeriodicPayment.class).get();
-    }
-
-    private PaymentInitialisationResponse getPaymentInitializationResponse() {
-        PaymentInitialisationResponse resp = new PaymentInitialisationResponse();
-        resp.setTransactionStatus(TransactionStatus.ACCP);
-        resp.setLinks(new Links());
-        return resp;
+        payment.setStartDate(LocalDate.now().plusDays(1));
+        payment.setEndDate(LocalDate.now().plusMonths(1));
+        payment.setDayOfExecution(3);
+        payment.setExecutionRule("some rule");
+        return payment;
     }
 }

@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -77,7 +78,14 @@ public class PaymentService {
      * @return list of single payments forming bulk payment
      */
     public List<SpiSinglePayments> addBulkPayments(List<SpiSinglePayments> payments) {
-        return paymentRepository.save(payments);
+        List<SpiSinglePayments> conductedPayments = new ArrayList<>();
+        for (SpiSinglePayments payment : payments) {
+            if (areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getContent())) {
+                SpiSinglePayments saved = paymentRepository.save(payment);
+                conductedPayments.add(saved);
+            } else conductedPayments.add(payment);
+        }
+        return conductedPayments;
     }
 
     BigDecimal calculateAmountToBeCharged(String accountId) {

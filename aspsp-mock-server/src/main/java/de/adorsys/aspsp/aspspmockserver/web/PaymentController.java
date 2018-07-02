@@ -53,13 +53,13 @@ public class PaymentController {
     @ApiOperation(value = "Creates a bulk payment(list of single payments) based on request body", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Created", response = List.class),
-        @ApiResponse(code = 400, message = "Bad Request")})
+        @ApiResponse(code = 204, message = "Payment Failed")})
     @PostMapping(path = "/bulk-payments")
     public ResponseEntity<List<SpiSinglePayments>> createBulkPayments(
         @RequestBody List<SpiSinglePayments> payments) {
         List<SpiSinglePayments> saved = paymentService.addBulkPayments(payments);
         return isEmpty(saved)
-                   ? ResponseEntity.badRequest().build()
+                   ? ResponseEntity.noContent().build()
                    : new ResponseEntity<>(saved, CREATED);
     }
 

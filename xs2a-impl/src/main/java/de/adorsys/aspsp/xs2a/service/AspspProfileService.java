@@ -76,7 +76,7 @@ public class AspspProfileService {
      *
      * @return 'true' if current sca approach mode equals 'redirect', 'false' if not
      */
-    public boolean isRedirectMode(){
+    public boolean isRedirectMode() {
         ScaApproach scaApproach = readScaApproach();
         return scaApproach == ScaApproach.REDIRECT
                    || scaApproach == ScaApproach.DECOUPLED;
@@ -96,9 +96,9 @@ public class AspspProfileService {
      * Checks if payment type is allowed by ASPSP
      *
      * @param type Payment type to be checked for availability at ASPSP
-     * @return
+     * @return Boolean representing if the payment type is supported by ASPSP
      */
-    public boolean isSupportedPaymentType(PaymentType type) {
+    public boolean isSupportedPaymentType(PisPaymentType type) {
         return getAvailablePaymentTypes().contains(type);
     }
 

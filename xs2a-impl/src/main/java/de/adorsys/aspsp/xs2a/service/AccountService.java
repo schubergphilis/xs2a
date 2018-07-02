@@ -49,7 +49,6 @@ import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 @Validated
 @AllArgsConstructor
 public class AccountService {
-
     private final AccountSpi accountSpi;
     private final AccountMapper accountMapper;
     private final ValueValidatorService validatorService;

@@ -16,7 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.domain.pis;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Address;
@@ -26,6 +25,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -76,15 +76,11 @@ public class SinglePayments {
     private Remittance remittanceInformationStructured;
 
     @ApiModelProperty(value = "requested execution date", example = "2017-01-01")
+    @FutureOrPresent
     private LocalDate requestedExecutionDate;
 
     @ApiModelProperty(value = "requested execution time", example = "2017-10-25T15:30:35.035")
+    @FutureOrPresent
     // TODO add support of all types of DateTime https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/148
     private LocalDateTime requestedExecutionTime;
-
-    @JsonIgnore
-    public boolean isValidDateAndTime() {
-        return this.requestedExecutionDate.isAfter(LocalDate.now()) && this.requestedExecutionTime.isAfter(LocalDateTime.now());
-    }
-
 }
