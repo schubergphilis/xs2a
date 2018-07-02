@@ -90,16 +90,6 @@ public class AspspProfileService {
         return getAvailablePaymentProducts().contains(product);
     }
 
-    /**
-     * Checks if payment type is allowed by ASPSP
-     *
-     * @param type Payment type to be checked for availability at ASPSP
-     * @return Boolean representing if the payment type is supported by ASPSP
-     */
-    public boolean isSupportedPaymentType(PisPaymentType type) {
-        return getAvailablePaymentTypes().contains(type);
-    }
-
     private List<String> readAvailablePaymentProducts() {
         return aspspProfileRestTemplate.exchange(
             aspspProfileRemoteUrls.getAvailablePaymentProducts(), HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {

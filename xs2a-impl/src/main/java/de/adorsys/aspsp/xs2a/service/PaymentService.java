@@ -119,9 +119,7 @@ public class PaymentService {
             }
         }
         if (CollectionUtils.isNotEmpty(validPayments)) {
-            List<PaymentInitialisationResponse> paymentResponses = aspspProfileService.isRedirectMode()
-                                                                       ? getBulkPaymentResponseWhenRedirectMode(validPayments, paymentProduct, tppRedirectPreferred)
-                                                                       : getBulkPaymentResponseWhenOAuthMode(validPayments, paymentProduct, tppRedirectPreferred);
+            List<PaymentInitialisationResponse> paymentResponses = getBulkPaymentResponses(paymentProduct, tppRedirectPreferred, validPayments);
             if (CollectionUtils.isNotEmpty(paymentResponses) && hasValidPayment(paymentResponses)) {
                 paymentResponses.addAll(invalidPayments);
                 return ResponseObject.<List<PaymentInitialisationResponse>>builder()
@@ -155,6 +153,12 @@ public class PaymentService {
                    .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
                                .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED)))
                                .build());
+    }
+
+    private List<PaymentInitialisationResponse> getBulkPaymentResponses(String paymentProduct, boolean tppRedirectPreferred, List<SinglePayments> validPayments) {
+        return aspspProfileService.isRedirectMode()
+                   ? getBulkPaymentResponseWhenRedirectMode(validPayments, paymentProduct, tppRedirectPreferred)
+                   : getBulkPaymentResponseWhenOAuthMode(validPayments, paymentProduct, tppRedirectPreferred);
     }
 
     private ResponseObject containsPaymentRelatedErrors(SinglePayments payment, String paymentProduct) {
@@ -217,7 +221,7 @@ public class PaymentService {
                    .map(Optional::get)
                    .peek(resp -> {
                        if (StringUtils.isBlank(resp.getPaymentId()) || resp.getTransactionStatus() == TransactionStatus.RJCT) {
-                           resp.setTppMessages(new MessageErrorCode[]{MessageErrorCode.PAYMENT_FAILED});
+                           resp.setTppMessages(new MessageErrorCode[]{PAYMENT_FAILED});
                            resp.setTransactionStatus(TransactionStatus.RJCT);
                        }
                    })

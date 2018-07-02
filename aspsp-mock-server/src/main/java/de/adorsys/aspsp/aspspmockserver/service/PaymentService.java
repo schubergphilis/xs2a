@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 
@@ -83,7 +84,9 @@ public class PaymentService {
             if (areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getContent())) {
                 SpiSinglePayments saved = paymentRepository.save(payment);
                 conductedPayments.add(saved);
-            } else conductedPayments.add(payment);
+            } else {
+                conductedPayments.add(payment);
+            }
         }
         return conductedPayments;
     }
@@ -105,15 +108,15 @@ public class PaymentService {
 
     private Optional<SpiAccountBalance> getInterimAvailableBalanceByReference(SpiAccountReference reference) {
         List<SpiAccountDetails> accountsByIban = accountService.getAccountsByIban(reference.getIban());
-        return filterDetailsByReference(accountsByIban, reference)
+        return filterDetailsByCurrency(accountsByIban, reference.getCurrency())
                    .flatMap(SpiAccountDetails::getFirstBalance)
                    .map(SpiBalances::getInterimAvailable);
     }
 
-    private Optional<SpiAccountDetails> filterDetailsByReference(List<SpiAccountDetails> accounts, SpiAccountReference reference) {
+    private Optional<SpiAccountDetails> filterDetailsByCurrency(List<SpiAccountDetails> accounts, Currency currency) {
         return Optional.ofNullable(accounts)
                    .flatMap(accs -> accs.stream()
-                                        .filter(ac -> ac.getCurrency() == reference.getCurrency())
+                                        .filter(ac -> ac.getCurrency() == currency)
                                         .findFirst());
     }
 

@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.aspspmockserver.web;
 
 import de.adorsys.aspsp.aspspmockserver.service.PsuService;
+import de.adorsys.aspsp.aspspmockserver.web.rest.PsuController;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
 import org.junit.Before;
@@ -61,7 +62,7 @@ public class PsuControllerTest {
             .thenReturn(PSU_ID);
         when(psuService.createPsuAndReturnId(getPsu(null, WRONG_E_MAIL, getDetails(false), getProducts())))
             .thenReturn(null);
-        when(psuService.getAllPsuList()).thenReturn(Collections.singletonList(getPsu(PSU_ID,E_MAIL,getDetails(false),getProducts())));
+        when(psuService.getAllPsuList()).thenReturn(Collections.singletonList(getPsu(PSU_ID, E_MAIL, getDetails(false), getProducts())));
         when(psuService.getPsuById(PSU_ID)).thenReturn(Optional.of(getPsu(PSU_ID, E_MAIL, getDetails(false), getProducts())));
         when(psuService.getPsuById(WRONG_PSU_ID)).thenReturn(Optional.empty());
         when(psuService.getAllowedPaymentProducts(PSU_ID)).thenReturn(getProducts());
@@ -99,7 +100,7 @@ public class PsuControllerTest {
 
         //Then
         assertThat(actualResult.getStatusCode()).isEqualTo(OK);
-        assertThat(actualResult.getBody()).isEqualTo(Collections.singletonList(getPsu(PSU_ID,E_MAIL,getDetails(false),getProducts())));
+        assertThat(actualResult.getBody()).isEqualTo(Collections.singletonList(getPsu(PSU_ID, E_MAIL, getDetails(false), getProducts())));
     }
 
     @Test

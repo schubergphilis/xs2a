@@ -102,13 +102,13 @@ public class RequestValidatorService {
         Map<String, String> requestHeadersMap = getRequestHeadersMap(request);
 
         RequestHeader headerImpl = HeadersFactory.getHeadersImpl(requestHeadersMap,
-                                                                 ((HandlerMethod) handler).getBeanType()
-                                                                );
+            ((HandlerMethod) handler).getBeanType()
+        );
 
         if (headerImpl instanceof ErrorMessageHeaderImpl) {
             return Collections.singletonMap("Wrong header arguments: ",
-                                            ((ErrorMessageHeaderImpl) headerImpl).getErrorMessage()
-                                           );
+                ((ErrorMessageHeaderImpl) headerImpl).getErrorMessage()
+            );
         }
 
         return getViolationMessagesMap(validator.validate(headerImpl));
