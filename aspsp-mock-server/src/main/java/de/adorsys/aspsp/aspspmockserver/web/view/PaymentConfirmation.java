@@ -14,17 +14,20 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.config.rest.consent;
+package de.adorsys.aspsp.aspspmockserver.web.view;
 
-import de.adorsys.aspsp.xs2a.exception.RestException;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.io.IOException;
+@Data
+@NoArgsConstructor
+public class PaymentConfirmation {
+    private String psuId;
+    private String consentId;
+    private String tanNumber;
 
-public class ConsentRestErrorHandler extends DefaultResponseErrorHandler {
-    @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
-        throw new RestException(response.getStatusCode(), response.getStatusCode().getReasonPhrase());
+    public PaymentConfirmation(String psuId, String consentId) {
+        this.psuId = psuId;
+        this.consentId = consentId;
     }
 }

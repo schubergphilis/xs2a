@@ -17,9 +17,11 @@
 package de.adorsys.aspsp.aspspmockserver.data.test;
 
 import de.adorsys.aspsp.aspspmockserver.repository.PsuRepository;
+import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
 import de.adorsys.aspsp.aspspmockserver.repository.TransactionRepository;
 import de.adorsys.aspsp.xs2a.spi.domain.account.*;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
+import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -44,18 +46,21 @@ import java.util.List;
 public class AccountMockServerData {
     private PsuRepository psuRepository;
     private TransactionRepository transactionRepository;
+    private TanRepository tanRepository;
     private List<SpiAccountDetails> accountDetails;
     private List<Psu> psus;
     private final List<String> ALLOWED_PAYMENTS = Collections.singletonList("sepa-credit-transfers");
     private final Currency EUR = Currency.getInstance("EUR");
     private final Currency USD = Currency.getInstance("USD");
 
-    public AccountMockServerData(PsuRepository psuRepository, TransactionRepository transactionRepository) {
+    public AccountMockServerData(PsuRepository psuRepository, TransactionRepository transactionRepository, TanRepository tanRepository) {
         this.psuRepository = psuRepository;
         this.transactionRepository = transactionRepository;
+        this.tanRepository = tanRepository;
         this.accountDetails = fillAccounts();
         this.psus = fillPsu();
         fillTransactions();
+        fillTanRepository();
     }
 
     private void fillTransactions() {
@@ -142,5 +147,11 @@ public class AccountMockServerData {
 
     private SpiAccountReference mapToReferenceFromDetails(SpiAccountDetails details) {
         return new SpiAccountReference(details.getIban(), details.getBban(), details.getPan(), details.getMaskedPan(), details.getMsisdn(), details.getCurrency());
+    }
+
+    private void fillTanRepository() {
+        tanRepository.save(new Tan("PSU_001", "111111"));
+        tanRepository.save(new Tan("PSU_002", "222222"));
+        tanRepository.save(new Tan("PSU_003", "333333"));
     }
 }

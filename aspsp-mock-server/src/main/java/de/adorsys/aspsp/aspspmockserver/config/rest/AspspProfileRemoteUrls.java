@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.config.rest.consent;
+package de.adorsys.aspsp.aspspmockserver.config.rest;
 
-import de.adorsys.aspsp.xs2a.exception.RestException;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+@Component
+public class AspspProfileRemoteUrls {
 
-public class ConsentRestErrorHandler extends DefaultResponseErrorHandler {
-    @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
-        throw new RestException(response.getStatusCode(), response.getStatusCode().getReasonPhrase());
+    @Value("${aspsp-profile.baseurl:http://localhost:48080/api/v1}")
+    private String aspspProfileBaseUrl;
+
+    /**
+     * Returns URL-string in order to get sca approach
+     *
+     * @return String
+     */
+    public String getScaApproach() {
+        return aspspProfileBaseUrl + "/aspsp-profile/sca-approach";
     }
 }
