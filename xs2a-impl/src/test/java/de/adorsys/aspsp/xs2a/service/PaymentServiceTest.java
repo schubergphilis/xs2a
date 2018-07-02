@@ -16,7 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
@@ -32,6 +31,7 @@ import de.adorsys.aspsp.xs2a.service.consent.pis.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPeriodicPayment;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +50,7 @@ import java.util.List;
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -65,11 +65,10 @@ public class PaymentServiceTest {
     private static final String AMOUNT = "100";
     private static final String EXCESSIVE_AMOUNT = "10000";
     private static final Currency CURRENCY = Currency.getInstance("EUR");
+    private static final LocalDate DATE = LocalDate.now();
 
     @Autowired
     private PaymentService paymentService;
-    @Autowired
-    private JsonConverter jsonConverter;
     @Autowired
     PaymentMapper paymentMapper;
 
@@ -102,8 +101,6 @@ public class PaymentServiceTest {
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP)));
 
         //Periodic
-        when((paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(getPeriodicPayment(IBAN, AMOUNT)), "sepa-credit-transfers", false)))
-            .thenReturn(getSpiPaymentResponse(ACCP));
         when((paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT)), "sepa-credit-transfers", false)))
             .thenReturn(null);
 
@@ -308,6 +305,8 @@ public class PaymentServiceTest {
 
     private void createPeriodic_Success(boolean redirect, PeriodicPayment payment, PaymentProduct product) {
         when(aspspProfileService.isRedirectMode()).thenReturn(redirect);
+        when((paymentSpi.initiatePeriodicPayment(any(SpiPeriodicPayment.class), eq("sepa-credit-transfers"), anyBoolean())))
+            .thenReturn(getSpiPaymentResponse(ACCP));
         //When:
         ResponseObject<PaymentInitialisationResponse> actualResponse = paymentService.initiatePeriodicPayment(payment, product.getCode(), false);
         //Then:
@@ -506,8 +505,8 @@ public class PaymentServiceTest {
         payment.setPurposeCode(new PurposeCode("BCENECEQ"));
         payment.setRemittanceInformationUnstructured("Ref Number Merchant");
 
-        payment.setStartDate(LocalDate.now().plusDays(1));
-        payment.setEndDate(LocalDate.now().plusMonths(1));
+        payment.setStartDate(DATE.plusDays(1));
+        payment.setEndDate(DATE.plusMonths(1));
         payment.setDayOfExecution(3);
         payment.setExecutionRule("some rule");
         return payment;
