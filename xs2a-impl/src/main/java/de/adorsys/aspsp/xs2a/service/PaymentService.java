@@ -41,6 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
@@ -196,10 +197,19 @@ public class PaymentService {
         return ResponseObject.builder().build();
     }
 
-    private Optional<PaymentInitialisationResponse> getPeriodicPaymentResponseWhenRedirectMode(PeriodicPayment periodicPayment, String paymentProduct, boolean tppRedirectPreferred) {
-        return StringUtils.isNotBlank(pisConsentService.createPisConsentForPeriodicPaymentAndGetId(periodicPayment))
-                   ? createPeriodicPaymentAndGetResponse(periodicPayment, paymentProduct, tppRedirectPreferred)
-                   : Optional.empty();
+    private PaymentInitialisationResponse getPeriodicPaymentResponseWhenRedirectMode(PeriodicPayment periodicPayment) {
+        String pisConsentId = pisConsentService.createPisConsentForPeriodicPaymentAndGetId(periodicPayment);
+
+        if (!StringUtils.isBlank(pisConsentId)) {
+            PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+            response.setTransactionStatus(TransactionStatus.ACCP);
+            response.setPisConsentId(pisConsentId);
+            response.setIban(periodicPayment.getDebtorAccount().getIban());
+
+            return response;
+        }
+
+        return null;
     }
 
     private Optional<PaymentInitialisationResponse> getPeriodicPaymentResponseWhenOAuthMode(PeriodicPayment periodicPayment, String paymentProduct, boolean tppRedirectPreferred) {
@@ -211,10 +221,19 @@ public class PaymentService {
         return paymentMapper.mapToPaymentInitializationResponse(paymentSpi.initiatePeriodicPayment(spiPeriodicPayment, paymentProduct, tppRedirectPreferred));
     }
 
-    private List<PaymentInitialisationResponse> getBulkPaymentResponseWhenRedirectMode(List<SinglePayments> payments, String paymentProduct, boolean tppRedirectPreferred) {
-        return StringUtils.isBlank(pisConsentService.createPisConsentForBulkPaymentAndGetId(payments))
-                   ? Collections.emptyList()
-                   : createBulkPaymentAndGetResponse(payments, paymentProduct, tppRedirectPreferred);
+    private List<PaymentInitialisationResponse> getBulkPaymentResponseWhenRedirectMode(List<SinglePayments> payments) {
+        String pisConsentId = pisConsentService.createPisConsentForBulkPaymentAndGetId(payments);
+
+        if (!StringUtils.isBlank(pisConsentId)) {
+            PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+            response.setTransactionStatus(TransactionStatus.ACCP);
+            response.setPisConsentId(pisConsentId);
+            response.setIban(payments.get(0).getDebtorAccount().getIban()); // TODO Establish order of payment creation with pis consent https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/159
+
+            return Arrays.asList(response);
+        }
+
+        return Collections.emptyList();
     }
 
     private List<PaymentInitialisationResponse> getBulkPaymentResponseWhenOAuthMode(List<SinglePayments> payments, String paymentProduct, boolean tppRedirectPreferred) {
@@ -238,10 +257,18 @@ public class PaymentService {
                    .collect(Collectors.toList());
     }
 
-    private Optional<PaymentInitialisationResponse> getSinglePaymentResponseWhenRedirectMode(SinglePayments singlePayment, String paymentProduct, boolean tppRedirectPreferred) {
-        return StringUtils.isNotBlank(pisConsentService.createPisConsentForSinglePaymentAndGetId(singlePayment))
-                   ? createSinglePaymentAndGetResponse(singlePayment, paymentProduct, tppRedirectPreferred)
-                   : Optional.empty();
+    private PaymentInitialisationResponse getSinglePaymentResponseWhenRedirectMode(SinglePayments singlePayment) {
+        String pisConsentId = pisConsentService.createPisConsentForSinglePaymentAndGetId(singlePayment);
+
+        if (!StringUtils.isBlank(pisConsentId)) {
+            PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+            response.setTransactionStatus(TransactionStatus.RCVD);
+            response.setPisConsentId(pisConsentId);
+            response.setIban(singlePayment.getDebtorAccount().getIban());
+
+            return response;
+        }
+        return null;
     }
 
     private Optional<PaymentInitialisationResponse> getSinglePaymentResponseWhenOAuthMode(SinglePayments singlePayment, String paymentProduct, boolean tppRedirectPreferred) {

@@ -13,18 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package de.adorsys.aspsp.aspspmockserver.repository;
-
-import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
-import de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.repository.MongoRepository;
-
-import java.util.List;
-
-@Profile({"mongo", "fongo"})
-public interface TanRepository extends MongoRepository<Tan, String> {
-
-    List<Tan> findByPsuIdAndTanStatus(String psuId, TanStatus tanStatus);
-}
+configs = {
+    localhost: "http://localhost:8080/api/v1/payments/sepa-credit-transfers?tppRedirectPreferred=true",
+    xs2a: "https://xs2a.integ.cloud.adorsys.de/api/v1/payments/sepa-credit-transfers?tppRedirectPreferred=true"
+};

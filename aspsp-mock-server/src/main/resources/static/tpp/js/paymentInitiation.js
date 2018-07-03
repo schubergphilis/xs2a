@@ -14,17 +14,16 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.aspspmockserver.repository;
 
-import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
-import de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus;
-import org.springframework.context.annotation.Profile;
-import org.springframework.data.mongodb.repository.MongoRepository;
+function getPaymentRedirectLink(productNumber) {
+    var paymentResp = sendPaymentRequestAndGetResponse(productNumber);
 
-import java.util.List;
+    if ((paymentResp["_links"] !== undefined)
+        && (paymentResp["_links"].redirect !== undefined)) {
 
-@Profile({"mongo", "fongo"})
-public interface TanRepository extends MongoRepository<Tan, String> {
+        var redirectLink = paymentResp["_links"].redirect;
+        console.log("redirectLink : " + redirectLink);
 
-    List<Tan> findByPsuIdAndTanStatus(String psuId, TanStatus tanStatus);
+        window.location = redirectLink;
+    }
 }
