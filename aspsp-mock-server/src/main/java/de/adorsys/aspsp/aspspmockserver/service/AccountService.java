@@ -82,11 +82,8 @@ public class AccountService {
                    .orElse(Collections.emptyList());
     }
 
-
-    public Optional<String> getPsuIdByIban(String iban) {
-        return psuRepository.findPsuByAccountDetailsList_Iban(iban).stream()
-                   .findFirst()
-                   .map(Psu::getId);
+    Optional<String> getPsuIdByIban(String iban) {
+        return psuRepository.findPsuByAccountDetailsList_Iban(iban).map(Psu::getId);
     }
 
     /**
