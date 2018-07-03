@@ -190,10 +190,6 @@ public class AccountService {
         return response;
     }
 
-    List<String> getPaymentProductsAllowedToPsuByReference(AccountReference reference) {
-        return accountSpi.readPsuAllowedPaymentProductList(accountMapper.mapToSpiAccountReference(reference));
-    }
-
     List<Balances> getAccountBalancesByAccountReference(AccountReference reference) {
         return Optional.ofNullable(reference)
                    .map(this::getAccountDetailsByAccountReference)
@@ -201,10 +197,6 @@ public class AccountService {
                    .map(Optional::get)
                    .map(AccountDetails::getBalances)
                    .orElse(Collections.emptyList());
-    }
-
-    boolean isAccountExists(AccountReference reference) {
-        return getAccountDetailsByAccountReference(reference).isPresent();
     }
 
     private List<AccountDetails> getAccountDetailsFromReferences(boolean withBalance, AccountAccess accountAccess) {
@@ -243,15 +235,11 @@ public class AccountService {
         LocalDate dateToChecked = Optional.ofNullable(dateTo)
                                       .orElse(LocalDate.now());
 
-        Optional<AccountReport> report;
-        if (StringUtils.isBlank(transactionId)) {
-            report = getAccountReportByPeriod(accountId, dateFrom, dateToChecked)
+        return StringUtils.isNotBlank(transactionId)
+                   ? getAccountReportByTransaction(transactionId, accountId)
+                   : getAccountReportByPeriod(accountId, dateFrom, dateToChecked)
                          .map(r -> filterByBookingStatus(r, bookingStatus));
-        } else {
-            report = getAccountReportByTransaction(transactionId, accountId);
-        }
 
-        return report;
     }
 
     private AccountReport filterByBookingStatus(AccountReport report, BookingStatus bookingStatus) {
@@ -276,7 +264,7 @@ public class AccountService {
         return accountMapper.mapToAccountReport(accountSpi.readTransactionsByPeriod(accountId, dateFrom, dateTo));
     }
 
-    private Optional<AccountDetails> getAccountDetailsByAccountReference(AccountReference reference) {
+    Optional<AccountDetails> getAccountDetailsByAccountReference(AccountReference reference) {
         return Optional.ofNullable(reference)
                    .map(ref -> accountSpi.readAccountDetailsByIban(ref.getIban()))
                    .map(Collection::stream)

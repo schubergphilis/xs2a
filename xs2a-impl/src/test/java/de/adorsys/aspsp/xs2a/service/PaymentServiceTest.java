@@ -20,6 +20,7 @@ import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
+import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.code.BICFI;
 import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
@@ -28,10 +29,12 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.consent.pis.PisConsentService;
+import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPeriodicPayment;
+import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,10 +45,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Currency;
-import java.util.List;
+import java.util.*;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus.*;
@@ -71,6 +71,8 @@ public class PaymentServiceTest {
     private PaymentService paymentService;
     @Autowired
     PaymentMapper paymentMapper;
+    @Autowired
+    AccountMapper accountMapper;
 
     @MockBean(name = "paymentSpi")
     private PaymentSpi paymentSpi;
@@ -82,6 +84,9 @@ public class PaymentServiceTest {
 
     @MockBean(name = "aspspProfileService")
     private AspspProfileService aspspProfileService;
+
+    @MockBean(name = "accountSpi")
+    private AccountSpi accountSpi;
 
     @Before
     public void setUp() {
@@ -111,13 +116,13 @@ public class PaymentServiceTest {
             .thenReturn(RJCT);
 
         //AccountExists
-        when(accountService.isAccountExists(getReference(IBAN)))
-            .thenReturn(true);
-        when(accountService.isAccountExists(getReference(WRONG_IBAN)))
-            .thenReturn(false);
+        when(accountService.getAccountDetailsByAccountReference(getReference(IBAN)))
+            .thenReturn(Optional.of(getDetails(IBAN)));
+        when(accountService.getAccountDetailsByAccountReference(getReference(WRONG_IBAN)))
+            .thenReturn(Optional.empty());
 
         //Allowed PP
-        when(accountService.getPaymentProductsAllowedToPsuByReference(getPaymentInitiationRequest(IBAN, AMOUNT).getDebtorAccount()))
+        when(accountSpi.readPsuAllowedPaymentProductList(accountMapper.mapToSpiAccountReference(getPaymentInitiationRequest(IBAN, AMOUNT).getDebtorAccount())))
             .thenReturn(Collections.singletonList("sepa-credit-transfers"));
 
         //Consents
@@ -127,6 +132,10 @@ public class PaymentServiceTest {
             .thenReturn(PAYMENT_CONSENT_ID);
         when(pisConsentService.createPisConsentForPeriodicPaymentAndGetId(any()))
             .thenReturn(PAYMENT_CONSENT_ID);
+    }
+
+    private AccountDetails getDetails(String iban) {
+        return new AccountDetails("123", iban, null, null, null, null, CURRENCY, null, null, null, null, null);
     }
 
     @Test
