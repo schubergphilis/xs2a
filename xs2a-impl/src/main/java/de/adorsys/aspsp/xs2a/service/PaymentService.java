@@ -38,6 +38,8 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -166,7 +168,7 @@ public class PaymentService {
     }
 
     private ResponseObject containsPaymentRelatedErrors(SinglePayments payment, String paymentProduct) {
-        if (payment == null) {
+        if (payment == null || isInvalidDate(payment.getRequestedExecutionDate(), payment.getRequestedExecutionTime())) {
             return ResponseObject.builder()
                        .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
                        .build();
@@ -263,5 +265,9 @@ public class PaymentService {
 
     List<String> getPaymentProductsAllowedToPsuByReference(AccountReference reference) {
         return accountSpi.readPsuAllowedPaymentProductList(accountMapper.mapToSpiAccountReference(reference));
+    }
+
+    private boolean isInvalidDate(LocalDate date, LocalDateTime dateTime) {
+        return date.isBefore(LocalDate.now()) && dateTime.isBefore(LocalDateTime.now());
     }
 }
