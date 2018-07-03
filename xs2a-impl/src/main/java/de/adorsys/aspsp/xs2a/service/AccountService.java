@@ -190,15 +190,6 @@ public class AccountService {
         return response;
     }
 
-    List<Balances> getAccountBalancesByAccountReference(AccountReference reference) {
-        return Optional.ofNullable(reference)
-                   .map(this::getAccountDetailsByAccountReference)
-                   .filter(Optional::isPresent)
-                   .map(Optional::get)
-                   .map(AccountDetails::getBalances)
-                   .orElse(Collections.emptyList());
-    }
-
     private List<AccountDetails> getAccountDetailsFromReferences(boolean withBalance, AccountAccess accountAccess) {
         List<AccountReference> references = withBalance
                                                 ? accountAccess.getBalances()
@@ -290,5 +281,10 @@ public class AccountService {
         fieldValidator.setTransactionId(transactionId);
 
         validatorService.validate(fieldValidator, ValidationGroup.AccountIdAndTransactionIdIsValid.class);
+    }
+
+    boolean isInvalidPaymentProductForPsu(AccountReference reference, String paymentProduct) {
+        return !accountSpi.readPsuAllowedPaymentProductList(accountMapper.mapToSpiAccountReference(reference))
+                    .contains(paymentProduct);
     }
 }

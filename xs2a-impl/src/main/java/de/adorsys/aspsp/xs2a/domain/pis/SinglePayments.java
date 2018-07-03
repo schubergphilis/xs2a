@@ -16,6 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.domain.pis;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Address;
@@ -83,4 +84,11 @@ public class SinglePayments {
     @FutureOrPresent
     // TODO add support of all types of DateTime https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/148
     private LocalDateTime requestedExecutionTime;
+
+    @JsonIgnore
+    public boolean isValidDated() {
+        return this.requestedExecutionDate != null && this.requestedExecutionTime != null
+                   && this.requestedExecutionDate.isAfter(LocalDate.now())
+                   && this.requestedExecutionTime.isAfter(LocalDateTime.now());
+    }
 }

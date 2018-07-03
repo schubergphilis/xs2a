@@ -20,7 +20,6 @@ import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
@@ -38,8 +37,6 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -83,7 +80,7 @@ public class PaymentService {
      * @return Response containing information about created periodic payment or corresponding error
      */
     public ResponseObject<PaymentInitialisationResponse> initiatePeriodicPayment(PeriodicPayment periodicPayment, String paymentProduct, boolean tppRedirectPreferred) {
-        ResponseObject paymentRelatedErrors = containsPaymentRelatedErrors(periodicPayment, paymentProduct);
+        ResponseObject paymentRelatedErrors = containsPeriodicPaymentRelatedErrors(periodicPayment, paymentProduct);
         if (paymentRelatedErrors.hasError()) {
             return ResponseObject.<PaymentInitialisationResponse>builder().fail(paymentRelatedErrors.getError()).build();
         }
@@ -116,7 +113,7 @@ public class PaymentService {
         List<SinglePayments> validPayments = new ArrayList<>();
         List<PaymentInitialisationResponse> invalidPayments = new ArrayList<>();
         for (SinglePayments s : payments) {
-            ResponseObject paymentRelatedErrors = containsPaymentRelatedErrors(s, paymentProduct);
+            ResponseObject paymentRelatedErrors = containsSinglePaymentRelatedErrors(s, paymentProduct);
             if (paymentRelatedErrors.hasError()) {
                 paymentMapper.mapToPaymentInitResponseFailedPayment(s == null ? new SinglePayments() : s, paymentRelatedErrors.getError().getTppMessage().getCode(), tppRedirectPreferred)
                     .map(invalidPayments::add);
@@ -126,7 +123,8 @@ public class PaymentService {
         }
         if (CollectionUtils.isNotEmpty(validPayments)) {
             List<PaymentInitialisationResponse> paymentResponses = getBulkPaymentResponses(paymentProduct, tppRedirectPreferred, validPayments);
-            if (CollectionUtils.isNotEmpty(paymentResponses) && hasValidPayment(paymentResponses)) {
+            if (CollectionUtils.isNotEmpty(paymentResponses) && paymentResponses.stream()
+                                                                    .anyMatch(pr -> pr.getTransactionStatus() != TransactionStatus.RJCT)) {
                 paymentResponses.addAll(invalidPayments);
                 return ResponseObject.<List<PaymentInitialisationResponse>>builder()
                            .body(paymentResponses).build();
@@ -142,10 +140,10 @@ public class PaymentService {
      * @param singlePayment        Single payment information
      * @param paymentProduct       The addressed payment product
      * @param tppRedirectPreferred boolean representation of TPP's desire to use redirect approach
-     * @return Rsponce containing information about created single payment or corresponding error
+     * @return Response containing information about created single payment or corresponding error
      */
     public ResponseObject<PaymentInitialisationResponse> createPaymentInitiation(SinglePayments singlePayment, String paymentProduct, boolean tppRedirectPreferred) {
-        ResponseObject paymentRelatedErrors = containsPaymentRelatedErrors(singlePayment, paymentProduct);
+        ResponseObject paymentRelatedErrors = containsSinglePaymentRelatedErrors(singlePayment, paymentProduct);
         if (paymentRelatedErrors.hasError()) {
             return ResponseObject.<PaymentInitialisationResponse>builder().fail(paymentRelatedErrors.getError()).build();
         }
@@ -167,28 +165,35 @@ public class PaymentService {
                    : getBulkPaymentResponseWhenOAuthMode(validPayments, paymentProduct, tppRedirectPreferred);
     }
 
+    private ResponseObject containsSinglePaymentRelatedErrors(SinglePayments payment, String paymentProduct) {
+        return payment != null && payment.isValidDated()
+                   ? containsPaymentRelatedErrors(payment, paymentProduct)
+                   : ResponseObject.builder()
+                         .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                         .build();
+    }
+
+    private ResponseObject containsPeriodicPaymentRelatedErrors(PeriodicPayment payment, String paymentProduct) {
+        return payment != null && payment.isValidDate()
+                   ? containsPaymentRelatedErrors(payment, paymentProduct)
+                   : ResponseObject.builder()
+                         .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                         .build();
+    }
+
     private ResponseObject containsPaymentRelatedErrors(SinglePayments payment, String paymentProduct) {
-        if (payment == null || isInvalidDate(payment.getRequestedExecutionDate(), payment.getRequestedExecutionTime())) {
-            return ResponseObject.builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
-                       .build();
-        }
-        if (!areAccountsExist(payment.getDebtorAccount(), payment.getCreditorAccount())) {
+        if (!accountService.getAccountDetailsByAccountReference(payment.getDebtorAccount()).isPresent()
+                && !accountService.getAccountDetailsByAccountReference(payment.getCreditorAccount()).isPresent()) {
             return ResponseObject.builder()
                        .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_400)))
                        .build();
         }
-        if (isInvalidPaymentProductForPsu(payment.getDebtorAccount(), paymentProduct)) {
+        if (accountService.isInvalidPaymentProductForPsu(payment.getDebtorAccount(), paymentProduct)) {
             return ResponseObject.<PaymentInitialisationResponse>builder()
                        .fail(new MessageError(new TppMessageInformation(ERROR, PRODUCT_INVALID)))
                        .build();
         }
         return ResponseObject.builder().build();
-    }
-
-    private boolean areAccountsExist(AccountReference debtorAccount, AccountReference creditorAccount) {
-        return isAccountExists(debtorAccount)
-                   && isAccountExists(creditorAccount);
     }
 
     private Optional<PaymentInitialisationResponse> getPeriodicPaymentResponseWhenRedirectMode(PeriodicPayment periodicPayment, String paymentProduct, boolean tppRedirectPreferred) {
@@ -203,8 +208,7 @@ public class PaymentService {
 
     private Optional<PaymentInitialisationResponse> createPeriodicPaymentAndGetResponse(PeriodicPayment periodicPayment, String paymentProduct, boolean tppRedirectPreferred) {
         SpiPeriodicPayment spiPeriodicPayment = paymentMapper.mapToSpiPeriodicPayment(periodicPayment);
-        SpiPaymentInitialisationResponse spiPeriodicPaymentResp = paymentSpi.initiatePeriodicPayment(spiPeriodicPayment, paymentProduct, tppRedirectPreferred);
-        return paymentMapper.mapToPaymentInitializationResponse(spiPeriodicPaymentResp);
+        return paymentMapper.mapToPaymentInitializationResponse(paymentSpi.initiatePeriodicPayment(spiPeriodicPayment, paymentProduct, tppRedirectPreferred));
     }
 
     private List<PaymentInitialisationResponse> getBulkPaymentResponseWhenRedirectMode(List<SinglePayments> payments, String paymentProduct, boolean tppRedirectPreferred) {
@@ -248,26 +252,5 @@ public class PaymentService {
         SpiSinglePayments spiSinglePayments = paymentMapper.mapToSpiSinglePayments(singlePayment);
         SpiPaymentInitialisationResponse spiPeriodicPaymentResp = paymentSpi.createPaymentInitiation(spiSinglePayments, paymentProduct, tppRedirectPreferred);
         return paymentMapper.mapToPaymentInitializationResponse(spiPeriodicPaymentResp);
-    }
-
-    private boolean isInvalidPaymentProductForPsu(AccountReference reference, String paymentProduct) {
-        return !getPaymentProductsAllowedToPsuByReference(reference).contains(paymentProduct);
-    }
-
-    private boolean hasValidPayment(List<PaymentInitialisationResponse> paymentResponses) {
-        return paymentResponses.stream()
-                   .anyMatch(pr -> pr.getTransactionStatus() != TransactionStatus.RJCT);
-    }
-
-    boolean isAccountExists(AccountReference reference) {
-        return accountService.getAccountDetailsByAccountReference(reference).isPresent();
-    }
-
-    List<String> getPaymentProductsAllowedToPsuByReference(AccountReference reference) {
-        return accountSpi.readPsuAllowedPaymentProductList(accountMapper.mapToSpiAccountReference(reference));
-    }
-
-    private boolean isInvalidDate(LocalDate date, LocalDateTime dateTime) {
-        return date.isBefore(LocalDate.now()) && dateTime.isBefore(LocalDateTime.now());
     }
 }

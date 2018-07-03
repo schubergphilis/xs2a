@@ -34,7 +34,6 @@ import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPeriodicPayment;
-import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +44,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
@@ -66,6 +66,9 @@ public class PaymentServiceTest {
     private static final String EXCESSIVE_AMOUNT = "10000";
     private static final Currency CURRENCY = Currency.getInstance("EUR");
     private static final LocalDate DATE = LocalDate.now();
+    private static final LocalDateTime TIME = LocalDateTime.now();
+    private static final String ALLOWED_PAYMENT_PRODUCT = "sepa-credit-transfers";
+    private static final String FORBIDDEN_PAYMENT_PRODUCT = "cross-border-credit-transfers";
 
     @Autowired
     private PaymentService paymentService;
@@ -85,28 +88,25 @@ public class PaymentServiceTest {
     @MockBean(name = "aspspProfileService")
     private AspspProfileService aspspProfileService;
 
-    @MockBean(name = "accountSpi")
-    private AccountSpi accountSpi;
-
     @Before
     public void setUp() {
         //SinglePayment
-        when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, AMOUNT)), "sepa-credit-transfers", false))
+        when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, AMOUNT)), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(getSpiPaymentResponse(RCVD));
-        when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT)), "sepa-credit-transfers", false))
+        when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT)), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(null);
         //Bulk
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, AMOUNT))), "sepa-credit-transfers", false))
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, AMOUNT))), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(ACCP)));
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT))), "sepa-credit-transfers", false))
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT))), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(ACCP)));
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT))), "sepa-credit-transfers", false))
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT))), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(RJCT)));
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Collections.singletonList(getPaymentInitiationRequest(IBAN, AMOUNT))), "sepa-credit-transfers", false))
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Collections.singletonList(getPaymentInitiationRequest(IBAN, AMOUNT))), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP)));
 
         //Periodic
-        when((paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT)), "sepa-credit-transfers", false)))
+        when((paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT)), ALLOWED_PAYMENT_PRODUCT, false)))
             .thenReturn(null);
 
         //Status by ID
@@ -121,9 +121,11 @@ public class PaymentServiceTest {
         when(accountService.getAccountDetailsByAccountReference(getReference(WRONG_IBAN)))
             .thenReturn(Optional.empty());
 
-        //Allowed PP
-        when(accountSpi.readPsuAllowedPaymentProductList(accountMapper.mapToSpiAccountReference(getPaymentInitiationRequest(IBAN, AMOUNT).getDebtorAccount())))
-            .thenReturn(Collections.singletonList("sepa-credit-transfers"));
+        //PaymentProduct PSU check
+        when(accountService.isInvalidPaymentProductForPsu(getPaymentInitiationRequest(IBAN, AMOUNT).getDebtorAccount(), ALLOWED_PAYMENT_PRODUCT))
+            .thenReturn(false);
+        when(accountService.isInvalidPaymentProductForPsu(getPaymentInitiationRequest(IBAN, AMOUNT).getDebtorAccount(), FORBIDDEN_PAYMENT_PRODUCT))
+            .thenReturn(true);
 
         //Consents
         when(pisConsentService.createPisConsentForSinglePaymentAndGetId(any()))
@@ -314,7 +316,7 @@ public class PaymentServiceTest {
 
     private void createPeriodic_Success(boolean redirect, PeriodicPayment payment, PaymentProduct product) {
         when(aspspProfileService.isRedirectMode()).thenReturn(redirect);
-        when((paymentSpi.initiatePeriodicPayment(any(SpiPeriodicPayment.class), eq("sepa-credit-transfers"), anyBoolean())))
+        when((paymentSpi.initiatePeriodicPayment(any(SpiPeriodicPayment.class), eq(ALLOWED_PAYMENT_PRODUCT), anyBoolean())))
             .thenReturn(getSpiPaymentResponse(ACCP));
         //When:
         ResponseObject<PaymentInitialisationResponse> actualResponse = paymentService.initiatePeriodicPayment(payment, product.getCode(), false);
@@ -486,6 +488,8 @@ public class PaymentServiceTest {
         singlePayments.setCreditorAccount(getReference(iban));
         singlePayments.setPurposeCode(new PurposeCode("BCENECEQ"));
         singlePayments.setRemittanceInformationUnstructured("Ref Number Merchant");
+        singlePayments.setRequestedExecutionDate(DATE.plusDays(1));
+        singlePayments.setRequestedExecutionTime(TIME.plusHours(1));
 
         return singlePayments;
     }
