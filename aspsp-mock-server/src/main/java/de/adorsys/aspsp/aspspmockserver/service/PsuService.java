@@ -96,7 +96,6 @@ public class PsuService {
      *
      * @param psuId      String representation of ASPSP identifier for specific PSU
      * @param product String representation of product to be added
-     * @return boolean representation of successful update(true) or its failure(false)
      */
     public void addAllowedProduct(String psuId, String product) {
         Psu psu = getPsuById(psuId).orElse(null);
