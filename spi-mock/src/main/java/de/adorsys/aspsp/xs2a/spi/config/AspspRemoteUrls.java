@@ -76,7 +76,7 @@ public class AspspRemoteUrls {
     }
 
     public String createPeriodicPayment() {
-        return spiMockBaseUrl + "/payments/createPeriodicPayment";
+        return spiMockBaseUrl + "/payments/create-periodic-payment";
     }
 
     //Transactions urls
@@ -114,6 +114,6 @@ public class AspspRemoteUrls {
      * @return URL
      */
     public String getAllowedPaymentProducts() {
-        return spiMockBaseUrl + "/psu/allowedPaymentProducts/{iban}";
+        return spiMockBaseUrl + "/psu/allowed-payment-products/{iban}";
     }
 }

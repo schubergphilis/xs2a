@@ -18,11 +18,10 @@ package de.adorsys.aspsp.aspspmockserver.service;
 
 import de.adorsys.aspsp.aspspmockserver.repository.PsuRepository;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -73,7 +72,7 @@ public class PsuService {
      * @return boolean representation of successful deletion(true) or its failure(false)
      */
     public boolean deletePsuById(String psuId) {
-        if (psuId != null && psuRepository.exists(psuId)) {
+        if (StringUtils.isNotBlank(psuId) && psuRepository.exists(psuId)) {
             psuRepository.delete(psuId);
             return true;
         }
@@ -99,20 +98,17 @@ public class PsuService {
      * @param product String representation of product to be added
      * @return boolean representation of successful update(true) or its failure(false)
      */
-    public boolean addAllowedProduct(String psuId, String product) {
+    public void addAllowedProduct(String psuId, String product) {
         Psu psu = getPsuById(psuId).orElse(null);
         if (psu != null && psu.isValid()) {
             List<String> allowedProducts = psu.getPermittedPaymentProducts();
             if (!allowedProducts.contains(product)) {
-                List<String> allowedProductsList = new ArrayList<>(allowedProducts);
-                allowedProductsList.add(product);
-                psu.setPermittedPaymentProducts(allowedProductsList);
-                List<String> updatedProductList = Optional.ofNullable(psuRepository.save(psu))
-                                                      .map(Psu::getPermittedPaymentProducts)
-                                                      .orElse(Collections.emptyList());
-                return updatedProductList.contains(product);
+                allowedProducts.add(product);
+                psu.setPermittedPaymentProducts(allowedProducts);
+                psuRepository.save(psu);
+
             }
         }
-        return false;
+
     }
 }

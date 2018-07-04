@@ -30,6 +30,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Data
 @ApiModel(description = "Payment Initialisation Request", value = "SinglePayments")
@@ -87,8 +88,12 @@ public class SinglePayments {
 
     @JsonIgnore
     public boolean isValidDated() {
-        return this.requestedExecutionDate != null && this.requestedExecutionTime != null
-                   && this.requestedExecutionDate.isAfter(LocalDate.now())
-                   && this.requestedExecutionTime.isAfter(LocalDateTime.now());
+        return Optional.ofNullable(requestedExecutionDate)
+                   .map(d -> d.isAfter(LocalDate.now()))
+                   .orElse(false)
+                   &&
+                   Optional.ofNullable(requestedExecutionTime)
+                       .map(d -> d.isAfter(LocalDateTime.now()))
+                       .orElse(false);
     }
 }

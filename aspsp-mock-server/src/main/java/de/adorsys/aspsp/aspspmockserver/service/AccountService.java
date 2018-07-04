@@ -83,7 +83,8 @@ public class AccountService {
     }
 
     Optional<String> getPsuIdByIban(String iban) {
-        return psuRepository.findPsuByAccountDetailsList_Iban(iban).map(Psu::getId);
+        return psuRepository.findPsuByAccountDetailsList_Iban(iban)
+                   .map(Psu::getId);
     }
 
     /**
@@ -106,7 +107,8 @@ public class AccountService {
      * @return list of account details
      */
     public List<SpiAccountDetails> getAccountsByPsuId(String psuId) {
-        return Optional.ofNullable(psuRepository.findOne(psuId)).map(Psu::getAccountDetailsList)
+        return Optional.ofNullable(psuRepository.findOne(psuId))
+                   .map(Psu::getAccountDetailsList)
                    .orElse(Collections.emptyList());
     }
 

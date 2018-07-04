@@ -134,7 +134,6 @@ public class PaymentMapper {
                        response.setPaymentId(p.getEndToEndIdentification());
                        response.setTppRedirectPreferred(tppRedirectPreferred);
                        response.setTppMessages(new MessageErrorCode[]{error});
-                       response.setLinks(new Links());
                        return response;
                    });
     }

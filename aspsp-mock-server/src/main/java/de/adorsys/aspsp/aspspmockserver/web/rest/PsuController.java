@@ -62,7 +62,7 @@ public class PsuController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK", response = List.class),
         @ApiResponse(code = 204, message = "Not Content")})
-    @GetMapping(path = "/allowedPaymentProducts/{iban}")
+    @GetMapping(path = "/allowed-payment-products/{iban}")
     public ResponseEntity<List<String>> readPaymentProductsById(@PathVariable("iban") String iban) {
         return Optional.ofNullable(psuService.getAllowedPaymentProducts(iban))
                    .map(ResponseEntity::ok)
@@ -71,13 +71,10 @@ public class PsuController {
 
     @ApiOperation(value = "Adds a payment product to the list of allowed products for PSU specified by its ASPSP identifier", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "OK", response = List.class),
-        @ApiResponse(code = 400, message = "Bad Request")})
-    @PutMapping(path = "/allowedPaymentProducts/add/{psu-id}/{product}")
-    public ResponseEntity addPaymentProduct(@PathVariable("psu-id") String psuId, @PathVariable(value = "product") String product) {
-        return psuService.addAllowedProduct(psuId, product)
-                   ? ResponseEntity.ok().build()
-                   : ResponseEntity.badRequest().build();
+        @ApiResponse(code = 200, message = "OK", response = List.class)})
+    @PutMapping(path = "/allowed-payment-products/{psu-id}/{product}")
+    public void addPaymentProduct(@PathVariable("psu-id") String psuId, @PathVariable(value = "product") String product) {
+        psuService.addAllowedProduct(psuId, product);
     }
 
     @ApiOperation(value = "Creates a PSU at ASPSP", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})

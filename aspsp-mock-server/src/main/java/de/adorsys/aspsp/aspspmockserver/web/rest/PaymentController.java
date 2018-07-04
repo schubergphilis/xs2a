@@ -76,7 +76,7 @@ public class PaymentController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Created", response = SpiPeriodicPayment.class),
         @ApiResponse(code = 400, message = "Bad Request")})
-    @PostMapping(path = "/createPeriodicPayment")
+    @PostMapping(path = "/create-periodic-payment")
     public ResponseEntity<SpiPeriodicPayment> createPeriodicPayment(@RequestBody SpiPeriodicPayment payment) {
         return paymentService.addPeriodicPayment(payment)
                    .map(saved -> new ResponseEntity<>(saved, CREATED))

@@ -37,16 +37,10 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import static de.adorsys.aspsp.xs2a.consent.api.pis.PisConsentStatus.RECEIVED;
-import static de.adorsys.aspsp.xs2a.consent.api.pis.PisConsentStatus.REJECTED;
-import static de.adorsys.aspsp.xs2a.consent.api.pis.PisConsentStatus.VALID;
+import static de.adorsys.aspsp.xs2a.consent.api.pis.PisConsentStatus.*;
 import static org.springframework.http.HttpStatus.OK;
 
 @Service
@@ -101,11 +95,9 @@ public class PaymentService {
         List<SpiSinglePayments> conductedPayments = new ArrayList<>();
         for (SpiSinglePayments payment : payments) {
             if (areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getContent())) {
-                SpiSinglePayments saved = paymentRepository.save(payment);
-                conductedPayments.add(saved);
-            } else {
-                conductedPayments.add(payment);
+                payment = paymentRepository.save(payment);
             }
+            conductedPayments.add(payment);
         }
         return conductedPayments;
     }

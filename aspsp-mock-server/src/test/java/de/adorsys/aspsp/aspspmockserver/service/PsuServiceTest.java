@@ -171,48 +171,6 @@ public class PsuServiceTest {
     }
 
     @Test
-    public void addPaymentProduct_Success() {
-        //Given
-        String newPaymentProduct = "new product";
-        //When
-        boolean actualResult = psuService.addAllowedProduct(PSU_ID, newPaymentProduct);
-
-        //Then
-        assertThat(actualResult).isTrue();
-    }
-
-    @Test
-    public void addPaymentProduct_Failure_wrong_id() {
-        //Given
-        String newPaymentProduct = "new product";
-        //When
-        boolean actualResult = psuService.addAllowedProduct(WRONG_PSU_ID, newPaymentProduct);
-
-        //Then
-        assertThat(actualResult).isFalse();
-    }
-
-    @Test
-    public void addPaymentProduct_Failure_saving_failed() {
-        //Given
-        String newPaymentProduct = "new product";
-        //When
-        boolean actualResult = psuService.addAllowedProduct(PSU_ID_1, newPaymentProduct);
-
-        //Then
-        assertThat(actualResult).isFalse();
-    }
-
-    @Test
-    public void addPaymentProduct_Failure_already_contained() {
-        //When
-        boolean actualResult = psuService.addAllowedProduct(PSU_ID_1, CORRECT_PAYMENT_PRODUCT);
-
-        //Then
-        assertThat(actualResult).isFalse();
-    }
-
-    @Test
     public void deletePsu_Success() {
         //When
         boolean actualResult = psuService.deletePsuById(PSU_ID);

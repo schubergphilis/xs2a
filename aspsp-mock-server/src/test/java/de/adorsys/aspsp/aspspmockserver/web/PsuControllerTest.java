@@ -67,8 +67,6 @@ public class PsuControllerTest {
         when(psuService.getPsuById(WRONG_PSU_ID)).thenReturn(Optional.empty());
         when(psuService.getAllowedPaymentProducts(PSU_ID)).thenReturn(getProducts());
         when(psuService.getAllowedPaymentProducts(WRONG_PSU_ID)).thenReturn(null);
-        when(psuService.addAllowedProduct(PSU_ID, "new product")).thenReturn(true);
-        when(psuService.addAllowedProduct(WRONG_PSU_ID, "new product")).thenReturn(false);
         when(psuService.deletePsuById(PSU_ID)).thenReturn(true);
         when(psuService.deletePsuById(WRONG_PSU_ID)).thenReturn(false);
 
@@ -139,28 +137,6 @@ public class PsuControllerTest {
 
         //Then
         assertThat(actualResult.getStatusCode()).isEqualTo(NO_CONTENT);
-    }
-
-    @Test
-    public void addPaymentProduct_Success() {
-        //Given
-        String newPaymentProduct = "new product";
-        //When
-        ResponseEntity actualResult = psuController.addPaymentProduct(PSU_ID, newPaymentProduct);
-
-        //Then
-        assertThat(actualResult.getStatusCode()).isEqualTo(OK);
-    }
-
-    @Test
-    public void addPaymentProduct_Failure_wrong_id() {
-        //Given
-        String newPaymentProduct = "new product";
-        //When
-        ResponseEntity actualResult = psuController.addPaymentProduct(WRONG_PSU_ID, newPaymentProduct);
-
-        //Then
-        assertThat(actualResult.getStatusCode()).isEqualTo(BAD_REQUEST);
     }
 
     @Test
