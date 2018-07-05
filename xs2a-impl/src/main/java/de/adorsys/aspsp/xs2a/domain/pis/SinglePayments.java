@@ -88,11 +88,11 @@ public class SinglePayments {
 
     @JsonIgnore
     public boolean isValidDated() {
-        return Optional.ofNullable(requestedExecutionDate)
+        return Optional.ofNullable(this.requestedExecutionDate)
                    .map(d -> d.isAfter(LocalDate.now()))
                    .orElse(false)
                    &&
-                   Optional.ofNullable(requestedExecutionTime)
+                   Optional.ofNullable(this.requestedExecutionTime)
                        .map(d -> d.isAfter(LocalDateTime.now()))
                        .orElse(false);
     }

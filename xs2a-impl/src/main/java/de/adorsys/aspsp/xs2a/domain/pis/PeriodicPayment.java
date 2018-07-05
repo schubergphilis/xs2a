@@ -50,8 +50,12 @@ public class PeriodicPayment extends SinglePayments {
 
     @JsonIgnore
     public boolean isValidDate() {
-        return Optional.ofNullable(startDate)
+        return Optional.ofNullable(this.startDate)
                    .map(d -> d.isAfter(LocalDate.now()))
-                   .orElse(false);
+                   .orElse(false)
+            &&
+            Optional.ofNullable(this.endDate)
+            .map(d-> d.isAfter(this.startDate))
+            .orElse(false);
     }
 }

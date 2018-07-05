@@ -91,22 +91,22 @@ public class PaymentServiceTest {
     @Before
     public void setUp() {
         //SinglePayment
-        when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, AMOUNT)), ALLOWED_PAYMENT_PRODUCT, false))
+        when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, AMOUNT,true)), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(getSpiPaymentResponse(RCVD));
-        when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT)), ALLOWED_PAYMENT_PRODUCT, false))
+        when(paymentSpi.createPaymentInitiation(paymentMapper.mapToSpiSinglePayments(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT,true)), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(null);
         //Bulk
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, AMOUNT))), ALLOWED_PAYMENT_PRODUCT, false))
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT,true), getPaymentInitiationRequest(IBAN, AMOUNT,true))), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(ACCP)));
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT))), ALLOWED_PAYMENT_PRODUCT, false))
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT,true), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT,true))), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(ACCP)));
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT))), ALLOWED_PAYMENT_PRODUCT, false))
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT,true), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT,true))), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP), getSpiPaymentResponse(RJCT)));
-        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Collections.singletonList(getPaymentInitiationRequest(IBAN, AMOUNT))), ALLOWED_PAYMENT_PRODUCT, false))
+        when(paymentSpi.createBulkPayments(paymentMapper.mapToSpiSinglePaymentList(Collections.singletonList(getPaymentInitiationRequest(IBAN, AMOUNT,true))), ALLOWED_PAYMENT_PRODUCT, false))
             .thenReturn(Arrays.asList(getSpiPaymentResponse(ACCP)));
 
         //Periodic
-        when((paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT)), ALLOWED_PAYMENT_PRODUCT, false)))
+        when((paymentSpi.initiatePeriodicPayment(paymentMapper.mapToSpiPeriodicPayment(getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT,true)), ALLOWED_PAYMENT_PRODUCT, false)))
             .thenReturn(null);
 
         //Status by ID
@@ -122,9 +122,9 @@ public class PaymentServiceTest {
             .thenReturn(Optional.empty());
 
         //PaymentProduct PSU check
-        when(accountService.isInvalidPaymentProductForPsu(getPaymentInitiationRequest(IBAN, AMOUNT).getDebtorAccount(), ALLOWED_PAYMENT_PRODUCT))
+        when(accountService.isInvalidPaymentProductForPsu(getPaymentInitiationRequest(IBAN, AMOUNT,true).getDebtorAccount(), ALLOWED_PAYMENT_PRODUCT))
             .thenReturn(false);
-        when(accountService.isInvalidPaymentProductForPsu(getPaymentInitiationRequest(IBAN, AMOUNT).getDebtorAccount(), FORBIDDEN_PAYMENT_PRODUCT))
+        when(accountService.isInvalidPaymentProductForPsu(getPaymentInitiationRequest(IBAN, AMOUNT,true).getDebtorAccount(), FORBIDDEN_PAYMENT_PRODUCT))
             .thenReturn(true);
 
         //Consents
@@ -169,7 +169,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, AMOUNT));
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT, true), getPaymentInitiationRequest(IBAN, AMOUNT,true));
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         //Then
         createBulkSuccess(redirect, payments, paymentProduct);
@@ -192,9 +192,22 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT));
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT,true), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT,true));
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         MessageErrorCode errorCode = MessageErrorCode.RESOURCE_UNKNOWN_400;
+        //Then
+        createBulkPartial(redirect, payments, paymentProduct, errorCode);
+        createBulkPartial(oauth, payments, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createBulkPayments_Success_Partial_wrong_date_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT,true), getPaymentInitiationRequest(IBAN, AMOUNT,false));
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.EXECUTION_DATE_INVALID;
         //Then
         createBulkPartial(redirect, payments, paymentProduct, errorCode);
         createBulkPartial(oauth, payments, paymentProduct, errorCode);
@@ -205,7 +218,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), null);
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT, true), null);
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         MessageErrorCode errorCode = MessageErrorCode.FORMAT_ERROR;
         //Then
@@ -218,7 +231,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT));
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT, true), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT,true));
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
         //Then
@@ -243,7 +256,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT), getPaymentInitiationRequest(IBAN, AMOUNT));
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, AMOUNT, true), getPaymentInitiationRequest(IBAN, AMOUNT, true));
         PaymentProduct paymentProduct = PaymentProduct.CBCT;
         MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
         //Then
@@ -256,7 +269,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(WRONG_IBAN, AMOUNT), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT));
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(WRONG_IBAN, AMOUNT, true), getPaymentInitiationRequest(WRONG_IBAN, AMOUNT,true));
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
         //Then
@@ -269,7 +282,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT));
+        List<SinglePayments> payments = Arrays.asList(getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT,true), getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT,true));
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
         //Then
@@ -308,7 +321,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        PeriodicPayment payment = getPeriodicPayment(IBAN, AMOUNT);
+        PeriodicPayment payment = getPeriodicPayment(IBAN, AMOUNT,true);
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         //Then
         createPeriodic_Success(redirect, payment, paymentProduct);
@@ -335,7 +348,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        PeriodicPayment payment = getPeriodicPayment(WRONG_IBAN, AMOUNT);
+        PeriodicPayment payment = getPeriodicPayment(WRONG_IBAN, AMOUNT,true);
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         MessageErrorCode errorCode = MessageErrorCode.RESOURCE_UNKNOWN_400;
         //Then
@@ -348,7 +361,7 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        PeriodicPayment payment = getPeriodicPayment(IBAN, AMOUNT);
+        PeriodicPayment payment = getPeriodicPayment(IBAN, AMOUNT,true);
         PaymentProduct paymentProduct = PaymentProduct.CBCT;
         MessageErrorCode errorCode = MessageErrorCode.PRODUCT_INVALID;
         //Then
@@ -374,9 +387,22 @@ public class PaymentServiceTest {
         //Given
         boolean redirect = true;
         boolean oauth = false;
-        PeriodicPayment payment = getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT);
+        PeriodicPayment payment = getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT,true);
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         MessageErrorCode errorCode = MessageErrorCode.PAYMENT_FAILED;
+        //Then
+        createPeriodic_Fail(redirect, payment, paymentProduct, errorCode);
+        createPeriodic_Fail(oauth, payment, paymentProduct, errorCode);
+    }
+
+    @Test
+    public void createPeriodic_Fail_Wrong_Dates_redirect_and_oauth() {
+        //Given
+        boolean redirect = true;
+        boolean oauth = false;
+        PeriodicPayment payment = getPeriodicPayment(IBAN, AMOUNT,false);
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        MessageErrorCode errorCode = MessageErrorCode.EXECUTION_DATE_INVALID;
         //Then
         createPeriodic_Fail(redirect, payment, paymentProduct, errorCode);
         createPeriodic_Fail(oauth, payment, paymentProduct, errorCode);
@@ -398,7 +424,7 @@ public class PaymentServiceTest {
     @Test
     public void createPaymentInitiation_Success() {
         // Given
-        SinglePayments payment = getPaymentInitiationRequest(IBAN, AMOUNT);
+        SinglePayments payment = getPaymentInitiationRequest(IBAN, AMOUNT,true);
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         boolean tppRedirectPreferred = false;
 
@@ -428,7 +454,7 @@ public class PaymentServiceTest {
     @Test
     public void createPaymentInitiation_Failure_account_does_not_exist() {
         // Given
-        SinglePayments payment = getPaymentInitiationRequest(WRONG_IBAN, AMOUNT);
+        SinglePayments payment = getPaymentInitiationRequest(WRONG_IBAN, AMOUNT,true);
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         boolean tppRedirectPreferred = false;
 
@@ -443,7 +469,7 @@ public class PaymentServiceTest {
     @Test
     public void createPaymentInitiation_Failure_payment_not_allowed_to_psu() {
         // Given
-        SinglePayments payment = getPaymentInitiationRequest(IBAN, AMOUNT);
+        SinglePayments payment = getPaymentInitiationRequest(IBAN, AMOUNT,true);
         PaymentProduct paymentProduct = PaymentProduct.CBCT;
         boolean tppRedirectPreferred = false;
 
@@ -458,7 +484,7 @@ public class PaymentServiceTest {
     @Test
     public void createPaymentInitiation_Failure_ASPSP_rejects_due_to_excessive_amount() {
         // Given
-        SinglePayments payment = getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT);
+        SinglePayments payment = getPaymentInitiationRequest(IBAN, EXCESSIVE_AMOUNT,true);
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         boolean tppRedirectPreferred = false;
 
@@ -470,6 +496,21 @@ public class PaymentServiceTest {
         assertThat(actualResponse.getError().getTppMessage().getCode()).isEqualTo(PAYMENT_FAILED);
     }
 
+    @Test
+    public void createPaymentInitiation_Failure_Wrong_execution_date() {
+        // Given
+        SinglePayments payment = getPaymentInitiationRequest(IBAN, AMOUNT, false);
+        PaymentProduct paymentProduct = PaymentProduct.SCT;
+        boolean tppRedirectPreferred = false;
+
+        //When:
+        ResponseObject<PaymentInitialisationResponse> actualResponse = paymentService.createPaymentInitiation(payment, paymentProduct.getCode(), tppRedirectPreferred);
+
+        //Then:
+        assertThat(actualResponse.hasError()).isTrue();
+        assertThat(actualResponse.getError().getTppMessage().getCode()).isEqualTo(EXECUTION_DATE_INVALID);
+    }
+
     //Test additional methods
     private SpiPaymentInitialisationResponse getSpiPaymentResponse(SpiTransactionStatus status) {
         SpiPaymentInitialisationResponse spiPaymentInitialisationResponse = new SpiPaymentInitialisationResponse();
@@ -478,7 +519,7 @@ public class PaymentServiceTest {
         return spiPaymentInitialisationResponse;
     }
 
-    private SinglePayments getPaymentInitiationRequest(String iban, String amountToPay) {
+    private SinglePayments getPaymentInitiationRequest(String iban, String amountToPay, boolean validDate) {
         Amount amount = new Amount();
         amount.setCurrency(CURRENCY);
         amount.setContent(amountToPay);
@@ -493,7 +534,7 @@ public class PaymentServiceTest {
         singlePayments.setCreditorAccount(getReference(iban));
         singlePayments.setPurposeCode(new PurposeCode("BCENECEQ"));
         singlePayments.setRemittanceInformationUnstructured("Ref Number Merchant");
-        singlePayments.setRequestedExecutionDate(DATE.plusDays(1));
+        singlePayments.setRequestedExecutionDate(validDate?DATE.plusDays(1):DATE.minusDays(1));
         singlePayments.setRequestedExecutionTime(TIME.plusHours(1));
 
         return singlePayments;
@@ -507,7 +548,7 @@ public class PaymentServiceTest {
         return reference;
     }
 
-    private PeriodicPayment getPeriodicPayment(String iban, String amountToPay) {
+    private PeriodicPayment getPeriodicPayment(String iban, String amountToPay, boolean validDate) {
         PeriodicPayment payment = new PeriodicPayment();
         Amount amount = new Amount();
         amount.setCurrency(CURRENCY);
@@ -522,9 +563,11 @@ public class PaymentServiceTest {
         payment.setCreditorAccount(getReference(iban));
         payment.setPurposeCode(new PurposeCode("BCENECEQ"));
         payment.setRemittanceInformationUnstructured("Ref Number Merchant");
+        payment.setRequestedExecutionDate(validDate ?DATE.plusDays(1):DATE.minusDays(1));
+        payment.setRequestedExecutionTime(validDate ?TIME.plusHours(1):TIME.minusHours(1));
 
-        payment.setStartDate(DATE.plusDays(1));
-        payment.setEndDate(DATE.plusMonths(1));
+        payment.setStartDate(validDate?DATE.plusDays(1):DATE.minusDays(1));
+        payment.setEndDate(validDate?DATE.plusMonths(1):DATE.minusDays(1));
         payment.setDayOfExecution(3);
         payment.setExecutionRule("some rule");
         return payment;

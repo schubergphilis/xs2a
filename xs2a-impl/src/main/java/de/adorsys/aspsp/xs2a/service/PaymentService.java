@@ -162,7 +162,7 @@ public class PaymentService {
     }
 
     private ResponseObject containsSinglePaymentRelatedErrors(SinglePayments payment, String paymentProduct) {
-        return payment != null && payment.isValidDated()
+        return payment != null
                    ? containsPaymentRelatedErrors(payment, paymentProduct)
                    : ResponseObject.builder()
                          .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
@@ -170,16 +170,25 @@ public class PaymentService {
     }
 
     private ResponseObject containsPeriodicPaymentRelatedErrors(PeriodicPayment payment, String paymentProduct) {
-        return payment != null && payment.isValidDate()
+        if (payment == null) {
+            return ResponseObject.builder()
+                       .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                       .build();
+        }
+        return payment.isValidDate()
                    ? containsPaymentRelatedErrors(payment, paymentProduct)
                    : ResponseObject.builder()
-                         .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                         .fail(new MessageError(new TppMessageInformation(ERROR, EXECUTION_DATE_INVALID)))
                          .build();
     }
 
     private ResponseObject containsPaymentRelatedErrors(SinglePayments payment, String paymentProduct) {
-        if (!accountService.getAccountDetailsByAccountReference(payment.getDebtorAccount()).isPresent()
-                && !accountService.getAccountDetailsByAccountReference(payment.getCreditorAccount()).isPresent()) {
+        if (!payment.isValidDated()) {
+            return ResponseObject.builder()
+                       .fail(new MessageError(new TppMessageInformation(ERROR, EXECUTION_DATE_INVALID)))
+                       .build();
+        }
+        if (!accountService.getAccountDetailsByAccountReference(payment.getDebtorAccount()).isPresent()) {
             return ResponseObject.builder()
                        .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_400)))
                        .build();
