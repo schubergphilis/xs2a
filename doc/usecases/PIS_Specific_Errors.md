@@ -2,7 +2,6 @@
 
   ERRORS not implemented so far  
  `REQUIRED_KID_MISSING`  - awaiting further information  
- `EXECUTION_DATE_INVALID` - shall be done in separate task using AoP or Interceptor after clarification, currently is not a required field according PSD2 v1.0
  
  Payment Product related errors and their causes are same for all PIS endpoints:
   -------------
@@ -38,9 +37,19 @@
      
    The endpoint should be queried with:
    * payment-product (existing and supported by ASPSP, available for current PSU payment product)_
-   * _**single/bulk/periodic payment**_ (Requested payment is empty or paydays are set to past dates)
+   * _**single/bulk/periodic payment**_ (Requested payment is empty)
      
    **Result:** You get an error message.   
    **Http Status:** `400 FORMAT_ERROR`
  
- -----------------------
+ -------------
+   **Failure: Invalid execution date**  
+      
+   The endpoint should be queried with:
+   * payment-product (existing and supported by ASPSP, available for current PSU payment product)_
+   * _**single/bulk/periodic payment**_ (Requested payment execution date is before today or end date is before the start date for periodic payments)
+      
+   **Result:** You get an error message.   
+   **Http Status:** `400 EXECUTION_DATE_INVALID`
+  
+  -----------------------
