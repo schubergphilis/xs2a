@@ -25,6 +25,7 @@ import lombok.Data;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 
 @Data
@@ -50,12 +51,10 @@ public class PeriodicPayment extends SinglePayments {
 
     @JsonIgnore
     public boolean isValidDate() {
-        return Optional.ofNullable(this.startDate)
-                   .map(d -> d.isAfter(LocalDate.now()))
-                   .orElse(false)
-            &&
-            Optional.ofNullable(this.endDate)
-            .map(d-> d.isAfter(this.startDate))
-            .orElse(false);
+        return this.startDate.isAfter(ChronoLocalDate.from(LocalDate.now().atStartOfDay()))
+                   &&
+                   Optional.ofNullable(this.endDate)
+                       .map(d -> d.isAfter(this.startDate))
+                       .orElse(false);
     }
 }

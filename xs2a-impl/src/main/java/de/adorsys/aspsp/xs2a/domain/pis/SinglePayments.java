@@ -30,6 +30,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 
 @Data
@@ -89,11 +90,11 @@ public class SinglePayments {
     @JsonIgnore
     public boolean isValidDated() {
         return Optional.ofNullable(this.requestedExecutionDate)
-                   .map(d -> d.isAfter(LocalDate.now()))
+                   .map(d -> d.isAfter(ChronoLocalDate.from(LocalDate.now().atStartOfDay())))
                    .orElse(false)
                    &&
                    Optional.ofNullable(this.requestedExecutionTime)
-                       .map(d -> d.isAfter(LocalDateTime.now()))
+                       .map(d -> d.isAfter(LocalDate.now().atTime(0,0)))
                        .orElse(false);
     }
 }
