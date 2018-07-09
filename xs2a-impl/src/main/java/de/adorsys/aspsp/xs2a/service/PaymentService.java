@@ -275,4 +275,8 @@ public class PaymentService {
         SpiPaymentInitialisationResponse spiPeriodicPaymentResp = paymentSpi.createPaymentInitiation(spiSinglePayments, paymentProduct, tppRedirectPreferred);
         return paymentMapper.mapToPaymentInitializationResponse(spiPeriodicPaymentResp);
     }
+
+    public <T> ResponseObject<T> getPaymentById(String paymentServiceRequested, String paymentProduct, String paymentId) {
+
+    }
 }
