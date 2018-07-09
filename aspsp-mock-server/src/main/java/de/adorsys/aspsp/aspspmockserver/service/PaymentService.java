@@ -119,6 +119,10 @@ public class PaymentService {
         consentRestTemplate.put(remotePisConsentUrls.updatePisConsentStatus(), null, consentId, consentStatus.name());
     }
 
+    public SpiSinglePayments getSinglePaymentByConsentId(String consentId) {
+        return getFirstSpiSinglePayment(getPaymentsFromPisConsent(consentId));
+    }
+
     private List<SpiSinglePayments> getPaymentsFromPisConsent(String consentId) {
         ResponseEntity<PisConsentResponse> responseEntity = consentRestTemplate.getForEntity(remotePisConsentUrls.getPisConsentById(), PisConsentResponse.class, consentId);
 

@@ -18,6 +18,7 @@ package de.adorsys.aspsp.aspspmockserver.web.view;
 
 import de.adorsys.aspsp.aspspmockserver.service.PaymentService;
 import de.adorsys.aspsp.aspspmockserver.service.PaymentConfirmationService;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayments;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -39,20 +40,23 @@ public class PaymentConfirmationController {
     @ApiOperation(value = "Sends TAN to psu`s email, validates TAN sent to PSU`s e-mail and returns a link to continue as authenticated user")
     public ModelAndView showConfirmationPage(@PathVariable("iban") String iban,
                                              @PathVariable("consent-id") String consentId) {
-
         paymentConfirmationService.generateAndSendTanForPsuByIban(iban);
 
         return new ModelAndView("tanConfirmationPage", "paymentConfirmation", new PaymentConfirmation(iban, consentId));
     }
 
-    @PostMapping(path = "/")
+    @PostMapping
     @ApiOperation(value = "Displays content of email TAN confirmation page")
-    public ModelAndView confirmTan(
-        @ModelAttribute("paymentConfirmation") PaymentConfirmation paymentConfirmation) {
+    public ModelAndView confirmTan(@ModelAttribute("paymentConfirmation") PaymentConfirmation paymentConfirmation, ModelAndView model) {
+        SpiSinglePayments paymentDetails = paymentService.getSinglePaymentByConsentId(paymentConfirmation.getConsentId());
+        model.addObject("paymentDetails", paymentDetails);
+        model.addObject("paymentConfirmation", paymentConfirmation);
+        String viewName = paymentConfirmationService.isTanNumberValidByIban(paymentConfirmation.getIban(), paymentConfirmation.getTanNumber(), paymentConfirmation.getConsentId())
+                              ? "consentConfirmationPage"
+                              : "tanConfirmationError";
+        model.setViewName(viewName);
 
-        return paymentConfirmationService.isTanNumberValidByIban(paymentConfirmation.getIban(), paymentConfirmation.getTanNumber(), paymentConfirmation.getConsentId())
-                   ? new ModelAndView("consentConfirmationPage", "paymentConfirmation", paymentConfirmation)
-                   : new ModelAndView("tanConfirmationError");
+        return model;
     }
 
     @PostMapping(path = "/consent", params = "decision=confirmed")
