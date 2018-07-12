@@ -18,6 +18,7 @@ package de.adorsys.aspsp.xs2a.spi.service;
 
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentType;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPeriodicPayment;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayments;
 
@@ -32,4 +33,10 @@ public interface PaymentSpi {
     List<SpiPaymentInitialisationResponse> createBulkPayments(List<SpiSinglePayments> payments);
 
     SpiTransactionStatus getPaymentStatusById(String paymentId, String paymentProduct);
+
+    SpiSinglePayments getSinglePaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId);
+
+    SpiPeriodicPayment getPeriodicPaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId);
+
+    List<SpiSinglePayments> getBulkPaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId);
 }

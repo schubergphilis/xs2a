@@ -24,16 +24,16 @@ import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.address.Address;
+import de.adorsys.aspsp.xs2a.domain.address.CountryCode;
 import de.adorsys.aspsp.xs2a.domain.code.BICFI;
+import de.adorsys.aspsp.xs2a.domain.code.FrequencyCode;
 import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
 import de.adorsys.aspsp.xs2a.domain.consent.AuthenticationObject;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
-import de.adorsys.aspsp.xs2a.domain.pis.Remittance;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
+import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.*;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class PaymentMapper {
                        spiSinglePayments.setCreditorAddress(mapToSpiAddress(paymentRe.getCreditorAddress()));
                        spiSinglePayments.setUltimateCreditor(paymentRe.getUltimateCreditor());
                        spiSinglePayments.setPurposeCode(Optional.ofNullable(paymentRe.getPurposeCode())
-                                                              .map(PurposeCode::getCode).orElse(""));
+                                                            .map(PurposeCode::getCode).orElse(""));
                        spiSinglePayments.setRemittanceInformationUnstructured(paymentRe.getRemittanceInformationUnstructured());
                        spiSinglePayments.setRemittanceInformationStructured(mapToSpiRemittance(paymentRe.getRemittanceInformationStructured()));
                        spiSinglePayments.setRequestedExecutionDate(paymentRe.getRequestedExecutionDate());
@@ -258,5 +258,97 @@ public class PaymentMapper {
         return Optional.ofNullable(remittance)
                    .map(r -> new PisRemittance(r.getReference(), r.getReferenceType(), r.getReferenceIssuer()))
                    .orElse(null);
+    }
+
+    public SpiPaymentType mapToSpiPaymentType(PaymentType paymentType) {
+        return SpiPaymentType.valueOf(paymentType.getPaymentType());
+    }
+
+    public SinglePayments mapToSinglePayment(SpiSinglePayments spiSinglePayment) {
+        return Optional.ofNullable(spiSinglePayment)
+                   .map(sp -> {
+                       SinglePayments payments = new SinglePayments();
+                       payments.setEndToEndIdentification(spiSinglePayment.getEndToEndIdentification());
+                       payments.setDebtorAccount(accountMapper.mapToAccountReference(spiSinglePayment.getDebtorAccount()));
+                       payments.setUltimateDebtor(spiSinglePayment.getUltimateDebtor());
+                       payments.setInstructedAmount(accountMapper.mapToAmount(spiSinglePayment.getInstructedAmount()));
+                       payments.setCreditorAccount(accountMapper.mapToAccountReference(spiSinglePayment.getCreditorAccount()));
+                       payments.setCreditorAgent(mapToBICFI(spiSinglePayment.getCreditorAgent()));
+                       payments.setCreditorName(spiSinglePayment.getCreditorName());
+                       payments.setCreditorAddress(mapToAddress(spiSinglePayment.getCreditorAddress()));
+                       payments.setUltimateCreditor(spiSinglePayment.getUltimateCreditor());
+                       payments.setPurposeCode(mapToPurposeCode(spiSinglePayment.getPurposeCode()));
+                       payments.setRemittanceInformationUnstructured(spiSinglePayment.getRemittanceInformationUnstructured());
+                       payments.setRemittanceInformationStructured(mapToRemittance(spiSinglePayment.getRemittanceInformationStructured()));
+                       payments.setRequestedExecutionDate(spiSinglePayment.getRequestedExecutionDate());
+                       payments.setRequestedExecutionTime(spiSinglePayment.getRequestedExecutionTime());
+                       return payments;
+                   })
+                   .orElse(null);
+    }
+
+    private PurposeCode mapToPurposeCode(String purposeCode) {
+        PurposeCode code = new PurposeCode();
+        code.setCode(purposeCode);
+        return code;
+    }
+
+    private Remittance mapToRemittance(SpiRemittance remittanceInformationStructured) {
+        Remittance remittance = new Remittance();
+        remittance.setReference(remittanceInformationStructured.getReference());
+        remittance.setReferenceIssuer(remittanceInformationStructured.getReferenceIssuer());
+        remittance.setReferenceType(remittanceInformationStructured.getReferenceType());
+        return remittance;
+    }
+
+    private Address mapToAddress(SpiAddress creditorAddress) {
+        Address address = new Address();
+        CountryCode code = new CountryCode();
+        code.setCode(creditorAddress.getCountry());
+        address.setCountry(code);
+        address.setPostalCode(creditorAddress.getPostalCode());
+        address.setCity(creditorAddress.getCity());
+        address.setStreet(creditorAddress.getStreet());
+        address.setBuildingNumber(creditorAddress.getBuildingNumber());
+        return address;
+    }
+
+    private BICFI mapToBICFI(String creditorAgent) {
+        BICFI bicfi = new BICFI();
+        bicfi.setCode(creditorAgent);
+        return bicfi;
+    }
+
+    public PeriodicPayment mapToPeriodicPayment(SpiPeriodicPayment spiPeriodicPayment) {
+        return Optional.ofNullable(spiPeriodicPayment).map(sp -> {
+            PeriodicPayment payment = new PeriodicPayment();
+            payment.setEndToEndIdentification(sp.getEndToEndIdentification());
+            payment.setDebtorAccount(accountMapper.mapToAccountReference(sp.getDebtorAccount()));
+            payment.setUltimateDebtor(sp.getUltimateDebtor());
+            payment.setInstructedAmount(accountMapper.mapToAmount(sp.getInstructedAmount()));
+            payment.setCreditorAccount(accountMapper.mapToAccountReference(sp.getCreditorAccount()));
+            payment.setCreditorAgent(mapToBICFI(sp.getCreditorAgent()));
+            payment.setCreditorName(sp.getCreditorName());
+            payment.setCreditorAddress(mapToAddress(sp.getCreditorAddress()));
+            payment.setUltimateCreditor(sp.getUltimateCreditor());
+            payment.setPurposeCode(mapToPurposeCode(sp.getPurposeCode()));
+            payment.setRemittanceInformationUnstructured(sp.getRemittanceInformationUnstructured());
+            payment.setRemittanceInformationStructured(mapToRemittance(sp.getRemittanceInformationStructured()));
+            payment.setRequestedExecutionDate(sp.getRequestedExecutionDate());
+            payment.setRequestedExecutionTime(sp.getRequestedExecutionTime());
+            payment.setExecutionRule(sp.getExecutionRule());
+            payment.setFrequency(FrequencyCode.valueOf(sp.getFrequency()));
+            payment.setDayOfExecution(sp.getDayOfExecution());
+            payment.setEndDate(sp.getEndDate());
+            payment.setStartDate(sp.getStartDate());
+            return payment;
+        })
+                   .orElse(null);
+    }
+
+    public List<SinglePayments> mapToBulkPayment(List<SpiSinglePayments> spiSinglePayments) {
+        return CollectionUtils.isNotEmpty(spiSinglePayments)
+                   ? spiSinglePayments.stream().map(this::mapToSinglePayment).collect(Collectors.toList())
+                   : null;
     }
 }

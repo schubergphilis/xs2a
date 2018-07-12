@@ -21,6 +21,7 @@ import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
@@ -36,8 +37,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.FORMAT_ERROR;
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.PAYMENT_FAILED;
+import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 
 @Service
@@ -141,5 +141,37 @@ public class PaymentService {
                    .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
                                .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED)))
                                .build());
+    }
+
+    /**
+     * Retrieves payment from ASPSP by its ASPSP identifier, product and payment type
+     *
+     * @param paymentType    type of payment (payments, bulk-payments, periodic-payments)
+     * @param paymentProduct The addressed payment product
+     * @param paymentId      ASPSP identifier of the payment
+     * @return Response containing information about payment or corresponding error
+     */
+    public ResponseObject<Object> getPaymentById(String paymentType, String paymentProduct, String paymentId) {
+        Optional<PaymentType> type = PaymentType.getByName(paymentType);
+        if (!type.isPresent()) {
+            return ResponseObject.builder()
+                       .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                       .build();
+        }
+        Optional payment = Optional.empty();
+        if (type.get() == PaymentType.SINGLE) {
+            payment = Optional.ofNullable(paymentSpi.getSinglePaymentById(paymentMapper.mapToSpiPaymentType(type.get()), paymentProduct, paymentId))
+                          .map(paymentMapper::mapToSinglePayment);
+        } else if (type.get() == PaymentType.PERIODIC) {
+            payment = Optional.ofNullable(paymentSpi.getPeriodicPaymentById(paymentMapper.mapToSpiPaymentType(type.get()), paymentProduct, paymentId))
+                          .map(paymentMapper::mapToPeriodicPayment);
+        } else if (type.get() == PaymentType.BULK) {
+            payment = Optional.ofNullable(paymentSpi.getBulkPaymentById(paymentMapper.mapToSpiPaymentType(type.get()), paymentProduct, paymentId))
+                          .map(paymentMapper::mapToBulkPayment);
+        }
+        return payment.isPresent()
+                   ? ResponseObject.builder().body(payment.get()).build()
+                   : ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build();
+
     }
 }

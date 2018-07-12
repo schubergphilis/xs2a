@@ -27,7 +27,10 @@ import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.payment.PaymentValidationService;
 import de.adorsys.aspsp.xs2a.service.payment.ScaPaymentService;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
+import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayments;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +39,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Currency;
 import java.util.List;
@@ -46,6 +50,7 @@ import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.domain.TransactionStatus.RCVD;
 import static de.adorsys.aspsp.xs2a.domain.TransactionStatus.RJCT;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,6 +64,7 @@ public class PaymentServiceTest {
     private static final String EXCESSIVE_AMOUNT = "10000";
     private static final Currency CURRENCY = Currency.getInstance("EUR");
     private static final String ALLOWED_PAYMENT_PRODUCT = "sepa-credit-transfers";
+    private static final String PAYMENT_TYPE = "payments";
 
     private final PeriodicPayment PERIODIC_PAYMENT_OK = getPeriodicPayment(IBAN, AMOUNT);
     private final PeriodicPayment PERIODIC_PAYMENT_NOK_IBAN = getPeriodicPayment(WRONG_IBAN, AMOUNT);
@@ -274,6 +280,31 @@ public class PaymentServiceTest {
         assertThat(actualResponse.getError().getTransactionStatus()).isEqualTo(RJCT);
     }
 
+    @Test
+    public void getPaymentById() {
+        when(paymentSpi.getSinglePaymentById(any(), any(), any())).thenReturn(getSpiSinglePayment(IBAN, AMOUNT));
+        when(paymentMapper.mapToSinglePayment(any())).thenReturn(getSinglePayment(IBAN, AMOUNT));
+        //When
+        ResponseObject<Object> response = paymentService.getPaymentById(PAYMENT_TYPE, ALLOWED_PAYMENT_PRODUCT, PAYMENT_ID);
+        //Than
+        assertThat(response.hasError()).isFalse();
+        assertThat(response.getError()).isNull();
+        assertThat(response.getBody()).isNotNull();
+        SinglePayments payment = (SinglePayments) response.getBody();
+        assertThat(payment.getEndToEndIdentification()).isEqualTo(PAYMENT_ID);
+    }
+
+    @Test
+    public void getPaymentById_Failure_wrong_id() {
+        when(paymentSpi.getSinglePaymentById(any(), any(), any())).thenReturn(null);
+        when(paymentMapper.mapToSinglePayment(any())).thenReturn(null);
+        //When
+        ResponseObject<Object> response = paymentService.getPaymentById(PAYMENT_TYPE, ALLOWED_PAYMENT_PRODUCT, WRONG_PAYMENT_ID);
+        //Than
+        assertThat(response.hasError()).isTrue();
+        assertThat(response.getBody()).isNull();
+        assertThat(response.getError().getTppMessage().getCode()).isEqualTo(RESOURCE_UNKNOWN_403);
+    }
 
     //Test additional methods
     private PaymentInitialisationResponse getPaymentResponse(TransactionStatus status, MessageErrorCode errorCode) {
@@ -289,6 +320,7 @@ public class PaymentServiceTest {
 
     private SinglePayments getSinglePayment(String iban, String amountToPay) {
         SinglePayments singlePayments = new SinglePayments();
+        singlePayments.setEndToEndIdentification(PAYMENT_ID);
         Amount amount = new Amount();
         amount.setCurrency(CURRENCY);
         amount.setContent(amountToPay);
@@ -298,12 +330,26 @@ public class PaymentServiceTest {
         return singlePayments;
     }
 
+    private SpiSinglePayments getSpiSinglePayment(String iban, String amountToPay) {
+        SpiSinglePayments singlePayments = new SpiSinglePayments();
+        singlePayments.setEndToEndIdentification(PAYMENT_ID);
+        SpiAmount amount = new SpiAmount(CURRENCY, new BigDecimal(amountToPay));
+        singlePayments.setInstructedAmount(amount);
+        singlePayments.setDebtorAccount(getSpiReference(iban));
+        singlePayments.setCreditorAccount(getSpiReference(iban));
+        return singlePayments;
+    }
+
     private AccountReference getReference(String iban) {
         AccountReference reference = new AccountReference();
         reference.setIban(iban);
         reference.setCurrency(CURRENCY);
 
         return reference;
+    }
+
+    private SpiAccountReference getSpiReference(String iban) {
+        return new SpiAccountReference(iban, null, null, null, null, CURRENCY);
     }
 
     private PeriodicPayment getPeriodicPayment(String iban, String amountToPay) {

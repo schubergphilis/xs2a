@@ -16,7 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.web;
 
-import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
@@ -38,9 +37,10 @@ public class PaymentController<T> {
     private final ResponseMapper responseMapper;
     private final PaymentService paymentService;
 
-    @ApiOperation(value = "Get information  about the status of a payment initialisation ", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @ApiOperation(value = "Get payment information", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @ApiResponses(value = {@ApiResponse(code = 200, message = "OK", response = TransactionStatus.class),
-        @ApiResponse(code = 404, message = "Not found")})
+        @ApiResponse(code = 404, message = "Not found"),
+        @ApiResponse(code = 403, message = "Wrong path variables")})
     @GetMapping(path = "/{payment-service}/{payment-product}/{paymentId}")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "Content-Type", value = "application/json", required = true, dataType = "String", paramType = "header"),
@@ -49,15 +49,13 @@ public class PaymentController<T> {
         @ApiImplicitParam(name = "signature", value = "98c0", required = false, dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "tpp-certificate", value = "some certificate", required = false, dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "PSU-IP-Address", value = "192.168.1.1", dataType = "String", paramType = "header")})
-    public ResponseEntity<T> getPaymentById(
+    public ResponseEntity getPaymentById(
         @ApiParam(name = "payment-service", value = "The addressed payment service", allowableValues = "payments, bulk-payments,periodic-payments")
         @PathVariable("payment-service") String paymentServiceRequested,
         @ApiParam(name = "payment-product", value = "The addressed payment product ", allowableValues = "sepa-credit-transfers, target-2-payments, instant-sepa-credit-transfers, cross-border-credit-transfers")
         @PathVariable("payment-product") String paymentProduct,
         @ApiParam(name = "paymentId", value = "529e0507-7539-4a65-9b74-bdf87061e99b")
         @PathVariable("paymentId") String paymentId) {
-        ResponseObject<T> responseObject = paymentService.getPaymentById(paymentServiceRequested, paymentProduct, paymentId);
-
-        return responseMapper.ok(responseObject);
+        return responseMapper.ok(paymentService.getPaymentById(paymentServiceRequested, paymentProduct, paymentId));
     }
 }
