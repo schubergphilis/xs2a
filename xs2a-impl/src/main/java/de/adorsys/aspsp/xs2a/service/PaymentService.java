@@ -16,6 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
+import de.adorsys.aspsp.xs2a.service.payment.*;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
@@ -26,8 +27,6 @@ import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
-import de.adorsys.aspsp.xs2a.service.payment.PaymentValidationService;
-import de.adorsys.aspsp.xs2a.service.payment.ScaPaymentService;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -47,6 +46,7 @@ public class PaymentService {
     private final PaymentMapper paymentMapper;
     private final ScaPaymentService scaPaymentService;
     private final PaymentValidationService paymentValidationService;
+    private final ReadPaymentFactory readPaymentFactory;
 
     /**
      * Retrieves payment status from ASPSP
@@ -152,23 +152,14 @@ public class PaymentService {
      * @return Response containing information about payment or corresponding error
      */
     public ResponseObject<Object> getPaymentById(String paymentType, String paymentProduct, String paymentId) {
-        Optional<PaymentType> type = PaymentType.getByName(paymentType);
+        Optional<PaymentType> type = PaymentType.getByValue(paymentType);
         if (!type.isPresent()) {
             return ResponseObject.builder()
                        .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
                        .build();
         }
-        Optional payment = Optional.empty();
-        if (type.get() == PaymentType.SINGLE) {
-            payment = Optional.ofNullable(paymentSpi.getSinglePaymentById(paymentMapper.mapToSpiPaymentType(type.get()), paymentProduct, paymentId))
-                          .map(paymentMapper::mapToSinglePayment);
-        } else if (type.get() == PaymentType.PERIODIC) {
-            payment = Optional.ofNullable(paymentSpi.getPeriodicPaymentById(paymentMapper.mapToSpiPaymentType(type.get()), paymentProduct, paymentId))
-                          .map(paymentMapper::mapToPeriodicPayment);
-        } else if (type.get() == PaymentType.BULK) {
-            payment = Optional.ofNullable(paymentSpi.getBulkPaymentById(paymentMapper.mapToSpiPaymentType(type.get()), paymentProduct, paymentId))
-                          .map(paymentMapper::mapToBulkPayment);
-        }
+        ReadPayment service = readPaymentFactory.getService(paymentType);
+        Optional<Object> payment = Optional.ofNullable(service.getPayment(paymentProduct, paymentId));
         return payment.isPresent()
                    ? ResponseObject.builder().body(payment.get()).build()
                    : ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build();

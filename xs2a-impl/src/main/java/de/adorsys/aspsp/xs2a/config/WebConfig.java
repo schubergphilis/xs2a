@@ -33,6 +33,7 @@ import de.adorsys.aspsp.xs2a.service.validator.parameter.ParametersFactory;
 import de.adorsys.aspsp.xs2a.web.interceptor.HandlerInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.ServiceLocatorFactoryBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -165,5 +166,12 @@ public class WebConfig extends WebMvcConfigurerAdapter {
             return new EmbeddedScaPaymentService();
         }
         return new RedirectScaPaymentService();
+    }
+
+    @Bean
+    public ServiceLocatorFactoryBean readPaymentFactory() {
+        ServiceLocatorFactoryBean serviceLocatorFactoryBean = new ServiceLocatorFactoryBean();
+        serviceLocatorFactoryBean.setServiceLocatorInterface(ReadPaymentFactory.class);
+        return serviceLocatorFactoryBean;
     }
 }

@@ -184,7 +184,7 @@ public class PaymentMapper {
     }
 
     public SpiPaymentType mapToSpiPaymentType(PaymentType paymentType) {
-        return SpiPaymentType.valueOf(paymentType.getPaymentType());
+        return SpiPaymentType.valueOf(paymentType.getValue());
     }
 
     public SinglePayments mapToSinglePayment(SpiSinglePayments spiSinglePayment) {

@@ -24,33 +24,32 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum PaymentType {
     SINGLE("payments"),
     BULK("bulk-payments"),
     PERIODIC("periodic-payments");
 
-    private String paymentType;
+    private String value;
     private final static Map<String, PaymentType> container = new HashMap<>();
 
 
     @JsonCreator
-    PaymentType(String paymentType) {
-        this.paymentType = paymentType;
+    PaymentType(String value) {
+        this.value = value;
     }
 
     static {
         for (PaymentType type : values()) {
-            container.put(type.getPaymentType(), type);
+            container.put(type.getValue(), type);
         }
     }
 
-    public String getPaymentType() {
-        return paymentType;
+    public String getValue() {
+        return value;
     }
 
     @JsonIgnore
-    public static Optional<PaymentType> getByName(String name) {
+    public static Optional<PaymentType> getByValue(String name) {
         return Optional.ofNullable(container.get(name));
     }
 }
