@@ -123,6 +123,6 @@ public class AspspRemoteUrls {
      * @return URL
      */
     public String getPaymentById() {
-        return spiMockBaseUrl + "/payment/{payment-type}/{payment-product}/{paymentId}";
+        return spiMockBaseUrl + "/payments/{payment-type}/{payment-product}/{paymentId}";
     }
 }

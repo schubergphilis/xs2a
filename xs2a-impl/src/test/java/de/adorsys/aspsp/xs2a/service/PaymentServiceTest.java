@@ -26,6 +26,8 @@ import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.payment.PaymentValidationService;
+import de.adorsys.aspsp.xs2a.service.payment.ReadPaymentFactory;
+import de.adorsys.aspsp.xs2a.service.payment.ReadSinglePayment;
 import de.adorsys.aspsp.xs2a.service.payment.ScaPaymentService;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
@@ -52,6 +54,7 @@ import static de.adorsys.aspsp.xs2a.domain.TransactionStatus.RJCT;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -85,6 +88,10 @@ public class PaymentServiceTest {
     private ScaPaymentService scaPaymentService;
     @Mock
     private PaymentSpi paymentSpi;
+    @Mock
+    private ReadPaymentFactory readPaymentFactory;
+    @Mock
+    private ReadSinglePayment readSinglePayment;
 
     @Before
     public void setUp() {
@@ -282,8 +289,8 @@ public class PaymentServiceTest {
 
     @Test
     public void getPaymentById() {
-        when(paymentSpi.getSinglePaymentById(any(), any(), any())).thenReturn(getSpiSinglePayment(IBAN, AMOUNT));
-        when(paymentMapper.mapToSinglePayment(any())).thenReturn(getSinglePayment(IBAN, AMOUNT));
+        when(readPaymentFactory.getService((any()))).thenReturn(readSinglePayment);
+        when(readSinglePayment.getPayment(any(), anyString())).thenReturn(getSinglePayment(IBAN, "10"));
         //When
         ResponseObject<Object> response = paymentService.getPaymentById(SINGLE, ALLOWED_PAYMENT_PRODUCT, PAYMENT_ID);
         //Than
@@ -296,8 +303,9 @@ public class PaymentServiceTest {
 
     @Test
     public void getPaymentById_Failure_wrong_id() {
-        when(paymentSpi.getSinglePaymentById(any(), any(), any())).thenReturn(null);
-        when(paymentMapper.mapToSinglePayment(any())).thenReturn(null);
+        when(readPaymentFactory.getService((any()))).thenReturn(readSinglePayment);
+        when(readSinglePayment.getPayment(any(), anyString())).thenReturn(null);
+
         //When
         ResponseObject<Object> response = paymentService.getPaymentById(SINGLE, ALLOWED_PAYMENT_PRODUCT, WRONG_PAYMENT_ID);
         //Than

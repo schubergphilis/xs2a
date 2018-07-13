@@ -34,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -89,8 +90,10 @@ public class PaymentSpiImpl implements PaymentSpi {
 
     @Override
     public List<SpiSinglePayments> getBulkPaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId) {
-        return aspspRestTemplate.exchange(aspspRemoteUrls.getPaymentById(), HttpMethod.GET, null, new ParameterizedTypeReference<List<SpiSinglePayments>>() {
-        }, paymentType, paymentProduct, paymentId).getBody();
+        SpiSinglePayments response = aspspRestTemplate.getForObject(aspspRemoteUrls.getPaymentById(), SpiSinglePayments.class, paymentType, paymentProduct, paymentId);
+        return Optional.ofNullable(response)
+                   .map(Collections::singletonList)
+                   .orElse(null);
     }
 
     private SpiPaymentInitialisationResponse mapToSpiPaymentResponse(SpiSinglePayments spiSinglePayments) {
