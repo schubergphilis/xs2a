@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.web;
 
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import io.swagger.annotations.*;
@@ -51,11 +52,11 @@ public class PaymentController<T> {
         @ApiImplicitParam(name = "PSU-IP-Address", value = "192.168.0.26", dataType = "String", paramType = "header")})//NOPMD //Ip is required as description of the field
     public ResponseEntity getPaymentById(
         @ApiParam(name = "payment-service", value = "The addressed payment service", allowableValues = "payments, bulk-payments,periodic-payments")
-        @PathVariable("payment-service") String paymentServiceRequested,
+        @PathVariable("payment-service") PaymentType paymentType,
         @ApiParam(name = "payment-product", value = "The addressed payment product ", allowableValues = "sepa-credit-transfers, target-2-payments, instant-sepa-credit-transfers, cross-border-credit-transfers")
         @PathVariable("payment-product") String paymentProduct,
         @ApiParam(name = "paymentId", value = "529e0507-7539-4a65-9b74-bdf87061e99b")
         @PathVariable("paymentId") String paymentId) {
-        return responseMapper.ok(paymentService.getPaymentById(paymentServiceRequested, paymentProduct, paymentId));
+        return responseMapper.ok(paymentService.getPaymentById(paymentType, paymentProduct, paymentId));
     }
 }

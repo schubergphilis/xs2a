@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_403;
+import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -44,7 +45,6 @@ public class PaymentControllerTest {
     private static final String CORRECT_PAYMENT_ID = "33333-444444-55555-55555";
     private static final String WRONG_PAYMENT_ID = "wrong_payment_id";
     private static final String PAYMENT_PRODUCT = "33333-444444-55555-55555";
-    private static final String PAYMENT_SERVICE = "payments";
 
     @InjectMocks
     PaymentController paymentController;
@@ -56,9 +56,9 @@ public class PaymentControllerTest {
 
     @Before
     public void setUp() {
-        when(paymentService.getPaymentById(PAYMENT_SERVICE, PAYMENT_PRODUCT, CORRECT_PAYMENT_ID))
+        when(paymentService.getPaymentById(SINGLE, PAYMENT_PRODUCT, CORRECT_PAYMENT_ID))
             .thenReturn(ResponseObject.builder().body(getPayment()).build());
-        when(paymentService.getPaymentById(PAYMENT_SERVICE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID))
+        when(paymentService.getPaymentById(SINGLE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID))
             .thenReturn(ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
 
 
@@ -68,7 +68,7 @@ public class PaymentControllerTest {
     public void getPaymentById() {
         when(responseMapper.ok(any())).thenReturn(new ResponseEntity<>(getPayment(), OK));
         //When
-        ResponseEntity response = paymentController.getPaymentById(PAYMENT_SERVICE, PAYMENT_PRODUCT, CORRECT_PAYMENT_ID);
+        ResponseEntity response = paymentController.getPaymentById(SINGLE, PAYMENT_PRODUCT, CORRECT_PAYMENT_ID);
         //Then
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertThat(response.getBody()).isEqualToComparingFieldByField(getPayment());
@@ -80,7 +80,7 @@ public class PaymentControllerTest {
             .thenReturn(new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)), HttpStatus.FORBIDDEN));
 
         //When
-        ResponseEntity response = paymentController.getPaymentById(PAYMENT_SERVICE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID);
+        ResponseEntity response = paymentController.getPaymentById(SINGLE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID);
         //Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }

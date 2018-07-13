@@ -151,14 +151,8 @@ public class PaymentService {
      * @param paymentId      ASPSP identifier of the payment
      * @return Response containing information about payment or corresponding error
      */
-    public ResponseObject<Object> getPaymentById(String paymentType, String paymentProduct, String paymentId) {
-        Optional<PaymentType> type = PaymentType.getByValue(paymentType);
-        if (!type.isPresent()) {
-            return ResponseObject.builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
-                       .build();
-        }
-        ReadPayment service = readPaymentFactory.getService(paymentType);
+    public ResponseObject<Object> getPaymentById(PaymentType paymentType, String paymentProduct, String paymentId) {
+        ReadPayment service = readPaymentFactory.getService(paymentType.getValue());
         Optional<Object> payment = Optional.ofNullable(service.getPayment(paymentProduct, paymentId));
         return payment.isPresent()
                    ? ResponseObject.builder().body(payment.get()).build()

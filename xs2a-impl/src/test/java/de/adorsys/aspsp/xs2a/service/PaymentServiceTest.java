@@ -49,6 +49,7 @@ import java.util.stream.Collectors;
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.domain.TransactionStatus.RCVD;
 import static de.adorsys.aspsp.xs2a.domain.TransactionStatus.RJCT;
+import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -64,7 +65,6 @@ public class PaymentServiceTest {
     private static final String EXCESSIVE_AMOUNT = "10000";
     private static final Currency CURRENCY = Currency.getInstance("EUR");
     private static final String ALLOWED_PAYMENT_PRODUCT = "sepa-credit-transfers";
-    private static final String PAYMENT_TYPE = "payments";
 
     private final PeriodicPayment PERIODIC_PAYMENT_OK = getPeriodicPayment(IBAN, AMOUNT);
     private final PeriodicPayment PERIODIC_PAYMENT_NOK_IBAN = getPeriodicPayment(WRONG_IBAN, AMOUNT);
@@ -285,7 +285,7 @@ public class PaymentServiceTest {
         when(paymentSpi.getSinglePaymentById(any(), any(), any())).thenReturn(getSpiSinglePayment(IBAN, AMOUNT));
         when(paymentMapper.mapToSinglePayment(any())).thenReturn(getSinglePayment(IBAN, AMOUNT));
         //When
-        ResponseObject<Object> response = paymentService.getPaymentById(PAYMENT_TYPE, ALLOWED_PAYMENT_PRODUCT, PAYMENT_ID);
+        ResponseObject<Object> response = paymentService.getPaymentById(SINGLE, ALLOWED_PAYMENT_PRODUCT, PAYMENT_ID);
         //Than
         assertThat(response.hasError()).isFalse();
         assertThat(response.getError()).isNull();
@@ -299,7 +299,7 @@ public class PaymentServiceTest {
         when(paymentSpi.getSinglePaymentById(any(), any(), any())).thenReturn(null);
         when(paymentMapper.mapToSinglePayment(any())).thenReturn(null);
         //When
-        ResponseObject<Object> response = paymentService.getPaymentById(PAYMENT_TYPE, ALLOWED_PAYMENT_PRODUCT, WRONG_PAYMENT_ID);
+        ResponseObject<Object> response = paymentService.getPaymentById(SINGLE, ALLOWED_PAYMENT_PRODUCT, WRONG_PAYMENT_ID);
         //Than
         assertThat(response.hasError()).isTrue();
         assertThat(response.getBody()).isNull();
