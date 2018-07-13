@@ -20,7 +20,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -32,17 +31,18 @@ public enum PaymentType {
     PERIODIC("periodic-payments");
 
     private String paymentType;
+    private final static Map<String, PaymentType> container = new HashMap<>();
+
 
     @JsonCreator
     PaymentType(String paymentType) {
         this.paymentType = paymentType;
     }
 
-    private static Map<String, PaymentType> container = new HashMap<>();
-
     static {
-        Arrays.stream(values())
-            .forEach(paymentType -> container.put(paymentType.getPaymentType(), paymentType));
+        for (PaymentType type : values()) {
+            container.put(type.getPaymentType(), type);
+        }
     }
 
     public String getPaymentType() {

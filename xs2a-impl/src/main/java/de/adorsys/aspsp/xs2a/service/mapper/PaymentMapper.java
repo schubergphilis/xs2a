@@ -16,10 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.service.mapper;
 
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisAddress;
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisPeriodicPayment;
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisRemittance;
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisSinglePayment;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
@@ -138,19 +134,19 @@ public class PaymentMapper {
                    });
     }
 
-    private String getFrequency(PeriodicPayment pp) {
+    String getFrequency(PeriodicPayment pp) {
         return Optional.ofNullable(pp.getFrequency())
                    .map(Enum::name)
                    .orElse(null);
     }
 
-    private String getCreditorAgentCode(PeriodicPayment payment) {
+    String getCreditorAgentCode(PeriodicPayment payment) {
         return Optional.ofNullable(payment.getCreditorAgent())
                    .map(BICFI::getCode)
                    .orElse(null);
     }
 
-    private String getPurposeCode(PeriodicPayment payment) {
+    String getPurposeCode(PeriodicPayment payment) {
         return Optional.ofNullable(payment.getPurposeCode())
                    .map(PurposeCode::getCode)
                    .orElse(null);
@@ -185,79 +181,6 @@ public class PaymentMapper {
         return payments.stream()
                    .map(this::mapToSpiSinglePayments)
                    .collect(Collectors.toList());
-    }
-
-    public PisSinglePayment mapToPisSinglePayment(SinglePayments paymentInitiationRequest) {
-        return Optional.ofNullable(paymentInitiationRequest)
-                   .map(payReq -> {
-                       PisSinglePayment pisSinglePayment = new PisSinglePayment();
-                       pisSinglePayment.setEndToEndIdentification(payReq.getEndToEndIdentification());
-                       pisSinglePayment.setDebtorAccount(accountMapper.mapToPisAccountReference(payReq.getDebtorAccount()));
-                       pisSinglePayment.setUltimateDebtor(payReq.getUltimateDebtor());
-                       pisSinglePayment.setInstructedAmount(accountMapper.mapToPisAmount(payReq.getInstructedAmount()));
-                       pisSinglePayment.setCreditorAccount(accountMapper.mapToPisAccountReference(payReq.getCreditorAccount()));
-                       pisSinglePayment.setCreditorAgent(Optional.ofNullable(payReq.getCreditorAgent())
-                                                             .map(BICFI::getCode).orElse(""));
-                       pisSinglePayment.setCreditorName(payReq.getCreditorName());
-                       pisSinglePayment.setCreditorAddress(mapToPisAddress(payReq.getCreditorAddress()));
-                       pisSinglePayment.setUltimateCreditor(payReq.getUltimateCreditor());
-                       pisSinglePayment.setPurposeCode(Optional.ofNullable(payReq.getPurposeCode())
-                                                           .map(PurposeCode::getCode).orElse(""));
-                       pisSinglePayment.setRemittanceInformationUnstructured(payReq.getRemittanceInformationUnstructured());
-                       pisSinglePayment.setRemittanceInformationStructured(mapToPisRemittance(payReq.getRemittanceInformationStructured()));
-                       pisSinglePayment.setRequestedExecutionDate(payReq.getRequestedExecutionDate());
-                       pisSinglePayment.setRequestedExecutionTime(payReq.getRequestedExecutionTime());
-
-                       return pisSinglePayment;
-                   })
-                   .orElse(null);
-    }
-
-    public List<PisSinglePayment> mapToPisSinglePaymentList(List<SinglePayments> singlePayments) {
-        return singlePayments.stream()
-                   .map(this::mapToPisSinglePayment)
-                   .collect(Collectors.toList());
-    }
-
-    public PisPeriodicPayment mapToPisPeriodicPayment(PeriodicPayment periodicPayment) {
-        return Optional.ofNullable(periodicPayment)
-                   .map(pp -> {
-                       PisPeriodicPayment pisPeriodicPayment = new PisPeriodicPayment();
-                       pisPeriodicPayment.setEndToEndIdentification(pp.getEndToEndIdentification());
-                       pisPeriodicPayment.setDebtorAccount(accountMapper.mapToPisAccountReference(pp.getDebtorAccount()));
-                       pisPeriodicPayment.setUltimateDebtor(pp.getUltimateDebtor());
-                       pisPeriodicPayment.setInstructedAmount(accountMapper.mapToPisAmount(pp.getInstructedAmount()));
-                       pisPeriodicPayment.setCreditorAccount(accountMapper.mapToPisAccountReference(pp.getCreditorAccount()));
-                       pisPeriodicPayment.setCreditorAgent(getCreditorAgentCode(pp));
-                       pisPeriodicPayment.setCreditorName(pp.getCreditorName());
-                       pisPeriodicPayment.setCreditorAddress(mapToPisAddress(pp.getCreditorAddress()));
-                       pisPeriodicPayment.setUltimateCreditor(pp.getUltimateCreditor());
-                       pisPeriodicPayment.setPurposeCode(getPurposeCode(pp));
-                       pisPeriodicPayment.setRemittanceInformationUnstructured(pp.getRemittanceInformationUnstructured());
-                       pisPeriodicPayment.setRemittanceInformationStructured(mapToPisRemittance(pp.getRemittanceInformationStructured()));
-                       pisPeriodicPayment.setRequestedExecutionDate(pp.getRequestedExecutionDate());
-                       pisPeriodicPayment.setRequestedExecutionTime(pp.getRequestedExecutionTime());
-                       pisPeriodicPayment.setStartDate(pp.getStartDate());
-                       pisPeriodicPayment.setExecutionRule(pp.getExecutionRule());
-                       pisPeriodicPayment.setEndDate(pp.getEndDate());
-                       pisPeriodicPayment.setFrequency(getFrequency(pp));
-                       pisPeriodicPayment.setDayOfExecution(pp.getDayOfExecution());
-
-                       return pisPeriodicPayment;
-                   })
-                   .orElse(null);
-    }
-
-    private PisAddress mapToPisAddress(Address address) {
-        return Optional.ofNullable(address)
-                   .map(a -> new PisAddress(a.getStreet(), a.getBuildingNumber(), a.getCity(), a.getPostalCode(), a.getCountry().toString()))
-                   .orElse(null);
-    }
-
-    private PisRemittance mapToPisRemittance(Remittance remittance) {
-        return Optional.ofNullable(remittance)
-                   .map(r -> new PisRemittance(r.getReference(), r.getReferenceType(), r.getReferenceIssuer()))
-                   .orElse(null);
     }
 
     public SpiPaymentType mapToSpiPaymentType(PaymentType paymentType) {
