@@ -25,6 +25,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayments;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -41,6 +42,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @Component
 @AllArgsConstructor
+@Profile("mockspi")
 public class PaymentSpiImpl implements PaymentSpi {
     private final AspspRemoteUrls aspspRemoteUrls;
     @Qualifier("aspspRestTemplate")
