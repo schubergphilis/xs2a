@@ -1,50 +1,48 @@
-package de.adorsys.aspsp.xs2a.stepdefinitions;
+package de.adorsys.aspsp.xs2a.integtest.stepdefinitions;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 
-@ConfigurationProperties
+@de.adorsys.aspsp.xs2a.integtest.stepdefinitions.FeatureFileSteps
 public class GlobalSteps {
 
     @Autowired
-    private Context context;
+    private de.adorsys.aspsp.xs2a.integtest.stepdefinitions.Context context;
 
-    @Value("${xs2a.baseUrl}")
-    private String baseUrl;
+    @Autowired
+    @Qualifier("xs2a")
+    private RestTemplate template;
 
-    @Value("${xs2a.auth.clientId}")
+    @Value("${auth.clientId}")
     private String clientId;
 
-    @Value("${xs2a.auth.clientSecret}")
+    @Value("${auth.clientSecret}")
     private String clientSecret;
 
-    @Value("${xs2a.auth.url}")
+    @Value("${auth.url}")
     private String keycloakUrl;
 
-    @Value("${xs2a.auth.grantType}")
+    @Value("${auth.grantType}")
     private String grantType;
 
-    @Value("${xs2a.auth.username}")
+    @Value("${auth.username}")
     private String username;
 
-    @Value("${xs2a.auth.password}")
+    @Value("${auth.password}")
     private String password;
-
-
 
     @Given("^PSU is logged in$")
     public void loginPsu() {
-        RestTemplate template = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -57,9 +55,14 @@ public class GlobalSteps {
 
         HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
-        ResponseEntity<HashMap> response = template.exchange(keycloakUrl, HttpMethod.POST, entity, HashMap.class);
+        ResponseEntity<HashMap> response = null;
+        try {
+            response = template.exchange(keycloakUrl, HttpMethod.POST, entity, HashMap.class);
+        } catch (RestClientException e) {
+            e.printStackTrace();
+        }
 
-        context.setAccessToken(response.getBody().get("access_token").toString());
+//        context.setAccessToken(response.getBody().get("access_token").toString());
     }
 
     @And("^(.*) approach is used$")

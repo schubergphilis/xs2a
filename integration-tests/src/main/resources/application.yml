@@ -15,54 +15,81 @@
 #
 
 
-xs2a-config:
-    read-timeout:
-        ms: 1000
-    connection-timeout:
-        ms: 10000
-
-aspspmockserver:
-    baseUrl: http://localhost:28080
-
-aspspmockserver-config:
-    read-timeout:
-        ms: 10000
-    connection-timeout:
-        ms: 10000
-
-
-
+spring:
+  profiles:
+    active: integ
+  jackson:
+    serialization.write_dates_as_timestamps: false
 
 ---
 spring:
     profiles: dev
 
-
 xs2a:
-    baseUrl: http://localhost:8080/api/v1
+  baseUrl: http://localhost:8080/api/v1
+  config:
+    readTimeoutInMs: 10000
+    connectionTimeoutInMs: 10000
+
+aspspMock:
+  baseUrl: http://localhost:28080
+  config:
+    readTimeoutInMs: 10000
+    connectionTimeoutInMs: 10000
+
+aspspProfile:
+  baseUrl: http://localhost:48080/api/v1
+  config:
+    readTimeoutInMs: 10000
+    connectionTimeoutInMs: 10000
+
+consent:
+  baseUrl: http://localhost:38080/api/v1
+  config:
+    readTimeoutInMs: 10000
+    connectionTimeoutInMs: 10000
+
+auth:
+  clientId:
+  clientSecret:
+  url:
+  grantType:
+  username:
+  password:
 
 ---
 
 spring:
     profiles: integ
 
+xs2a:
+  baseUrl: https://xs2a.cloud.adorsys.de/api/v1
+  config:
+    readTimeoutInMs: 10000
+    connectionTimeoutInMs: 10000
 
+aspspMock:
+  baseUrl: http://localhost:28080
+  config:
+    readTimeoutInMs: 10000
+    connectionTimeoutInMs: 10000
 
-xs2a.baseurl=http://localhost:8080/api/v1
-xs2a-config.read-timeout.ms=10000
-xs2a-config.connection-timeout.ms=10000
+aspspProfile:
+  baseUrl: http://localhost:48080/api/v1
+  config:
+    readTimeoutInMs: 10000
+    connectionTimeoutInMs: 10000
 
-aspspmockserver.baseurl=http://localhost:28080
-aspspmockserver-config.read-timeout.ms = 10000
-aspspmockserver-config.connection-timeout.ms = 10000
+consent:
+  baseUrl: http://localhost:38080/api/v1
+  config:
+    readTimeoutInMs: 10000
+    connectionTimeoutInMs: 10000
 
-consent-service.baseurl=http://localhost:38080/api/v1
-rest-consent-config.read-timeout.ms=10000
-rest-consent-config.connection-timeout.ms=10000
-
-aspsp-profile.baseurl=http://localhost:48080/api/v1
-rest-aspsp-profile-config.read-timeout.ms=10000
-rest-aspsp-profile.connection-timeout.ms=10000
-
---
-
+auth:
+  clientId: xs2a-impl-business
+  clientSecret: 9946274d-7e60-4082-afc8-2e56e833ec71
+  url: https://xs2a-idp.cloud.adorsys.de/auth/realms/xs2a/protocol/openid-connect/token
+  grantType: password
+  username: tppDemoDeveloper
+  password: zzz

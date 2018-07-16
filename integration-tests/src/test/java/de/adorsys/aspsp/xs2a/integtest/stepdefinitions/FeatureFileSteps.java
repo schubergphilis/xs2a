@@ -1,4 +1,4 @@
-package de.adorsys.aspsp.xs2a.stepdefinitions;
+package de.adorsys.aspsp.xs2a.integtest.stepdefinitions;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @ContextConfiguration("classpath:*cucumber.xml")
-@ActiveProfiles("cucumber")
+@ActiveProfiles("integ")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public @interface FeatureFileSteps {
 }
