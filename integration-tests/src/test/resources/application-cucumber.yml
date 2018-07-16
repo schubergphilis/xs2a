@@ -1,0 +1,10 @@
+xs2a:
+  baseUrl: https://xs2a.cloud.adorsys.de/api/v1
+
+  auth:
+    clientId: xs2a-impl-business
+    clientSecret: 9946274d-7e60-4082-afc8-2e56e833ec71
+    url: https://xs2a-idp.cloud.adorsys.de/auth/realms/xs2a/protocol/openid-connect/token
+    grantType: password
+    username: tppDemoDeveloper
+    password: zzz

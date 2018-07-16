@@ -14,6 +14,40 @@
 # limitations under the License.
 #
 
+
+xs2a-config:
+    read-timeout:
+        ms: 1000
+    connection-timeout:
+        ms: 10000
+
+aspspmockserver:
+    baseUrl: http://localhost:28080
+
+aspspmockserver-config:
+    read-timeout:
+        ms: 10000
+    connection-timeout:
+        ms: 10000
+
+
+
+
+---
+spring:
+    profiles: dev
+
+
+xs2a:
+    baseUrl: http://localhost:8080/api/v1
+
+---
+
+spring:
+    profiles: integ
+
+
+
 xs2a.baseurl=http://localhost:8080/api/v1
 xs2a-config.read-timeout.ms=10000
 xs2a-config.connection-timeout.ms=10000
@@ -29,3 +63,6 @@ rest-consent-config.connection-timeout.ms=10000
 aspsp-profile.baseurl=http://localhost:48080/api/v1
 rest-aspsp-profile-config.read-timeout.ms=10000
 rest-aspsp-profile.connection-timeout.ms=10000
+
+--
+
