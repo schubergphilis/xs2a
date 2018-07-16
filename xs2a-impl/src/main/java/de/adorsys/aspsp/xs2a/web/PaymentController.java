@@ -46,16 +46,17 @@ public class PaymentController<T> {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "Content-Type", value = "application/json", required = true, dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "X-Request-ID", value = "16d40f49-a110-4344-a949-f99828ae13c9", required = true, dataType = "UUID", paramType = "header"),
-        @ApiImplicitParam(name = "tpp-request-id", value = "2f77a125-aa7a-45c0-b414-cea25a116035", required = true, dataType = "UUID", paramType = "header"),
+        @ApiImplicitParam(name = "PSU-ID", value = "2f77a125-aa7a-45c0-b414-cea25a116035", required = false, dataType = "String", paramType = "header"),
+        @ApiImplicitParam(name = "PSU-ID-Type", value = "no data", required = false, dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "signature", value = "98c0", required = false, dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "tpp-certificate", value = "some certificate", required = false, dataType = "String", paramType = "header"),
-        @ApiImplicitParam(name = "PSU-IP-Address", value = "192.168.0.26", dataType = "String", paramType = "header")})//NOPMD //Ip is required as description of the field
+        @ApiImplicitParam(name = "PSU-IP-Address", value = "192.168.0.26", required = true, dataType = "String", paramType = "header")})//NOPMD //Ip is required as description of the field
     public ResponseEntity getPaymentById(
-        @ApiParam(name = "payment-service", value = "The addressed payment service", allowableValues = "payments, bulk-payments,periodic-payments")
+        @ApiParam(name = "payment-service", value = "The addressed payment service", required = true, allowableValues = "payments, bulk-payments,periodic-payments")
         @PathVariable("payment-service") PaymentType paymentType,
-        @ApiParam(name = "payment-product", value = "The addressed payment product ", allowableValues = "sepa-credit-transfers, target-2-payments, instant-sepa-credit-transfers, cross-border-credit-transfers")
+        @ApiParam(name = "payment-product", value = "The addressed payment product ", required = true, allowableValues = "sepa-credit-transfers, target-2-payments, instant-sepa-credit-transfers, cross-border-credit-transfers")
         @PathVariable("payment-product") String paymentProduct,
-        @ApiParam(name = "paymentId", value = "529e0507-7539-4a65-9b74-bdf87061e99b")
+        @ApiParam(name = "paymentId", value = "529e0507-7539-4a65-9b74-bdf87061e99b", required = true)
         @PathVariable("paymentId") String paymentId) {
         return responseMapper.ok(paymentService.getPaymentById(paymentType, paymentProduct, paymentId));
     }

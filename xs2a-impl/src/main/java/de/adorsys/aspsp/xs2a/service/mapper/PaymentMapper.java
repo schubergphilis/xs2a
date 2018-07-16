@@ -184,7 +184,7 @@ public class PaymentMapper {
     }
 
     public SpiPaymentType mapToSpiPaymentType(PaymentType paymentType) {
-        return SpiPaymentType.valueOf(paymentType.getValue());
+        return SpiPaymentType.valueOf(paymentType.name());
     }
 
     public SinglePayments mapToSinglePayment(SpiSinglePayments spiSinglePayment) {
@@ -211,29 +211,42 @@ public class PaymentMapper {
     }
 
     private PurposeCode mapToPurposeCode(String purposeCode) {
-        PurposeCode code = new PurposeCode();
-        code.setCode(purposeCode);
-        return code;
+        return Optional.ofNullable(purposeCode)
+                   .map(p -> {
+                       PurposeCode code = new PurposeCode();
+                       code.setCode(purposeCode);
+                       return code;
+                   })
+                   .orElse(new PurposeCode());
     }
 
     private Remittance mapToRemittance(SpiRemittance remittanceInformationStructured) {
-        Remittance remittance = new Remittance();
-        remittance.setReference(remittanceInformationStructured.getReference());
-        remittance.setReferenceIssuer(remittanceInformationStructured.getReferenceIssuer());
-        remittance.setReferenceType(remittanceInformationStructured.getReferenceType());
-        return remittance;
+        return Optional.ofNullable(remittanceInformationStructured)
+                   .map(r -> {
+                       Remittance remittance = new Remittance();
+                       remittance.setReference(r.getReference());
+                       remittance.setReferenceIssuer(r.getReferenceIssuer());
+                       remittance.setReferenceType(r.getReferenceType());
+                       return remittance;
+                   })
+                   .orElse(new Remittance());
     }
 
     private Address mapToAddress(SpiAddress creditorAddress) {
-        Address address = new Address();
-        CountryCode code = new CountryCode();
-        code.setCode(creditorAddress.getCountry());
-        address.setCountry(code);
-        address.setPostalCode(creditorAddress.getPostalCode());
-        address.setCity(creditorAddress.getCity());
-        address.setStreet(creditorAddress.getStreet());
-        address.setBuildingNumber(creditorAddress.getBuildingNumber());
-        return address;
+        return Optional.ofNullable(creditorAddress)
+                   .map(a -> {
+                       Address address = new Address();
+                       CountryCode code = new CountryCode();
+                       code.setCode(Optional.ofNullable(a.getCountry()).orElse(null));
+                       address.setCountry(code);
+                       address.setPostalCode(a.getPostalCode());
+                       address.setCity(a.getCity());
+                       address.setStreet(a.getStreet());
+                       address.setBuildingNumber(a.getBuildingNumber());
+                       return address;
+                   })
+                   .orElse(new Address());
+
     }
 
     private BICFI mapToBICFI(String creditorAgent) {
