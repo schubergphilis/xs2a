@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain.common;
+package de.adorsys.aspsp.xs2a.integtest;
 
-public enum TransactionsArt {
-    booked, expected, authorised, opening_booked, closing_booked, interim_available
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class IntegrationTestApp {
+    public static void main(String[] args) {
+            SpringApplication.run(IntegrationTestApp.class, args);
+    }
 }
