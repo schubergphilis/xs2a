@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.web;
 
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
+import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
@@ -127,9 +128,6 @@ public class PaymentInitiationControllerTest {
 
     private ResponseObject readResponseObject() throws IOException {
         PaymentInitialisationResponse resp = readPaymentInitialisationResponse();
-        resp.setIban("DE371234599999");
-        resp.setPisConsentId("932f8184-59dc-4fdb-848e-58b887b3ba02");
-
         return ResponseObject.builder().body(resp).build();
     }
 
@@ -137,6 +135,9 @@ public class PaymentInitiationControllerTest {
         PaymentInitialisationResponse resp = jsonConverter.toObject(IOUtils.resourceToString(CREATE_PAYMENT_INITIATION_RESPONSE_JSON_PATH, UTF_8), PaymentInitialisationResponse.class).get();
         resp.setIban("DE371234599999");
         resp.setPisConsentId("932f8184-59dc-4fdb-848e-58b887b3ba02");
+        Links links = new Links();
+        links.setScaRedirect(REDIRECT_LINK + resp.getIban() + "/" + resp.getPisConsentId() + "/" + resp.getPaymentId());
+
 
         return resp;
     }

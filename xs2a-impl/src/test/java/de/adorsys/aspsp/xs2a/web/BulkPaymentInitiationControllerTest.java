@@ -97,7 +97,7 @@ public class BulkPaymentInitiationControllerTest {
         PaymentInitialisationResponse response = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitialisationResponse.class).get();
         List<PaymentInitialisationResponse> responseList = new ArrayList<>();
         Links links = new Links();
-        links.setScaRedirect(REDIRECT_LINK + response.getIban() + "/" + response.getPisConsentId());
+        links.setScaRedirect(REDIRECT_LINK + response.getIban() + "/" + response.getPisConsentId() + "/" + response.getPaymentId());
         links.setSelf(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());
         links.setUpdatePsuIdentification(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());
         links.setUpdatePsuAuthentication(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());

@@ -27,6 +27,17 @@
     <p th:utext="*{instructedAmount.content}"></p>
     <label>Currency:</label>
     <p th:utext="*{instructedAmount.currency}"></p>
+    <label>Debtor: </label>
+    <p th:utext="*{paymentDetails.ultimateDebtor}"></p>
+    <p th:utext="*{paymentDetails.debtorAccount.getIban()}"></p>
+    <label>Creditor: </label>
+    <p th:utext="*{paymentDetails.creditorName}"></p>
+    <p th:utext="*{paymentDetails.creditorAccount.getIban()}"></p>
+
+    <label>Date: </label>
+    <p th:utext="*{paymentDetails.requestedExecutionDate}"></p>
+    <label>Time: </label>
+    <p th:utext="*{paymentDetails.requestedExecutionTime}"></p>
 </div>
 </body>
 </html>
