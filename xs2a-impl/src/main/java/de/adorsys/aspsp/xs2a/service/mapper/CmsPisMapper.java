@@ -26,7 +26,7 @@ import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.Remittance;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CmsPisMapper {
     private AccountMapper accountMapper;
     private PaymentMapper paymentMapper;
@@ -102,7 +102,7 @@ public class CmsPisMapper {
 
     private PisAddress mapToPisAddress(Address address) {
         return Optional.ofNullable(address)
-                   .map(a -> new PisAddress(a.getStreet(), a.getBuildingNumber(), a.getCity(), a.getPostalCode(), a.getCountry().toString()))
+                   .map(a -> new PisAddress(a.getStreet(), a.getBuildingNumber(), a.getCity(), a.getPostalCode(), a.getCountry().getCode()))
                    .orElse(null);
     }
 
