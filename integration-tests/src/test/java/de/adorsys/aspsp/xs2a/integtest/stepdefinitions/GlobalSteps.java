@@ -2,6 +2,7 @@ package de.adorsys.aspsp.xs2a.integtest.stepdefinitions;
 
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,14 +14,14 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 
-@de.adorsys.aspsp.xs2a.integtest.stepdefinitions.FeatureFileSteps
+@FeatureFileSteps
 public class GlobalSteps {
 
     @Autowired
-    private de.adorsys.aspsp.xs2a.integtest.stepdefinitions.Context context;
+    private Context context;
 
     @Autowired
-    @Qualifier("xs2a")
+    @Qualifier("aspsp-mock")
     private RestTemplate template;
 
     @Value("${auth.clientId}")
@@ -62,7 +63,7 @@ public class GlobalSteps {
             e.printStackTrace();
         }
 
-//        context.setAccessToken(response.getBody().get("access_token").toString());
+        context.setAccessToken(response.getBody().get("access_token").toString());
     }
 
     @And("^(.*) approach is used$")

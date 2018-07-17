@@ -5,8 +5,8 @@ import lombok.Getter;
 import java.util.Map;
 
 @Getter
-public class Response {
+public class Response<T> {
     String code;
     Map<String, String> header;
-    Object body;
+    T body;
 }

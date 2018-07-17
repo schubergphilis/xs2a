@@ -17,7 +17,7 @@
 
 spring:
   profiles:
-    active: integ
+    active: dev
   jackson:
     serialization.write_dates_as_timestamps: false
 
@@ -50,12 +50,12 @@ consent:
     connectionTimeoutInMs: 10000
 
 auth:
-  clientId:
-  clientSecret:
-  url:
-  grantType:
-  username:
-  password:
+  clientId: xs2a-impl
+  clientSecret: 7db3ea97-e85c-4c4e-be4e-bc8a49e36740
+  url: http://localhost:8081/auth/realms/xs2a/protocol/openid-connect/token
+  grantType: password
+  username: aspsp
+  password: zzz
 
 ---
 
@@ -63,7 +63,7 @@ spring:
     profiles: integ
 
 xs2a:
-  baseUrl: https://xs2a.cloud.adorsys.de/api/v1
+  baseUrl: https://xs2a.integ.cloud.adorsys.de/api/v1
   config:
     readTimeoutInMs: 10000
     connectionTimeoutInMs: 10000
@@ -87,9 +87,9 @@ consent:
     connectionTimeoutInMs: 10000
 
 auth:
-  clientId: xs2a-impl-business
-  clientSecret: 9946274d-7e60-4082-afc8-2e56e833ec71
-  url: https://xs2a-idp.cloud.adorsys.de/auth/realms/xs2a/protocol/openid-connect/token
+  clientId: xs2a-impl
+  clientSecret: 99e0af67-d034-42a0-856e-63af0b8769aa
+  url: https://xs2a-idp-integ.cloud.adorsys.de/auth/realms/xs2a/protocol/openid-connect/token
   grantType: password
-  username: tppDemoDeveloper
+  username: aspsp
   password: zzz

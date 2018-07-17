@@ -193,6 +193,7 @@
                     <profiles>
                         <profile>mockspi</profile>
                     </profiles>
+                    <classifier>exec</classifier>
                 </configuration>
                 <executions>
                     <execution>

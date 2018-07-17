@@ -7,6 +7,7 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
+import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
@@ -19,20 +20,19 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-@de.adorsys.aspsp.xs2a.integtest.stepdefinitions.FeatureFileSteps
+@FeatureFileSteps
 public class PISSteps {
 
     @Autowired
-    @Qualifier("xs2a")
+    @Qualifier("aspsp-mock")
     private RestTemplate restTemplate;
 
     @Autowired
-    private de.adorsys.aspsp.xs2a.integtest.stepdefinitions.Context context;
+    private Context context;
 
     /* see GlobalSteps.java
         @Given("^PSU is logged in$")
@@ -43,7 +43,7 @@ public class PISSteps {
     */
 
     @And("^PSU wants to initiate a single payment (.*) using the payment product (.*)$")
-    public void initiateSinglePayment(String dataFileName, String paymentProduct) throws IOException {
+    public void loadTestData(String dataFileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
 
         File jsonFile = new File("src/test/resources/data-input/" + dataFileName);
@@ -65,7 +65,7 @@ public class PISSteps {
             headers);
 
         ResponseEntity<HashMap> response = restTemplate.exchange(
-            context.getBaseUrl() + "payments/" + context.getPaymentProduct(),
+            context.getMockUrl() + "/payments/" + context.getPaymentProduct(),
             HttpMethod.POST,
             entity,
             HashMap.class);
@@ -75,8 +75,8 @@ public class PISSteps {
 
     @Then("^a payment resource is created at the aspsp mock$")
     public void checkResponse() {
-        ResponseEntity response = context.getResponse();
+        ResponseEntity<HashMap> response = context.getResponse();
         assertThat(response.getStatusCode(), equalTo(context.getTestData().getResponse().getCode()));
-        assertThat(((HashMap) ((HashMap) response.getBody()).get("_links")).get("redirect"), notNullValue());
+        assertThat(((HashMap)response.getBody().get("_links")).get("redirect"), notNullValue());
     }
 }

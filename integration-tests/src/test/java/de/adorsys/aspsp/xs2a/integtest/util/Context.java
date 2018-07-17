@@ -1,4 +1,4 @@
-package de.adorsys.aspsp.xs2a.integtest.stepdefinitions;
+package de.adorsys.aspsp.xs2a.integtest.util;
 
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import lombok.Data;
@@ -15,6 +15,9 @@ public class Context {
 
     @Value("${xs2a.baseUrl}")
     private String baseUrl;
+
+    @Value("${aspspMock.baseUrl}")
+    private String mockUrl;
 
     String scaApproach;
     String paymentProduct;
