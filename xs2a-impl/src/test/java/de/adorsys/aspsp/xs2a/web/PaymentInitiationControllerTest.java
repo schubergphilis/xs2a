@@ -38,6 +38,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -136,8 +137,8 @@ public class PaymentInitiationControllerTest {
         resp.setIban("DE371234599999");
         resp.setPisConsentId("932f8184-59dc-4fdb-848e-58b887b3ba02");
         Links links = new Links();
-        links.setScaRedirect(REDIRECT_LINK + resp.getIban() + "/" + resp.getPisConsentId() + "/" + resp.getPaymentId());
-
+        String encodedPaymentId = Base64.getEncoder().encodeToString(resp.getPaymentId().getBytes());
+        links.setScaRedirect(REDIRECT_LINK + resp.getIban() + "/" + resp.getPisConsentId() + "/" + encodedPaymentId);
 
         return resp;
     }

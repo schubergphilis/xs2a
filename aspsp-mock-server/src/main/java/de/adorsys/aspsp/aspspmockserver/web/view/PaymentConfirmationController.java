@@ -26,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.Base64;
 import java.util.Optional;
 
 import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REVOKED_BY_PSU;
@@ -46,8 +47,9 @@ public class PaymentConfirmationController {
                                              @PathVariable("payment-id") String paymentId) {
 
         paymentConfirmationService.generateAndSendTanForPsuByIban(iban);
+        String decodedPaymentId = new String(Base64.getDecoder().decode(paymentId));
 
-        return new ModelAndView("tanConfirmationPage", "paymentConfirmation", new PaymentConfirmation(iban, consentId, paymentId));
+        return new ModelAndView("tanConfirmationPage", "paymentConfirmation", new PaymentConfirmation(iban, consentId, decodedPaymentId));
     }
 
     @PostMapping

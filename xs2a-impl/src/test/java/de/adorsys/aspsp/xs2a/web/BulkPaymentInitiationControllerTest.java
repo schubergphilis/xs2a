@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -97,7 +98,8 @@ public class BulkPaymentInitiationControllerTest {
         PaymentInitialisationResponse response = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitialisationResponse.class).get();
         List<PaymentInitialisationResponse> responseList = new ArrayList<>();
         Links links = new Links();
-        links.setScaRedirect(REDIRECT_LINK + response.getIban() + "/" + response.getPisConsentId() + "/" + response.getPaymentId());
+        String encodedPaymentId = Base64.getEncoder().encodeToString(response.getPaymentId().getBytes());
+        links.setScaRedirect(REDIRECT_LINK + response.getIban() + "/" + response.getPisConsentId() + "/" + encodedPaymentId);
         links.setSelf(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());
         links.setUpdatePsuIdentification(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());
         links.setUpdatePsuAuthentication(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());
