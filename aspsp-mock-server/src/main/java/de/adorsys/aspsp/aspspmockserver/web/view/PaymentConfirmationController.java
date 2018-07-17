@@ -18,12 +18,15 @@ package de.adorsys.aspsp.aspspmockserver.web.view;
 
 import de.adorsys.aspsp.aspspmockserver.service.PaymentService;
 import de.adorsys.aspsp.aspspmockserver.service.PaymentConfirmationService;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.AspspPayment;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REVOKED_BY_PSU;
 import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.VALID;
@@ -51,12 +54,18 @@ public class PaymentConfirmationController {
     @ApiOperation(value = "Displays content of email TAN confirmation page")
     public ModelAndView confirmTan(@ModelAttribute("paymentConfirmation") PaymentConfirmation paymentConfirmation,
                                    ModelAndView model) {
-        model.addObject("paymentDetails", paymentService.getPaymentById(paymentConfirmation.getPaymentId()));
-        model.addObject("paymentConfirmation", paymentConfirmation);
-        String viewName = paymentConfirmationService.isTanNumberValidByIban(paymentConfirmation.getIban(), paymentConfirmation.getTanNumber(), paymentConfirmation.getConsentId())
-                              ? "consentConfirmationPage"
-                              : "tanConfirmationError";
-        model.setViewName(viewName);
+        Optional<AspspPayment> payment = paymentService.getPaymentById(paymentConfirmation.getPaymentId());
+        if(payment.isPresent()) {
+            model.addObject("paymentDetails", payment.get());
+            model.addObject("paymentConfirmation", paymentConfirmation);
+            String viewName = paymentConfirmationService.isTanNumberValidByIban(paymentConfirmation.getIban(), paymentConfirmation.getTanNumber(), paymentConfirmation.getConsentId())
+                                  ? "consentConfirmationPage"
+                                  : "tanConfirmationError";
+            model.setViewName(viewName);
+        }
+        else {
+            model.setViewName("paymentFailurePage");
+        }
 
         return model;
     }
@@ -65,7 +74,7 @@ public class PaymentConfirmationController {
     @ApiOperation(value = "Proceeds payment and changes the status of the corresponding consent")
     public ModelAndView proceedPayment(@ModelAttribute("paymentConfirmation") PaymentConfirmation paymentConfirmation) {
         paymentService.updatePaymentConsentStatus(paymentConfirmation.getConsentId(), VALID);
-        return new ModelAndView("paymentSuccessPage", "paymentDetails", paymentService.getPaymentById(paymentConfirmation.getPaymentId()));
+        return new ModelAndView("paymentSuccessPage", "paymentDetails", paymentService.getPaymentById(paymentConfirmation.getPaymentId()).get());
     }
 
     @PostMapping(path = "/consent", params = "decision=revoked")
