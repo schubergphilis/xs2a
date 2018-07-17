@@ -17,6 +17,9 @@
 package de.adorsys.aspsp.xs2a.domain.pis;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Address;
@@ -78,11 +81,12 @@ public class SinglePayments {
     private Remittance remittanceInformationStructured;
 
     @ApiModelProperty(value = "requested execution date", example = "2017-01-01")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     @FutureOrPresent
     private LocalDate requestedExecutionDate;
 
     @ApiModelProperty(value = "requested execution time", example = "2017-10-25T15:30:35.035")
-    @FutureOrPresent
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     // TODO add support of all types of DateTime https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/148
     private LocalDateTime requestedExecutionTime;
 
