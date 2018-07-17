@@ -33,7 +33,7 @@
     <label> Payment id: </label>
     <p th:utext="*{paymentDetails.paymentId}"></p>
     <label>The purchase:</label>
-    <p th:utext="*{paymentDetails.purposeCode}"></p>
+    <p th:utext="*{paymentDetails.remittanceInformationUnstructured}"></p>
     <label>Amount: </label>
     <p th:utext="*{paymentDetails.instructedAmount.getContent().toString()}"></p>
     <label>Debtor: </label>

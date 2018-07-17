@@ -43,7 +43,7 @@ abstract class CommonRequestHeader implements RequestHeader {
     @NotNull
     private UUID xRequestId;
 
-    @ApiModelProperty(value = "A signature of the request by the TPP on application level. This might be mandated by ASPSP", required = false, example = "keyId='Serial_Number_Of_The_TPP’s_certificate',algorithm='rsa- sha256', headers='Digest TPP-Transaction-ID TPP-Request-ID PSU-ID Date', signature='Base64(RSA-SHA256(signing string))")
+    @ApiModelProperty(value = "A signature of the request by the TPP on application level. This might be mandated by ASPSP", required = false, example = "keyId='Serial_Number_Of_The_TPP’s_certificate',algorithm='rsa- sha256', headers='Digest TPP-Transaction-ID x-request-id PSU-ID Date', signature='Base64(RSA-SHA256(signing string))")
     @JsonProperty(value = "signature")
     private String signature;
 
