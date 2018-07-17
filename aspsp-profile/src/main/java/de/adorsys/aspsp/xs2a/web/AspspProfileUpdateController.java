@@ -16,6 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.web;
 
+import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
@@ -24,10 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -128,6 +126,18 @@ public class AspspProfileUpdateController {
         @ApiResponse(code = 400, message = "Bad request")})
     public ResponseEntity<Void> updateMulticurrencyAccountLevel(@RequestBody String multicurrencyAccountLevel) {
         aspspProfileService.updateMulticurrencyAccountLevel(MulticurrencyAccountLevel.valueOf(multicurrencyAccountLevel.trim().toUpperCase()));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/booking-status")
+    @ApiOperation(value = "Updates supported multicurrency account levels. Only for DEBUG!")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = String.class),
+        @ApiResponse(code = 400, message = "Bad request")})
+    public ResponseEntity<Void> updateBookingStatus(
+        @ApiParam(name = "bookingStatus", value = "bookingStatus", required = true, allowableValues = "booked, pending, both", defaultValue = "booked")
+        @RequestParam String bookingStatus) {
+        aspspProfileService.updateBookingStatus(BookingStatus.valueOf(bookingStatus.trim().toUpperCase()));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

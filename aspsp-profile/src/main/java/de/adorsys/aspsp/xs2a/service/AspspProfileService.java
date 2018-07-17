@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.config.ProfileConfiguration;
+import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
 import lombok.RequiredArgsConstructor;
@@ -159,9 +160,24 @@ public class AspspProfileService {
 
     /**
      * Update value of supported multicurrency account levels
-     * @param multicurrencyAccountLevel new value of of supported multicurrency account levels
+     * @param multicurrencyAccountLevel new value of supported multicurrency account levels
      */
     public void updateMulticurrencyAccountLevel(MulticurrencyAccountLevel multicurrencyAccountLevel) {
         profileConfiguration.setMulticurrencyAccountLevel(multicurrencyAccountLevel);
+    }
+
+    /**
+     * Read supported booking status
+     */
+    public BookingStatus getBookingStatus(){
+        return profileConfiguration.getBookingStatus();
+    }
+
+    /**
+     * Update value of booking status
+     * @param bookingStatus new value of booking status
+     */
+    public void updateBookingStatus(BookingStatus bookingStatus) {
+        profileConfiguration.setBookingStatus(bookingStatus);
     }
 }

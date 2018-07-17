@@ -13,3 +13,4 @@ setting:
  pisRedirectUrlToAspsp: http://localhost:28080/view/payment/confirmation/
  aisRedirectUrlToAspsp: http://localhost:28080/
  multicurrencyAccountLevel: SUBACCOUNT
+ bookingStatus: BOOKED

@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.config;
 
 
+import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.PaymentType;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
@@ -81,6 +82,8 @@ public class ProfileConfiguration {
      * Multicurrency account types supported by ASPSP
      */
     private MulticurrencyAccountLevel multicurrencyAccountLevel;
+
+    private BookingStatus bookingStatus;
 
     @PostConstruct
     private void addNecessaryPaymentTypesByDefault() { //NOPMD It is necessary for set single payment available by default
