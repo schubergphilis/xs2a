@@ -76,6 +76,11 @@ public class AccountMockServerData {
         transactionRepository.save(getTransaction("0007", psus.get(2), psus.get(1), BigDecimal.valueOf(120), EUR, LocalDate.parse("2018-01-02"), LocalDate.parse("2018-01-02")));
         transactionRepository.save(getTransaction("0008", psus.get(1), psus.get(2), BigDecimal.valueOf(30), USD, null, LocalDate.parse("2018-02-02")));
         transactionRepository.save(getTransaction("0009", psus.get(1), psus.get(2), BigDecimal.valueOf(80), EUR, LocalDate.parse("2018-02-02"), LocalDate.parse("2018-02-02")));
+
+        // Transaction data for Cucumber test
+        transactionRepository.save(getTransaction("ba8f7012-bdaf-4ada-bbf7-4c004d046ffe", psus.get(4), psus.get(3), BigDecimal.valueOf(80), EUR, LocalDate.parse("2018-01-01"), LocalDate.parse("2018-01-01")));
+        transactionRepository.save(getTransaction("7d12ff85-8ace-4124-877a-6bc3f125e98b", psus.get(5), psus.get(3), BigDecimal.valueOf(90), EUR, LocalDate.parse("2018-01-01"), LocalDate.parse("2018-01-01")));
+        transactionRepository.save(getTransaction("bb0962ca-f6db-4ba7-b187-2b2e1af25845", psus.get(6), psus.get(3), BigDecimal.valueOf(100), EUR, LocalDate.parse("2018-01-01"), LocalDate.parse("2018-01-01")));
     }
 
     private SpiTransaction getTransaction(String transactionId, Psu creditor, Psu debtor, BigDecimal amount, Currency currency, LocalDate bookingDate, LocalDate valueDate) {
@@ -103,7 +108,12 @@ public class AccountMockServerData {
             psuRepository.save(new Psu("PSU_003", "test3@gmail.com", Arrays.asList(accountDetails.get(5), accountDetails.get(6)), ALLOWED_PAYMENTS)),
 
             // Test User for Cucumber tests
-            psuRepository.save(new Psu("PSU_Cucumber", "mueller.alex@web.de", Arrays.asList(accountDetails.get(7)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER)));
+            psuRepository.save(new Psu("d9e71419-24e4-4c5a-8d93-fcc23153aaff", "mueller.alex@web.de", Arrays.asList(accountDetails.get(7)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER)),
+            psuRepository.save(new Psu("PSU_CucumberGreenpeace", "greenpeace@web.de", Arrays.asList(accountDetails.get(8)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER)),
+            psuRepository.save(new Psu("PSU_CucumberTelekom", "telekom@telekom.de", Arrays.asList(accountDetails.get(9)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER)),
+            psuRepository.save(new Psu("PSU_CucumberJochen", "jochen.mueller@web.de", Arrays.asList(accountDetails.get(10)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER))
+        );
+
     }
 
     private List<SpiAccountDetails> fillAccounts() {
@@ -118,7 +128,10 @@ public class AccountMockServerData {
             getNewAccount("66666-999999999", getNewBalanceList(USD, BigDecimal.valueOf(1400), BigDecimal.valueOf(700)), "DE89370400440532013005", "CXZCC6427T", "DEUTDE8EXXX", "Company AG", "SCT"),
 
             // account Test User for Cucumber
-            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8add", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(287.99)), "DE81432100000004111111", null, null, "Alexander Mueller", "GIRO")
+            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8add", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(287.99)), "DE81432100000004111111", null, null, "Alexander Mueller", "GIRO"),
+            getNewAccountCucumberTest("88888-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(1000000)), "DE81432100000004222222", null, null, "Greenpeace", "GIRO"),
+            getNewAccountCucumberTest("99999-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(500000)), "DE81432100000004333333", null, null, "Telekom", "GIRO"),
+            getNewAccountCucumberTest("12345-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(50000)), "DE81432100000004444444", null, null, "Jochen Mueller", "GIRO")
         );
     }
 
