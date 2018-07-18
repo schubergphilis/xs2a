@@ -19,7 +19,6 @@ package de.adorsys.aspsp.xs2a.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
-import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
@@ -41,14 +40,12 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Mockito.when;
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BulkPaymentInitiationControllerTest {
@@ -102,14 +99,6 @@ public class BulkPaymentInitiationControllerTest {
     private List<PaymentInitialisationResponse> readPaymentInitialisationResponse() throws IOException {
         PaymentInitialisationResponse response = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitialisationResponse.class).get();
         List<PaymentInitialisationResponse> responseList = new ArrayList<>();
-        Links links = new Links();
-        String encodedPaymentId = Base64.getEncoder().encodeToString(response.getPaymentId().getBytes());
-        links.setScaRedirect(REDIRECT_LINK + response.getIban() + "/" + response.getPisConsentId() + "/" + encodedPaymentId);
-        links.setSelf(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());
-        links.setUpdatePsuIdentification(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());
-        links.setUpdatePsuAuthentication(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash(response.getPaymentId()).toString());
-        links.setStatus(linkTo(BulkPaymentInitiationController.class, PAYMENT_PRODUCT.getCode()).slash("status").toString());
-        response.setLinks(links);
         responseList.add(response);
 
         return responseList;
