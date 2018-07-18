@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.aspspmockserver.web.view;
+package de.adorsys.aspsp.aspspmockserver.domain;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
