@@ -10,10 +10,7 @@ import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
@@ -65,7 +62,7 @@ public class PISSteps {
             headers);
 
         ResponseEntity<HashMap> response = restTemplate.exchange(
-            context.getMockUrl() + "/payments/" + context.getPaymentProduct(),
+            context.getBaseUrl() + "/payments/" + context.getPaymentProduct(),
             HttpMethod.POST,
             entity,
             HashMap.class);
@@ -73,10 +70,16 @@ public class PISSteps {
         context.setResponse(response);
     }
 
-    @Then("^a payment resource is created at the aspsp mock$")
-    public void checkResponse() {
+    @Then("^a successful response code and$")
+    public void checkResponseCode() {
         ResponseEntity<HashMap> response = context.getResponse();
-        assertThat(response.getStatusCode(), equalTo(context.getTestData().getResponse().getCode()));
-        assertThat(((HashMap)response.getBody().get("_links")).get("redirect"), notNullValue());
+        HttpStatus compareStatus = HttpStatus.valueOf(Integer.valueOf(context.getTestData().getResponse().getCode()));
+        assertThat(response.getStatusCode(), equalTo(compareStatus));
+    }
+
+    @And("^the appropriate single payment response data is delivered to the PSU$")
+    public void checkResponseData() {
+        ResponseEntity<HashMap> response = context.getResponse();
+//        assertThat(((HashMap)response.getBody().get("_links")).get("redirect"), notNullValue());
     }
 }
