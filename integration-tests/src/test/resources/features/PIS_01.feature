@@ -10,12 +10,11 @@ Feature: Payment Initiation Service
         And <sca-approach> approach is used
         And PSU wants to initiate a single payment <single-payment> using the payment product <payment-product>
         When PSU sends the payment initiating request
-        Then a payment resource is created at the aspsp mock
         And a successful response code and
         And the appropriate single payment response data is delivered to the PSU
         Examples:
-            | sca-approach | payment-product      | single-payment                |
-            | redirect     | sepa-credit-transfer | singlePayInit-successful.json |
+            | sca-approach | payment-product       | single-payment                |
+            | redirect     | sepa-credit-transfers | singlePayInit-successful.json |
 
 #
 #    Scenario Outline: Failed payment initiation request for single payments

@@ -2,44 +2,57 @@
   "request": {
     "header": {
       "tpp-transaction-id": "16d40f49-a110-4344-a949-f99828ae13c9",
-      "tpp-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
+      "x-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
       "psu-ip-address": "192.168.0.26"
     },
     "body": {
       "creditorAccount": {
+        "bban": 1111111111,
         "currency": "EUR",
-        "iban": "DE938274817361740591263"
+        "iban": "DE89370400440532013000",
+        "maskedPan": "23456xxxxxx1234",
+        "msisdn": "0172/1111111",
+        "pan": 1111
       },
       "creditorAddress": {
-        "buildingNumber": "56",
+        "buildingNumber": "123-34",
         "city": "Nürnberg",
         "country": {
-          "code": "49"
+          "code": 49
         },
-        "postalCode": "90543",
-        "street": "WBG Straße"
+        "postalCode": 90431,
+        "street": "Herrnstraße"
       },
-      "creditorName": "WBG",
+      "creditorAgent": {
+        "code": "BCENECEQ"
+      },
+      "creditorName": "Telekom",
       "debtorAccount": {
+        "bban": 1111111111,
         "currency": "EUR",
-        "iban": "DE81432100000004111111"
+        "iban": "DE81432100000004111111",
+        "maskedPan": "23456xxxxxx1234",
+        "msisdn": "0172/1111111",
+        "pan": 1111
       },
-      "endToEndIdentification": "WBG-123456789",
+      "endToEndIdentification": "RI-123456789",
       "instructedAmount": {
-        "content": "520.00",
+        "content": 10,
         "currency": "EUR"
       },
       "purposeCode": {
-        "code": "Monatsmiete Mueller, Alexander"
+        "code": "BCENECEQ"
       },
       "remittanceInformationStructured": {
-        "reference": "Ref Number Merchant"
+        "reference": "Ref Number Merchant",
+        "referenceIssuer": "string",
+        "referenceType": "string"
       },
-      "remittanceInformationUnstructured": "Ref. Number WBG-1234",
-      "requestedExecutionDate": "2018-10-01",
-      "requestedExecutionTime": "2018-10-01T10:30:35.035",
-      "ultimateCreditor": "WBG",
-      "ultimateDebtor": "Alexander Mueller"
+      "remittanceInformationUnstructured": "Ref. Number TELEKOM-1222",
+      "requestedExecutionDate": "2018-07-18",
+      "requestedExecutionTime": "2018-07-18T18:30:35.035",
+      "ultimateCreditor": "Telekom",
+      "ultimateDebtor": "Mueller"
     }
   },
   "response": {
