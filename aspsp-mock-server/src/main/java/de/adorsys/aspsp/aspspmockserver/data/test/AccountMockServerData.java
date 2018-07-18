@@ -195,8 +195,8 @@ public class AccountMockServerData {
     private SpiAccountBalance getBalanceCucumberTests(Currency currency, BigDecimal amount) {
         SpiAccountBalance balance = new SpiAccountBalance();
         balance.setSpiAmount(new SpiAmount(currency, amount));
-        balance.setDate(LocalDate.of(2018, 7,  9));
-        balance.setLastActionDateTime(LocalDateTime.of(2018, 7, 9, 14, 5, 19, 368));
+        balance.setDate(LocalDate.parse("2018-07-09"));
+        balance.setLastActionDateTime(LocalDateTime.parse("2018-07-09T14:05:19.368"));
         return balance;
     }
 
