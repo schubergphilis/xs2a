@@ -108,7 +108,7 @@ public class AccountMockServerData {
             psuRepository.save(new Psu("PSU_003", "test3@gmail.com", Arrays.asList(accountDetails.get(5), accountDetails.get(6)), ALLOWED_PAYMENTS)),
 
             // Test User for Cucumber tests
-            psuRepository.save(new Psu("PSU_Cucumber", "mueller.alex@web.de", Arrays.asList(accountDetails.get(7)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER)),
+            psuRepository.save(new Psu("d9e71419-24e4-4c5a-8d93-fcc23153aaff", "mueller.alex@web.de", Arrays.asList(accountDetails.get(7)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER)),
             psuRepository.save(new Psu("PSU_CucumberGreenpeace", "greenpeace@web.de", Arrays.asList(accountDetails.get(8)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER)),
             psuRepository.save(new Psu("PSU_CucumberTelekom", "telekom@telekom.de", Arrays.asList(accountDetails.get(9)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER)),
             psuRepository.save(new Psu("PSU_CucumberJochen", "jochen.mueller@web.de", Arrays.asList(accountDetails.get(10)), ALLOWED_PAYMENTS_CUCUMBER_TESTUSER))
