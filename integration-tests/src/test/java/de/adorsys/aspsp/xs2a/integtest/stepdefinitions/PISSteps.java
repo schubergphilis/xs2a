@@ -46,12 +46,13 @@ public class PISSteps {
         File jsonFile = new File("src/test/resources/data-input/" + dataFileName);
 
         ObjectMapper mapper = new ObjectMapper();
-        TestData<SinglePayments> data = mapper.readValue(jsonFile, new TypeReference<TestData<SinglePayments>>() {});
+        TestData<SinglePayments> data = mapper.readValue(jsonFile, new TypeReference<TestData<SinglePayments>>() {
+        });
 
         context.setTestData(data);
     }
 
-    @When("^PSU sends the payment initiating request$")
+    @When("^PSU sends the single payment initiating request$")
     public void sendPaymentInitiatingRequest() {
         HttpHeaders headers = new HttpHeaders();
         headers.setAll(context.getTestData().getRequest().getHeader());
@@ -70,16 +71,16 @@ public class PISSteps {
         context.setResponse(response);
     }
 
-    @Then("^a successful response code and$")
+    @Then("^a successful response code and the appropriate single payment response data is delivered to the PSU$")
     public void checkResponseCode() {
-        ResponseEntity<HashMap> response = context.getResponse();
-        HttpStatus compareStatus = HttpStatus.valueOf(Integer.valueOf(context.getTestData().getResponse().getCode()));
-        assertThat(response.getStatusCode(), equalTo(compareStatus));
-    }
+        ResponseEntity<HashMap> actualResponse = context.getResponse();
+        HashMap assertedResponseBody = (HashMap<String, String>) context.getTestData().getResponse().getBody();
 
-    @And("^the appropriate single payment response data is delivered to the PSU$")
-    public void checkResponseData() {
-        ResponseEntity<HashMap> response = context.getResponse();
-//        assertThat(((HashMap)response.getBody().get("_links")).get("redirect"), notNullValue());
+        HttpStatus compareStatus = HttpStatus.valueOf(Integer.valueOf(context.getTestData().getResponse().getCode()));
+        assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
+
+        assertThat(actualResponse.getBody().get("transactionStatus"), equalTo(assertedResponseBody.get("transactionStatus")));
+        assertThat(actualResponse.getBody().get("paymentId"), notNullValue());
+        assertThat(((HashMap) actualResponse.getBody().get("_links")).get("scaRedirect"), notNullValue());
     }
 }

@@ -3,13 +3,12 @@
     "header": [
       {
         "tpp-transaction-id": "16d40f49-a110-4344-a949-f99828ae13c9",
-        "tpp-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
+        "x-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
         "psu-ip-address": "192168.0.26"
       }
     ],
     "body": [
       {
-        "id": "abb03ee0-37f7-4337-b0af-8fab920a52d1",
         "creditorAccount": {
           "currency": "EUR",
           "iban": "DE938274817361740591263"
@@ -48,13 +47,11 @@
   "response": {
     "code": "400",
     "header": [],
-    "body": [
-      {
-        "transactionStatus": "Received",
-        "_links": {
-          "redirect": "https://url.suffix/redirect"
-        }
+    "body": {
+      "tppMessages": {
+        "category": "ERROR",
+        "code": "FORMAT_ERROR"
       }
-    ]
+    }
   }
 }
