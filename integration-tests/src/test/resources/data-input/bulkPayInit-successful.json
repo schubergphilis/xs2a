@@ -1,12 +1,10 @@
 {
   "request": {
-    "header": [
-      {
-        "tpp-transaction-id": "16d40f49-a110-4344-a949-f99828ae13c9",
-        "x-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
-        "psu-ip-address": "192.168.0.26"
-      }
-    ],
+    "header": {
+      "tpp-transaction-id": "16d40f49-a110-4344-a949-f99828ae13c9",
+      "x-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
+      "psu-ip-address": "192.168.0.26"
+    },
     "body": [
       {
         "creditorAccount": {
@@ -32,7 +30,9 @@
           "content": "520.00",
           "currency": "EUR"
         },
-        "purposeCode": "Monatsmiete Mueller, Alexander",
+        "purposeCode": {
+          "code": "Monatsmiete Mueller, Alexander"
+        },
         "remittanceInformationStructured": {
           "reference": "Ref Number Merchant"
         },
@@ -56,9 +56,6 @@
           "postalCode": "01067",
           "street": "Kaisergasse"
         },
-        "creditorAgent": {
-          "code": "XTBNECOH"
-        },
         "creditorName": "Grünstrom",
         "debtorAccount": {
           "currency": "EUR",
@@ -69,7 +66,9 @@
           "content": "71.07",
           "currency": "EUR"
         },
-        "purposeCode": "Abrechnung Strom 10/2018",
+        "purposeCode": {
+          "code": "Abrechnung Strom 10/2018"
+        },
         "remittanceInformationStructured": {
           "reference": "Ref Number Merchant"
         },
@@ -86,10 +85,10 @@
     "header": [],
     "body": [
       {
-        "transactionStatus": "Reiceived"
+        "transactionStatus": "Received"
       },
       {
-        "transactionStatus": "Reiceived"
+        "transactionStatus": "Received"
       }
     ]
   }
