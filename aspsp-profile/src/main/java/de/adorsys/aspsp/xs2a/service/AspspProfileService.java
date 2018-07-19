@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static de.adorsys.aspsp.xs2a.domain.BookingStatus.BOOKED;
+
 @Service
 @RequiredArgsConstructor
 public class AspspProfileService {
@@ -186,9 +188,12 @@ public class AspspProfileService {
     /**
      * Update list of available booking statuses
      *
-     * @param bookingStatuses new value of available booking statuses
+     * @param availableBookingStatuses new value of available booking statuses
      */
-    public void updateAvailableBookingStatuses(List<BookingStatus> bookingStatuses) {
-        profileConfiguration.setAvailableBookingStatuses(bookingStatuses);
+    public void updateAvailableBookingStatuses(List<BookingStatus> availableBookingStatuses) {
+        if (!availableBookingStatuses.contains(BOOKED)) {
+            availableBookingStatuses.add(BOOKED);
+        }
+        profileConfiguration.setAvailableBookingStatuses(availableBookingStatuses);
     }
 }
