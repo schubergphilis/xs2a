@@ -101,10 +101,10 @@ public class AspspProfileController {
         return new ResponseEntity<>(aspspProfileService.getMulticurrencyAccountLevel(), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/booking-status")
-    @ApiOperation(value = "Reads supported booking statuses, such as booked, pending and both")
-    @ApiResponse(code = 200, message = "Ok", response = MulticurrencyAccountLevel.class)
-    public ResponseEntity<BookingStatus> getBookingStatus() {
-        return new ResponseEntity<>(aspspProfileService.getBookingStatus(), HttpStatus.OK);
+    @GetMapping(path = "/available-booking-statuses")
+    @ApiOperation(value = "Reads available booking statuses, such as booked, pending and both")
+    @ApiResponse(code = 200, message = "Ok", response = String.class)
+    public ResponseEntity<List<BookingStatus>> getAvailableBookingStatuses() {
+        return new ResponseEntity<>(aspspProfileService.getAvailableBookingStatuses(), HttpStatus.OK);
     }
 }

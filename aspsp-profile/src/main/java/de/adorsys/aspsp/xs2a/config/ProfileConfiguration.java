@@ -83,14 +83,23 @@ public class ProfileConfiguration {
      */
     private MulticurrencyAccountLevel multicurrencyAccountLevel;
 
-    private BookingStatus bookingStatus;
+    private List<BookingStatus> availableBookingStatuses;
 
     @PostConstruct
-    private void addNecessaryPaymentTypesByDefault() { //NOPMD It is necessary for set single payment available by default
-        String necessaryType = PaymentType.FUTURE_DATED.getValue();
+    private void addDefaultValues() { //NOPMD It is necessary for set single payment and booked booking status available by default
+        setDefaultPaymentType(PaymentType.FUTURE_DATED);
+        setDefaultBookingStatus(BookingStatus.BOOKED);
+    }
 
-        if (!availablePaymentTypes.contains(necessaryType)) {
-            availablePaymentTypes.add(PaymentType.FUTURE_DATED.getValue());
+    private void setDefaultPaymentType(PaymentType necessaryType) {
+        if (!availablePaymentTypes.contains(necessaryType.getValue())) {
+            availablePaymentTypes.add(necessaryType.getValue());
+        }
+    }
+
+    private void setDefaultBookingStatus(BookingStatus necessaryStatus) {
+        if (!availableBookingStatuses.contains(necessaryStatus)) {
+            availableBookingStatuses.add(necessaryStatus);
         }
     }
 }

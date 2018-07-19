@@ -28,14 +28,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Profile("debug_mode")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "aspsp-profile/for-debug")
 @Api(value = "Update aspsp profile ", tags = "Update aspsp profile.  Only for DEBUG!",
-     description = "Provides access to update aspsp profile",
-     authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    description = "Provides access to update aspsp profile",
+    authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
 public class AspspProfileUpdateController {
     private final AspspProfileService aspspProfileService;
 
@@ -129,15 +130,13 @@ public class AspspProfileUpdateController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(path = "/booking-status")
-    @ApiOperation(value = "Updates supported multicurrency account levels. Only for DEBUG!")
+    @PutMapping(path = "/available-booking-statuses")
+    @ApiOperation(value = "Updates supported booking statuses. Only for DEBUG!")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = String.class),
         @ApiResponse(code = 400, message = "Bad request")})
-    public ResponseEntity<Void> updateBookingStatus(
-        @ApiParam(name = "bookingStatus", value = "bookingStatus", required = true, allowableValues = "booked, pending, both", defaultValue = "booked")
-        @RequestParam String bookingStatus) {
-        aspspProfileService.updateBookingStatus(BookingStatus.valueOf(bookingStatus.trim().toUpperCase()));
+    public ResponseEntity<Void> updateBookingStatuses(@RequestBody List<BookingStatus> bookingStatuses) {
+        aspspProfileService.updateAvailableBookingStatuses(bookingStatuses);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
