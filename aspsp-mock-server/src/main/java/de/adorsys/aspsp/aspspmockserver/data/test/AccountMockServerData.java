@@ -67,28 +67,28 @@ public class AccountMockServerData {
     }
 
     private void fillTransactions() {
-        transactionRepository.save(getTransaction("0001", psus.get(0), psus.get(1), BigDecimal.valueOf(200), EUR, LocalDate.parse("2018-01-02"), LocalDate.parse("2018-01-02")));
-        transactionRepository.save(getTransaction("0002", psus.get(0), psus.get(1), BigDecimal.valueOf(150), USD, null, LocalDate.parse("2018-01-02")));
-        transactionRepository.save(getTransaction("0003", psus.get(1), psus.get(0), BigDecimal.valueOf(250), EUR, LocalDate.parse("2018-02-02"), LocalDate.parse("2018-02-02")));
-        transactionRepository.save(getTransaction("0004", psus.get(1), psus.get(0), BigDecimal.valueOf(20), USD, null, LocalDate.parse("2018-02-02")));
-        transactionRepository.save(getTransaction("0005", psus.get(2), psus.get(0), BigDecimal.valueOf(40), EUR, LocalDate.parse("2018-03-02"), LocalDate.parse("2018-03-02")));
-        transactionRepository.save(getTransaction("0006", psus.get(2), psus.get(1), BigDecimal.valueOf(50), USD, null, LocalDate.parse("2018-01-02")));
-        transactionRepository.save(getTransaction("0007", psus.get(2), psus.get(1), BigDecimal.valueOf(120), EUR, LocalDate.parse("2018-01-02"), LocalDate.parse("2018-01-02")));
-        transactionRepository.save(getTransaction("0008", psus.get(1), psus.get(2), BigDecimal.valueOf(30), USD, null, LocalDate.parse("2018-02-02")));
-        transactionRepository.save(getTransaction("0009", psus.get(1), psus.get(2), BigDecimal.valueOf(80), EUR, LocalDate.parse("2018-02-02"), LocalDate.parse("2018-02-02")));
+        transactionRepository.save(getTransaction("0001", psus.get(0), psus.get(1), BigDecimal.valueOf(200), EUR, LocalDate.parse("2018-01-02"), LocalDate.parse("2018-01-02"), ""));
+        transactionRepository.save(getTransaction("0002", psus.get(0), psus.get(1), BigDecimal.valueOf(150), USD, null, LocalDate.parse("2018-01-02"), ""));
+        transactionRepository.save(getTransaction("0003", psus.get(1), psus.get(0), BigDecimal.valueOf(250), EUR, LocalDate.parse("2018-02-02"), LocalDate.parse("2018-02-02"), ""));
+        transactionRepository.save(getTransaction("0004", psus.get(1), psus.get(0), BigDecimal.valueOf(20), USD, null, LocalDate.parse("2018-02-02"), ""));
+        transactionRepository.save(getTransaction("0005", psus.get(2), psus.get(0), BigDecimal.valueOf(40), EUR, LocalDate.parse("2018-03-02"), LocalDate.parse("2018-03-02"), ""));
+        transactionRepository.save(getTransaction("0006", psus.get(2), psus.get(1), BigDecimal.valueOf(50), USD, null, LocalDate.parse("2018-01-02"), ""));
+        transactionRepository.save(getTransaction("0007", psus.get(2), psus.get(1), BigDecimal.valueOf(120), EUR, LocalDate.parse("2018-01-02"), LocalDate.parse("2018-01-02"), ""));
+        transactionRepository.save(getTransaction("0008", psus.get(1), psus.get(2), BigDecimal.valueOf(30), USD, null, LocalDate.parse("2018-02-02"), ""));
+        transactionRepository.save(getTransaction("0009", psus.get(1), psus.get(2), BigDecimal.valueOf(80), EUR, LocalDate.parse("2018-02-02"), LocalDate.parse("2018-02-02"), ""));
 
         // Transaction data for Cucumber test
-        transactionRepository.save(getTransaction("ba8f7012-bdaf-4ada-bbf7-4c004d046ffe", psus.get(4), psus.get(3), BigDecimal.valueOf(80), EUR, LocalDate.parse("2018-01-01"), LocalDate.parse("2018-01-01")));
-        transactionRepository.save(getTransaction("7d12ff85-8ace-4124-877a-6bc3f125e98b", psus.get(5), psus.get(3), BigDecimal.valueOf(90), EUR, LocalDate.parse("2018-01-01"), LocalDate.parse("2018-01-01")));
-        transactionRepository.save(getTransaction("bb0962ca-f6db-4ba7-b187-2b2e1af25845", psus.get(6), psus.get(3), BigDecimal.valueOf(100), EUR, LocalDate.parse("2018-01-01"), LocalDate.parse("2018-01-01")));
+        transactionRepository.save(getTransaction("ba8f7012-bdaf-4ada-bbf7-4c004d046ffe", psus.get(4), psus.get(3), BigDecimal.valueOf(50), EUR, LocalDate.parse("2018-07-05"), LocalDate.parse("2018-07-05"), "Spende Greenpeace"));
+        transactionRepository.save(getTransaction("7d12ff85-8ace-4124-877a-6bc3f125e98b", psus.get(5), psus.get(3), BigDecimal.valueOf(45.99), EUR, LocalDate.parse("2018-01-01"), LocalDate.parse("2018-01-01"), "Internet Rechnung Januar 2018 - MC-13058247-00000002"));
+        transactionRepository.save(getTransaction("bb0962ca-f6db-4ba7-b187-2b2e1af25845", psus.get(6), psus.get(3), BigDecimal.valueOf(200), EUR, LocalDate.parse("2018-05-15"), LocalDate.parse("2018-05-15"), "Alles Gute zum Geburtstag"));
     }
 
-    private SpiTransaction getTransaction(String transactionId, Psu creditor, Psu debtor, BigDecimal amount, Currency currency, LocalDate bookingDate, LocalDate valueDate) {
+    private SpiTransaction getTransaction(String transactionId, Psu creditor, Psu debtor, BigDecimal amount, Currency currency, LocalDate bookingDate, LocalDate valueDate, String purposeCode) {
         return new SpiTransaction(
             transactionId, "", "", creditor.getId(), bookingDate, valueDate,
             new SpiAmount(currency, amount), getFirstElementName(creditor), getRef(creditor, currency), getFirstElementName(creditor),
             getFirstElementName(debtor), getRef(debtor, currency), getFirstElementName(debtor), "",
-            "", "", "");
+            "", purposeCode, "");
     }
 
     private String getFirstElementName(Psu creditor) {
@@ -128,10 +128,10 @@ public class AccountMockServerData {
             getNewAccount("66666-999999999", getNewBalanceList(USD, BigDecimal.valueOf(1400), BigDecimal.valueOf(700)), "DE89370400440532013005", "CXZCC6427T", "DEUTDE8EXXX", "Company AG", "SCT"),
 
             // account Test User for Cucumber
-            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8add", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(287.99)), "DE81432100000004111111", null, null, "Alexander Mueller", "GIRO"),
-            getNewAccountCucumberTest("88888-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(1000000)), "DE81432100000004222222", null, null, "Greenpeace", "GIRO"),
-            getNewAccountCucumberTest("99999-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(500000)), "DE81432100000004333333", null, null, "Telekom", "GIRO"),
-            getNewAccountCucumberTest("12345-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(50000)), "DE81432100000004444444", null, null, "Jochen Mueller", "GIRO")
+            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8add", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(50000)), "DE81432100000004111111", null, null, "Alexander Mueller", "GIRO"),
+            getNewAccountCucumberTest("88888-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(1000000)), "DE56432100000005999999", null, null, "Greenpeace", "GIRO"),
+            getNewAccountCucumberTest("99999-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(500000)), "DE37123400000005765499", null, null, "Telekom", "GIRO"),
+            getNewAccountCucumberTest("12345-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(20000)), "DE56234891038492849284", null, null, "Jochen Mueller", "GIRO")
         );
     }
 
@@ -154,17 +154,17 @@ public class AccountMockServerData {
 
     private List<SpiBalances> getNewBalanceList(Currency currency, BigDecimal amount1, BigDecimal amount2) {
         SpiBalances spiBalances = new SpiBalances();
-        spiBalances.setOpeningBooked(getBalance(currency, amount1));
-        spiBalances.setInterimAvailable(getBalance(currency, amount1));
-        spiBalances.setAuthorised(getBalance(currency, amount2));
+        spiBalances.setOpeningBooked(getBalance(currency, amount1, LocalDate.now(), LocalDateTime.now()));
+        spiBalances.setInterimAvailable(getBalance(currency, amount1, LocalDate.now(), LocalDateTime.now()));
+        spiBalances.setAuthorised(getBalance(currency, amount2, LocalDate.now(), LocalDateTime.now()));
         return Collections.singletonList(spiBalances);
     }
 
-    private SpiAccountBalance getBalance(Currency currency, BigDecimal amount) {
+    private SpiAccountBalance getBalance(Currency currency, BigDecimal amount, LocalDate date, LocalDateTime dateTime) {
         SpiAccountBalance balance = new SpiAccountBalance();
         balance.setSpiAmount(new SpiAmount(currency, amount));
-        balance.setDate(LocalDate.now());
-        balance.setLastActionDateTime(LocalDateTime.now());
+        balance.setDate(date);
+        balance.setLastActionDateTime(dateTime);
         return balance;
     }
 
@@ -188,16 +188,8 @@ public class AccountMockServerData {
 
     private List<SpiBalances> getNewBalanceListCucumberTests(Currency currency, BigDecimal amount1) {
         SpiBalances spiBalances = new SpiBalances();
-        spiBalances.setInterimAvailable(getBalanceCucumberTests(currency, amount1));
+        spiBalances.setInterimAvailable(getBalance(currency, amount1, LocalDate.parse("2018-07-09"), LocalDateTime.parse("2018-07-09T14:05:19.368")));
         return Collections.singletonList(spiBalances);
-    }
-
-    private SpiAccountBalance getBalanceCucumberTests(Currency currency, BigDecimal amount) {
-        SpiAccountBalance balance = new SpiAccountBalance();
-        balance.setSpiAmount(new SpiAmount(currency, amount));
-        balance.setDate(LocalDate.parse("2018-07-09"));
-        balance.setLastActionDateTime(LocalDateTime.parse("2018-07-09T14:05:19.368"));
-        return balance;
     }
 
     private SpiAccountReference mapToReferenceFromDetails(SpiAccountDetails details) {
