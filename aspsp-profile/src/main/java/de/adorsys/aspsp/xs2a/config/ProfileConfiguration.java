@@ -16,7 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.config;
 
-
 import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.PaymentType;
