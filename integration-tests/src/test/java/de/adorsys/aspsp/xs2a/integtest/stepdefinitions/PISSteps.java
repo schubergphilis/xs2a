@@ -74,7 +74,7 @@ public class PISSteps {
     @Then("^a successful response code and the appropriate single payment response data is delivered to the PSU$")
     public void checkResponseCode() {
         ResponseEntity<HashMap> actualResponse = context.getResponse();
-        HashMap assertedResponseBody = (HashMap<String, String>) context.getTestData().getResponse().getBody();
+        HashMap<String, String> assertedResponseBody = (HashMap) context.getTestData().getResponse().getBody();
 
         HttpStatus compareStatus = HttpStatus.valueOf(Integer.valueOf(context.getTestData().getResponse().getCode()));
         assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
