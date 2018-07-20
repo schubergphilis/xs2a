@@ -85,7 +85,7 @@ public class ProfileConfiguration {
     private List<BookingStatus> availableBookingStatuses;
 
     @PostConstruct
-    private void addDefaultValues() { //NOPMD It is necessary for set single payment and booked booking status available by default
+    private void addDefaultValues() { //NOPMD It is necessary to set single payment and booked booking status available by default
         setDefaultPaymentType(PaymentType.FUTURE_DATED);
         setDefaultBookingStatus(BookingStatus.BOOKED);
     }
