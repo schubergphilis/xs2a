@@ -27,7 +27,6 @@ import org.springframework.context.annotation.PropertySource;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.Set;
 
 import static de.adorsys.aspsp.xs2a.domain.BookingStatus.BOOKED;
 
@@ -88,17 +87,23 @@ public class ProfileConfiguration {
     /**
      * Booking statuses supported by ASPSP, such as Booked, Pending and Both
      */
-    private Set<BookingStatus> availableBookingStatuses;
+    private List<BookingStatus> availableBookingStatuses;
 
     @PostConstruct
     private void addDefaultValues() { //NOPMD It is necessary to set single payment and booked booking status available by default
         setDefaultPaymentType(PaymentType.FUTURE_DATED);
-        availableBookingStatuses.add(BOOKED);
+        setDefaultBookingStatus(BOOKED);
     }
 
     private void setDefaultPaymentType(PaymentType necessaryType) {
         if (!availablePaymentTypes.contains(necessaryType.getValue())) {
             availablePaymentTypes.add(necessaryType.getValue());
+        }
+    }
+
+    private void setDefaultBookingStatus(BookingStatus necessaryStatus) {
+        if (!availableBookingStatuses.contains(necessaryStatus)) {
+            availableBookingStatuses.add(necessaryStatus);
         }
     }
 }

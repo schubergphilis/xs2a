@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -104,7 +103,7 @@ public class AspspProfileController {
     @GetMapping(path = "/available-booking-statuses")
     @ApiOperation(value = "Reads available booking statuses, such as booked, pending and both")
     @ApiResponse(code = 200, message = "Ok", response = String.class)
-    public ResponseEntity<Set<BookingStatus>> getAvailableBookingStatuses() {
+    public ResponseEntity<List<BookingStatus>> getAvailableBookingStatuses() {
         return new ResponseEntity<>(aspspProfileService.getAvailableBookingStatuses(), HttpStatus.OK);
     }
 }

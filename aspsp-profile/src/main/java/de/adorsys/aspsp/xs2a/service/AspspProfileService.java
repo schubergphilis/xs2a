@@ -24,7 +24,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 import static de.adorsys.aspsp.xs2a.domain.BookingStatus.BOOKED;
 
@@ -180,19 +179,21 @@ public class AspspProfileService {
     }
 
     /**
-     * Read set of available booking statuses
+     * Read list of available booking statuses
      */
-    public Set<BookingStatus> getAvailableBookingStatuses() {
+    public List<BookingStatus> getAvailableBookingStatuses() {
         return profileConfiguration.getAvailableBookingStatuses();
     }
 
     /**
-     * Update set of available booking statuses
+     * Update list of available booking statuses
      *
      * @param availableBookingStatuses new value of available booking statuses
      */
-    public void updateAvailableBookingStatuses(Set<BookingStatus> availableBookingStatuses) {
-        availableBookingStatuses.add(BOOKED);
+    public void updateAvailableBookingStatuses(List<BookingStatus> availableBookingStatuses) {
+        if (!availableBookingStatuses.contains(BOOKED)) {
+            availableBookingStatuses.add(BOOKED);
+        }
         profileConfiguration.setAvailableBookingStatuses(availableBookingStatuses);
     }
 }

@@ -28,7 +28,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @Profile("debug_mode")
 @RestController
@@ -134,7 +133,7 @@ public class AspspProfileUpdateController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = String.class),
         @ApiResponse(code = 400, message = "Bad request")})
-    public ResponseEntity<Void> updateBookingStatuses(@RequestBody Set<BookingStatus> bookingStatuses) {
+    public ResponseEntity<Void> updateBookingStatuses(@RequestBody List<BookingStatus> bookingStatuses) {
         aspspProfileService.updateAvailableBookingStatuses(bookingStatuses);
         return new ResponseEntity<>(HttpStatus.OK);
     }
