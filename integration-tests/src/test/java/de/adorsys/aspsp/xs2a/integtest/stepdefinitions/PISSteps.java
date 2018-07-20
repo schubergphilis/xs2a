@@ -25,7 +25,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class PISSteps {
 
     @Autowired
-    @Qualifier("aspsp-mock")
+    @Qualifier("xs2a")
     private RestTemplate restTemplate;
 
     @Autowired
@@ -71,7 +71,7 @@ public class PISSteps {
         context.setResponse(response);
     }
 
-    @Then("^a successful response code and the appropriate single payment response data is delivered to the PSU$")
+    @Then("^a successful response code and the appropriate single payment response data$")
     public void checkResponseCode() {
         ResponseEntity<HashMap> actualResponse = context.getResponse();
         HashMap<String, String> assertedResponseBody = (HashMap) context.getTestData().getResponse().getBody();
@@ -81,6 +81,12 @@ public class PISSteps {
 
         assertThat(actualResponse.getBody().get("transactionStatus"), equalTo(assertedResponseBody.get("transactionStatus")));
         assertThat(actualResponse.getBody().get("paymentId"), notNullValue());
+    }
+
+    @And("^a redirect URL is delivered to the PSU$")
+    public void checkRedirectUrl() {
+        ResponseEntity<HashMap> actualResponse = context.getResponse();
+
         assertThat(((HashMap) actualResponse.getBody().get("_links")).get("scaRedirect"), notNullValue());
     }
 }
