@@ -48,7 +48,7 @@ variables:
 
 .java_artifacts: &java_artifacts
   paths:
-    - "xs2a-impl/target/aspsp-xs2a*jar"
+    - "spi-mock/target/spi-mock*jar"
     - "consent-management-system/target/consent-management*jar"
     - "aspsp-profile/target/aspsp-profile*jar"
     - "aspsp-mock-server/target/aspsp-mock-server*jar"
@@ -70,7 +70,7 @@ variables:
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $GITLAB_REGISTRY
 
-    - docker build -t "$GITLAB_IMAGE_NAME_XS2A:$DOCKER_TAG" xs2a-impl
+    - docker build -t "$GITLAB_IMAGE_NAME_XS2A:$DOCKER_TAG" spi-mock
     - docker push "$GITLAB_IMAGE_NAME_XS2A:$DOCKER_TAG"
 
     - docker build -t "$GITLAB_IMAGE_NAME_MOCKSRV:$DOCKER_TAG" aspsp-mock-server
