@@ -26,10 +26,6 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import java.security.KeyManagementException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-
 @Configuration
 public class Xs2aRestConfig {
 
@@ -48,7 +44,7 @@ public class Xs2aRestConfig {
 
     @Bean(name = "xs2aRestTemplate")
     @Qualifier("xs2a")
-    public RestTemplate xs2aRestConfig() throws NoSuchAlgorithmException, KeyManagementException, KeyStoreException {
+    public RestTemplate xs2aRestConfig() {
         RestTemplate rest = new RestTemplate(clientHttpRequestFactory());
         rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         rest.getMessageConverters().add(new StringHttpMessageConverter());

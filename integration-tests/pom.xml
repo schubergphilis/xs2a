@@ -30,6 +30,7 @@
     <properties>
         <ruleset.basedir>..</ruleset.basedir>
         <cucumber.version>1.2.5</cucumber.version>
+        <hamcrest.version>1.3</hamcrest.version>
     </properties>
 
     <dependencies>
@@ -137,7 +138,7 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
+            <version>${hamcrest.version}</version>
         </dependency>
     </dependencies>
 

@@ -21,8 +21,8 @@ import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
 import de.adorsys.aspsp.aspspmockserver.repository.TransactionRepository;
 import de.adorsys.aspsp.xs2a.spi.domain.account.*;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
-import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
+import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -97,8 +97,8 @@ public class AccountMockServerData {
 
     private SpiAccountReference getRef(Psu psu, Currency currency) {
         return psu.getAccountDetailsList().stream()
-                   .filter(det -> det.getCurrency() == currency)
-                   .map(this::mapToReferenceFromDetails).findFirst().get();
+            .filter(det -> det.getCurrency() == currency)
+            .map(this::mapToReferenceFromDetails).findFirst().get();
     }
 
     private List<Psu> fillPsu() {
@@ -188,7 +188,7 @@ public class AccountMockServerData {
 
     private List<SpiBalances> getNewBalanceListCucumberTests(Currency currency, BigDecimal amount1) {
         SpiBalances spiBalances = new SpiBalances();
-        spiBalances.setInterimAvailable(getBalance(currency, amount1, LocalDate.parse("2018-07-09"), LocalDateTime.parse("2018-07-09T14:05:19.368")));
+        spiBalances.setInterimAvailable(getBalance(currency, amount1, LocalDate.now(), LocalDateTime.now()));
         return Collections.singletonList(spiBalances);
     }
 

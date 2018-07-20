@@ -25,10 +25,8 @@ Feature: Payment Initiation Service
 #            | payment-product      | single-payment                                 |
 #            | sepa-credit-transfer | singlePayInit-incorrect-syntax.json            |
 #            | sepa-credit-trans    | singlePayInit-incorrect-payment-product.json   |
-#            | sepa-credit-transfer | singlePayInit-no-transaction-id.json           |
 #            | sepa-credit-transfer | singlePayInit-no-request-id.json               |
 #            | sepa-credit-transfer | singlePayInit-no-ip-address.json               |
-#            | sepa-credit-transfer | singlePayInit-wrong-format-transaction-id.json |
 #            | sepa-credit-transfer | singlePayInit-wrong-format-request-id.json     |
 #            | sepa-credit-transfer | singlePayInit-wrong-format-psu-ip-address.json |
 #            | sepa-credit-transfer | singlePayInit-exceeding-amount.json            |

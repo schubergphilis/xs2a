@@ -75,12 +75,12 @@ public class PISSteps {
     @Then("^a successful response code and the appropriate single payment response data$")
     public void checkResponseCode() {
         ResponseEntity<HashMap> actualResponse = context.getResponse();
-        HashMap<String, String> assertedResponseBody = (HashMap) context.getTestData().getResponse().getBody();
+        HashMap<String, String> givenResponseBody = (HashMap) context.getTestData().getResponse().getBody();
 
-        HttpStatus compareStatus = HttpStatus.valueOf(Integer.valueOf(context.getTestData().getResponse().getCode()));
+        HttpStatus compareStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
         assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
 
-        assertThat(actualResponse.getBody().get("transactionStatus"), equalTo(assertedResponseBody.get("transactionStatus")));
+        assertThat(actualResponse.getBody().get("transactionStatus"), equalTo(givenResponseBody.get("transactionStatus")));
         assertThat(actualResponse.getBody().get("paymentId"), notNullValue());
     }
 
@@ -89,5 +89,9 @@ public class PISSteps {
         ResponseEntity<HashMap> actualResponse = context.getResponse();
 
         assertThat(((HashMap) actualResponse.getBody().get("_links")).get("scaRedirect"), notNullValue());
+    }
+
+    private HttpStatus convertStringToHttpStatusCode(String code){
+        return HttpStatus.valueOf(Integer.valueOf(code));
     }
 }
