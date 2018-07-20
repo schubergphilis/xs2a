@@ -4,6 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class TestData<T>{
-    Request<T> request;
-    Response response;
+    private Request<T> request;
+    private Response response;
 }

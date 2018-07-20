@@ -81,23 +81,22 @@ public class SinglePayments {
     private Remittance remittanceInformationStructured;
 
     @ApiModelProperty(value = "requested execution date", example = "2017-01-01")
-    @JsonDeserialize(using = LocalDateDeserializer.class)
     @FutureOrPresent
     private LocalDate requestedExecutionDate;
 
     @ApiModelProperty(value = "requested execution time", example = "2017-10-25T15:30:35.035")
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @FutureOrPresent
     // TODO add support of all types of DateTime https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/148
     private LocalDateTime requestedExecutionTime;
 
     @JsonIgnore
     public boolean isValidDated() { //TODO Should be removed with https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/167
         return Optional.ofNullable(this.requestedExecutionDate)
-                   .map(d -> d.isEqual(LocalDate.now()) || d.isAfter(LocalDate.now()))
-                   .orElse(false)
-                   &&
-                   Optional.ofNullable(this.requestedExecutionTime)
-                       .map(d -> d.isAfter(LocalDate.now().atTime(0, 0)))
-                       .orElse(false);
+            .map(d -> d.isEqual(LocalDate.now()) || d.isAfter(LocalDate.now()))
+            .orElse(false)
+            &&
+            Optional.ofNullable(this.requestedExecutionTime)
+                .map(d -> d.isAfter(LocalDate.now().atTime(0, 0)))
+                .orElse(false);
     }
 }

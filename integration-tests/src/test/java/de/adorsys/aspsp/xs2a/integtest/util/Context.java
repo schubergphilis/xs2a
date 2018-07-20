@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 
-
 @Data
 @Component
 public class Context {
@@ -19,9 +18,9 @@ public class Context {
     @Value("${aspspMock.baseUrl}")
     private String mockUrl;
 
-    String scaApproach;
-    String paymentProduct;
-    String accessToken;
-    TestData testData;
-    ResponseEntity<HashMap> response;
+    private String scaApproach;
+    private String paymentProduct;
+    private String accessToken;
+    private TestData testData;
+    private ResponseEntity<HashMap> response;
 }

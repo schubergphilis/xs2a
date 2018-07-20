@@ -6,6 +6,6 @@ import java.util.Map;
 
 @Getter
 public class Request<T> {
-    Map<String, String> header;
-    T body;
+    private Map<String, String> header;
+    private T body;
 }
