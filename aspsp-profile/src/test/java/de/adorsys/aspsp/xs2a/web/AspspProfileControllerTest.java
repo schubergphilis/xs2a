@@ -32,7 +32,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import static de.adorsys.aspsp.xs2a.domain.BookingStatus.BOOKED;
 import static de.adorsys.aspsp.xs2a.domain.BookingStatus.BOTH;
@@ -50,7 +52,7 @@ public class AspspProfileControllerTest {
     private static final String PIS_REDIRECT_LINK = "https://aspsp-mock-integ.cloud.adorsys.de/view/payment/confirmation/";
     private static final String AIS_REDIRECT_LINK = "https://aspsp-mock-integ.cloud.adorsys.de/view/account/";
     private static final MulticurrencyAccountLevel MULTICURRENCY_ACCOUNT_LEVEL = MulticurrencyAccountLevel.SUBACCOUNT;
-    private static final List<BookingStatus> AVAILABLE_BOOKING_STATUSES = getBookingStatuses();
+    private static final Set<BookingStatus> AVAILABLE_BOOKING_STATUSES = getBookingStatuses();
 
     @Autowired
     private AspspProfileController aspspProfileController;
@@ -190,7 +192,7 @@ public class AspspProfileControllerTest {
     }
 
     @Test
-    public void getMulticurrencyAccountLevel(){
+    public void getMulticurrencyAccountLevel() {
         //Given:
         HttpStatus expectedStatusCode = HttpStatus.OK;
 
@@ -203,12 +205,12 @@ public class AspspProfileControllerTest {
     }
 
     @Test
-    public void getAvailableBookingStatuses(){
+    public void getAvailableBookingStatuses() {
         //Given:
         HttpStatus expectedStatusCode = HttpStatus.OK;
 
         //When:
-        ResponseEntity<List<BookingStatus>> actualResponse = aspspProfileController.getAvailableBookingStatuses();
+        ResponseEntity<Set<BookingStatus>> actualResponse = aspspProfileController.getAvailableBookingStatuses();
 
         //Then:
         assertThat(actualResponse.getStatusCode()).isEqualTo(expectedStatusCode);
@@ -228,11 +230,8 @@ public class AspspProfileControllerTest {
             "bulk");
     }
 
-    private static List<BookingStatus> getBookingStatuses() {
-        return Arrays.asList(
-            BOOKED,
-            PENDING,
-            BOTH
-        );
+    private static Set<BookingStatus> getBookingStatuses() {
+        return EnumSet.allOf(BookingStatus.class);
+
     }
 }

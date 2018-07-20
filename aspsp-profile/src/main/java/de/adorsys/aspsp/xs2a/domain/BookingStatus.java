@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.domain;
 
 import io.swagger.annotations.ApiModel;
 
-@ApiModel(description = "BookingStatus", value = "Booking Status")
+@ApiModel(description = "Booking status", value = "BookingStatus")
 public enum BookingStatus {
     BOOKED,
     PENDING,
