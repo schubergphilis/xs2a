@@ -9,9 +9,9 @@ CREATE TABLE IF NOT EXISTS pis_consent(
     CONSTRAINT pis_consent_pkey PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS pis_payments (
-	pis_consent_id int8 NOT NULL,
-	payment_ids varchar(255) NULL,
+CREATE TABLE IF NOT EXISTS pis_payment (
+	pis_consent_id bigint NOT NULL,
+	payment_id varchar(255) NULL,
 	CONSTRAINT pis_consent_fkey FOREIGN KEY (pis_consent_id) REFERENCES pis_consent (id)
 );
 

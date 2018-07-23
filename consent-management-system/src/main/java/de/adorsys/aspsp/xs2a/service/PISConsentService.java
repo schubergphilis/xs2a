@@ -85,7 +85,7 @@ public class PISConsentService {
     private Optional<PisConsent> mapToBulkPaymentConsent(List<String> paymentIds) {
         PisConsent consent = new PisConsent();
         consent.setExternalId(UUID.randomUUID().toString());
-        consent.setPaymentIds(paymentIds);
+        consent.setPaymentId(paymentIds);
         consent.setConsentType(ConsentType.PIS);
         consent.setPisConsentType(PisConsentType.BULK);
         consent.setConsentStatus(PisConsentStatus.RECEIVED);
@@ -98,7 +98,7 @@ public class PISConsentService {
                    .map(pmt -> {
                        PisConsent consent = new PisConsent();
                        consent.setExternalId(UUID.randomUUID().toString());
-                       consent.setPaymentIds(Collections.singletonList(pmt));
+                       consent.setPaymentId(Collections.singletonList(pmt));
                        consent.setConsentType(ConsentType.PIS);
                        consent.setPisConsentType(PisConsentType.PERIODIC);
                        consent.setConsentStatus(PisConsentStatus.RECEIVED);
@@ -111,7 +111,7 @@ public class PISConsentService {
                    .map(pmt -> {
                        PisConsent consent = new PisConsent();
                        consent.setExternalId(UUID.randomUUID().toString());
-                       consent.setPaymentIds(Collections.singletonList(pmt));
+                       consent.setPaymentId(Collections.singletonList(pmt));
                        consent.setConsentType(ConsentType.PIS);
                        consent.setPisConsentType(PisConsentType.SINGLE);
                        consent.setConsentStatus(PisConsentStatus.RECEIVED);
@@ -125,7 +125,7 @@ public class PISConsentService {
                        pc.getExternalId(),
                        pc.getPisConsentType(),
                        pc.getConsentStatus(),
-                       pc.getPaymentIds())
+                       pc.getPaymentId())
                    );
     }
 }
