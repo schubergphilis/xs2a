@@ -1,3 +1,4 @@
+---
 setting:
  frequencyPerDay: 5
  combinedServiceIndicator: false
@@ -13,3 +14,5 @@ setting:
  pisRedirectUrlToAspsp: http://localhost:28080/view/payment/confirmation/
  aisRedirectUrlToAspsp: http://localhost:28080/
  multicurrencyAccountLevel: SUBACCOUNT
+ availableBookingStatuses:
+ - BOOKED
