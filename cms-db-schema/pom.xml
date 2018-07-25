@@ -8,6 +8,8 @@
         <version>1.4-SNAPSHOT</version>
     </parent>
 
+    <packaging>pom</packaging>
+
     <properties>
         <ruleset.basedir>..</ruleset.basedir>
         <postgresql.version>42.2.4</postgresql.version>
