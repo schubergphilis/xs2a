@@ -62,6 +62,9 @@ public class PISSteps {
         HttpHeaders headers = new HttpHeaders();
         headers.setAll(context.getTestData().getRequest().getHeader());
         headers.add("Authorization", "Bearer " + context.getAccessToken());
+        headers.add("Content-Type", "application/json");
+
+
 
         HttpEntity<SinglePayments> entity = new HttpEntity<>(
             (SinglePayments) context.getTestData().getRequest().getBody(),
@@ -119,6 +122,7 @@ public class PISSteps {
         HttpHeaders header = new HttpHeaders();
         header.setAll(context.getTestData().getRequest().getHeader());
         header.add("Authorization", "Bearer" + context.getAccessToken());
+        header.add("Content-Type", "application/json");
 
         HttpEntity<PeriodicPayment> entity = new HttpEntity<>(
             (PeriodicPayment) context.getTestData().getRequest().getBody(), header);
@@ -140,7 +144,7 @@ public class PISSteps {
 
         assertThat(resp.getStatusCode(), equalTo(compStatus));
         assertThat(resp.getBody().get("transactionStatus"), equalTo(respBody.get("transactionStatus")));
-        //assertThat(resp.getBody().get("paymentId"), notNullValue());
+       // assertThat(resp.getBody().get("paymentId"), notNullValue());
     }
 
 }

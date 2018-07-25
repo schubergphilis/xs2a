@@ -53,7 +53,7 @@ consent:
 
 auth:
   clientId: xs2a-impl
-  clientSecret: 7db3ea97-e85c-4c4e-be4e-bc8a49e36740
+  clientSecret: 88e04517-6d5f-4e69-904a-eeadf2baf95a
   url: http://localhost:8081/auth/realms/xs2a/protocol/openid-connect/token
   grantType: password
   username: aspsp

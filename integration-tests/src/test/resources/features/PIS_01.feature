@@ -60,15 +60,15 @@ Feature: Payment Initiation Service
     # Recurring Payments                                                                                               #
     #                                                                                                                  #
     ####################################################################################################################
-#    Scenario Outline: Payment initiation request for recurring payments (redirect)
-#        Given PSU is logged in using redirect approach
-#        And PSU wants to initiate a recurring payment <recurring-payment> using the payment product <payment-product>
-#        When PSU sends the recurring payment initiating request
-#        Then a successful response code and the appropriate recurring payment response data
-#        And a redirect URL is delivered to the PSU
-#        Examples:
-#            | payment-product       | recurring-payment          |
-#            | sepa-credit-transfers | recPayInit-successful.json |
+   Scenario Outline: Payment initiation request for recurring payments (redirect)
+        Given PSU is logged in using redirect approach
+        And PSU wants to initiate a recurring payment <recurring-payment> using the payment product <payment-product>
+        When PSU sends the recurring payment initiating request
+        Then a successful response code and the appropriate recurring payment response data
+        And a redirect URL is delivered to the PSU
+        Examples:
+            | payment-product       | recurring-payment          |
+            | sepa-credit-transfers | recPayInit-successful.json |
 
 
 #    Scenario Outline: Failed payment initiation request for recurring payments (redirect)
