@@ -3,28 +3,28 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet author="peter" id="2018-07-24-1">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-1">
         <comment>Create sequence for ais consent id.</comment>
         <createSequence sequenceName="ais_consent_id_seq"/>
     </changeSet>
 
-    <changeSet author="peter" id="2018-07-24-2">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-2">
         <comment>Create sequence for ais account id.</comment>
         <createSequence sequenceName="ais_account_id_seq"/>
     </changeSet>
 
-    <changeSet author="peter" id="2018-07-24-3">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-3">
         <comment>Create sequence for ais consent action id.</comment>
         <createSequence sequenceName="ais_consent_action_id_seq"/>
     </changeSet>
 
-    <changeSet author="peter" id="2018-07-24-4">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-4">
         <comment>Create sequence for pis consent id.</comment>
         <createSequence sequenceName="pis_consent_id_seq"/>
     </changeSet>
 
 
-    <changeSet author="peter" id="2018-07-24-5">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-5">
         <comment>Create table ais_consent.</comment>
 
         <createTable tableName="ais_consent">
@@ -73,7 +73,7 @@
     </changeSet>
 
 
-    <changeSet author="peter" id="2018-07-24-6">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-6">
         <comment>Create table ais_account.</comment>
 
         <createTable tableName="ais_account">
@@ -96,7 +96,7 @@
     </changeSet>
 
 
-    <changeSet author="peter" id="2018-07-24-7">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-7">
         <comment>Create table ais_account_access.</comment>
 
         <createTable tableName="ais_account_access">
@@ -119,7 +119,7 @@
     </changeSet>
 
 
-    <changeSet author="peter" id="2018-07-24-8">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-8">
         <comment>Create table ais_consent_action.</comment>
 
         <createTable tableName="ais_consent_action">
@@ -144,7 +144,7 @@
     </changeSet>
 
 
-    <changeSet author="peter" id="2018-07-24-9">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-9">
         <comment>Create table pis_consent.</comment>
 
         <createTable tableName="pis_consent">
@@ -169,7 +169,7 @@
     </changeSet>
 
 
-    <changeSet author="peter" id="2018-07-24-10">
+    <changeSet author="pru@adorsys.com.ua" id="2018-07-24-10">
         <comment>Create table pis_payment.</comment>
 
         <createTable tableName="pis_payment">

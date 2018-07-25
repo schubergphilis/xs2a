@@ -33,6 +33,7 @@
         <module>consent-api</module>
         <module>aspsp-profile</module>
         <module>integration-tests</module>
+        <module>cms-db-schema</module>
     </modules>
     <packaging>pom</packaging>
 
