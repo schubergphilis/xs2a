@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.consent.api.AccountInfo;
+import de.adorsys.aspsp.xs2a.consent.api.AccountType;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccessInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
@@ -30,6 +31,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiCreateConsentRequest;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -93,9 +95,9 @@ public class ConsentMapperTest {
         req.setFrequencyPerDay(consentReq.getFrequencyPerDay());
         AisAccountAccessInfo info = new AisAccountAccessInfo();
 
-        info.setAccounts(getAccountInfo(consentReq.getAccess().getAccounts()));
-        info.setBalances(getAccountInfo(consentReq.getAccess().getBalances()));
-        info.setTransactions(getAccountInfo(consentReq.getAccess().getTransactions()));
+        info.setAccounts(getAccountInfoList(consentReq.getAccess().getAccounts()));
+        info.setBalances(getAccountInfoList(consentReq.getAccess().getBalances()));
+        info.setTransactions(getAccountInfoList(consentReq.getAccess().getTransactions()));
         info.setAvailableAccounts(Optional.ofNullable(req.getAccess()).map(AisAccountAccessInfo::getAvailableAccounts).orElse(null));
         info.setAllPsd2(Optional.ofNullable(req.getAccess()).map(AisAccountAccessInfo::getAllPsd2).orElse(null));
         req.setAccess(info);
@@ -103,18 +105,37 @@ public class ConsentMapperTest {
         return req;
     }
 
-    private List<AccountInfo> getAccountInfo(List<AccountReference> references) {
+    private List<AccountInfo> getAccountInfoList(List<AccountReference> references) {
 
         return Optional.ofNullable(references)
                    .map(ref -> ref.stream()
-                                   .map(ar -> {
-                                       AccountInfo ai = new AccountInfo();
-                                       ai.setIban(ar.getIban());
-                                       ai.setCurrency(getCurrency(ar));
-                                       return ai;
-                                   })
+                                   .map(this::getAccountInfo)
                                    .collect(Collectors.toList()))
                    .orElse(Collections.emptyList());
+    }
+
+    private AccountInfo getAccountInfo(AccountReference ref) {
+        AccountType accountType = AccountType.IBAN;
+        String accountTypeId = "";
+
+        if (!StringUtils.isBlank(ref.getIban())) {
+            accountTypeId = ref.getIban();
+            accountType = AccountType.IBAN;
+        } else if (!StringUtils.isBlank(ref.getBban())) {
+            accountTypeId = ref.getBban();
+            accountType = AccountType.BBAN;
+        } else if (!StringUtils.isBlank(ref.getPan())) {
+            accountTypeId = ref.getPan();
+            accountType = AccountType.PAN;
+        } else if (!StringUtils.isBlank(ref.getMaskedPan())) {
+            accountTypeId = ref.getMaskedPan();
+            accountType = AccountType.MASKEDPAN;
+        } else if (!StringUtils.isBlank(ref.getMsisdn())) {
+            accountTypeId = ref.getMsisdn();
+            accountType = AccountType.MSISDN;
+        }
+
+        return new AccountInfo(accountTypeId, accountType, ref.getCurrency());
     }
 
     @Test

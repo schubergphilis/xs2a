@@ -26,27 +26,21 @@ import java.util.*;
 
 @Value
 public class AccountHolder {
-    private final Map<String, Set<AccountAccess>> accountAccesses = new HashMap<>();
+    private final Map<AccountInfo, Set<AccountAccess>> accountAccesses = new HashMap<>();
 
-    public void fillAccess(List<AccountInfo> info, TypeAccess typeAccess) {
-        if (CollectionUtils.isNotEmpty(info)) {
-            for (AccountInfo a : info) {
-                addAccountAccess(a.getIban(), getCurrencyByString(a.getCurrency()), typeAccess);
+    public void fillAccess(List<AccountInfo> infoList, TypeAccess typeAccess) {
+        if (CollectionUtils.isNotEmpty(infoList)) {
+            for (AccountInfo info : infoList) {
+                addAccountAccess(info, typeAccess);
             }
         }
     }
 
-    private Currency getCurrencyByString(String currency) {
-        return Optional.ofNullable(currency)
-                   .map(Currency::getInstance)
-                   .orElse(null);
-    }
-
-    private void addAccountAccess(String iban, Currency currency, TypeAccess typeAccess) {
-        accountAccesses.putIfAbsent(iban, new HashSet<>());
-        accountAccesses.get(iban).add(new AccountAccess(currency, typeAccess));
+    private void addAccountAccess(AccountInfo accountInfo, TypeAccess typeAccess) {
+        accountAccesses.putIfAbsent(accountInfo, new HashSet<>());
+        accountAccesses.get(accountInfo).add(new AccountAccess(accountInfo.getCurrency(), typeAccess));
         if (EnumSet.of(TypeAccess.BALANCE, TypeAccess.TRANSACTION).contains(typeAccess)) {
-            accountAccesses.get(iban).add(new AccountAccess(currency, TypeAccess.ACCOUNT));
+            accountAccesses.get(accountInfo).add(new AccountAccess(accountInfo.getCurrency(), TypeAccess.ACCOUNT));
         }
     }
 }

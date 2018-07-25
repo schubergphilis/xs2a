@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.consent.api.AccountInfo;
+import de.adorsys.aspsp.xs2a.consent.api.AccountType;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccessInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.AisConsent;
@@ -32,6 +33,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 
@@ -119,7 +121,7 @@ public class AisConsentServiceTest {
     }
 
     private List<AccountInfo> buildAccountsInfo() {
-        return Arrays.asList(new AccountInfo("iban-1", "EUR"));
+        return Arrays.asList(new AccountInfo("iban-1", AccountType.IBAN, Currency.getInstance("EUR")));
     }
 
     private SpiAccountConsent buildSpiAccountConsent() {

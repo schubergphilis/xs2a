@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.account.AccountHolder;
+import de.adorsys.aspsp.xs2a.consent.api.AccountInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccessInfo;
@@ -87,7 +88,7 @@ public class AISConsentService {
         return buildAccounts(holder.getAccountAccesses());
     }
 
-    private List<AisAccount> buildAccounts(Map<String, Set<AccountAccess>> accountAccesses) {
+    private List<AisAccount> buildAccounts(Map<AccountInfo, Set<AccountAccess>> accountAccesses) {
         return accountAccesses
                    .entrySet().stream()
                    .map(e -> new AisAccount(e.getKey(), e.getValue()))

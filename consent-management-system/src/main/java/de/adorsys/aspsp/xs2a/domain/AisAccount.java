@@ -18,9 +18,12 @@ package de.adorsys.aspsp.xs2a.domain;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import de.adorsys.aspsp.xs2a.consent.api.AccountInfo;
+import de.adorsys.aspsp.xs2a.consent.api.AccountType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import java.util.List;
 import java.util.Set;
 
 @Data
+@NoArgsConstructor
 @Entity(name = "ais_account")
 @ApiModel(description = "Ais account entity", value = "AisAccount")
 public class AisAccount {
@@ -36,9 +40,14 @@ public class AisAccount {
     @SequenceGenerator(name = "ais_account_generator", sequenceName = "ais_account_id_seq")
     private Long id;
 
-    @Column(name = "iban", nullable = false)
-    @ApiModelProperty(value = "IBAN: This data element can be used in the body of the CreateConsentReq Request Message for retrieving account access consent from this payment account", required = true, example = "DE2310010010123456789")
-    private String iban;
+    @Column(name = "account_id", nullable = false)
+    @ApiModelProperty(value = "The account identifier which can be used on payload-level to address specific accounts", example = "DE2310010010156789")
+    private String accountTypeId;
+
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "account_type", nullable = false)
+    @ApiModelProperty(value = "The type of account identifier", example = "IBAN")
+    private AccountType accountType;
 
     @ElementCollection
     @CollectionTable(name = "ais_account_access", joinColumns = @JoinColumn(name = "account_id"))
@@ -51,10 +60,9 @@ public class AisAccount {
     @ApiModelProperty(value = "Detailed information about consent", required = true)
     private AisConsent consent;
 
-    public AisAccount() {}
-
-    public AisAccount(String iban, Set<AccountAccess> accountAccesses) {
-        this.iban = iban;
+    public AisAccount(AccountInfo accountInfo, Set<AccountAccess> accountAccesses) {
+        this.accountTypeId = accountInfo.getAccountTypeId();
+        this.accountType = accountInfo.getAccountType();
         this.accesses.addAll(accountAccesses);
     }
 }

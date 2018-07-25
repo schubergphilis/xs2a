@@ -16,18 +16,22 @@
 
 package de.adorsys.aspsp.xs2a.service.mapper;
 
+import de.adorsys.aspsp.xs2a.consent.api.AccountType;
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.AisAccount;
 import de.adorsys.aspsp.xs2a.domain.AisConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiAccountAccess;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Currency;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class ConsentMapper {
 
@@ -61,7 +65,24 @@ public class ConsentMapper {
     private List<SpiAccountReference> mapToSpiAccountReference(AisAccount aisAccount, TypeAccess typeAccess) {
         return aisAccount.getAccesses().stream()
                    .filter(ass -> ass.getTypeAccess() == typeAccess)
-                   .map(access -> new SpiAccountReference(aisAccount.getIban(), "", "", "", "", access.getCurrency()))
+                   .map(access -> mapToSpiAccountReference(aisAccount.getAccountTypeId(), aisAccount.getAccountType(), access.getCurrency()))
                    .collect(Collectors.toList());
+    }
+
+    private SpiAccountReference mapToSpiAccountReference(String accountTypeId, AccountType accountType, Currency currency) {
+        if (accountType == AccountType.IBAN) {
+            return new SpiAccountReference(accountTypeId, "", "", "", "", currency);
+        } else if (accountType == AccountType.BBAN) {
+            return new SpiAccountReference("", accountTypeId, "", "", "", currency);
+        } else if (accountType == AccountType.PAN) {
+            return new SpiAccountReference("", "", accountTypeId, "", "", currency);
+        } else if (accountType == AccountType.MASKEDPAN) {
+            return new SpiAccountReference("", "", "", accountTypeId, "", currency);
+        } else if (accountType == AccountType.MSISDN) {
+            return new SpiAccountReference("", "", "", "", accountTypeId, currency);
+        } else {
+            log.warn("Unknown account type! {}", accountType);
+            return null;
+        }
     }
 }

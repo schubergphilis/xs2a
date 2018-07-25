@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import de.adorsys.aspsp.xs2a.consent.api.AccountInfo;
+import de.adorsys.aspsp.xs2a.consent.api.AccountType;
 import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccessInfo;
@@ -30,14 +31,16 @@ import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiAccountAccessType;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiCreateConsentRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ConsentMapper {
@@ -179,11 +182,28 @@ public class ConsentMapper {
     }
 
     private AccountInfo mapToAccountInfo(AccountReference ref) {
-        AccountInfo info = new AccountInfo();
-        info.setIban(ref.getIban());
-        info.setCurrency(Optional.ofNullable(ref.getCurrency())
-                             .map(Currency::getCurrencyCode)
-                             .orElse(null));
-        return info;
+        AccountType accountType = AccountType.IBAN;
+        String accountTypeId = "";
+
+        if (!StringUtils.isBlank(ref.getIban())) {
+            accountTypeId = ref.getIban();
+            accountType = AccountType.IBAN;
+        } else if (!StringUtils.isBlank(ref.getBban())) {
+            accountTypeId = ref.getBban();
+            accountType = AccountType.BBAN;
+        } else if (!StringUtils.isBlank(ref.getPan())) {
+            accountTypeId = ref.getPan();
+            accountType = AccountType.PAN;
+        } else if (!StringUtils.isBlank(ref.getMaskedPan())) {
+            accountTypeId = ref.getMaskedPan();
+            accountType = AccountType.MASKEDPAN;
+        } else if (!StringUtils.isBlank(ref.getMsisdn())) {
+            accountTypeId = ref.getMsisdn();
+            accountType = AccountType.MSISDN;
+        } else {
+            log.warn("Unknown account type! {}", ref);
+        }
+
+        return new AccountInfo(accountTypeId, accountType, ref.getCurrency());
     }
 }

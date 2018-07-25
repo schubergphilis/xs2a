@@ -18,22 +18,20 @@ package de.adorsys.aspsp.xs2a.consent.api;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
-@NoArgsConstructor
+import java.util.Currency;
+
+@Value
 @ApiModel(description = "Account information", value = "AccountInfo")
 public class AccountInfo {
 
-    @ApiModelProperty(value = "IBAN: This data element can be used in the body of the CreateConsentReq Request Message for retrieving account access consent from this payment accoun", example = "DE2310010010156789")
-    private String iban;
+    @ApiModelProperty(value = "The account identifier which can be used on payload-level to address specific accounts", example = "DE2310010010156789")
+    private String accountTypeId;
+
+    @ApiModelProperty(value = "The type of account identifier", example = "IBAN")
+    private AccountType accountType;
 
     @ApiModelProperty(value = "ISO 4217 currency code", example = "EUR")
-    private String currency;
-
-    public AccountInfo(String iban, String currency) {
-        this.iban = iban;
-        this.currency = currency;
-    }
+    private Currency currency;
 }
