@@ -64,7 +64,8 @@ public class BPISStep {
         HttpHeaders headers = new HttpHeaders();
         headers.setAll(context.getTestData().getRequest().getHeader());
         headers.add("Authorization", "Bearer " + context.getAccessToken());
-        headers.add("tpp-transaction-id", "16d40f49-a110-4344-a949-f99828ae13c9");
+       // headers.add("tpp-transaction-id", "16d40f49-a110-4344-a949-f99828ae13c9");
+        headers.add("Content-Type", "application/json");
 
         List<SinglePayments> paymentsList = ((List<SinglePayments>) context.getTestData().getRequest().getBody());
 
@@ -77,17 +78,18 @@ public class BPISStep {
         context.setResponse(response);
     }
 
-//    @Then("^a successful response code and the appropriate bulk payment response data$")
-//    public void checkResponseCode() {
-//        ResponseEntity<HashMap> actualResponse = context.getResponse();
-//        HashMap<String, String> givenResponseBody = (HashMap) context.getTestData().getResponse().getBody();
-//
-//        HttpStatus compareStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
-//        assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
-//
-//        assertThat(actualResponse.getBody().get("transactionStatus"), equalTo(givenResponseBody.get("transactionStatus")));
-//        assertThat(actualResponse.getBody().get("paymentId"), notNullValue());
-//    }
+    @Then("^a successful response code and the appropriate bulk payment response data$")
+    public void checkResponseCode() {
+        ResponseEntity<List<PaymentInitialisationResponse>> actualResponse = context.getResponse();
+        List<HashMap<String, String>> givenResponseBody = (List<HashMap<String, String>>) context.getTestData().getResponse().getBody();
+
+        HttpStatus compareStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
+        assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
+
+        //TODO: Find a way to check for the transaction status (so that the type of the compared status is the same)
+        //assertThat(actualResponse.getBody().get(0).getTransactionStatus(), equalTo(givenResponseBody.get(0).get("transactionStatus")));
+        assertThat(actualResponse.getBody().get(0).getPaymentId(), notNullValue());
+    }
 /*
     @And("^a redirect URL is delivered to the PSU$")
     public void checkRedirectUrl() {
