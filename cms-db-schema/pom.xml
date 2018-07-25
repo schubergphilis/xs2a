@@ -7,6 +7,11 @@
         <groupId>de.adorsys.aspsp</groupId>
         <version>1.4-SNAPSHOT</version>
     </parent>
+
+    <properties>
+        <ruleset.basedir>..</ruleset.basedir>
+    </properties>
+
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>cms-db-schema</artifactId>
