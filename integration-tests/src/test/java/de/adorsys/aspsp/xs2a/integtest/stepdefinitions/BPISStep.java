@@ -17,7 +17,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -59,14 +58,16 @@ public class BPISStep {
     }
 
     @When("^PSU sends the bulk payment initiating request$")
-    public void sendPaymentInitiatingRequest() {
+    public void sendPaymentInitiatingRequest() throws IOException {
         HttpHeaders headers = new HttpHeaders();
         headers.setAll(context.getTestData().getRequest().getHeader());
         headers.add("Authorization", "Bearer " + context.getAccessToken());
 
-       // List<SinglePayments> paymentsList = ((List<SinglePayments>) context.getTestData().getRequest().getBody());
-        HttpEntity<ArrayList<SinglePayments>> entity = new HttpEntity<>(
-            (ArrayList<SinglePayments>) context.getTestData().getRequest().getBody(),
+        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        String json = mapper.writeValueAsString(context.getTestData().getRequest().getBody());
+        List<SinglePayments> paymentsList = ((List<SinglePayments>) context.getTestData().getRequest().getBody());
+        HttpEntity<List<SinglePayments> > entity = new HttpEntity<>(
+            paymentsList,
             headers);
 
         ResponseEntity<HashMap> response = restTemplate.exchange(
