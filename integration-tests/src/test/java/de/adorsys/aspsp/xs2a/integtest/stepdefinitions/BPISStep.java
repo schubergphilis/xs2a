@@ -33,17 +33,13 @@ public class BPISStep {
     @Autowired
     private Context context;
 
-
 /* see GlobalSteps.java
         @Given("^PSU is logged in$")
     */
 
-
-
 /* see GlobalSteps.java
         @And("^(.*) approach is used$")
     */
-
 
     @And("^PSU wants to initiate multiple payments (.*) using the payment product (.*)$")
     public void loadTestData(String dataFileName, String paymentProduct) throws IOException {
@@ -63,7 +59,6 @@ public class BPISStep {
         HttpHeaders headers = new HttpHeaders();
         headers.setAll(context.getTestData().getRequest().getHeader());
         headers.add("Authorization", "Bearer " + context.getAccessToken());
-       // headers.add("tpp-transaction-id", "16d40f49-a110-4344-a949-f99828ae13c9");
         headers.add("Content-Type", "application/json");
 
         List<SinglePayments> paymentsList = ((List<SinglePayments>) context.getTestData().getRequest().getBody());
