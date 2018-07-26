@@ -68,7 +68,6 @@ public class BPISStep {
             HttpMethod.POST, new HttpEntity<>(paymentsList, headers), new ParameterizedTypeReference<List<HashMap>>() {
             });
 
-
         context.setResponse(response);
     }
 
