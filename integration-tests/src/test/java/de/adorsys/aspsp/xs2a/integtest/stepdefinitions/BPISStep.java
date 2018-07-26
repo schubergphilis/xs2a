@@ -7,7 +7,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
@@ -69,9 +68,9 @@ public class BPISStep {
 
         List<SinglePayments> paymentsList = ((List<SinglePayments>) context.getTestData().getRequest().getBody());
 
-        ResponseEntity<List<PaymentInitialisationResponse>> response = restTemplate.exchange(
+        ResponseEntity<List<HashMap>> response = restTemplate.exchange(
             context.getBaseUrl() + "/bulk-payments/" + context.getPaymentProduct(),
-            HttpMethod.POST, new HttpEntity<>(paymentsList, headers), new ParameterizedTypeReference<List<PaymentInitialisationResponse>>() {
+            HttpMethod.POST, new HttpEntity<>(paymentsList, headers), new ParameterizedTypeReference<List<HashMap>>() {
             });
 
 
@@ -80,24 +79,27 @@ public class BPISStep {
 
     @Then("^a successful response code and the appropriate bulk payment response data$")
     public void checkResponseCode() {
-        ResponseEntity<List<PaymentInitialisationResponse>> actualResponse = context.getResponse();
+        ResponseEntity<List<HashMap>> actualResponse = context.getResponse();
         List<HashMap<String, String>> givenResponseBody = (List<HashMap<String, String>>) context.getTestData().getResponse().getBody();
 
         HttpStatus compareStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
         assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
 
-        //TODO: Find a way to check for the transaction status (so that the type of the compared status is the same)
-        //assertThat(actualResponse.getBody().get(0).getTransactionStatus(), equalTo(givenResponseBody.get(0).get("transactionStatus")));
-        assertThat(actualResponse.getBody().get(0).getPaymentId(), notNullValue());
-    }
-/*
-    @And("^a redirect URL is delivered to the PSU$")
-    public void checkRedirectUrl() {
-        ResponseEntity<HashMap> actualResponse = context.getResponse();
+        assertThat(actualResponse.getBody().get(0).get("transactionStatus"), equalTo(givenResponseBody.get(0).get("transactionStatus")));
+        assertThat(actualResponse.getStatusCode(), notNullValue());
 
-        assertThat(((HashMap) actualResponse.getBody().get("_links")).get("scaRedirect"), notNullValue());
+        assertThat(actualResponse.getBody().get(1).get("transactionStatus"), equalTo(givenResponseBody.get(1).get("transactionStatus")));
+
     }
-*/
+
+    @And("^a redirect URL for every payment of the Bulk payment is delivered to the PSU$")
+    public void checkRedirectUrl() {
+        ResponseEntity<List<HashMap>> actualResponse = context.getResponse();
+
+        assertThat(((HashMap) (actualResponse.getBody()).get(0).get("_links")).get("scaRedirect"), notNullValue());
+        assertThat(((HashMap) (actualResponse.getBody()).get(1).get("_links")).get("scaRedirect"), notNullValue());
+    }
+
     private HttpStatus convertStringToHttpStatusCode(String code){
         return HttpStatus.valueOf(Integer.valueOf(code));
     }
