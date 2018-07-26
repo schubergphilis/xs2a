@@ -20,6 +20,7 @@ public class Context {
 
     private String scaApproach;
     private String paymentProduct;
+    private String paymentId;
     private String accessToken;
     private TestData testData;
     private ResponseEntity<HashMap> response;
