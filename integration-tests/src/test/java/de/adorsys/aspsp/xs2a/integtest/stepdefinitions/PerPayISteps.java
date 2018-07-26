@@ -42,41 +42,41 @@ public class PerPayISteps {
     */
 
     @And("^PSU wants to initiate a recurring payment (.*) using the payment product (.*)$")
-    public void loadTestDataRecPay(String fileName, String paymentProduct) throws IOException {
+    public void loadTestDataForPeriodicPayment(String fileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
-        File jsFile = new File("src/test/resources/data-input/pis/recurring/" + fileName);
+        File PeriodicPaymentJsonFile = new File("src/test/resources/data-input/pis/recurring/" + fileName);
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        TestData<PeriodicPayment> data = objectMapper.readValue(jsFile, new TypeReference<TestData<PeriodicPayment>>() {
+        TestData<PeriodicPayment> data = objectMapper.readValue(PeriodicPaymentJsonFile, new TypeReference<TestData<PeriodicPayment>>() {
         });
         context.setTestData(data);
     }
 
     @When("^PSU sends the recurring payment initiating request$")
-    public void sendPerPaymentInitiatingRequest() {
+    public void sendPeriodicPaymentInitiatingRequest() {
         HttpHeaders header = new HttpHeaders();
         header.setAll(context.getTestData().getRequest().getHeader());
         header.add("Authorization", "Bearer" + context.getAccessToken());
         header.add("Content-Type", "application/json");
         HttpEntity<PeriodicPayment> entity = new HttpEntity<>(
             (PeriodicPayment) context.getTestData().getRequest().getBody(), header);
-        ResponseEntity<HashMap> response = restTemplate.exchange(
+        ResponseEntity<HashMap> responseEntity = restTemplate.exchange(
             context.getBaseUrl() + "/periodic-payments/" + context.getPaymentProduct(),
             HttpMethod.POST,
             entity,
             HashMap.class);
 
-        context.setResponse(response);
+        context.setResponse(responseEntity);
     }
 
     @Then("^a successful response code and the appropriate recurring payment response data")
-    public void checkRespCodeRecPayment() {
+    public void checkResponseCodeFromPeriodicPayment() {
 
-        HashMap<String, String> respBody = (HashMap) context.getTestData().getResponse().getBody();
-        ResponseEntity<HashMap> resp = context.getResponse();
-        HttpStatus compStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
-        assertThat(resp.getStatusCode(), equalTo(compStatus));
-        assertThat(resp.getBody().get("transactionStatus"), equalTo(respBody.get("transactionStatus")));
-        assertThat(resp.getBody().get("paymentId"), notNullValue());
+        HashMap<String, String> responseBody = (HashMap) context.getTestData().getResponse().getBody();
+        ResponseEntity<HashMap> responseEntity = context.getResponse();
+        HttpStatus comparedStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
+        assertThat(responseEntity.getStatusCode(), equalTo(comparedStatus));
+        assertThat(responseEntity.getBody().get("transactionStatus"), equalTo(responseBody.get("transactionStatus")));
+        assertThat(responseEntity.getBody().get("paymentId"), notNullValue());
     }
 
     private HttpStatus convertStringToHttpStatusCode(String code) {
