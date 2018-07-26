@@ -106,13 +106,13 @@ Feature: Payment Initiation Service
 #        Then an appropriate response code and the status <payment-status> is delivered to the PSU
 #        Examples:
 #            | payment-id                           | payment-product      | payment-status                |
-#            | 529e0507-7539-4a65-9b74-bdf87061e99b | sepa-credit-transfer | paymentStatus-successful.json |
+#            | 529e0507-7539-4a65-9b74-bdf87061e99b | sepa-credit-transfers | paymentStatus-successful.json |
 
     Scenario Outline: Payment Status Request with not existing Payment-ID
-        Given PSU is logged in
+        Given PSU is logged in using redirect approach
         And created a payment status request with of a not existing payment-id <payment-id> using the payment product <payment-product>
         When PSU requests the status of the payment
         Then an appropriate response code and the status <payment-status> is delivered to the PSU
         Examples:
-            | payment-id                           | payment-product      | payment-status                     |
-            | 529e0507-7539-4a65-9b74-bdf87061e99b | sepa-credit-transfer | paymentStatus-not-existing-id.json |
+            | payment-id                           | payment-product       | payment-status                     |
+            | 529e0507-7539-4a65-9b74-bdf87061e99b | sepa-credit-transfers | paymentStatus-not-existing-id.json |
