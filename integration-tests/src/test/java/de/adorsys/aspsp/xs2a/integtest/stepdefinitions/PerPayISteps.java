@@ -44,25 +44,19 @@ public class PerPayISteps {
     @And("^PSU wants to initiate a recurring payment (.*) using the payment product (.*)$")
     public void loadTestDataRecPay(String fileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
-
         File jsFile = new File("src/test/resources/data-input/pis/recurring/" + fileName);
-
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         TestData<PeriodicPayment> data = objectMapper.readValue(jsFile, new TypeReference<TestData<PeriodicPayment>>() {
         });
-
         context.setTestData(data);
-
     }
 
     @When("^PSU sends the recurring payment initiating request$")
     public void sendPerPaymentInitiatingRequest() {
-
         HttpHeaders header = new HttpHeaders();
         header.setAll(context.getTestData().getRequest().getHeader());
         header.add("Authorization", "Bearer" + context.getAccessToken());
         header.add("Content-Type", "application/json");
-
         HttpEntity<PeriodicPayment> entity = new HttpEntity<>(
             (PeriodicPayment) context.getTestData().getRequest().getBody(), header);
         ResponseEntity<HashMap> response = restTemplate.exchange(
@@ -79,9 +73,7 @@ public class PerPayISteps {
 
         HashMap<String, String> respBody = (HashMap) context.getTestData().getResponse().getBody();
         ResponseEntity<HashMap> resp = context.getResponse();
-
         HttpStatus compStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
-
         assertThat(resp.getStatusCode(), equalTo(compStatus));
         assertThat(resp.getBody().get("transactionStatus"), equalTo(respBody.get("transactionStatus")));
         assertThat(resp.getBody().get("paymentId"), notNullValue());
@@ -90,5 +82,4 @@ public class PerPayISteps {
     private HttpStatus convertStringToHttpStatusCode(String code) {
         return HttpStatus.valueOf(Integer.valueOf(code));
     }
-
 }

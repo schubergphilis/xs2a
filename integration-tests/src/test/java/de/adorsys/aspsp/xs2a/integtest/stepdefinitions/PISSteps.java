@@ -60,7 +60,6 @@ public class PISSteps {
         headers.add("Authorization", "Bearer " + context.getAccessToken());
         headers.add("Content-Type", "application/json");
 
-
         HttpEntity<SinglePayments> entity = new HttpEntity<>(
             (SinglePayments) context.getTestData().getRequest().getBody(),
             headers);
@@ -78,7 +77,6 @@ public class PISSteps {
     public void checkResponseCode() {
         ResponseEntity<HashMap> actualResponse = context.getResponse();
         HashMap<String, String> givenResponseBody = (HashMap) context.getTestData().getResponse().getBody();
-
         HttpStatus compareStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
         assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
 
@@ -89,12 +87,10 @@ public class PISSteps {
     @And("^a redirect URL is delivered to the PSU$")
     public void checkRedirectUrl() {
         ResponseEntity<HashMap> actualResponse = context.getResponse();
-
         assertThat(((HashMap) actualResponse.getBody().get("_links")).get("scaRedirect"), notNullValue());
     }
 
     private HttpStatus convertStringToHttpStatusCode(String code) {
         return HttpStatus.valueOf(Integer.valueOf(code));
     }
-
 }
