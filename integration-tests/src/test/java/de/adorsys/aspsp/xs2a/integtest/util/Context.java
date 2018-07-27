@@ -10,7 +10,7 @@ import java.util.HashMap;
 
 @Data
 @Component
-public class Context {
+public class Context <T> {
 
     @Value("${xs2a.baseUrl}")
     private String baseUrl;
@@ -23,5 +23,5 @@ public class Context {
     private String paymentId;
     private String accessToken;
     private TestData testData;
-    private ResponseEntity<HashMap> response;
+    private ResponseEntity<T> response;
 }
