@@ -98,15 +98,15 @@ Feature: Payment Initiation Service
     # Payment Status                                                                                                   #
     #                                                                                                                  #
     ####################################################################################################################
-#    Scenario Outline: Successful Payment Status Request
-#        Given PSU is logged in
-#        And initiated a single payment with the payment-id <payment-id>
-#        And created a payment status request with of that payment
-#        When PSU requests the status of the payment
-#        Then an appropriate response code and the status <payment-status> is delivered to the PSU
-#        Examples:
-#            | payment-id                           | payment-status                |
-#            | 529e0507-7539-4a65-9b74-bdf87061e99b | paymentStatus-successful.json |
+    Scenario Outline: Successful Payment Status Request
+        Given PSU is logged in using redirect approach
+        And initiated a single payment with the payment-id
+        And created a payment status request with of that payment
+        When PSU requests the status of the payment
+        Then an appropriate response code and the status <payment-status> is delivered to the PSU
+        Examples:
+            | payment-status                |
+            | paymentStatus-successful.json |
 
 #    Scenario Outline: Payment Status Request with not existing Payment-ID
 #        Given PSU is logged in
