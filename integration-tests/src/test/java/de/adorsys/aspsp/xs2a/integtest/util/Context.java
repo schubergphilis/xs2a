@@ -6,11 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-
 @Data
 @Component
-public class Context {
+public class Context<T, U, R> {
 
     @Value("${xs2a.baseUrl}")
     private String baseUrl;
@@ -22,6 +20,6 @@ public class Context {
     private String paymentProduct;
     private String paymentId;
     private String accessToken;
-    private TestData testData;
-    private ResponseEntity<HashMap> response;
+    private TestData<T, U> testData;
+    private ResponseEntity<R> actualResponse;
 }
