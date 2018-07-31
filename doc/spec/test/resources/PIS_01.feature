@@ -64,16 +64,16 @@ Feature: Payment Initiation Service
     # Standing Orders                                                                                                  #
     #                                                                                                                  #
     ####################################################################################################################
-    Scenario Outline: Payment initiation request for standing orders
-        Given PSU is logged in
-        And <sca-approach> approach is used
-        And PSU wants to initiate a standing order <recurring-payment>
-        Then a payment resource is created at the aspsp mock
-        And a successful response code and
-        And the appropriate recurring payment response data is delivered to the PSU
-        Examples:
-            | sca-approach | recurring-payment          |
-            | redirect     | recPayInit-successful.json |
+#    Scenario Outline: Payment initiation request for standing orders
+#        Given PSU is logged in
+#        And <sca-approach> approach is used
+#        And PSU wants to initiate a standing order <recurring-payment>
+#        Then a payment resource is created at the aspsp mock
+#        And a successful response code and
+#        And the appropriate recurring payment response data is delivered to the PSU
+#        Examples:
+#            | sca-approach | recurring-payment          |
+#            | redirect     | recPayInit-successful.json |
 
     # TODO Recurring payment initiation with not defined frequency -> 400
     # TODO Recurring payment initiation with start date in the past -> 400

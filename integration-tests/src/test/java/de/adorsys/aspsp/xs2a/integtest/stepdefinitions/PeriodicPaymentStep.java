@@ -24,7 +24,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 @FeatureFileSteps
-public class PerPayISteps {
+public class PeriodicPaymentStep {
 
     @Autowired
     @Qualifier("xs2a")
@@ -44,9 +44,9 @@ public class PerPayISteps {
     @And("^PSU wants to initiate a recurring payment (.*) using the payment product (.*)$")
     public void loadTestDataForPeriodicPayment(String fileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
-        File PeriodicPaymentJsonFile = new File("src/test/resources/data-input/pis/recurring/" + fileName);
+        File periodicPaymentJsonFile = new File("src/test/resources/data-input/pis/recurring/" + fileName);
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        TestData<PeriodicPayment> data = objectMapper.readValue(PeriodicPaymentJsonFile, new TypeReference<TestData<PeriodicPayment>>() {
+        TestData<PeriodicPayment, HashMap> data = objectMapper.readValue(periodicPaymentJsonFile, new TypeReference<TestData<PeriodicPayment, HashMap>>() {
         });
         context.setTestData(data);
     }
@@ -65,14 +65,14 @@ public class PerPayISteps {
             entity,
             HashMap.class);
 
-        context.setResponse(responseEntity);
+        context.setActualResponse(responseEntity);
     }
 
     @Then("^a successful response code and the appropriate recurring payment response data")
     public void checkResponseCodeFromPeriodicPayment() {
 
         HashMap<String, String> responseBody = (HashMap) context.getTestData().getResponse().getBody();
-        ResponseEntity<HashMap> responseEntity = context.getResponse();
+        ResponseEntity<HashMap> responseEntity = context.getActualResponse();
         HttpStatus comparedStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
         assertThat(responseEntity.getStatusCode(), equalTo(comparedStatus));
         assertThat(responseEntity.getBody().get("transactionStatus"), equalTo(responseBody.get("transactionStatus")));
@@ -82,4 +82,6 @@ public class PerPayISteps {
     private HttpStatus convertStringToHttpStatusCode(String code) {
         return HttpStatus.valueOf(Integer.valueOf(code));
     }
+
+
 }
