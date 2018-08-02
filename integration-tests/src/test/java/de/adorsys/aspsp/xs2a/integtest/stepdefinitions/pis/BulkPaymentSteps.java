@@ -1,15 +1,19 @@
 
-package de.adorsys.aspsp.xs2a.integtest.stepdefinitions;
+package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader;
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
+import de.adorsys.aspsp.xs2a.integtest.util.PaymentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -24,25 +28,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
-public class BPISStep {
+public class BulkPaymentSteps {
 
     @Autowired
     @Qualifier("xs2a")
     private RestTemplate restTemplate;
 
     @Autowired
-    private Context<List<SinglePayments>, List<HashMap>, List<HashMap>> context;
+    private Context<List<SinglePayments>, List<HashMap>, List<PaymentInitialisationResponse>> context;
 
-/* see GlobalSteps.java
-        @Given("^PSU is logged in$")
-    */
-
-/* see GlobalSteps.java
-        @And("^(.*) approach is used$")
-    */
-
-    @And("^PSU wants to initiate multiple payments (.*) using the payment product (.*)$")
-    public void loadTestData(String dataFileName, String paymentProduct) throws IOException {
+    @Given("^PSU wants to initiate multiple payments (.*) using the payment product (.*)$")
+    public void loadTestDataBulkPayment(String dataFileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
 
         File jsonFile = new File("src/test/resources/data-input/pis/bulk/" + dataFileName);
@@ -55,47 +51,38 @@ public class BPISStep {
     }
 
     @When("^PSU sends the bulk payment initiating request$")
-    public void sendPaymentInitiatingRequest() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAll(context.getTestData().getRequest().getHeader());
-        headers.add("Authorization", "Bearer " + context.getAccessToken());
-        headers.add("Content-Type", "application/json");
+    public void sendBulkPaymentInitiatingRequest() {
+        HttpEntity<List<SinglePayments>> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
-        List<SinglePayments> paymentsList = context.getTestData().getRequest().getBody();
-
-        ResponseEntity<List<HashMap>> response = restTemplate.exchange(
+        ResponseEntity<List<PaymentInitialisationResponse>> response = restTemplate.exchange(
             context.getBaseUrl() + "/bulk-payments/" + context.getPaymentProduct(),
-            HttpMethod.POST, new HttpEntity<>(paymentsList, headers), new ParameterizedTypeReference<List<HashMap>>() {
+            HttpMethod.POST, entity, new ParameterizedTypeReference<List<PaymentInitialisationResponse>>() {
             });
 
         context.setActualResponse(response);
     }
 
     @Then("^a successful response code and the appropriate bulk payment response data$")
-    public void checkResponseCode() {
-        ResponseEntity<List<HashMap>> actualResponse = context.getActualResponse();
+    public void checkResponseCodeBulkPayment() {
+        ResponseEntity<List<PaymentInitialisationResponse>> actualResponse = context.getActualResponse();
         List<HashMap> givenResponseBody = context.getTestData().getResponse().getBody();
 
-        HttpStatus compareStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
+        HttpStatus compareStatus = HttpStatus.valueOf(context.getTestData().getResponse().getCode());
         assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
 
-        assertThat(actualResponse.getBody().get(0).get("transactionStatus"), equalTo(givenResponseBody.get(0).get("transactionStatus")));
+        assertThat(actualResponse.getBody().get(0).getTransactionStatus().name(), equalTo(givenResponseBody.get(0).get("transactionStatus")));
         assertThat(actualResponse.getStatusCode(), notNullValue());
 
-        assertThat(actualResponse.getBody().get(1).get("transactionStatus"), equalTo(givenResponseBody.get(1).get("transactionStatus")));
+        assertThat(actualResponse.getBody().get(1).getTransactionStatus().name(), equalTo(givenResponseBody.get(1).get("transactionStatus")));
 
     }
 
     @And("^a redirect URL for every payment of the Bulk payment is delivered to the PSU$")
-    public void checkRedirectUrl() {
-        ResponseEntity<List<HashMap>> actualResponse = context.getActualResponse();
+    public void checkRedirectUrlBulkPayment() {
+        ResponseEntity<List<PaymentInitialisationResponse>> actualResponse = context.getActualResponse();
 
-        assertThat(((HashMap) (actualResponse.getBody()).get(0).get("_links")).get("scaRedirect"), notNullValue());
-        assertThat(((HashMap) (actualResponse.getBody()).get(1).get("_links")).get("scaRedirect"), notNullValue());
-    }
-
-    private HttpStatus convertStringToHttpStatusCode(String code){
-        return HttpStatus.valueOf(Integer.valueOf(code));
+        assertThat(actualResponse.getBody().get(0).getLinks().getScaRedirect(), notNullValue());
+        assertThat(actualResponse.getBody().get(1).getLinks().getScaRedirect(), notNullValue());
     }
 }
 

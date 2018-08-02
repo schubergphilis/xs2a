@@ -1,15 +1,17 @@
-package de.adorsys.aspsp.xs2a.integtest.stepdefinitions;
+package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
+import de.adorsys.aspsp.xs2a.integtest.util.PaymentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
@@ -26,7 +28,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 @FeatureFileSteps
-public class PISSteps {
+public class SinglePaymentSteps {
 
     @Autowired
     @Qualifier("xs2a")
@@ -35,15 +37,7 @@ public class PISSteps {
     @Autowired
     private Context<SinglePayments, HashMap, PaymentInitialisationResponse> context;
 
-    /* see GlobalSteps.java
-        @Given("^PSU is logged in$")
-    */
-
-    /* see GlobalSteps.java
-        @And("^(.*) approach is used$")
-    */
-
-    @And("^PSU wants to initiate a single payment (.*) using the payment product (.*)$")
+    @Given("^PSU wants to initiate a single payment (.*) using the payment product (.*)$")
     public void loadTestData(String dataFileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
 
@@ -58,7 +52,7 @@ public class PISSteps {
 
     @When("^PSU sends the single payment initiating request$")
     public void sendPaymentInitiatingRequest() {
-        HttpEntity<SinglePayments> entity = getSinglePaymentsHttpEntity();
+        HttpEntity<SinglePayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
         ResponseEntity<PaymentInitialisationResponse> response = restTemplate.exchange(
             context.getBaseUrl() + "/payments/" + context.getPaymentProduct(),
@@ -74,7 +68,7 @@ public class PISSteps {
         ResponseEntity<PaymentInitialisationResponse> actualResponse = context.getActualResponse();
         Map givenResponseBody = context.getTestData().getResponse().getBody();
 
-        HttpStatus compareStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
+        HttpStatus compareStatus = HttpStatus.valueOf(context.getTestData().getResponse().getCode());
         assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
 
         assertThat(actualResponse.getBody().getTransactionStatus().name(), equalTo(givenResponseBody.get("transactionStatus")));
@@ -88,13 +82,9 @@ public class PISSteps {
         assertThat(actualResponse.getBody().getLinks().getScaRedirect(), notNullValue());
     }
 
-    private HttpStatus convertStringToHttpStatusCode(String code){
-        return HttpStatus.valueOf(Integer.valueOf(code));
-    }
-
     @When("^PSU sends the single payment initiating request with error$")
     public void sendPaymentInitiatingRequestWithError() throws HttpClientErrorException {
-        HttpEntity<SinglePayments> entity = getSinglePaymentsHttpEntity();
+        HttpEntity<SinglePayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
         try {
             restTemplate.exchange(
@@ -108,19 +98,9 @@ public class PISSteps {
         }
     }
 
-    @Then("^an error response code is displayed the appropriate error response$")
-    public void anErrorResponseCodeIsDisplayedTheAppropriateErrorResponse() {
-        ResponseEntity<PaymentInitialisationResponse> response = context.getActualResponse();
-        HttpStatus httpStatus = convertStringToHttpStatusCode(context.getTestData().getResponse().getCode());
-        assertThat(response.getStatusCode(), equalTo(httpStatus));
-    }
+    /*
+     * @Then("^an error response code is displayed the appropriate error response$")
+     * see GlobalSteps.java
+     */
 
-    private HttpEntity<SinglePayments> getSinglePaymentsHttpEntity() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAll(context.getTestData().getRequest().getHeader());
-        headers.add("Authorization", "Bearer " + context.getAccessToken());
-        headers.add("Content-Type", "application/json");
-
-        return new HttpEntity<>(context.getTestData().getRequest().getBody(), headers);
-    }
 }

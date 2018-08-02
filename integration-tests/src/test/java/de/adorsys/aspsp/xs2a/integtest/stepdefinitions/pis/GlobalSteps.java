@@ -1,6 +1,8 @@
-package de.adorsys.aspsp.xs2a.integtest.stepdefinitions;
+package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,6 +15,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
 import java.util.Objects;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @FeatureFileSteps
 public class GlobalSteps {
@@ -42,17 +47,12 @@ public class GlobalSteps {
     @Value("${auth.password}")
     private String password;
 
-    @Given("^PSU is logged in using redirect approach$")
-    public void loginPsuRedirect() {
-        // no login necessary
-    }
-
     @Given("^PSU is logged in using oauth approach$")
     public void loginPsuOAuth() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<>();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
         map.add("grant_type", grantType);
         map.add("password", password);
         map.add("client_id", clientId);
@@ -70,6 +70,13 @@ public class GlobalSteps {
 
         context.setScaApproach("redirect");
         context.setAccessToken(Objects.requireNonNull(response).getBody().get("access_token").toString());
+    }
+
+    @Then("^an error response code is displayed the appropriate error response$")
+    public void anErrorResponseCodeIsDisplayedTheAppropriateErrorResponse() {
+        ResponseEntity<PaymentInitialisationResponse> response = context.getActualResponse();
+        HttpStatus httpStatus = HttpStatus.valueOf(context.getTestData().getResponse().getCode());
+        assertThat(response.getStatusCode(), equalTo(httpStatus));
     }
 
 }

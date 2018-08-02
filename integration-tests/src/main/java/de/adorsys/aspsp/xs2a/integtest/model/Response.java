@@ -6,7 +6,7 @@ import java.util.Map;
 
 @Getter
 public class Response<T> {
-    private String code;
+    private int code;
     private Map<String, String> header;
     private T body;
 }
