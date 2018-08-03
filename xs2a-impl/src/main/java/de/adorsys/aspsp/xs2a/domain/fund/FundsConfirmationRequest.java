@@ -51,7 +51,7 @@ public class FundsConfirmationRequest implements AccountReferenceCollector {
     private Amount instructedAmount;
 
     @Override
-    public Set<AccountReference> getReferences() {
+    public Set<AccountReference> getAccountReferences() {
         return new HashSet<>(Collections.singletonList(this.psuAccount));
     }
 }

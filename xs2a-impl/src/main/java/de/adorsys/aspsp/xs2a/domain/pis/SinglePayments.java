@@ -103,7 +103,7 @@ public class SinglePayments implements AccountReferenceCollector {
 
     @JsonIgnore
     @Override
-    public Set<AccountReference> getReferences() {
+    public Set<AccountReference> getAccountReferences() {
         return new HashSet<>(Arrays.asList(this.debtorAccount, this.creditorAccount));
     }
 }

@@ -57,7 +57,7 @@ public class BulkPaymentInitiationController {
         @PathVariable("payment-product") String paymentProduct,
         @RequestBody List<SinglePayments> payments) {
         for (SinglePayments payment : payments) {
-            Optional<MessageError> error = referenceValidationService.validateAccountReferences(payment.getReferences());
+            Optional<MessageError> error = referenceValidationService.validateAccountReferences(payment.getAccountReferences());
             if (error.isPresent()) {
                 return responseMapper.created(ResponseObject.<List<PaymentInitialisationResponse>>builder().fail(error.get()).build());
             }

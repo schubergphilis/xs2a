@@ -56,7 +56,7 @@ public class PeriodicPaymentsController {
         @PathVariable("payment-product") String paymentProduct,
         @ApiParam(name = "Periodic Payment", value = "All data relevant for the corresponding payment product and necessary for execution of the standing order.", required = true)
         @RequestBody PeriodicPayment periodicPayment) {
-        Optional<MessageError> error = referenceValidationService.validateAccountReferences(periodicPayment.getReferences());
+        Optional<MessageError> error = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
         return responseMapper.created(
             error.isPresent()
                 ? ResponseObject.<PaymentInitialisationResponse>builder().fail(error.get()).build()

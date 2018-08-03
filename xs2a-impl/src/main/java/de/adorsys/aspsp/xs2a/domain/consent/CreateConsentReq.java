@@ -58,7 +58,7 @@ public class CreateConsentReq implements AccountReferenceCollector {
 
     @JsonIgnore
     @Override
-    public Set<AccountReference> getReferences() {
+    public Set<AccountReference> getAccountReferences() {
         Optional<AccountAccess> access = Optional.ofNullable(this.access);
         Set<AccountReference> result = new HashSet<>();
         if (access.isPresent()) {

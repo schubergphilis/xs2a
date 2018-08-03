@@ -64,9 +64,9 @@ public class ConsentInformationController {
     public ResponseEntity<CreateConsentResp> createAccountConsent(
         @RequestHeader(name = "psu-id", required = false) String psuId,
         @Valid @RequestBody CreateConsentReq createConsent) {
-        Set<AccountReference> references = createConsent.getReferences();
+        Set<AccountReference> references = createConsent.getAccountReferences();
         Optional<MessageError> error = !references.isEmpty()
-                                           ? referenceValidationService.validateAccountReferences(createConsent.getReferences())
+                                           ? referenceValidationService.validateAccountReferences(createConsent.getAccountReferences())
                                            : Optional.empty();
         return responseMapper.created(
             error.isPresent()

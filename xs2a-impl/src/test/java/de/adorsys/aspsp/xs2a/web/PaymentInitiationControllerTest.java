@@ -122,7 +122,7 @@ public class PaymentInitiationControllerTest {
     @Test
     public void createPaymentInitiation() throws IOException {
         when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(readPaymentInitialisationResponse(), HttpStatus.CREATED));
-        when(referenceValidationService.validateAccountReferences(readSinglePayments().getReferences())).thenReturn(Optional.empty());
+        when(referenceValidationService.validateAccountReferences(readSinglePayments().getAccountReferences())).thenReturn(Optional.empty());
         //Given
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         SinglePayments payment = readSinglePayments();
