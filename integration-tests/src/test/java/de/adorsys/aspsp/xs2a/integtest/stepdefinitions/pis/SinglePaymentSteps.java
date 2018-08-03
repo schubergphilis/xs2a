@@ -1,9 +1,10 @@
-package de.adorsys.aspsp.xs2a.integtest.stepdefinitions;
+package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
@@ -26,7 +27,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 @FeatureFileSteps
-public class PISSteps {
+public class SinglePaymentSteps {
 
     @Autowired
     @Qualifier("xs2a")
@@ -35,15 +36,7 @@ public class PISSteps {
     @Autowired
     private Context<SinglePayments, HashMap, PaymentInitialisationResponse> context;
 
-    /* see GlobalSteps.java
-        @Given("^PSU is logged in$")
-    */
-
-    /* see GlobalSteps.java
-        @And("^(.*) approach is used$")
-    */
-
-    @And("^PSU wants to initiate a single payment (.*) using the payment product (.*)$")
+    @Given("^PSU wants to initiate a single payment (.*) using the payment product (.*)$")
     public void loadTestData(String dataFileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
 
@@ -88,7 +81,7 @@ public class PISSteps {
         assertThat(actualResponse.getBody().getLinks().getScaRedirect(), notNullValue());
     }
 
-    private HttpStatus convertStringToHttpStatusCode(String code){
+    private HttpStatus convertStringToHttpStatusCode(String code) {
         return HttpStatus.valueOf(Integer.valueOf(code));
     }
 
