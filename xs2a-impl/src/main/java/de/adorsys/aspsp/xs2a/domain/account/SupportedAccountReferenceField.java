@@ -5,40 +5,40 @@ import org.apache.commons.validator.routines.IBANValidator;
 
 import java.util.Optional;
 
-public enum SupportedAccountReferenceFields {
+public enum SupportedAccountReferenceField {
     IBAN {
         @Override
         public Optional<Boolean> isValid(AccountReference reference) {
             return Optional.ofNullable(reference.getIban())
-                       .map(SupportedAccountReferenceFields::isValidIban);
+                       .map(SupportedAccountReferenceField::isValidIban);
         }
     },
     BBAN {
         @Override
         public Optional<Boolean> isValid(AccountReference reference) {
             return Optional.ofNullable(reference.getBban())
-                       .map(SupportedAccountReferenceFields::isValidBban);
+                       .map(SupportedAccountReferenceField::isValidBban);
         }
     },
     PAN {
         @Override
         public Optional<Boolean> isValid(AccountReference reference) {
             return Optional.ofNullable(reference.getPan())
-                       .map(SupportedAccountReferenceFields::isValidPan);
+                       .map(SupportedAccountReferenceField::isValidPan);
         }
     },
     MASKEDPAN {
         @Override
         public Optional<Boolean> isValid(AccountReference reference) {
             return Optional.ofNullable(reference.getMaskedPan())
-                       .map(SupportedAccountReferenceFields::isValidMaskedPan);
+                       .map(SupportedAccountReferenceField::isValidMaskedPan);
         }
     },
     MSISDN {
         @Override
         public Optional<Boolean> isValid(AccountReference reference) {
             return Optional.ofNullable(reference.getMsisdn())
-                       .map(SupportedAccountReferenceFields::isValidMsisdn);
+                       .map(SupportedAccountReferenceField::isValidMsisdn);
         }
     };
 

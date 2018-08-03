@@ -89,18 +89,18 @@ public class ProfileConfiguration {
     /**
      * Account Reference fields supported by ASPSP, such as: IBAN, PAN, MSIDN
      */
-    private List<SupportedAccountReferenceFields> supportedAccountReferenceFields;
+    private List<SupportedAccountReferenceField> supportedAccountReferenceFields;
 
     @PostConstruct
     private void addDefaultValues() { //NOPMD It is necessary to set single payment and booked booking status available by default
         setDefaultPaymentType(PaymentType.FUTURE_DATED);
         setDefaultBookingStatus(BOOKED);
-        setAvailableAccountReferenceField(SupportedAccountReferenceFields.IBAN); //Sets default Account Reference Field
+        setAvailableAccountReferenceField(SupportedAccountReferenceField.IBAN); //Sets default Account Reference Field
     }
 
-    private void setAvailableAccountReferenceField(SupportedAccountReferenceFields defaultSupportedAccountReferenceFields) {
-        if (!supportedAccountReferenceFields.contains(defaultSupportedAccountReferenceFields)) {
-            supportedAccountReferenceFields.add(defaultSupportedAccountReferenceFields);
+    private void setAvailableAccountReferenceField(SupportedAccountReferenceField defaultSupportedAccountReferenceField) {
+        if (!supportedAccountReferenceFields.contains(defaultSupportedAccountReferenceField)) {
+            supportedAccountReferenceFields.add(defaultSupportedAccountReferenceField);
         }
     }
 

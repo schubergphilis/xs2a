@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.service;
 import de.adorsys.aspsp.xs2a.config.rest.profile.AspspProfileRemoteUrls;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
-import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceFields;
+import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -133,10 +133,10 @@ public class AspspProfileService {
      *
      * @return List of supported fields
      */
-    public List<SupportedAccountReferenceFields> getSupportedAccountReferenceFields() {
+    public List<SupportedAccountReferenceField> getSupportedAccountReferenceFields() {
         return Optional.ofNullable(readSupportedAccountReferenceFields())
                    .map(list -> list.stream()
-                                    .map(SupportedAccountReferenceFields::valueOf)
+                                    .map(SupportedAccountReferenceField::valueOf)
                                     .collect(Collectors.toList()))
                    .orElse(Collections.emptyList());
     }

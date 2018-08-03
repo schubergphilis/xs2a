@@ -4,7 +4,7 @@ import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceFields;
+import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
@@ -22,7 +22,7 @@ public class AccountReferenceValidationService {
     private final AspspProfileService profileService;
 
     public Optional<MessageError> validateAccountReferences(Set<AccountReference> references) {
-        List<SupportedAccountReferenceFields> supportedFields = profileService.getSupportedAccountReferenceFields();
+        List<SupportedAccountReferenceField> supportedFields = profileService.getSupportedAccountReferenceFields();
 
         List<Boolean> list = references.stream()
                                  .map(ar -> isValidAccountReference(ar, supportedFields))
@@ -32,7 +32,7 @@ public class AccountReferenceValidationService {
                    : Optional.empty();
     }
 
-    private boolean isValidAccountReference(AccountReference reference, List<SupportedAccountReferenceFields> supportedFields) {
+    private boolean isValidAccountReference(AccountReference reference, List<SupportedAccountReferenceField> supportedFields) {
         List<Boolean> list = supportedFields.stream()
                                  .map(f -> f.isValid(reference))
                                  .filter(Optional::isPresent)

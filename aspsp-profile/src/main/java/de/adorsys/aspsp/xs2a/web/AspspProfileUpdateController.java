@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
-import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceFields;
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -150,7 +150,7 @@ public class AspspProfileUpdateController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = String.class),
         @ApiResponse(code = 400, message = "Bad request")})
-    public ResponseEntity<Void> updateAccountReferenceFields(@RequestBody List<SupportedAccountReferenceFields> referenceFields) {
+    public ResponseEntity<Void> updateAccountReferenceFields(@RequestBody List<SupportedAccountReferenceField> referenceFields) {
         aspspProfileService.updateSupportedAccountReferenceFields(referenceFields);
         return new ResponseEntity<>(HttpStatus.OK);
     }

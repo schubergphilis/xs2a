@@ -1,7 +1,7 @@
 package de.adorsys.aspsp.xs2a.service.validator;
 
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceFields;
+import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import org.junit.Before;
@@ -36,7 +36,7 @@ public class AccountReferenceValidationServiceTest {
 
     @Before
     public void setUpAccountServiceMock() {
-        when(profileService.getSupportedAccountReferenceFields()).thenReturn(Arrays.asList(SupportedAccountReferenceFields.IBAN, SupportedAccountReferenceFields.BBAN));
+        when(profileService.getSupportedAccountReferenceFields()).thenReturn(Arrays.asList(SupportedAccountReferenceField.IBAN, SupportedAccountReferenceField.BBAN));
     }
 
     @Test

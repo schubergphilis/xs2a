@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
-import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceFields;
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -114,8 +114,8 @@ public class AspspProfileController {
 
     @GetMapping(path = "/supported-account-reference-fields")
     @ApiOperation(value = "Reads supported Account Reference Fields, this list is used for AccountReference validation at xs2a")
-    @ApiResponse(code = 200, message = "Ok", response = SupportedAccountReferenceFields.class)
-    public ResponseEntity<List<SupportedAccountReferenceFields>> getAccountReferenceFields() {
+    @ApiResponse(code = 200, message = "Ok", response = SupportedAccountReferenceField.class)
+    public ResponseEntity<List<SupportedAccountReferenceField>> getAccountReferenceFields() {
         return new ResponseEntity<>(aspspProfileService.getSupportedAccountReferenceFields(), HttpStatus.OK);
     }
 }

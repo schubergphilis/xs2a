@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SupportedAccountReferenceFieldsTest {
+public class SupportedAccountReferenceFieldTest {
     private final String IBAN = "DE 8937 0400 4405 3201 3000";
     private final String WRONG_IBAN = "123456789";
     private final String BBAN = "3704 0044 0532-0130 0000 0000";
@@ -23,7 +23,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidIBAN_Success() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.IBAN.isValid(getReference(IBAN, null, null, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.IBAN.isValid(getReference(IBAN, null, null, null, null));
         //Then:
         successTest(result);
     }
@@ -31,7 +31,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidIBAN_Fail_wrong() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.IBAN.isValid(getReference(WRONG_IBAN, null, null, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.IBAN.isValid(getReference(WRONG_IBAN, null, null, null, null));
         //Then:
         failWrong(result);
     }
@@ -39,7 +39,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidIBAN_Fail_null() {
         //When:
-        Optional<Boolean> valid = SupportedAccountReferenceFields.IBAN.isValid(getReference(null, null, null, null, null));
+        Optional<Boolean> valid = SupportedAccountReferenceField.IBAN.isValid(getReference(null, null, null, null, null));
         //Then:
         assertThat(valid.isPresent()).isFalse();
     }
@@ -47,7 +47,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidBBAN_Success() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.BBAN.isValid(getReference(null, BBAN, null, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.BBAN.isValid(getReference(null, BBAN, null, null, null));
         //Then:
         successTest(result);
     }
@@ -55,7 +55,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidBBAN_Fail_wrong() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.BBAN.isValid(getReference(null, WRONG_BBAN, null, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.BBAN.isValid(getReference(null, WRONG_BBAN, null, null, null));
         //Then:
         failWrong(result);
     }
@@ -63,7 +63,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidBBAN_Fail_null() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.BBAN.isValid(getReference(null, null, null, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.BBAN.isValid(getReference(null, null, null, null, null));
         //Then:
         assertThat(result.isPresent()).isFalse();
     }
@@ -71,7 +71,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidPAN_Success() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.PAN.isValid(getReference(null, null, PAN, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.PAN.isValid(getReference(null, null, PAN, null, null));
         //Then:
         successTest(result);
     }
@@ -79,7 +79,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidPAN_Fail_wrong() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.PAN.isValid(getReference(null, null, WRONG_PAN, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.PAN.isValid(getReference(null, null, WRONG_PAN, null, null));
         //Then:
         failWrong(result);
     }
@@ -87,7 +87,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidPAN_Fail_null() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.PAN.isValid(getReference(null, null, null, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.PAN.isValid(getReference(null, null, null, null, null));
         //Then:
         assertThat(result.isPresent()).isFalse();
     }
@@ -95,7 +95,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidMaskedPAN_Success() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.MASKEDPAN.isValid(getReference(null, null, null, MASKED_PAN, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.MASKEDPAN.isValid(getReference(null, null, null, MASKED_PAN, null));
         //Then:
         successTest(result);
     }
@@ -103,7 +103,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidMaskedPAN_Fail_wrong() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.MASKEDPAN.isValid(getReference(null, null, null, WRONG_MASKED_PAN, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.MASKEDPAN.isValid(getReference(null, null, null, WRONG_MASKED_PAN, null));
         //Then:
         failWrong(result);
     }
@@ -111,7 +111,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidMaskedPAN_Fail_null() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.MASKEDPAN.isValid(getReference(null, null, null, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.MASKEDPAN.isValid(getReference(null, null, null, null, null));
         //Then:
         assertThat(result.isPresent()).isFalse();
     }
@@ -120,7 +120,7 @@ public class SupportedAccountReferenceFieldsTest {
     public void isValidMSISDN_Success() {
         for (String s : MSISDN) {
             //When:
-            Optional<Boolean> result = SupportedAccountReferenceFields.MSISDN.isValid(getReference(null, null, null, null, s));
+            Optional<Boolean> result = SupportedAccountReferenceField.MSISDN.isValid(getReference(null, null, null, null, s));
             //Then:
             successTest(result);
         }
@@ -129,7 +129,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidMSISDN_Fail_wrong() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.MSISDN.isValid(getReference(null, null, null, null, WRONG_MSISDN));
+        Optional<Boolean> result = SupportedAccountReferenceField.MSISDN.isValid(getReference(null, null, null, null, WRONG_MSISDN));
         //Then:
         failWrong(result);
     }
@@ -137,7 +137,7 @@ public class SupportedAccountReferenceFieldsTest {
     @Test
     public void isValidMSISDN_Fail_null() {
         //When:
-        Optional<Boolean> result = SupportedAccountReferenceFields.MSISDN.isValid(getReference(null, null, null, null, null));
+        Optional<Boolean> result = SupportedAccountReferenceField.MSISDN.isValid(getReference(null, null, null, null, null));
         //Then:
         assertThat(result.isPresent()).isFalse();
     }

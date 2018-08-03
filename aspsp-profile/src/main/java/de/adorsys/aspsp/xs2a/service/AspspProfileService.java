@@ -20,13 +20,14 @@ import de.adorsys.aspsp.xs2a.config.ProfileConfiguration;
 import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
-import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceFields;
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 import static de.adorsys.aspsp.xs2a.domain.BookingStatus.BOOKED;
+import static de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField.IBAN;
 
 @Service
 @RequiredArgsConstructor
@@ -201,13 +202,13 @@ public class AspspProfileService {
     /**
      * Read List of Account Reference Fields supported by ASPSP
      */
-    public List<SupportedAccountReferenceFields> getSupportedAccountReferenceFields() {
+    public List<SupportedAccountReferenceField> getSupportedAccountReferenceFields() {
         return profileConfiguration.getSupportedAccountReferenceFields();
     }
 
-    public void updateSupportedAccountReferenceFields(List<SupportedAccountReferenceFields> fields) {
-        if (!fields.contains(SupportedAccountReferenceFields.IBAN)) {
-            fields.add(SupportedAccountReferenceFields.IBAN);
+    public void updateSupportedAccountReferenceFields(List<SupportedAccountReferenceField> fields) {
+        if (!fields.contains(IBAN)) {
+            fields.add(IBAN);
         }
         profileConfiguration.setSupportedAccountReferenceFields(fields);
     }
