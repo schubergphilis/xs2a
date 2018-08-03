@@ -16,18 +16,25 @@
 
 package de.adorsys.aspsp.xs2a.domain.consent;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.adorsys.aspsp.xs2a.domain.AccountReferenceCollector;
+import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 @Data
 @ApiModel(description = "Request creates an account information consent resource at the ASPSP regarding access to accounts specified in this request")
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CreateConsentReq {
+public class CreateConsentReq implements AccountReferenceCollector {
 
     @ApiModelProperty(value = "Requested access services.", required = true)
     @NotNull
@@ -48,4 +55,20 @@ public class CreateConsentReq {
     @ApiModelProperty(value = "If 'true' indicates that a payment initiation service will be addressed in the same 'session'", required = true)
     @NotNull
     private boolean combinedServiceIndicator;
+
+    @JsonIgnore
+    @Override
+    public Set<AccountReference> getReferences() {
+        Optional<AccountAccess> access = Optional.ofNullable(this.access);
+        Set<AccountReference> result = new HashSet<>();
+        if (access.isPresent()) {
+            result.addAll(Optional.ofNullable(access.get().getAccounts())
+                              .orElse(Collections.emptyList()));
+            result.addAll(Optional.ofNullable(access.get().getBalances())
+                              .orElse(Collections.emptyList()));
+            result.addAll(Optional.ofNullable(access.get().getTransactions())
+                              .orElse(Collections.emptyList()));
+        }
+        return result;
+    }
 }

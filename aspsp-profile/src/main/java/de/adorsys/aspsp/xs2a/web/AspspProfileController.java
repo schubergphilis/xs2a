@@ -19,8 +19,11 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceFields;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,8 @@ import java.util.List;
 @RequestMapping(path = "aspsp-profile")
 @Api(value = "Aspsp profile", tags = "Aspsp profile", description = "Provides access to aspsp profile")
 public class AspspProfileController {
+
+    // http://localhost:48080/api/v1/supported-account-reference-fields
     private final AspspProfileService aspspProfileService;
 
     @GetMapping(path = "/frequency-per-day")
@@ -105,5 +110,12 @@ public class AspspProfileController {
     @ApiResponse(code = 200, message = "Ok", response = String.class)
     public ResponseEntity<List<BookingStatus>> getAvailableBookingStatuses() {
         return new ResponseEntity<>(aspspProfileService.getAvailableBookingStatuses(), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/supported-account-reference-fields")
+    @ApiOperation(value = "Reads supported Account Reference Fields, this list is used for AccountReference validation at xs2a")
+    @ApiResponse(code = 200, message = "Ok", response = SupportedAccountReferenceFields.class)
+    public ResponseEntity<List<SupportedAccountReferenceFields>> getAccountReferenceFields() {
+        return new ResponseEntity<>(aspspProfileService.getSupportedAccountReferenceFields(), HttpStatus.OK);
     }
 }

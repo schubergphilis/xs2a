@@ -20,6 +20,7 @@ import de.adorsys.aspsp.xs2a.config.ProfileConfiguration;
 import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.MulticurrencyAccountLevel;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceFields;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -195,5 +196,19 @@ public class AspspProfileService {
             availableBookingStatuses.add(BOOKED);
         }
         profileConfiguration.setAvailableBookingStatuses(availableBookingStatuses);
+    }
+
+    /**
+     * Read List of Account Reference Fields supported by ASPSP
+     */
+    public List<SupportedAccountReferenceFields> getSupportedAccountReferenceFields() {
+        return profileConfiguration.getSupportedAccountReferenceFields();
+    }
+
+    public void updateSupportedAccountReferenceFields(List<SupportedAccountReferenceFields> fields) {
+        if (!fields.contains(SupportedAccountReferenceFields.IBAN)) {
+            fields.add(SupportedAccountReferenceFields.IBAN);
+        }
+        profileConfiguration.setSupportedAccountReferenceFields(fields);
     }
 }
