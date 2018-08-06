@@ -94,6 +94,7 @@ public class SinglePaymentSteps {
                 HashMap.class);
         } catch (HttpClientErrorException hce) {
             ResponseEntity<PaymentInitialisationResponse> actualResponse = new ResponseEntity<>(hce.getStatusCode());
+
             context.setActualResponse(actualResponse);
         }
     }
