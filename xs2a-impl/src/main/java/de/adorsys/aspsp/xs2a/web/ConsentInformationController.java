@@ -65,13 +65,13 @@ public class ConsentInformationController {
         @RequestHeader(name = "psu-id", required = false) String psuId,
         @Valid @RequestBody CreateConsentReq createConsent) {
         Set<AccountReference> references = createConsent.getAccountReferences();
-        Optional<MessageError> error = !references.isEmpty()
-                                           ? referenceValidationService.validateAccountReferences(createConsent.getAccountReferences())
-                                           : Optional.empty();
+        Optional<MessageError> error = references.isEmpty()
+                                           ? Optional.empty()
+                                           : referenceValidationService.validateAccountReferences(createConsent.getAccountReferences());
         return responseMapper.created(
-            error.isPresent()
-                ? ResponseObject.<CreateConsentResp>builder().fail(error.get()).build()
-                : consentService.createAccountConsentsWithResponse(createConsent, psuId));
+            error
+                .map(e -> ResponseObject.<CreateConsentResp>builder().fail(e).build())
+                .orElse(consentService.createAccountConsentsWithResponse(createConsent, psuId)));
     }
 
     @ApiOperation(value = "Can check the status of an account information consent resource", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,10 +25,11 @@ public class AccountReferenceValidationService {
     public Optional<MessageError> validateAccountReferences(Set<AccountReference> references) {
         List<SupportedAccountReferenceField> supportedFields = profileService.getSupportedAccountReferenceFields();
 
-        List<Boolean> list = references.stream()
-                                 .map(ar -> isValidAccountReference(ar, supportedFields))
-                                 .collect(Collectors.toList());
-        return list.contains(false) || !list.contains(true)
+        boolean isInvalidReferenceSet = references.stream()
+                                            .map(ar -> isValidAccountReference(ar, supportedFields))
+                                            .anyMatch(Predicate.isEqual(false));
+
+        return isInvalidReferenceSet
                    ? Optional.of(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.FORMAT_ERROR)))
                    : Optional.empty();
     }

@@ -46,17 +46,17 @@ public enum SupportedAccountReferenceField {
 
     private static boolean isValidIban(String iban) {
         IBANValidator validator = IBANValidator.getInstance();
-        return validator.isValid(iban.replaceAll("[^a-zA-Z0-9]", ""));
+        return validator.isValid(normalizeString(iban));
     }
 
     private static boolean isValidBban(String bban) {
-        return bban.replaceAll("[^a-zA-Z0-9]", "").length() >= 11
-                   && bban.replaceAll("[^a-zA-Z0-9]", "").length() <= 28; // Can be extended with aprox 50 country specific masks
+        return normalizeString(bban).length() >= 11
+                   && normalizeString(bban).length() <= 28; // Can be extended with aprox 50 country specific masks
     }
 
     private static boolean isValidPan(String pan) {
         CreditCardValidator validator = CreditCardValidator.genericCreditCardValidator(); //Can be extended with specification of credit card types (VISA, MasterCard, AMEX etc. with array in aspsp profile)
-        return validator.isValid(pan.replaceAll("[^a-zA-Z0-9]", ""));
+        return validator.isValid(normalizeString(pan));
     }
 
     private static boolean isValidMaskedPan(String maskedPan) {
@@ -68,5 +68,9 @@ public enum SupportedAccountReferenceField {
         String tel = msisdn.replaceAll("[-() ]", "");
         return tel.matches("[ˆ+]?[0-9]{8,15}")
                    || tel.matches("[ˆ00]?[0-9]{8,16}");
+    }
+
+    private static String normalizeString(String string) {
+        return string.replaceAll("[^a-zA-Z0-9]", "");
     }
 }

@@ -206,6 +206,11 @@ public class AspspProfileService {
         return profileConfiguration.getSupportedAccountReferenceFields();
     }
 
+    /**
+     * Update list of ASPSP supported Account Reference fields
+     *
+     * @param fields list of supported fields to substitute existing one
+     */
     public void updateSupportedAccountReferenceFields(List<SupportedAccountReferenceField> fields) {
         if (!fields.contains(IBAN)) {
             fields.add(IBAN);

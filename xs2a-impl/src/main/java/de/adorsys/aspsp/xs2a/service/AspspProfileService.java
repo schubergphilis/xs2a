@@ -134,16 +134,8 @@ public class AspspProfileService {
      * @return List of supported fields
      */
     public List<SupportedAccountReferenceField> getSupportedAccountReferenceFields() {
-        return Optional.ofNullable(readSupportedAccountReferenceFields())
-                   .map(list -> list.stream()
-                                    .map(SupportedAccountReferenceField::valueOf)
-                                    .collect(Collectors.toList()))
-                   .orElse(Collections.emptyList());
-    }
-
-    private List<String> readSupportedAccountReferenceFields() {
         return aspspProfileRestTemplate.exchange(
-            aspspProfileRemoteUrls.getSupportedAccountReferenceFields(), HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {
+            aspspProfileRemoteUrls.getSupportedAccountReferenceFields(), HttpMethod.GET, null, new ParameterizedTypeReference<List<SupportedAccountReferenceField>>() {
             }).getBody();
     }
 

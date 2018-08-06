@@ -39,7 +39,6 @@ import java.util.List;
 @Api(value = "Aspsp profile", tags = "Aspsp profile", description = "Provides access to aspsp profile")
 public class AspspProfileController {
 
-    // http://localhost:48080/api/v1/supported-account-reference-fields
     private final AspspProfileService aspspProfileService;
 
     @GetMapping(path = "/frequency-per-day")
