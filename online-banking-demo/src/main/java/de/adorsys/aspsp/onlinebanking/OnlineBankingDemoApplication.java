@@ -14,17 +14,14 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.config;
+package de.adorsys.aspsp.onlinebanking;
 
-import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@EnableWebMvc
-@TestConfiguration
-@ActiveProfiles(profiles = "test")
-@TestPropertySource("classpath:application-test.properties")
-public class WebConfigTest extends WebMvcConfigurerAdapter {
+@SpringBootApplication
+public class OnlineBankingDemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(OnlineBankingDemoApplication.class, args);
+    }
 }

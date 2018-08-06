@@ -21,7 +21,7 @@
 
     <groupId>de.adorsys.aspsp</groupId>
     <artifactId>xs2a</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <modules>
         <module>aspsp-idp</module>
         <module>spi-api</module>
@@ -34,6 +34,7 @@
         <module>aspsp-profile</module>
         <module>integration-tests</module>
         <module>cms-db-schema</module>
+        <module>online-banking-demo</module>
     </modules>
     <packaging>pom</packaging>
 

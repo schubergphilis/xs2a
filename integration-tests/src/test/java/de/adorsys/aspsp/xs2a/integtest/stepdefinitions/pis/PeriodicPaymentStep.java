@@ -7,7 +7,7 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
+import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import de.adorsys.aspsp.xs2a.integtest.util.PaymentUtils;
@@ -98,14 +98,13 @@ public class PeriodicPaymentStep {
 
             ObjectMapper objectMapper = new ObjectMapper();
 
-            String errMessage = hce.getResponseBodyAsString(); //the string has to be a string of json object of MessageError.
-            MessageError messageError = objectMapper.readValue(hce.getResponseBodyAsString(), MessageError.class);
+            ITMessageError messageError = objectMapper.readValue(hce.getResponseBodyAsString(), ITMessageError.class);
             context.setMessageError(messageError);
         }
     }
 
     /*
      * @Then("^an error response code is displayed the appropriate error response$")
-     * see GlobalSteps.java
+     * see SinglePaymentSteps.java
      */
 }

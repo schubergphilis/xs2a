@@ -2,7 +2,7 @@ package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +14,8 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -68,15 +70,8 @@ public class GlobalSteps {
             e.printStackTrace();
         }
 
-        context.setScaApproach("redirect");
+        context.setScaApproach("oauth");
         context.setAccessToken(Objects.requireNonNull(response).getBody().get("access_token").toString());
-    }
-
-    @Then("^an error response code is displayed the appropriate error response$")
-    public void anErrorResponseCodeIsDisplayedTheAppropriateErrorResponse() {
-        ResponseEntity<PaymentInitialisationResponse> response = context.getActualResponse();
-        HttpStatus httpStatus = HttpStatus.valueOf(context.getTestData().getResponse().getCode());
-        assertThat(response.getStatusCode(), equalTo(httpStatus));
     }
 
 }
