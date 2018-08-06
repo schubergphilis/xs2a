@@ -16,6 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.domain.fund;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.adorsys.aspsp.xs2a.domain.AccountReferenceCollector;
 import de.adorsys.aspsp.xs2a.domain.Amount;
@@ -50,6 +51,7 @@ public class FundsConfirmationRequest implements AccountReferenceCollector {
     @ApiModelProperty(value = "Transaction amount to be checked within the funds check mechanism.", required = true)
     private Amount instructedAmount;
 
+    @JsonIgnore
     @Override
     public Set<AccountReference> getAccountReferences() {
         return new HashSet<>(Collections.singletonList(this.psuAccount));

@@ -26,10 +26,8 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Data
 @ApiModel(description = "Request creates an account information consent resource at the ASPSP regarding access to accounts specified in this request")
@@ -59,16 +57,23 @@ public class CreateConsentReq implements AccountReferenceCollector {
     @JsonIgnore
     @Override
     public Set<AccountReference> getAccountReferences() {
-        Optional<AccountAccess> access = Optional.ofNullable(this.access);
-        Set<AccountReference> result = new HashSet<>();
-        if (access.isPresent()) {
-            result.addAll(Optional.ofNullable(access.get().getAccounts())
-                              .orElse(Collections.emptyList()));
-            result.addAll(Optional.ofNullable(access.get().getBalances())
-                              .orElse(Collections.emptyList()));
-            result.addAll(Optional.ofNullable(access.get().getTransactions())
-                              .orElse(Collections.emptyList()));
-        }
-        return result;
+        return Optional.ofNullable(this.access)
+                   .map(a -> getReferenceSet(a.getAccounts(), a.getBalances(), a.getTransactions()))
+                   .orElse(Collections.emptySet());
+    }
+
+    @JsonIgnore
+    @SafeVarargs
+    private final Set<AccountReference> getReferenceSet(List<AccountReference>... referencesList) {
+        return Arrays.stream(referencesList)
+                   .map(this::getReferenceList)
+                   .flatMap(Collection::stream)
+                   .collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    private List<AccountReference> getReferenceList(List<AccountReference> reference) {
+        return Optional.ofNullable(reference)
+                   .orElse(Collections.emptyList());
     }
 }
