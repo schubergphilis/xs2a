@@ -55,8 +55,8 @@ public class FundsConfirmationController {
     public ResponseEntity<FundsConfirmationResponse> fundConfirmation(@RequestBody FundsConfirmationRequest request) {
         Optional<MessageError> error = referenceValidationService.validateAccountReferences(request.getAccountReferences());
         return responseMapper.ok(
-            error.isPresent()
-                ? ResponseObject.<FundsConfirmationResponse>builder().fail(error.get()).build()
-                : fundsConfirmationService.fundsConfirmation(request));
+            error
+                .map(e -> ResponseObject.<FundsConfirmationResponse>builder().fail(e).build())
+                .orElse(fundsConfirmationService.fundsConfirmation(request)));
     }
 }

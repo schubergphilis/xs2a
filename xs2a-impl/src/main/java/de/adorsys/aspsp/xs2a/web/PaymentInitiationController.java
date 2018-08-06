@@ -66,9 +66,9 @@ public class PaymentInitiationController {
         @RequestBody SinglePayments singlePayment) {
         Optional<MessageError> error = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
         return responseMapper.created(
-            error.isPresent()
-                ? ResponseObject.<PaymentInitialisationResponse>builder().fail(error.get()).build()
-                : paymentService.createPaymentInitiation(singlePayment, paymentProduct));
+            error
+                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(e).build())
+                .orElse(paymentService.createPaymentInitiation(singlePayment, paymentProduct)));
     }
 
     @ApiOperation(value = "Get information  about the status of a payment initialisation ", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})

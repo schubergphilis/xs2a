@@ -58,8 +58,8 @@ public class PeriodicPaymentsController {
         @RequestBody PeriodicPayment periodicPayment) {
         Optional<MessageError> error = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
         return responseMapper.created(
-            error.isPresent()
-                ? ResponseObject.<PaymentInitialisationResponse>builder().fail(error.get()).build()
-                : paymentService.initiatePeriodicPayment(periodicPayment, paymentProduct));
+            error
+                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(e).build())
+                .orElse(paymentService.initiatePeriodicPayment(periodicPayment, paymentProduct)));
     }
 }
