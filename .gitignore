@@ -29,15 +29,21 @@ dist/
 nbdist/
 .nb-gradle/
 
+### PisMockWebApp ###
+node_modules/
+node
+.vscode
+
 ### Other ###
 bin/
 .factorypath
 *.log
 logs
 log
-.vscode
 
 .DS_Store
 .springBeans
 
 cms-db-schema/liquibase.properties
+**/META-INF
+**/main/java/META-INF
