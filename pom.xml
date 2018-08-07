@@ -35,6 +35,7 @@
         <module>integration-tests</module>
         <module>cms-db-schema</module>
         <module>online-banking-demo</module>
+        <module>xs2a-server-api</module>
     </modules>
     <packaging>pom</packaging>
 
