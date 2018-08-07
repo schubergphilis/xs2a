@@ -12,7 +12,7 @@ import java.util.Optional;
 
 
 @Data
-public class ItPeriodicPayments extends SinglePayments {
+public class ITPeriodicPayments extends SinglePayments {
 
     private LocalDate startDate;
 

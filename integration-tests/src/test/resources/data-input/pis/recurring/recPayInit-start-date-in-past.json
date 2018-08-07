@@ -56,7 +56,7 @@
       "transactionStatus": "RJCT",
       "tppMessage": {
         "category": "ERROR",
-        "code": "START_DATE_INVALID"
+        "code": "EXECUTION_DATE_INVALID"
       }
     }
   }

@@ -8,10 +8,10 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
+import de.adorsys.aspsp.xs2a.integtest.entities.ITPeriodicPayments;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import de.adorsys.aspsp.xs2a.integtest.util.PaymentUtils;
-import de.adorsys.aspsp.xs2a.integtest.entities.ItPeriodicPayments;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
@@ -40,7 +40,8 @@ public class PeriodicPaymentStep {
     private RestTemplate restTemplate;
 
     @Autowired
-    private Context<ItPeriodicPayments, HashMap, PaymentInitialisationResponse> context;
+    private Context<ITPeriodicPayments, HashMap, PaymentInitialisationResponse> context;
+
 
     @And("^PSU wants to initiate a recurring payment (.*) using the payment product (.*)$")
     public void loadTestDataForPeriodicPayment(String fileName, String paymentProduct) throws IOException {
@@ -49,7 +50,7 @@ public class PeriodicPaymentStep {
 
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
-        TestData<ItPeriodicPayments, HashMap> data = objectMapper.readValue(periodicPaymentJsonFile, new TypeReference<TestData<ItPeriodicPayments, HashMap>>() {
+        TestData<ITPeriodicPayments, HashMap> data = objectMapper.readValue(periodicPaymentJsonFile, new TypeReference<TestData<ITPeriodicPayments, HashMap>>() {
         });
 
         context.setTestData(data);
@@ -57,7 +58,7 @@ public class PeriodicPaymentStep {
 
     @When("^PSU sends the recurring payment initiating request$")
     public void sendPeriodicPaymentInitiatingRequest() {
-        HttpEntity<ItPeriodicPayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
+        HttpEntity<ITPeriodicPayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
         ResponseEntity<PaymentInitialisationResponse> responseEntity = restTemplate.exchange(
             context.getBaseUrl() + "/periodic-payments/" + context.getPaymentProduct(),
@@ -81,7 +82,7 @@ public class PeriodicPaymentStep {
 
     @When("^PSU sends the recurring payment initiating request with error$")
     public void sendFalsePeriodicPaymentInitiatingRequest() throws IOException {
-        HttpEntity<ItPeriodicPayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
+        HttpEntity<ITPeriodicPayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
         try {
             restTemplate.exchange(
