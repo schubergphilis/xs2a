@@ -1,0 +1,19 @@
+{
+  "request": {
+    "header": {
+      "x-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
+      "consent-id":"32e77f6c8680-4ee2-ba9d-617ca432c199"
+    }
+  },
+  "response": {
+    "code": "400",
+    "header": {},
+    "body": {
+      "tppMessage": {
+        "category": "ERROR",
+        "code": "FORMAT_ERROR"
+      }
+    }
+  }
+
+}
