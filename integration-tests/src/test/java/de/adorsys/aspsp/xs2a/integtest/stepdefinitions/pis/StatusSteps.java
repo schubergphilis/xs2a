@@ -2,14 +2,10 @@ package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
@@ -18,17 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.io.IOUtils.resourceToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
 
 @FeatureFileSteps
 public class StatusSteps {
@@ -40,29 +35,26 @@ public class StatusSteps {
     @Autowired
     private Context< HashMap, HashMap, ITMessageError> context;
 
-    /* see GlobalSteps.java
-        @Given("^PSU is logged in$")
-    */
+    @Autowired
+    private ObjectMapper mapper;
 
-    /* see GlobalSteps.java
-        @And("^(.*) approach is used$")
-    */
-
-    @And("^created a payment status request with of a not existing payment-id (.*) using the payment product (.*)$")
+    @Given("^PSU wants to request a payment status without an existing payment-id (.*) using the payment product (.*)$")
     public void setPaymentParameters(String paymentId, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
         context.setPaymentId(paymentId);
+    }
 
+    @And("^the set of data (.*)$")
+    public void loadTestData(String dataFileName) throws IOException {
+        TestData<HashMap, HashMap> data = mapper.readValue(resourceToString("/data-input/pis/status/" + dataFileName, UTF_8), new TypeReference<TestData<HashMap, HashMap>>() {
+        });
+
+        context.setTestData(data);
     }
 
     @When("^PSU requests the status of the payment$")
-    public void sendPaymentStatusRequest() throws IOException {
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("x-request-id", "2f77a125-aa7a-45c0-b414-cea25a116035");
-        headers.add("Authorization", "Bearer " + context.getAccessToken());
-
-        HttpEntity<HashMap> entity = new HttpEntity (headers);
+    public void sendPaymentStatusRequest() throws HttpClientErrorException, IOException {
+        HttpEntity<HashMap> entity = getStatusHttpEntity();
 
         try {
             restTemplate.exchange(
@@ -70,43 +62,45 @@ public class StatusSteps {
                 HttpMethod.GET,
                 entity,
                 HashMap.class);
-        } catch (HttpClientErrorException hce){
-            ResponseEntity<ITMessageError> actualResponse = new ResponseEntity<>(hce.getStatusCode());
-            context.setActualResponse(actualResponse);
-            String responseBodyAsString = hce.getResponseBodyAsString();
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            ITMessageError messageError = objectMapper.readValue(responseBodyAsString, ITMessageError.class);
-            context.setMessageError(messageError);
+        } catch (RestClientResponseException rex){
+            handleRequestError(rex);
         }
     }
 
-    @Then("^an appropriate response code and the status (.*) is delivered to the PSU$")
-    public void checkStatus(String dataFileName) throws IOException {
+    private void handleRequestError(RestClientResponseException exceptionObj) throws IOException {
+        ResponseEntity<ITMessageError> actualResponse = new ResponseEntity<>(HttpStatus.valueOf(exceptionObj.getRawStatusCode()));
+        context.setActualResponse(actualResponse);
 
-        File jsonFile = new File("src/test/resources/data-input/pis/status/" + dataFileName);
-        ObjectMapper mapper = new ObjectMapper();
-        TestData<MessageError, HashMap> data = mapper.readValue(jsonFile, new TypeReference<TestData<MessageError, HashMap>>() {
-        });
+        String responseBodyAsString = exceptionObj.getResponseBodyAsString();
+        ITMessageError messageError = mapper.readValue(responseBodyAsString, ITMessageError.class);
+        context.setMessageError(messageError);
+    }
 
-        ResponseEntity<ITMessageError> response = context.getActualResponse();
-        HttpStatus httpStatus = convertStringToHttpStatusCode(data.getResponse().getCode());
-
-        assertThat(response.getStatusCode(), equalTo(httpStatus));
+    @Then("^an appropriate response code and the status is delivered to the PSU$")
+    public void checkStatus() throws IOException {
+        HttpStatus httpStatus = context.getTestData().getResponse().getHttpStatus();
+        assertThat(context.getActualResponse().getStatusCode(), equalTo(httpStatus));
 
         ITMessageError givenErrorObject = context.getMessageError();
-        HashMap givenResponseBody = data.getResponse().getBody();
+        HashMap givenResponseBody = context.getTestData().getResponse().getBody();
         String status = (String) givenResponseBody.get("transactionStatus");
         HashMap tppMessageContent = (HashMap) givenResponseBody.get("tppMessage");
 
-        assertThat(givenErrorObject.getTransactionStatus().toString(), equalTo(status));
-        assertThat(givenErrorObject.getTppMessage().getCategory().name(), equalTo(tppMessageContent.get("category")));
-        assertThat(givenErrorObject.getTppMessage().getCode().name(), equalTo(tppMessageContent.get("code")));
+        if (givenErrorObject.getTransactionStatus() != null ) {
+            assertThat(givenErrorObject.getTransactionStatus().toString(), equalTo(status));
+        }
+        if (givenErrorObject.getTppMessage() != null ) {
+            assertThat(givenErrorObject.getTppMessage().getCategory().name(), equalTo(tppMessageContent.get("category")));
+            assertThat(givenErrorObject.getTppMessage().getCode().name(), equalTo(tppMessageContent.get("code")));
+        }
     }
 
-    private HttpStatus convertStringToHttpStatusCode(String code){
-        return HttpStatus.valueOf(Integer.valueOf(code));
+    private HttpEntity getStatusHttpEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAll(context.getTestData().getRequest().getHeader());
+        headers.add("Authorization", "Bearer " + context.getAccessToken());
+        headers.add("Content-Type", "application/json");
+
+        return new HttpEntity<>(null, headers);
     }
-
-
 }
