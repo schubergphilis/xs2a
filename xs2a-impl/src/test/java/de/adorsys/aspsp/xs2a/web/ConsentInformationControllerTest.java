@@ -35,7 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
@@ -172,7 +172,7 @@ public class ConsentInformationControllerTest {
 
     private CreateConsentReq getCreateConsentReq() {
         CreateConsentReq req = new CreateConsentReq();
-        AccountAccess access = new AccountAccess(new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), null, null);
+        AccountAccess access = new AccountAccess(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), null, null);
         req.setAccess(access);
         return req;
     }
