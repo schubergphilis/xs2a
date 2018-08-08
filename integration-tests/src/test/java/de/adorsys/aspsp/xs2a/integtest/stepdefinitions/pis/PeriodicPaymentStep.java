@@ -77,8 +77,8 @@ public class PeriodicPaymentStep {
     public void checkResponseCodeFromPeriodicPayment() {
         Map responseBody = context.getTestData().getResponse().getBody();
         ResponseEntity<PaymentInitialisationResponse> responseEntity = context.getActualResponse();
-        HttpStatus comparedStatus = context.getTestData().getResponse().getHttpStatus();
-        assertThat(responseEntity.getStatusCode(), equalTo(comparedStatus));
+        HttpStatus expectedStatus = context.getTestData().getResponse().getHttpStatus();
+        assertThat(responseEntity.getStatusCode(), equalTo(expectedStatus));
         assertThat(responseEntity.getBody().getTransactionStatus().name(), equalTo(responseBody.get("transactionStatus")));
         assertThat(responseEntity.getBody().getPaymentId(), notNullValue());
     }
