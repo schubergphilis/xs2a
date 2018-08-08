@@ -2,13 +2,12 @@ package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
+import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
@@ -20,34 +19,34 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.commons.io.IOUtils.resourceToString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
 @FeatureFileSteps
 public class SinglePaymentSteps {
-
     @Autowired
     @Qualifier("xs2a")
     private RestTemplate restTemplate;
 
     @Autowired
-    private Context<SinglePayments, HashMap, PaymentInitialisationResponse> context;
+    private Context<SinglePayment, HashMap, PaymentInitialisationResponse> context;
+
+    @Autowired
+    private ObjectMapper mapper;
 
     @Given("^PSU wants to initiate a single payment (.*) using the payment product (.*)$")
     public void loadTestData(String dataFileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
 
-        File jsonFile = new File("src/test/resources/data-input/pis/single/" + dataFileName);
-
-        ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        TestData<SinglePayments, HashMap> data = mapper.readValue(jsonFile, new TypeReference<TestData<SinglePayments, HashMap>>() {
+        TestData<SinglePayment, HashMap> data = mapper.readValue(resourceToString("/data-input/pis/single/" + dataFileName, UTF_8), new TypeReference<TestData<SinglePayment, HashMap>>() {
         });
 
         context.setTestData(data);
@@ -55,7 +54,7 @@ public class SinglePaymentSteps {
 
     @When("^PSU sends the single payment initiating request$")
     public void sendPaymentInitiatingRequest() {
-        HttpEntity<SinglePayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
+        HttpEntity<SinglePayment> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
         ResponseEntity<PaymentInitialisationResponse> response = restTemplate.exchange(
             context.getBaseUrl() + "/payments/" + context.getPaymentProduct(),
@@ -71,7 +70,7 @@ public class SinglePaymentSteps {
         ResponseEntity<PaymentInitialisationResponse> actualResponse = context.getActualResponse();
         Map givenResponseBody = context.getTestData().getResponse().getBody();
 
-        HttpStatus compareStatus = HttpStatus.valueOf(context.getTestData().getResponse().getCode());
+        HttpStatus compareStatus = context.getTestData().getResponse().getHttpStatus();
         assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
 
         assertThat(actualResponse.getBody().getTransactionStatus().name(), equalTo(givenResponseBody.get("transactionStatus")));
@@ -87,7 +86,7 @@ public class SinglePaymentSteps {
 
     @When("^PSU sends the single payment initiating request with error$")
     public void sendPaymentInitiatingRequestWithError() throws HttpClientErrorException, IOException {
-        HttpEntity<SinglePayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
+        HttpEntity<SinglePayment> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
         try {
             restTemplate.exchange(
@@ -114,7 +113,7 @@ public class SinglePaymentSteps {
         ITMessageError givenErrorObject = context.getMessageError();
         Map givenResponseBody = context.getTestData().getResponse().getBody();
 
-        HttpStatus httpStatus = HttpStatus.valueOf(context.getTestData().getResponse().getCode());
+        HttpStatus httpStatus = context.getTestData().getResponse().getHttpStatus();
         assertThat(context.getActualResponse().getStatusCode(), equalTo(httpStatus));
 
         LinkedHashMap tppMessageContent = (LinkedHashMap) givenResponseBody.get("tppMessage");
@@ -124,5 +123,14 @@ public class SinglePaymentSteps {
             assertThat(givenErrorObject.getTppMessage().getCategory().name(), equalTo(tppMessageContent.get("category")));
             assertThat(givenErrorObject.getTppMessage().getCode().name(), equalTo(tppMessageContent.get("code")));
         }
+    }
+
+    private HttpEntity<SinglePayment> getSinglePaymentsHttpEntity() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAll(context.getTestData().getRequest().getHeader());
+        headers.add("Authorization", "Bearer " + context.getAccessToken());
+        headers.add("Content-Type", "application/json");
+
+        return new HttpEntity<>(context.getTestData().getRequest().getBody(), headers);
     }
 }

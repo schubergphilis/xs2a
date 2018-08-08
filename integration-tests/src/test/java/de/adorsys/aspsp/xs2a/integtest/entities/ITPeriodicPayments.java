@@ -1,7 +1,7 @@
 package de.adorsys.aspsp.xs2a.integtest.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
+import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import lombok.Data;
 
 import javax.validation.constraints.Max;
@@ -12,7 +12,7 @@ import java.util.Optional;
 
 
 @Data
-public class ITPeriodicPayments extends SinglePayments {
+public class ITPeriodicPayments extends SinglePayment {
 
     private LocalDate startDate;
 
