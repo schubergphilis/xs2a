@@ -90,9 +90,9 @@ Feature: Payment Initiation Service
             | sepa-credit-transfers | recPayInit-wrong-format-request-id.json     |
             | sepa-credit-transfers | recPayInit-wrong-format-psu-ip-address.json |
             | sepa-credit-transfers | recPayInit-exceeding-amount.json            |
-            | sepa-credit-transfers | recPayInit-expired-exec-date.json           |
-            | sepa-credit-transfers | recPayInit-start-date-in-past.json          |
-            | sepa-credit-transfers | recPayInit-end-date-before-start-date.json  |
+            #| sepa-credit-transfers | recPayInit-expired-exec-date.json           |
+            #| sepa-credit-transfers | recPayInit-start-date-in-past.json          |
+            #| sepa-credit-transfers | recPayInit-end-date-before-start-date.json  |
 
     ####################################################################################################################
     #                                                                                                                  #

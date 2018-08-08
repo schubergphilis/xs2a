@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,18 +43,20 @@ public class PeriodicPaymentStep {
     @Autowired
     private Context<ITPeriodicPayments, HashMap, PaymentInitialisationResponse> context;
 
+    @Autowired
+    private ObjectMapper mapper;
 
     @And("^PSU wants to initiate a recurring payment (.*) using the payment product (.*)$")
     public void loadTestDataForPeriodicPayment(String fileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
         File periodicPaymentJsonFile = new File("src/test/resources/data-input/pis/recurring/" + fileName);
 
-        ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-
-        TestData<ITPeriodicPayments, HashMap> data = objectMapper.readValue(periodicPaymentJsonFile, new TypeReference<TestData<ITPeriodicPayments, HashMap>>() {
+        TestData<ITPeriodicPayments, HashMap> data = mapper.readValue(periodicPaymentJsonFile, new TypeReference<TestData<ITPeriodicPayments, HashMap>>() {
         });
 
         context.setTestData(data);
+
+        context.getTestData().getRequest().getBody().setEndDate(LocalDate.now().plusDays(100));
     }
 
     @When("^PSU sends the recurring payment initiating request$")
@@ -74,7 +77,7 @@ public class PeriodicPaymentStep {
     public void checkResponseCodeFromPeriodicPayment() {
         Map responseBody = context.getTestData().getResponse().getBody();
         ResponseEntity<PaymentInitialisationResponse> responseEntity = context.getActualResponse();
-        HttpStatus comparedStatus = HttpStatus.valueOf(context.getTestData().getResponse().getCode());
+        HttpStatus comparedStatus = context.getTestData().getResponse().getHttpStatus();
         assertThat(responseEntity.getStatusCode(), equalTo(comparedStatus));
         assertThat(responseEntity.getBody().getTransactionStatus().name(), equalTo(responseBody.get("transactionStatus")));
         assertThat(responseEntity.getBody().getPaymentId(), notNullValue());

@@ -58,8 +58,6 @@ public class BulkPaymentSteps {
         headers.add("Authorization", "Bearer " + context.getAccessToken());
         headers.add("Content-Type", "application/json");
 
-        List<SinglePayment> paymentsList = context.getTestData().getRequest().getBody();
-
         ResponseEntity<List<PaymentInitialisationResponse>> response = restTemplate.exchange(
             context.getBaseUrl() + "/bulk-payments/" + context.getPaymentProduct(),
             HttpMethod.POST, entity, new ParameterizedTypeReference<List<PaymentInitialisationResponse>>() {
@@ -73,7 +71,7 @@ public class BulkPaymentSteps {
         ResponseEntity<List<PaymentInitialisationResponse>> actualResponse = context.getActualResponse();
         List<HashMap> givenResponseBody = context.getTestData().getResponse().getBody();
 
-        HttpStatus compareStatus = HttpStatus.valueOf(context.getTestData().getResponse().getCode());
+        HttpStatus compareStatus = context.getTestData().getResponse().getHttpStatus();
         assertThat(actualResponse.getStatusCode(), equalTo(compareStatus));
         assertThat(actualResponse.getStatusCode(), equalTo(context.getTestData().getResponse().getHttpStatus()));
 
