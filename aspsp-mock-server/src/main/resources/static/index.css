@@ -16,7 +16,7 @@
 
 .page {
     font-family: "Helvetica Neue Light","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
-    color: #065d87;
+    color: #054f72;
     background-color: #fafafa;
     font-weight: lighter;
     text-align: center;
@@ -24,16 +24,30 @@
 }
 
 .header {
+    padding: 1%;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
 }
 
-.header__logo img{
+.header img{
+    display: inline-block;
     width: auto;
-    height: 26px;
-    padding: 0 20px 0 40px;
+    height: 25px;
+    padding: 0 20px 0 10px;
+}
+
+
+.header__title {
+    display: inline-block;
+    font-size: 27px;
+    font-weight: bolder;
+    color: #054f72;
+    margin: 0 0 6px;
 }
 
 .container {
-    padding-top: 5.5%;
+    padding-top: 4%;
     display: flex;
     justify-content: center;
 }
