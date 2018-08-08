@@ -73,7 +73,7 @@ public class PaymentService {
      * @return Response containing information about created periodic payment or corresponding error
      */
     public ResponseObject<PaymentInitialisationResponse> initiatePeriodicPayment(PeriodicPayment periodicPayment, String paymentProduct) {
-        return periodicPayment.isValidDated() && periodicPayment.isValidDate()
+        return periodicPayment.areValidExecutionAndPeriodDates()
                    ? scaPaymentService.createPeriodicPayment(periodicPayment)
                          .map(resp -> ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build())
                          .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
@@ -89,7 +89,7 @@ public class PaymentService {
      *
      * @param payments       List of single payments forming bulk payment
      * @param paymentProduct The addressed payment product
-     * @return List of payment initiation responses containing inforamtion about created payments or an error if non of the payments could pass the validation
+     * @return List of payment initiation responses containing information about created payments or an error if non of the payments could pass the validation
      */
     public ResponseObject<List<PaymentInitialisationResponse>> createBulkPayments(List<SinglePayment> payments, String paymentProduct) {
         if (CollectionUtils.isEmpty(payments)) {
@@ -100,7 +100,7 @@ public class PaymentService {
         List<SinglePayment> validPayments = new ArrayList<>();
         List<PaymentInitialisationResponse> invalidPayments = new ArrayList<>();
         for (SinglePayment payment : payments) {
-            if (!payment.isValidDated()) {
+            if (!payment.isValidExecutionDateAndTime()) {
                 paymentMapper.mapToPaymentInitResponseFailedPayment(payment, EXECUTION_DATE_INVALID)
                     .map(invalidPayments::add);
             } else {
@@ -128,7 +128,7 @@ public class PaymentService {
      * @return Response containing information about created single payment or corresponding error
      */
     public ResponseObject<PaymentInitialisationResponse> createPaymentInitiation(SinglePayment singlePayment, String paymentProduct) {
-        return singlePayment.isValidDated()
+        return singlePayment.isValidExecutionDateAndTime()
                    ? scaPaymentService.createSinglePayment(singlePayment)
                          .map(resp -> ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build())
                          .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
