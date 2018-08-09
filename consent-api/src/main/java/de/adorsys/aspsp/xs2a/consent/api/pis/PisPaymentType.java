@@ -44,7 +44,7 @@ public enum PisPaymentType {
         return value;
     }
 
-    public static Optional<PisPaymentType> getByValue(String value){
+    public static Optional<PisPaymentType> getByValue(String value) {
         return Optional.ofNullable(container.get(value));
     }
 

@@ -38,22 +38,22 @@ public class SwaggerConfig {
     @Bean(name = "api")
     public Docket apiDocklet() {
         return new Docket(DocumentationType.SWAGGER_2)
-            .apiInfo(getApiInfo())
-            .select()
-            .apis(RequestHandlerSelectors.basePackage("de.adorsys.aspsp.xs2a.web"))
-            .paths(Predicates.not(PathSelectors.regex("/error.*?")))
-            .paths(Predicates.not(PathSelectors.regex("/connect.*")))
-            .paths(Predicates.not(PathSelectors.regex("/management.*")))
-            .build();
+                   .apiInfo(getApiInfo())
+                   .select()
+                   .apis(RequestHandlerSelectors.basePackage("de.adorsys.aspsp.xs2a.web"))
+                   .paths(Predicates.not(PathSelectors.regex("/error.*?")))
+                   .paths(Predicates.not(PathSelectors.regex("/connect.*")))
+                   .paths(Predicates.not(PathSelectors.regex("/management.*")))
+                   .build();
     }
 
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
-            .title("Consent management rest API")
-            .contact(new Contact("pru, adorsys GmbH & Co. KG", "http://www.adorsys.de", "pru@adorsys.com.ua"))
-            .version("1.0")
-            .license("Apache License 2.0")
-            .licenseUrl(licenseUrl)
-            .build();
+                   .title("Consent management rest API")
+                   .contact(new Contact("pru, adorsys GmbH & Co. KG", "http://www.adorsys.de", "pru@adorsys.com.ua"))
+                   .version("1.0")
+                   .license("Apache License 2.0")
+                   .licenseUrl(licenseUrl)
+                   .build();
     }
 }

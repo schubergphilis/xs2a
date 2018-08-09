@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ConsentConfirmationDeniedComponent } from './consent-confirmation-denied.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+import {ConsentConfirmationDeniedComponent} from './consent-confirmation-denied.component';
 
 describe('ConsentConfirmationDeniedComponent', () => {
   let component: ConsentConfirmationDeniedComponent;
@@ -9,9 +9,9 @@ describe('ConsentConfirmationDeniedComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      declarations: [ ConsentConfirmationDeniedComponent ]
+      declarations: [ConsentConfirmationDeniedComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

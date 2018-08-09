@@ -1,6 +1,3 @@
-
-
-
 /*
  * Copyright 2018-2018 adorsys GmbH & Co KG
  *
@@ -75,7 +72,7 @@ function getPaymentInitiationRequestJson(productNumber) {
     formObject.ultimateDebtor = $("#debtorName").val();
     formObject.creditorName = $("#creditorName").val();
     formObject.ultimateCreditor = $("#creditorName").val();
-    formObject.remittanceInformationUnstructured = $("#productName"+ productNumber).val();
+    formObject.remittanceInformationUnstructured = $("#productName" + productNumber).val();
 
     var dateTime = new Date();
     dateTime.setDate(dateTime.getDate() + 1);

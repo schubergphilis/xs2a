@@ -46,17 +46,17 @@ public abstract class KeycloakTestBase {
         when(session.userCredentialManager()).thenReturn(userCredentialManager);
         when(session.getContext()).thenReturn(context);
         when(session.getKeycloakSessionFactory()).thenReturn(keycloakSessionFactory);
-        
+
 
         when(keycloakSessionFactory.getProviderFactory(
-				ClientAuthenticator.class, KeycloakModelUtils.getDefaultClientAuthenticatorType())).thenReturn(clientAuthenticatorFactory);
-        
+            ClientAuthenticator.class, KeycloakModelUtils.getDefaultClientAuthenticatorType())).thenReturn(clientAuthenticatorFactory);
+
         when(context.getRealm()).thenReturn(realm);
         //when(context.getUri()).thenCallRealMethod();
 
         when(realm.addClient(anyString())).thenReturn(new ClientModelImpl());
-        when(realm.addClient(anyString(),anyString())).thenReturn(new ClientModelImpl());
-        
+        when(realm.addClient(anyString(), anyString())).thenReturn(new ClientModelImpl());
+
         when(auth.requireCreate(any(ClientRegistrationContext.class))).thenReturn(RegistrationAuth.ANONYMOUS);
 
     }

@@ -23,41 +23,41 @@ import no.difi.certvalidator.api.CertificateValidationException;
 @Slf4j
 public class CertificateExtractorUtil {
 
-	public static TppCertificateData extract(String encodedCert) throws CertificateValidationException {
+    public static TppCertificateData extract(String encodedCert) throws CertificateValidationException {
 
-		X509Certificate cert = X509CertUtils.parse(encodedCert);
+        X509Certificate cert = X509CertUtils.parse(encodedCert);
 
-		List<TppRole> roles = new ArrayList<>();
+        List<TppRole> roles = new ArrayList<>();
 
-		TppCertificateData tppCertData = new TppCertificateData();
+        TppCertificateData tppCertData = new TppCertificateData();
 
-		PSD2QCType psd2qcType = PSD2QCStatement.psd2QCType(cert);
-		RolesOfPSP rolesOfPSP = psd2qcType.getRolesOfPSP();
-		RoleOfPSP[] roles2 = rolesOfPSP.getRoles();
-		for (RoleOfPSP roleOfPSP : roles2) {
-			roles.add(TppRole.valueOf(roleOfPSP.getNormalizedRoleName()));
-		}
-		tppCertData.setPspRoles(roles);
+        PSD2QCType psd2qcType = PSD2QCStatement.psd2QCType(cert);
+        RolesOfPSP rolesOfPSP = psd2qcType.getRolesOfPSP();
+        RoleOfPSP[] roles2 = rolesOfPSP.getRoles();
+        for (RoleOfPSP roleOfPSP : roles2) {
+            roles.add(TppRole.valueOf(roleOfPSP.getNormalizedRoleName()));
+        }
+        tppCertData.setPspRoles(roles);
 
-		tppCertData.setPspAuthorityName(psd2qcType.getnCAName().getString());
-		tppCertData.setPspAuthorityId(psd2qcType.getnCAId().getString());
+        tppCertData.setPspAuthorityName(psd2qcType.getnCAName().getString());
+        tppCertData.setPspAuthorityId(psd2qcType.getnCAId().getString());
 
-		try {
-			X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
-			String pspAuthorisationNber = IETFUtils
-					.valueToString(x500name.getRDNs(BCStyle.ORGANIZATION_IDENTIFIER)[0].getFirst().getValue());
-			tppCertData.setPspAuthorzationNumber(pspAuthorisationNber);
-			
-			String pspName = IETFUtils
-					.valueToString(x500name.getRDNs(BCStyle.CN)[0].getFirst().getValue());
-			tppCertData.setPspName(pspName);
-		} catch (CertificateEncodingException e) {
-			log.debug(e.getMessage());
-			throw new CertificateValidationException(CertificateErrorMsgCode.CERTIFICATE_INVALID.toString());
-		}
+        try {
+            X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
+            String pspAuthorisationNber = IETFUtils
+                                              .valueToString(x500name.getRDNs(BCStyle.ORGANIZATION_IDENTIFIER)[0].getFirst().getValue());
+            tppCertData.setPspAuthorzationNumber(pspAuthorisationNber);
 
-		return tppCertData;
+            String pspName = IETFUtils
+                                 .valueToString(x500name.getRDNs(BCStyle.CN)[0].getFirst().getValue());
+            tppCertData.setPspName(pspName);
+        } catch (CertificateEncodingException e) {
+            log.debug(e.getMessage());
+            throw new CertificateValidationException(CertificateErrorMsgCode.CERTIFICATE_INVALID.toString());
+        }
 
-	}
+        return tppCertData;
+
+    }
 
 }

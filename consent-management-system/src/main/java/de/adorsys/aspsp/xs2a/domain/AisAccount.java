@@ -51,7 +51,8 @@ public class AisAccount {
     @ApiModelProperty(value = "Detailed information about consent", required = true)
     private AisConsent consent;
 
-    public AisAccount() {}
+    public AisAccount() {
+    }
 
     public AisAccount(String iban, Set<AccountAccess> accountAccesses) {
         this.iban = iban;

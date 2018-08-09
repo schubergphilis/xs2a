@@ -15,16 +15,16 @@
  * Remittance
  */
 export interface Remittance {
-    /**
-     * the actual reference
-     */
-    reference: string;
-    /**
-     * reference issuer
-     */
-    referenceIssuer?: string;
-    /**
-     * reference type
-     */
-    referenceType?: string;
+  /**
+   * the actual reference
+   */
+  reference: string;
+  /**
+   * reference issuer
+   */
+  referenceIssuer?: string;
+  /**
+   * reference type
+   */
+  referenceType?: string;
 }

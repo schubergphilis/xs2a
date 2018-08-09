@@ -15,8 +15,8 @@
  * BICFI
  */
 export interface TheBICAssociatedToTheAccount_ {
-    /**
-     * BICFI code
-     */
-    code?: string;
+  /**
+   * BICFI code
+   */
+  code?: string;
 }

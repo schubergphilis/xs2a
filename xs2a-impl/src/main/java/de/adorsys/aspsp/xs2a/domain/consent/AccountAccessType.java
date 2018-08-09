@@ -24,7 +24,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel(description = "AccountAccess type", value = "AccountAccessType")
 public enum AccountAccessType {
-	ALL_ACCOUNTS("all-accounts");
+    ALL_ACCOUNTS("all-accounts");
 
     @ApiModelProperty(value = "description", example = "all-accounts")
     private String description;

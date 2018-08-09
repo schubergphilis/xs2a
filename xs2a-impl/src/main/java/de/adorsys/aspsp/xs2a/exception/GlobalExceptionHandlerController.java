@@ -40,7 +40,7 @@ public class GlobalExceptionHandlerController {
         log.warn("ValidationException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
         return new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR)
-                                                       .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
+                                                         .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
@@ -64,6 +64,6 @@ public class GlobalExceptionHandlerController {
         log.warn("RestException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
         return new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, ex.getMessageErrorCode())
-                                                       .text(ex.getMessage())), ex.getHttpStatus());
+                                                         .text(ex.getMessage())), ex.getHttpStatus());
     }
 }

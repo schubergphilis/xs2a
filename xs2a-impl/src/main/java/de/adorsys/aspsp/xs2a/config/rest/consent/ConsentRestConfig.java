@@ -33,7 +33,7 @@ public class ConsentRestConfig {
     private int connectionTimeout;
 
     @Bean(name = "consentRestTemplate")
-    public RestTemplate consentRestTemplate(){
+    public RestTemplate consentRestTemplate() {
         RestTemplate rest = new RestTemplate(clientHttpRequestFactory());
         rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         rest.getMessageConverters().add(new StringHttpMessageConverter());

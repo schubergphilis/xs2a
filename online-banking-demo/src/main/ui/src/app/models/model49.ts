@@ -15,8 +15,8 @@
  * Country code
  */
 export interface Model49 {
-    /**
-     * Country code
-     */
-    code: string;
+  /**
+   * Country code
+   */
+  code: string;
 }

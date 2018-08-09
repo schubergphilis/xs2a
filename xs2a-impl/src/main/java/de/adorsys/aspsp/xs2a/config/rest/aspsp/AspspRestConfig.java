@@ -39,7 +39,7 @@ public class AspspRestConfig {
 
     @Bean(name = "aspspRestTemplate")
     @Scope(scopeName = WebApplicationContext.SCOPE_REQUEST, proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public RestTemplate restTemplate(){
+    public RestTemplate restTemplate() {
         RestTemplate rest = new RestTemplate(clientHttpRequestFactory());
         rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         rest.getMessageConverters().add(new StringHttpMessageConverter());

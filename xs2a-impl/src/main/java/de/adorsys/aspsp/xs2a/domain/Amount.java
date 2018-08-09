@@ -27,11 +27,11 @@ import java.util.Currency;
 @ApiModel(description = "Amount information", value = "Amount")
 public class Amount {
 
-	@ApiModelProperty(value = "ISO 4217 currency code", required = true, example = "EUR")
+    @ApiModelProperty(value = "ISO 4217 currency code", required = true, example = "EUR")
     @NotNull
     private Currency currency;
 
-	@ApiModelProperty(value = "The amount given with fractional digits, where fractions must be compliant to the currency definition. The decimal separator is a dot", required = true, example = "1000.00")
+    @ApiModelProperty(value = "The amount given with fractional digits, where fractions must be compliant to the currency definition. The decimal separator is a dot", required = true, example = "1000.00")
     @NotNull
     private String content;
 }

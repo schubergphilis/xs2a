@@ -51,7 +51,7 @@ public enum PaymentProduct {
         return code;
     }
 
-    public static Optional<PaymentProduct> getByCode(String code){
+    public static Optional<PaymentProduct> getByCode(String code) {
         return Optional.ofNullable(container.get(code));
     }
 }

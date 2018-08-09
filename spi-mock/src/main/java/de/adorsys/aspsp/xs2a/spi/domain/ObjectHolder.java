@@ -22,10 +22,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Value
-public class ObjectHolder <K, V>{
+public class ObjectHolder<K, V> {
     private Map<K, V> values = new HashMap<>();
 
-    public ObjectHolder<K, V> addValue(K key, V value){
+    public ObjectHolder<K, V> addValue(K key, V value) {
         values.put(key, value);
         return this;
     }

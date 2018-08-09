@@ -34,43 +34,43 @@ import java.io.IOException;
 @Order(2)
 public class RoleFilter implements Filter {
 
-	@Autowired
-	TppRoleValidationService tppRoleValidationService;
-	@Autowired
-	private AspspProfileService aspspProfileService;
+    @Autowired
+    TppRoleValidationService tppRoleValidationService;
+    @Autowired
+    private AspspProfileService aspspProfileService;
 
-	@Override
-	public void init(FilterConfig filterConfig) {
-	}
+    @Override
+    public void init(FilterConfig filterConfig) {
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
 
-		if (aspspProfileService.getTppSignatureRequired()) {
-			if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
-				throw new ServletException("OncePerRequestFilter just supports HTTP requests");
-			}
+        if (aspspProfileService.getTppSignatureRequired()) {
+            if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
+                throw new ServletException("OncePerRequestFilter just supports HTTP requests");
+            }
 
-			HttpServletRequest httpRequest = (HttpServletRequest) request;
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
 
-			TppCertificateData tppCertData = (TppCertificateData) request.getAttribute("tppCertData");
+            TppCertificateData tppCertData = (TppCertificateData) request.getAttribute("tppCertData");
 
-			if (tppRoleValidationService.validate(httpRequest, tppCertData.getPspRoles())) {
-				chain.doFilter(request, response);
-			} else {
-				log.debug(
-						"Returned if the resource that was referenced in the path exists but cannot be accessed by the TPP or the PSU");
-				((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN,
-						"Returned if the resource that was referenced in the path exists but cannot be accessed by the TPP or the PSU");
-			}
-		} else {
-			chain.doFilter(request, response);
-		}
-	}
+            if (tppRoleValidationService.validate(httpRequest, tppCertData.getPspRoles())) {
+                chain.doFilter(request, response);
+            } else {
+                log.debug(
+                    "Returned if the resource that was referenced in the path exists but cannot be accessed by the TPP or the PSU");
+                ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN,
+                    "Returned if the resource that was referenced in the path exists but cannot be accessed by the TPP or the PSU");
+            }
+        } else {
+            chain.doFilter(request, response);
+        }
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
 }

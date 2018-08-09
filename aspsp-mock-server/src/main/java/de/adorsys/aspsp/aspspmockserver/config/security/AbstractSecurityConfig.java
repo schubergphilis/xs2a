@@ -41,7 +41,7 @@ import static java.util.Collections.singletonList;
 @EnableWebSecurity
 @ComponentScan(basePackageClasses = KeycloakSecurityComponents.class)
 public abstract class AbstractSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
-    protected final String[] ALLOW_PATH = {"/swagger-ui.html**", "/o2c.html", "index.html", "/","/api-docs/**", "/v2/api-docs/**",
+    protected final String[] ALLOW_PATH = {"/swagger-ui.html**", "/o2c.html", "index.html", "/", "/api-docs/**", "/v2/api-docs/**",
         "/info", "/error", "/*.js", "/*.css", "/*.ico", "/*.json", "/webjars/**", "/lib/*", "/swagger-resources/**", "/swagger/**", "/auth/**",
         "/sso/**"};
 
@@ -67,7 +67,7 @@ public abstract class AbstractSecurityConfig extends KeycloakWebSecurityConfigur
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(singletonList("*"));
-        configuration.setAllowedHeaders(asList( "Origin", "Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(asList("Origin", "Authorization", "Content-Type"));
         configuration.setAllowedMethods(asList("GET", "POST", "PUT", "DELETE"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

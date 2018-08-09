@@ -52,7 +52,8 @@ public class AspspPayment {
     private PisPaymentType pisPaymentType;
     private SpiTransactionStatus paymentStatus;
 
-    public AspspPayment() {}
+    public AspspPayment() {
+    }
 
     public AspspPayment(PisPaymentType pisPaymentType) {
         this.pisPaymentType = pisPaymentType;

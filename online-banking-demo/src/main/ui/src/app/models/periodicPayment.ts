@@ -9,90 +9,99 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { AccountReference } from './accountReference';
-import { Address } from './address';
-import { Amount } from './amount';
-import { PurposeCode } from './purposeCode';
-import { Remittance } from './remittance';
-import { TheBICAssociatedToTheAccount_ } from './theBICAssociatedToTheAccount_';
+import {AccountReference} from './accountReference';
+import {Address} from './address';
+import {Amount} from './amount';
+import {PurposeCode} from './purposeCode';
+import {Remittance} from './remittance';
+import {TheBICAssociatedToTheAccount_} from './theBICAssociatedToTheAccount_';
 
 
 /**
  * Periodic Payment Initialisation Request
  */
 export interface PeriodicPayment {
-    /**
-     * creditor account
-     */
-    creditorAccount: AccountReference;
-    /**
-     * creditor Address
-     */
-    creditorAddress?: Address;
-    /**
-     * creditor agent
-     */
-    creditorAgent?: TheBICAssociatedToTheAccount_;
-    /**
-     * creditor name
-     */
-    creditorName: string;
-    dayOfExecution?: number;
-    /**
-     * debtor account
-     */
-    debtorAccount: AccountReference;
-    endDate?: string;
-    /**
-     * end to end authentication
-     */
-    endToEndIdentification?: string;
-    executionRule?: string;
-    frequency: PeriodicPayment.FrequencyEnum;
-    /**
-     * instructed amount
-     */
-    instructedAmount: Amount;
-    /**
-     * purpose code
-     */
-    purposeCode?: PurposeCode;
-    /**
-     * remittance information structured
-     */
-    remittanceInformationStructured?: Remittance;
-    /**
-     * remittance information unstructured
-     */
-    remittanceInformationUnstructured?: string;
-    /**
-     * requested execution date
-     */
-    requestedExecutionDate?: string;
-    /**
-     * requested execution time
-     */
-    requestedExecutionTime?: Date;
-    startDate: string;
-    /**
-     * ultimate creditor
-     */
-    ultimateCreditor?: string;
-    /**
-     * ultimate debtor
-     */
-    ultimateDebtor?: string;
+  /**
+   * creditor account
+   */
+  creditorAccount: AccountReference;
+  /**
+   * creditor Address
+   */
+  creditorAddress?: Address;
+  /**
+   * creditor agent
+   */
+  creditorAgent?: TheBICAssociatedToTheAccount_;
+  /**
+   * creditor name
+   */
+  creditorName: string;
+  dayOfExecution?: number;
+  /**
+   * debtor account
+   */
+  debtorAccount: AccountReference;
+  endDate?: string;
+  /**
+   * end to end authentication
+   */
+  endToEndIdentification?: string;
+  executionRule?: string;
+  frequency: PeriodicPayment.FrequencyEnum;
+  /**
+   * instructed amount
+   */
+  instructedAmount: Amount;
+  /**
+   * purpose code
+   */
+  purposeCode?: PurposeCode;
+  /**
+   * remittance information structured
+   */
+  remittanceInformationStructured?: Remittance;
+  /**
+   * remittance information unstructured
+   */
+  remittanceInformationUnstructured?: string;
+  /**
+   * requested execution date
+   */
+  requestedExecutionDate?: string;
+  /**
+   * requested execution time
+   */
+  requestedExecutionTime?: Date;
+  startDate: string;
+  /**
+   * ultimate creditor
+   */
+  ultimateCreditor?: string;
+  /**
+   * ultimate debtor
+   */
+  ultimateDebtor?: string;
 }
+
 export namespace PeriodicPayment {
-    export type FrequencyEnum = 'DAILY' | 'WEEKLY' | 'EVERYTWOWEEKS' | 'MONTHLY' | 'EVERYTWOMONTHS' | 'QUARTERLY' | 'SEMIANNUAL' | 'ANNUAL';
-    export const FrequencyEnum = {
-        DAILY: 'DAILY' as FrequencyEnum,
-        WEEKLY: 'WEEKLY' as FrequencyEnum,
-        EVERYTWOWEEKS: 'EVERYTWOWEEKS' as FrequencyEnum,
-        MONTHLY: 'MONTHLY' as FrequencyEnum,
-        EVERYTWOMONTHS: 'EVERYTWOMONTHS' as FrequencyEnum,
-        QUARTERLY: 'QUARTERLY' as FrequencyEnum,
-        SEMIANNUAL: 'SEMIANNUAL' as FrequencyEnum,
-        ANNUAL: 'ANNUAL' as FrequencyEnum
-    }
+  export type FrequencyEnum =
+    'DAILY'
+    | 'WEEKLY'
+    | 'EVERYTWOWEEKS'
+    | 'MONTHLY'
+    | 'EVERYTWOMONTHS'
+    | 'QUARTERLY'
+    | 'SEMIANNUAL'
+    | 'ANNUAL';
+  export const FrequencyEnum = {
+    DAILY: 'DAILY' as FrequencyEnum,
+    WEEKLY: 'WEEKLY' as FrequencyEnum,
+    EVERYTWOWEEKS: 'EVERYTWOWEEKS' as FrequencyEnum,
+    MONTHLY: 'MONTHLY' as FrequencyEnum,
+    EVERYTWOMONTHS: 'EVERYTWOMONTHS' as FrequencyEnum,
+    QUARTERLY: 'QUARTERLY' as FrequencyEnum,
+    SEMIANNUAL: 'SEMIANNUAL' as FrequencyEnum,
+    ANNUAL: 'ANNUAL' as FrequencyEnum
+  }
 }

@@ -31,40 +31,40 @@ import java.util.Map;
 
 public class TppSignatureValidator {
 
-	/**
-	 * mandatory header fields for http signature in case of psd2
-	 */
-	private static final List<String> MANDATORY_HEADERS_PSD2 = Arrays
-			.asList("digest", "tpp-transaction-id", "x-request-id", "timestamp");
+    /**
+     * mandatory header fields for http signature in case of psd2
+     */
+    private static final List<String> MANDATORY_HEADERS_PSD2 = Arrays
+                                                                   .asList("digest", "tpp-transaction-id", "x-request-id", "timestamp");
 
-	/**
-	 * signature should not be null signature should be conform with psd2
-	 * addition signature should be verifiable by the entry certificate
-	 *
-	 * @param signature Signature to verify
-	 * @return true if signature is correct, false otherwise
-	 */
-	public boolean verifySignature(String signature, String tppEncodedCert, Map<String, String> headers)
-			throws NoSuchAlgorithmException, SignatureException, IOException {
+    /**
+     * signature should not be null signature should be conform with psd2
+     * addition signature should be verifiable by the entry certificate
+     *
+     * @param signature Signature to verify
+     * @return true if signature is correct, false otherwise
+     */
+    public boolean verifySignature(String signature, String tppEncodedCert, Map<String, String> headers)
+        throws NoSuchAlgorithmException, SignatureException, IOException {
 
-		if (StringUtils.isBlank(signature)) {
-			throw new IllegalArgumentException("SIGNATURE_MISSING");
-		}
+        if (StringUtils.isBlank(signature)) {
+            throw new IllegalArgumentException("SIGNATURE_MISSING");
+        }
 
-		if (StringUtils.isBlank(tppEncodedCert)) {
-			throw new IllegalArgumentException("CERTIFICAT_MISSING");
-		}
+        if (StringUtils.isBlank(tppEncodedCert)) {
+            throw new IllegalArgumentException("CERTIFICAT_MISSING");
+        }
 
-		Signature signatureData = Signature.fromString(signature);
+        Signature signatureData = Signature.fromString(signature);
 
-		if (!signatureData.getHeaders().containsAll(MANDATORY_HEADERS_PSD2)) {
-			throw new IllegalArgumentException("SIGNATURE_INVALID");
-		}
+        if (!signatureData.getHeaders().containsAll(MANDATORY_HEADERS_PSD2)) {
+            throw new IllegalArgumentException("SIGNATURE_INVALID");
+        }
 
-		X509Certificate cert = X509CertUtils.parse(tppEncodedCert);
-		PublicKey key = cert.getPublicKey();
-		SignatureVerifier verifier = new SignatureVerifier(key, signatureData);
-		return verifier.verify("method", "uri", headers);
-	}
+        X509Certificate cert = X509CertUtils.parse(tppEncodedCert);
+        PublicKey key = cert.getPublicKey();
+        SignatureVerifier verifier = new SignatureVerifier(key, signatureData);
+        return verifier.verify("method", "uri", headers);
+    }
 
 }

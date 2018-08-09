@@ -9,31 +9,31 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Model49 } from './model49';
+import {Model49} from './model49';
 
 
 /**
  * Address
  */
 export interface Address {
-    /**
-     * Building number
-     */
-    buildingNumber?: string;
-    /**
-     * City
-     */
-    city?: string;
-    /**
-     * Country
-     */
-    country: Model49;
-    /**
-     * Postal code
-     */
-    postalCode?: string;
-    /**
-     * Street
-     */
-    street?: string;
+  /**
+   * Building number
+   */
+  buildingNumber?: string;
+  /**
+   * City
+   */
+  city?: string;
+  /**
+   * Country
+   */
+  country: Model49;
+  /**
+   * Postal code
+   */
+  postalCode?: string;
+  /**
+   * Street
+   */
+  street?: string;
 }

@@ -68,12 +68,12 @@ public class PaymentMapper {
                        spiSinglePayment.setCreditorAccount(accountMapper.mapToSpiAccountReference(paymentRe.getCreditorAccount()));
 
                        spiSinglePayment.setCreditorAgent(Optional.ofNullable(paymentRe.getCreditorAgent())
-                                                              .map(BICFI::getCode).orElse(""));
+                                                             .map(BICFI::getCode).orElse(""));
                        spiSinglePayment.setCreditorName(paymentRe.getCreditorName());
                        spiSinglePayment.setCreditorAddress(mapToSpiAddress(paymentRe.getCreditorAddress()));
                        spiSinglePayment.setUltimateCreditor(paymentRe.getUltimateCreditor());
                        spiSinglePayment.setPurposeCode(Optional.ofNullable(paymentRe.getPurposeCode())
-                                                            .map(PurposeCode::getCode).orElse(""));
+                                                           .map(PurposeCode::getCode).orElse(""));
                        spiSinglePayment.setRemittanceInformationUnstructured(paymentRe.getRemittanceInformationUnstructured());
                        spiSinglePayment.setRemittanceInformationStructured(mapToSpiRemittance(paymentRe.getRemittanceInformationStructured()));
                        spiSinglePayment.setRequestedExecutionDate(paymentRe.getRequestedExecutionDate());

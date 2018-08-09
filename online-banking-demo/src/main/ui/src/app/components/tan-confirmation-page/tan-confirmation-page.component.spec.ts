@@ -1,8 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TanConfirmationPageComponent } from './tan-confirmation-page.component';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { FormsModule } from '@angular/forms';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {TanConfirmationPageComponent} from './tan-confirmation-page.component';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+import {FormsModule} from '@angular/forms';
 
 
 describe('TanConfirmationPageComponent', () => {
@@ -11,10 +11,10 @@ describe('TanConfirmationPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, RouterTestingModule, HttpClientTestingModule ],
-      declarations: [ TanConfirmationPageComponent ]
+      imports: [FormsModule, RouterTestingModule, HttpClientTestingModule],
+      declarations: [TanConfirmationPageComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

@@ -36,14 +36,14 @@ public class ConsentsRestConfig {
     @Value("${consent.baseUrl}")
     private String consentServiceBaseUrl;
 
-    @Bean(name="consentServiceBaseUrl")
+    @Bean(name = "consentServiceBaseUrl")
     public String consentServiceBaseUrl() {
         return consentServiceBaseUrl;
     }
 
     @Bean(name = "consentRestTemplate")
     @Qualifier("consent")
-    public RestTemplate consentRestTemplate(){
+    public RestTemplate consentRestTemplate() {
         RestTemplate rest = new RestTemplate(clientHttpRequestFactory());
         rest.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         rest.getMessageConverters().add(new StringHttpMessageConverter());

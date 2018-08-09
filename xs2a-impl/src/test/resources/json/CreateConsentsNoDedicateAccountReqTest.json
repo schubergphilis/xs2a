@@ -1,7 +1,9 @@
-{"access":
-{ "accounts": [],
-  "balances": [],
-  "transactions": []},
+{
+  "access": {
+    "accounts": [],
+    "balances": [],
+    "transactions": []
+  },
   "recurringIndicator": "true",
   "validUntil": "2017-11-01",
   "frequencyPerDay": "4"

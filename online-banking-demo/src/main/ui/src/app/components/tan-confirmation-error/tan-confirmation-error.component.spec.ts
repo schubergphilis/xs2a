@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TanConfirmationErrorComponent } from './tan-confirmation-error.component';
-import { RouterTestingModule } from '@angular/router/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {TanConfirmationErrorComponent} from './tan-confirmation-error.component';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('TanConfirmationErrorComponent', () => {
   let component: TanConfirmationErrorComponent;
@@ -8,10 +8,10 @@ describe('TanConfirmationErrorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ RouterTestingModule ],
-      declarations: [ TanConfirmationErrorComponent ]
+      imports: [RouterTestingModule],
+      declarations: [TanConfirmationErrorComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

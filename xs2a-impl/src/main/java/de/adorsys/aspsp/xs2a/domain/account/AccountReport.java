@@ -41,11 +41,11 @@ public class AccountReport {
     private final Transactions[] pending;
 
     @ApiModelProperty(value = "Links: the following links might be used within this context:" +
-                              "account link (mandatory)" +
-                              "first_page_link (optional)" +
-                              "second_page_link (optional)" +
-                              "current_page_ link (optional)" +
-                              "last_page_link (optional)", required = true)
+                                  "account link (mandatory)" +
+                                  "first_page_link (optional)" +
+                                  "second_page_link (optional)" +
+                                  "current_page_ link (optional)" +
+                                  "last_page_link (optional)", required = true)
     @NotNull
     @JsonProperty("_links")
     private Links links;

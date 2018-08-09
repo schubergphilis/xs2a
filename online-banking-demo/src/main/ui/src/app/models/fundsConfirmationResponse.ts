@@ -15,8 +15,8 @@
  * FundsConfirmationResponse
  */
 export interface FundsConfirmationResponse {
-    /**
-     * Equals 'true' if sufficient funds are available at the time of the request, 'false' otherwise.
-     */
-    fundsAvailable?: boolean;
+  /**
+   * Equals 'true' if sufficient funds are available at the time of the request, 'false' otherwise.
+   */
+  fundsAvailable?: boolean;
 }

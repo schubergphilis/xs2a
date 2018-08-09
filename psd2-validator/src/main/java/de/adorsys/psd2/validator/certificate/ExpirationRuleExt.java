@@ -24,13 +24,13 @@ import java.security.cert.X509Certificate;
 public class ExpirationRuleExt extends ExpirationRule {
 
     @Override
-	public void validate(X509Certificate certificate) throws FailedCertValidationException {
+    public void validate(X509Certificate certificate) throws FailedCertValidationException {
 
-		try {
-			super.validate(certificate);
-		} catch (FailedValidationException e) {
-			throw new FailedCertValidationException(CertificateErrorMsgCode.CERTIFICATE_EXPIRED.name(),
-					CertificateErrorMsgCode.CERTIFICATE_EXPIRED.toString());
-		}
-	}
+        try {
+            super.validate(certificate);
+        } catch (FailedValidationException e) {
+            throw new FailedCertValidationException(CertificateErrorMsgCode.CERTIFICATE_EXPIRED.name(),
+                CertificateErrorMsgCode.CERTIFICATE_EXPIRED.toString());
+        }
+    }
 }

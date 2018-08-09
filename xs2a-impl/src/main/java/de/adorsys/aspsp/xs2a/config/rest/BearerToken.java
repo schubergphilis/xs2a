@@ -27,7 +27,7 @@ import static de.adorsys.aspsp.xs2a.spi.domain.constant.AuthorizationConstant.BE
 public class BearerToken {
     private final String token;
 
-    public String getToken(){
+    public String getToken() {
         return StringUtils.substringAfter(token, BEARER_TOKEN_PREFIX);
     }
 }

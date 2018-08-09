@@ -9,24 +9,24 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { Links } from './links';
-import { TransactionsCreditorResponse } from './transactionsCreditorResponse';
+import {Links} from './links';
+import {TransactionsCreditorResponse} from './transactionsCreditorResponse';
 
 
 /**
  * Account Report
  */
 export interface AccountReport {
-    /**
-     * Links: the following links might be used within this context:account link (mandatory)first_page_link (optional)second_page_link (optional)current_page_ link (optional)last_page_link (optional)
-     */
-    links: Links;
-    /**
-     * Booked TransactionsCreditorResponse
-     */
-    booked: Array<TransactionsCreditorResponse>;
-    /**
-     * Pending TransactionsCreditorResponse
-     */
-    pending?: Array<TransactionsCreditorResponse>;
+  /**
+   * Links: the following links might be used within this context:account link (mandatory)first_page_link (optional)second_page_link (optional)current_page_ link (optional)last_page_link (optional)
+   */
+  links: Links;
+  /**
+   * Booked TransactionsCreditorResponse
+   */
+  booked: Array<TransactionsCreditorResponse>;
+  /**
+   * Pending TransactionsCreditorResponse
+   */
+  pending?: Array<TransactionsCreditorResponse>;
 }

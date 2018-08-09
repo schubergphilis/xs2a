@@ -41,7 +41,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TransactionControllerTest {
-    private static LocalDate DATE =  LocalDate.parse("2019-03-03");
+    private static LocalDate DATE = LocalDate.parse("2019-03-03");
     private static final String TRANSACTION_ID = "00001";
     private static final String WRONG_TRANSACTION_ID = "00002";
     private final String ACCOUNT_ID = "123456789";

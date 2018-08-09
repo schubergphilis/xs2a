@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BankingService} from '../../service/banking.service';
 import {Observable} from 'rxjs';
-import { SinglePayments } from '../../models/models';
+import {SinglePayments} from '../../models/models';
 
 @Component({
   selector: 'app-consent-confirmation-page',
@@ -16,7 +16,8 @@ export class ConsentConfirmationPageComponent implements OnInit {
   iban: string;
   consentId: string;
 
-  constructor(private route: ActivatedRoute, private router: Router, private bankingService: BankingService){ }
+  constructor(private route: ActivatedRoute, private router: Router, private bankingService: BankingService) {
+  }
 
   onClickPaymentAccepted(paymentIsAccepted) {
     this.decision = paymentIsAccepted ? "confirmed" : "revoked"
@@ -27,16 +28,16 @@ export class ConsentConfirmationPageComponent implements OnInit {
           this.router.navigate([nextState])
         },
         error => {
-        this.router.navigate(['/consentconfirmationerror'])
+          this.router.navigate(['/consentconfirmationerror'])
         }
-    )
+      )
   }
 
   ngOnInit() {
     this.route.queryParams
-    .subscribe(params => {
-      this.readBankingDataFromUrl(params)
-    })
+      .subscribe(params => {
+        this.readBankingDataFromUrl(params)
+      })
     this.checkAndSaveData()
     this.singlePayments$ = this.bankingService.getSinglePayments();
   }
@@ -48,7 +49,7 @@ export class ConsentConfirmationPageComponent implements OnInit {
   }
 
   checkAndSaveData() {
-    var data ={iban: this.iban, consentId: this.consentId, paymentId: this.paymentId}
+    var data = {iban: this.iban, consentId: this.consentId, paymentId: this.paymentId}
     if (Object.keys(this.bankingService.loadData()).length === 0) {
       this.bankingService.saveData(data)
     }

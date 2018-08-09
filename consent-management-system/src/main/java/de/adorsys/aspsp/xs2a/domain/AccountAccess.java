@@ -40,9 +40,10 @@ public class AccountAccess {
     @ApiModelProperty(value = "Types of given accesses: account, balance, transaction, payment", required = true, example = "ACCOUNT")
     private TypeAccess typeAccess;
 
-    public AccountAccess(){}
+    public AccountAccess() {
+    }
 
-    public AccountAccess(Currency currency, TypeAccess typeAccess){
+    public AccountAccess(Currency currency, TypeAccess typeAccess) {
         this.currency = currency;
         this.typeAccess = typeAccess;
     }

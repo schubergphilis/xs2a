@@ -15,8 +15,8 @@
  * PurposeCode
  */
 export interface PurposeCode {
-    /**
-     * Purpose code
-     */
-    code?: string;
+  /**
+   * Purpose code
+   */
+  code?: string;
 }

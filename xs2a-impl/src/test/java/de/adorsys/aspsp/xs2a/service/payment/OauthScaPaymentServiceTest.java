@@ -61,8 +61,8 @@ public class OauthScaPaymentServiceTest {
     @Before
     public void setUp() {
         when(paymentMapper.mapToSpiSinglePaymentList(getBulk(true, true))).thenReturn(getSpiBulk(true, true));
-        when(paymentMapper.mapToSpiSinglePaymentList(getBulk(true,false))).thenReturn(getSpiBulk(true,false));
-        when(paymentMapper.mapToSpiSinglePaymentList(getBulk(false,false))).thenReturn(getSpiBulk(false,false));
+        when(paymentMapper.mapToSpiSinglePaymentList(getBulk(true, false))).thenReturn(getSpiBulk(true, false));
+        when(paymentMapper.mapToSpiSinglePaymentList(getBulk(false, false))).thenReturn(getSpiBulk(false, false));
         when(paymentMapper.mapToPaymentInitializationResponse(getSpiResp(true))).thenReturn(getResp(true));
         when(paymentMapper.mapToPaymentInitializationResponse(getSpiResp(false))).thenReturn(getResp(false));
         when(paymentMapper.mapToPaymentInitResponseFailedPayment(getPayment(false), PAYMENT_FAILED))
@@ -96,9 +96,9 @@ public class OauthScaPaymentServiceTest {
         //When
         List<PaymentInitialisationResponse> actualResponse = oauthScaPaymentService.createBulkPayment(payments);
         assertNotNull(actualResponse);
-        assertTrue(actualResponse.get(0).getPaymentId().equals(PAYMENT_ID) && actualResponse.get(1).getPaymentId()==null);
+        assertTrue(actualResponse.get(0).getPaymentId().equals(PAYMENT_ID) && actualResponse.get(1).getPaymentId() == null);
         assertTrue(actualResponse.get(0).getTransactionStatus().equals(TransactionStatus.RCVD) && actualResponse.get(1).getTransactionStatus().equals(TransactionStatus.RJCT));
-        assertTrue(actualResponse.get(0).getTppMessages() == null && actualResponse.get(1).getTppMessages()[0]==PAYMENT_FAILED);
+        assertTrue(actualResponse.get(0).getTppMessages() == null && actualResponse.get(1).getTppMessages()[0] == PAYMENT_FAILED);
     }
 
     @Test
@@ -108,9 +108,9 @@ public class OauthScaPaymentServiceTest {
         //When
         List<PaymentInitialisationResponse> actualResponse = oauthScaPaymentService.createBulkPayment(payments);
         assertNotNull(actualResponse);
-        assertTrue(actualResponse.get(0).getPaymentId()==null && actualResponse.get(1).getPaymentId()==null);
+        assertTrue(actualResponse.get(0).getPaymentId() == null && actualResponse.get(1).getPaymentId() == null);
         assertTrue(actualResponse.get(0).getTransactionStatus().equals(TransactionStatus.RJCT) && actualResponse.get(1).getTransactionStatus().equals(TransactionStatus.RJCT));
-        assertTrue(actualResponse.get(0).getTppMessages()[0]==PAYMENT_FAILED && actualResponse.get(1).getTppMessages()[0]==PAYMENT_FAILED);
+        assertTrue(actualResponse.get(0).getTppMessages()[0] == PAYMENT_FAILED && actualResponse.get(1).getTppMessages()[0] == PAYMENT_FAILED);
     }
 
     @Test

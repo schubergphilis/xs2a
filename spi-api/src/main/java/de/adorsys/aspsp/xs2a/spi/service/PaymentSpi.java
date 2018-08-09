@@ -40,7 +40,7 @@ public interface PaymentSpi {
     /**
      * Initiates a periodic payment at ASPSP
      *
-     * @param periodicPayment periodic payment to be sent for saving at ASPSP
+     * @param periodicPayment  periodic payment to be sent for saving at ASPSP
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return Response from ASPSP containing information about carried payment initiation operation
@@ -50,7 +50,7 @@ public interface PaymentSpi {
     /**
      * Initiates a bulk payment at ASPSP
      *
-     * @param payments bulk payment to be sent for saving at ASPSP
+     * @param payments         bulk payment to be sent for saving at ASPSP
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return Response from ASPSP containing information about carried payment initiation operation
@@ -60,8 +60,8 @@ public interface PaymentSpi {
     /**
      * Returns a payment status by its ASPSP identifier
      *
-     * @param paymentId      ASPSP identifier of a payment
-     * @param paymentProduct The addressed payment product
+     * @param paymentId        ASPSP identifier of a payment
+     * @param paymentProduct   The addressed payment product
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return payment status
@@ -71,9 +71,9 @@ public interface PaymentSpi {
     /**
      * Returns a single payment by its ASPSP identifier
      *
-     * @param paymentType    Type of payment
-     * @param paymentProduct The addressed payment product
-     * @param paymentId      ASPSP identifier of a payment
+     * @param paymentType      Type of payment
+     * @param paymentProduct   The addressed payment product
+     * @param paymentId        ASPSP identifier of a payment
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return single payment
@@ -83,9 +83,9 @@ public interface PaymentSpi {
     /**
      * Returns a periodic payment by its ASPSP identifier
      *
-     * @param paymentType    Type of payment
-     * @param paymentProduct The addressed payment product
-     * @param paymentId      ASPSP identifier of a payment
+     * @param paymentType      Type of payment
+     * @param paymentProduct   The addressed payment product
+     * @param paymentId        ASPSP identifier of a payment
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return periodic payment
@@ -95,9 +95,9 @@ public interface PaymentSpi {
     /**
      * Returns a bulk payment by its ASPSP identifier
      *
-     * @param paymentType    Type of payment
-     * @param paymentProduct The addressed payment product
-     * @param paymentId      ASPSP identifier of a payment
+     * @param paymentType      Type of payment
+     * @param paymentProduct   The addressed payment product
+     * @param paymentId        ASPSP identifier of a payment
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return bulk payment

@@ -94,7 +94,7 @@ public class PsuService {
     /**
      * Adds an allowed payment product to corresponding PSU`s list
      *
-     * @param psuId      String representation of ASPSP identifier for specific PSU
+     * @param psuId   String representation of ASPSP identifier for specific PSU
      * @param product String representation of product to be added
      */
     public void addAllowedProduct(String psuId, String product) {

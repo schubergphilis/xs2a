@@ -33,7 +33,7 @@ class DescriptionConverterExt {
 
     static ClientRepresentation toInternal(KeycloakSession session,
                                            OIDCClientRepresentationExtended clientOIDCext
-                                          ) throws ClientRegistrationException {
+    ) throws ClientRegistrationException {
 
         Map<String, String> attributes = new HashMap<>();
         attributes.put("software_statement", clientOIDCext.getSoftwareStatement());
@@ -47,7 +47,7 @@ class DescriptionConverterExt {
 
     static OIDCClientRepresentationExtended toExternalResponse(KeycloakSession session,
                                                                ClientRepresentation client, URI uri
-                                                              ) {
+    ) {
 
         String softStatement = client.getAttributes().get("software_statement");
         OIDCClientRepresentation clientRep = DescriptionConverter.toExternalResponse(session, client, uri);
@@ -69,7 +69,7 @@ class DescriptionConverterExt {
                 "Failed to convert ClientRepresentation to OIDCClientRepresentationExtended. Exception: {}",
                 e.getMessage(),
                 e
-                                      );
+            );
         }
         return response;
     }

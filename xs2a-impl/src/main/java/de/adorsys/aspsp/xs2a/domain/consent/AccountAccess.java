@@ -45,11 +45,11 @@ public class AccountAccess {
     private AccountAccessType allPsd2;
 
     @JsonIgnore
-    public boolean isNotEmpty(){
-       return  !(CollectionUtils.isEmpty(accounts)
-              && CollectionUtils.isEmpty(balances)
-              && CollectionUtils.isEmpty(transactions)
-              && allPsd2 == null
-              && availableAccounts == null);
+    public boolean isNotEmpty() {
+        return !(CollectionUtils.isEmpty(accounts)
+                     && CollectionUtils.isEmpty(balances)
+                     && CollectionUtils.isEmpty(transactions)
+                     && allPsd2 == null
+                     && availableAccounts == null);
     }
 }

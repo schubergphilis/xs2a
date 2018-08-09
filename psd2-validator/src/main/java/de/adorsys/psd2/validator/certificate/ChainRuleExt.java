@@ -24,19 +24,19 @@ import java.security.cert.X509Certificate;
 
 public class ChainRuleExt extends ChainRule {
 
-	ChainRuleExt(CertificateBucket rootCertificates, CertificateBucket intermediateCertificates) {
-		super(rootCertificates, intermediateCertificates);
-	}
+    ChainRuleExt(CertificateBucket rootCertificates, CertificateBucket intermediateCertificates) {
+        super(rootCertificates, intermediateCertificates);
+    }
 
-	@Override
-	public void validate(X509Certificate certificate) throws FailedCertValidationException {
+    @Override
+    public void validate(X509Certificate certificate) throws FailedCertValidationException {
 
-		try {
-			super.validate(certificate);
-		} catch (CertificateValidationException e) {
-			throw new FailedCertValidationException(CertificateErrorMsgCode.CERTIFICATE_INVALID.name(),
-					CertificateErrorMsgCode.CERTIFICATE_INVALID.toString());
-		}
-	}
+        try {
+            super.validate(certificate);
+        } catch (CertificateValidationException e) {
+            throw new FailedCertValidationException(CertificateErrorMsgCode.CERTIFICATE_INVALID.name(),
+                CertificateErrorMsgCode.CERTIFICATE_INVALID.toString());
+        }
+    }
 
 }

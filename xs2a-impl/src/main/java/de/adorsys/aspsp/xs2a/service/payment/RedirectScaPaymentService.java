@@ -80,7 +80,7 @@ public class RedirectScaPaymentService implements ScaPaymentService {
 
     private List<PaymentInitialisationResponse> createBulkPaymentAndGetResponse(List<SinglePayment> payments) {
         List<SpiSinglePayment> spiPayments = paymentMapper.mapToSpiSinglePaymentList(payments);
-        List<SpiPaymentInitialisationResponse> spiPaymentInitiations = paymentSpi.createBulkPayments(spiPayments,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        List<SpiPaymentInitialisationResponse> spiPaymentInitiations = paymentSpi.createBulkPayments(spiPayments, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
 
         List<PaymentInitialisationResponse> paymentResponses = spiPaymentInitiations.stream()
                                                                    .map(paymentMapper::mapToPaymentInitializationResponse)
@@ -123,7 +123,7 @@ public class RedirectScaPaymentService implements ScaPaymentService {
 
     private Optional<PaymentInitialisationResponse> createSinglePaymentAndGetResponse(SinglePayment singlePayment) {
         SpiSinglePayment spiSinglePayment = paymentMapper.mapToSpiSinglePayment(singlePayment);
-        SpiPaymentInitialisationResponse spiPeriodicPaymentResp = paymentSpi.createPaymentInitiation(spiSinglePayment,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        SpiPaymentInitialisationResponse spiPeriodicPaymentResp = paymentSpi.createPaymentInitiation(spiSinglePayment, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         return paymentMapper.mapToPaymentInitializationResponse(spiPeriodicPaymentResp);
     }
 

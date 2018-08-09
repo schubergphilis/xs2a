@@ -32,6 +32,6 @@ public class AccountReference {
     private Currency currency;
 
     public AccountReference(String iban, Currency currency) {
-        this(iban, "", "", "", "" ,currency);
+        this(iban, "", "", "", "", currency);
     }
 }

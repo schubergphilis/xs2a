@@ -27,35 +27,35 @@ import java.util.Arrays;
 @Slf4j
 public class CertificateUtils {
 
-	public static X509Certificate[] getCertificates(String folderName, String... fileNames) {
-		return Arrays.stream(fileNames)
-                .map(fileName -> getCertificate(folderName + "/" + fileName))
-                .toArray(X509Certificate[]::new);
-	}
+    public static X509Certificate[] getCertificates(String folderName, String... fileNames) {
+        return Arrays.stream(fileNames)
+                   .map(fileName -> getCertificate(folderName + "/" + fileName))
+                   .toArray(X509Certificate[]::new);
+    }
 
-	private static X509Certificate getCertificate(String filePath) {
+    private static X509Certificate getCertificate(String filePath) {
 
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		try {
-			byte[] bytes = IOUtils.resourceToByteArray(filePath, loader);
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try {
+            byte[] bytes = IOUtils.resourceToByteArray(filePath, loader);
             return X509CertUtils.parse(bytes);
-		} catch (IOException e) {
-			log.debug(e.getMessage());
-		}
-		return null;
-	}
+        } catch (IOException e) {
+            log.debug(e.getMessage());
+        }
+        return null;
+    }
 
-	public static String getCertificateByName(String filename) {
+    public static String getCertificateByName(String filename) {
 
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();
-		try {
-			byte[] bytes = IOUtils.resourceToByteArray("certificates/" + filename, loader);
-			X509Certificate cert = X509CertUtils.parse(bytes);
+        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+        try {
+            byte[] bytes = IOUtils.resourceToByteArray("certificates/" + filename, loader);
+            X509Certificate cert = X509CertUtils.parse(bytes);
             return X509CertUtils.toPEMString(cert);
-		} catch (IOException e) {
-			log.debug(e.getMessage());
-		}
-		return null;
-	}
+        } catch (IOException e) {
+            log.debug(e.getMessage());
+        }
+        return null;
+    }
 
 }

@@ -9,72 +9,72 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { AccountReference } from './accountReference';
-import { Address } from './address';
-import { Amount } from './amount';
-import { PurposeCode } from './purposeCode';
-import { Remittance } from './remittance';
-import { TheBICAssociatedToTheAccount_ } from './theBICAssociatedToTheAccount_';
+import {AccountReference} from './accountReference';
+import {Address} from './address';
+import {Amount} from './amount';
+import {PurposeCode} from './purposeCode';
+import {Remittance} from './remittance';
+import {TheBICAssociatedToTheAccount_} from './theBICAssociatedToTheAccount_';
 
 
 /**
  * Payment Initialisation Request
  */
 export interface SinglePayments {
-    /**
-     * creditor account
-     */
-    creditorAccount: AccountReference;
-    /**
-     * creditor Address
-     */
-    creditorAddress?: Address;
-    /**
-     * creditor agent
-     */
-    creditorAgent?: TheBICAssociatedToTheAccount_;
-    /**
-     * creditor name
-     */
-    creditorName: string;
-    /**
-     * debtor account
-     */
-    debtorAccount: AccountReference;
-    /**
-     * end to end authentication
-     */
-    endToEndIdentification?: string;
-    /**
-     * instructed amount
-     */
-    instructedAmount: Amount;
-    /**
-     * purpose code
-     */
-    purposeCode?: PurposeCode;
-    /**
-     * remittance information structured
-     */
-    remittanceInformationStructured?: Remittance;
-    /**
-     * remittance information unstructured
-     */
-    remittanceInformationUnstructured?: string;
-    /**
-     * requested execution date
-     */
-    requestedExecutionDate?: string;
-    /**
-     * requested execution time
-     */
-    requestedExecutionTime?: Date;
-    /**
-     * ultimate creditor
-     */
-    ultimateCreditor?: string;
-    /**
-     * ultimate debtor
-     */
-    ultimateDebtor?: string;
+  /**
+   * creditor account
+   */
+  creditorAccount: AccountReference;
+  /**
+   * creditor Address
+   */
+  creditorAddress?: Address;
+  /**
+   * creditor agent
+   */
+  creditorAgent?: TheBICAssociatedToTheAccount_;
+  /**
+   * creditor name
+   */
+  creditorName: string;
+  /**
+   * debtor account
+   */
+  debtorAccount: AccountReference;
+  /**
+   * end to end authentication
+   */
+  endToEndIdentification?: string;
+  /**
+   * instructed amount
+   */
+  instructedAmount: Amount;
+  /**
+   * purpose code
+   */
+  purposeCode?: PurposeCode;
+  /**
+   * remittance information structured
+   */
+  remittanceInformationStructured?: Remittance;
+  /**
+   * remittance information unstructured
+   */
+  remittanceInformationUnstructured?: string;
+  /**
+   * requested execution date
+   */
+  requestedExecutionDate?: string;
+  /**
+   * requested execution time
+   */
+  requestedExecutionTime?: Date;
+  /**
+   * ultimate creditor
+   */
+  ultimateCreditor?: string;
+  /**
+   * ultimate debtor
+   */
+  ultimateDebtor?: string;
 }

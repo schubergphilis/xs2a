@@ -1,12 +1,11 @@
 {
-  "transactionId":"1234567",
+  "transactionId": "1234567",
   "endToEndId": "123456789",
   "mandateId": "12345",
   "creditorId": "12346",
   "bookingDate": "2017-01-01",
   "valueDate": "2017-01-01",
-  "spiAmount":
-  {
+  "spiAmount": {
     "currency": "EUR",
     "content": "1000.0"
   },
@@ -18,6 +17,6 @@
   "ultimateDebtor": "Max",
   "remittanceInformationUnstructured": "Ref Number Merchant",
   "remittanceInformationStructured": "Ref Number Merchant",
-  "purposeCode":  "BCENECEQ",
+  "purposeCode": "BCENECEQ",
   "bankTransactionCodeCode": "123344"
 }

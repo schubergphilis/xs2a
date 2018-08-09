@@ -136,8 +136,8 @@ public class AccountMockServerData {
 
     private SpiAccountReference getRef(Psu psu, Currency currency) {
         return psu.getAccountDetailsList().stream()
-            .filter(det -> det.getCurrency() == currency)
-            .map(this::mapToReferenceFromDetails).findFirst().get();
+                   .filter(det -> det.getCurrency() == currency)
+                   .map(this::mapToReferenceFromDetails).findFirst().get();
     }
 
     private List<Psu> fillPsu() {

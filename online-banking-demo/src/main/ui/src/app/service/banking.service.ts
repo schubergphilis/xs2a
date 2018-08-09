@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Banking } from '../models/banking.model';
-import { SinglePayments } from '../models/models';
-import { environment } from '../../environments/environment';
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {Banking} from '../models/banking.model';
+import {SinglePayments} from '../models/models';
+import {environment} from '../../environments/environment';
 
 
 @Injectable({
@@ -24,8 +24,8 @@ export class BankingService {
       consentId: this.savedData.consentId,
       paymentId: this.savedData.paymentId
     }
-    var headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post(this.mockServerUrl + '/view/payment/confirmation/', body, { headers: headers })
+    var headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.httpClient.post(this.mockServerUrl + '/view/payment/confirmation/', body, {headers: headers})
   }
 
   postConsent(decision) {
@@ -35,8 +35,8 @@ export class BankingService {
       paymentId: this.savedData.paymentId
     }
 
-    var headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.post(this.mockServerUrl + '/view/payment/confirmation/consent?decision=' + decision, body, { headers: headers })
+    var headers = new HttpHeaders({'Content-Type': 'application/json'});
+    return this.httpClient.post(this.mockServerUrl + '/view/payment/confirmation/consent?decision=' + decision, body, {headers: headers})
   }
 
   saveData(data) {

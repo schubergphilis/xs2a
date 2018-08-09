@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
-import { BankingService } from '../../service/banking.service';
-import { Banking } from '../../models/banking.model';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute, Router, UrlSegment} from '@angular/router';
+import {BankingService} from '../../service/banking.service';
+import {Banking} from '../../models/banking.model';
 
 @Component({
   selector: 'app-tan-confirmation-page',
@@ -14,15 +14,16 @@ export class TanConfirmationPageComponent implements OnInit {
   paymentId: string;
   wrongTanCount: number = 0;
 
-  constructor(private route: ActivatedRoute, private router: Router, private bankingService: BankingService) { }
+  constructor(private route: ActivatedRoute, private router: Router, private bankingService: BankingService) {
+  }
 
   onClickContinue() {
-    const data = <Banking>({ tan: this.tan, iban: this.iban, consentId: this.consentId, paymentId: this.paymentId })
+    const data = <Banking>({tan: this.tan, iban: this.iban, consentId: this.consentId, paymentId: this.paymentId})
     this.bankingService.saveData(data)
     this.bankingService.postTan()
       .subscribe(
         success => {
-          this.router.navigate(['/consentconfirmation'], { queryParams: this.createQueryParams() });
+          this.router.navigate(['/consentconfirmation'], {queryParams: this.createQueryParams()});
         },
         error => {
           if (error.error.message === 'WRONG_TAN') {
@@ -47,7 +48,9 @@ export class TanConfirmationPageComponent implements OnInit {
 
   ngOnInit() {
     this.route.url
-      .subscribe(params => { this.getBankingDetailsFromUrl(params) })
+      .subscribe(params => {
+        this.getBankingDetailsFromUrl(params)
+      })
   }
 
   getBankingDetailsFromUrl(params: UrlSegment[]) {

@@ -55,14 +55,14 @@ public class PaymentConfirmationController {
     @GetMapping(path = "/{iban}/{consent-id}/{payment-id}")
     @ApiOperation(value = "Sends TAN to psu`s email, validates TAN sent to PSU`s e-mail and returns a link to continue as authenticated user")
     public void showConfirmationPage(@PathVariable("iban") String iban,
-                                             @PathVariable("consent-id") String consentId,
-                                             @PathVariable("payment-id") String paymentId,
-                                                HttpServletResponse response) throws IOException {
+                                     @PathVariable("consent-id") String consentId,
+                                     @PathVariable("payment-id") String paymentId,
+                                     HttpServletResponse response) throws IOException {
 
         paymentConfirmationService.generateAndSendTanForPsuByIban(iban);
 
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
-            .path("/{iban}/{consentId}/{paymentId}").buildAndExpand(iban, consentId, paymentId);
+                                          .path("/{iban}/{consentId}/{paymentId}").buildAndExpand(iban, consentId, paymentId);
 
         response.sendRedirect(onlineBankingMockWebappUrl + uriComponents.toUriString());
     }
@@ -75,13 +75,13 @@ public class PaymentConfirmationController {
     })
     public ResponseEntity confirmTan(@RequestBody PaymentConfirmation paymentConfirmation) {
         Optional<AspspPayment> payment = paymentService.getPaymentById(paymentConfirmation.getPaymentId());
-        if(payment.isPresent()) {
+        if (payment.isPresent()) {
             if (paymentConfirmationService.isTanNumberValidByIban(paymentConfirmation.getIban(), paymentConfirmation.getTanNumber(), paymentConfirmation.getConsentId())) {
                 return new ResponseEntity(HttpStatus.OK);
             }
             ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "WRONG_TAN", "Bad request");
-            return  new ResponseEntity<>(error, error.getStatus());
-            }
+            return new ResponseEntity<>(error, error.getStatus());
+        }
         ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "PAYMENT_MISSING", "Bad request");
         return new ResponseEntity<>(error, error.getStatus());
     }

@@ -166,7 +166,7 @@ public class AccountMapper {
 
     private AccountReference mapToAccountReference(AccountDetails details) {
         return Optional.ofNullable(details)
-                   .map(det-> getAccountReference(det.getIban(), det.getBban(), det.getPan(), det.getMaskedPan(), det.getMsisdn(), det.getCurrency()))
+                   .map(det -> getAccountReference(det.getIban(), det.getBban(), det.getPan(), det.getMaskedPan(), det.getMsisdn(), det.getCurrency()))
                    .orElse(null);
 
     }

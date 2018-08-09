@@ -39,53 +39,53 @@ import java.security.cert.CertificateException;
 @Order(1)
 public class CertificateFilter implements Filter {
 
-	private SimpleCertificateBucket blockedCertBucket;
-	private SimpleCertificateBucket rootCertBucket;
-	private SimpleCertificateBucket intermediateCertBucket;
+    private SimpleCertificateBucket blockedCertBucket;
+    private SimpleCertificateBucket rootCertBucket;
+    private SimpleCertificateBucket intermediateCertBucket;
 
-	@Autowired
-	private AspspProfileService aspspProfileService;
+    @Autowired
+    private AspspProfileService aspspProfileService;
 
-	@Override
-	public void init(FilterConfig filterConfig) {
+    @Override
+    public void init(FilterConfig filterConfig) {
 
-		blockedCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("blockedcert"));
-		rootCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("rootcert", "MyRootCA.pem"));
-		intermediateCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("intermediatecert"));
-	}
+        blockedCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("blockedcert"));
+        rootCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("rootcert", "MyRootCA.pem"));
+        intermediateCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("intermediatecert"));
+    }
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
 
-		if (aspspProfileService.getTppSignatureRequired()) {
-			if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
-				throw new ServletException("OncePerRequestFilter just supports HTTP requests");
-			}
+        if (aspspProfileService.getTppSignatureRequired()) {
+            if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
+                throw new ServletException("OncePerRequestFilter just supports HTTP requests");
+            }
 
-			HttpServletRequest httpRequest = (HttpServletRequest) request;
-			String encodedTppCert = httpRequest.getHeader("tpp-certificate");
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
+            String encodedTppCert = httpRequest.getHeader("tpp-certificate");
 
-			CertificateValidatorFactory validatorFactory = new CertificateValidatorFactory(blockedCertBucket,
-					rootCertBucket, intermediateCertBucket);
-			try {
-				validatorFactory.validate(encodedTppCert);
+            CertificateValidatorFactory validatorFactory = new CertificateValidatorFactory(blockedCertBucket,
+                rootCertBucket, intermediateCertBucket);
+            try {
+                validatorFactory.validate(encodedTppCert);
 
-				TppCertificateData tppCertData = CertificateExtractorUtil.extract(encodedTppCert);
-				request.setAttribute("tppCertData", tppCertData);
+                TppCertificateData tppCertData = CertificateExtractorUtil.extract(encodedTppCert);
+                request.setAttribute("tppCertData", tppCertData);
 
-				chain.doFilter(request, response);
-			} catch (CertificateException | CertificateValidationException e) {
-				log.debug(e.getMessage());
-				((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-			}
-		} else {
-			chain.doFilter(request, response);
-		}
-	}
+                chain.doFilter(request, response);
+            } catch (CertificateException | CertificateValidationException e) {
+                log.debug(e.getMessage());
+                ((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+            }
+        } else {
+            chain.doFilter(request, response);
+        }
+    }
 
-	@Override
-	public void destroy() {
-	}
+    @Override
+    public void destroy() {
+    }
 
 }

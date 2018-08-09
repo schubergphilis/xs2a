@@ -112,7 +112,7 @@ public class AISConsentService {
      * Update consent status by id
      *
      * @param consentId
-     * @param status new consent status
+     * @param status    new consent status
      * @return Boolean
      */
     public Optional<Boolean> updateConsentStatusById(String consentId, ConsentStatus status) {
@@ -160,7 +160,7 @@ public class AISConsentService {
     }
 
     private void updateAisConsentCounter(AisConsent consent) {
-        if(consent.hasUsagesAvailable()){
+        if (consent.hasUsagesAvailable()) {
             int usageCounter = consent.getUsageCounter();
             int newUsageCounter = --usageCounter;
             consent.setUsageCounter(newUsageCounter);

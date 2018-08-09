@@ -15,8 +15,8 @@
  * BankTransactionCode
  */
 export interface TheBankTransactionCode {
-    /**
-     * BankTransactionCode code
-     */
-    code?: string;
+  /**
+   * BankTransactionCode code
+   */
+  code?: string;
 }

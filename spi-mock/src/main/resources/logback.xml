@@ -35,11 +35,11 @@
         </rollingPolicy>
     </appender>
 
-    <logger name="org.springframework" level="WARN" />
-    <logger name="springfox.documentation" level="OFF" />
-    <logger name="org.hibernate.validator" level="OFF" />
-    <logger name="org.keycloak.adapters" level="OFF" />
-    <logger name="org.apache.http" level="WARN" />
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="springfox.documentation" level="OFF"/>
+    <logger name="org.hibernate.validator" level="OFF"/>
+    <logger name="org.keycloak.adapters" level="OFF"/>
+    <logger name="org.apache.http" level="WARN"/>
 
     <root level="DEBUG">
         <appender-ref ref="FILE"/>

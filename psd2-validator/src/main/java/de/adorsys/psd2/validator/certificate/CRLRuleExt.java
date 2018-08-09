@@ -24,13 +24,13 @@ import java.security.cert.X509Certificate;
 public class CRLRuleExt extends CRLRule {
 
     @Override
-	public void validate(X509Certificate certificate) throws FailedCertValidationException {
+    public void validate(X509Certificate certificate) throws FailedCertValidationException {
 
-		try {
-			super.validate(certificate);
-		} catch (CertificateValidationException e) {
-			throw new FailedCertValidationException(CertificateErrorMsgCode.CERTIFICATE_REVOKED.name(),
-					CertificateErrorMsgCode.CERTIFICATE_REVOKED.toString());
-		}
-	}
+        try {
+            super.validate(certificate);
+        } catch (CertificateValidationException e) {
+            throw new FailedCertValidationException(CertificateErrorMsgCode.CERTIFICATE_REVOKED.name(),
+                CertificateErrorMsgCode.CERTIFICATE_REVOKED.toString());
+        }
+    }
 }

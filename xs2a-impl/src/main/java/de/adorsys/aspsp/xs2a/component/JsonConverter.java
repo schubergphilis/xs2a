@@ -31,7 +31,7 @@ import java.util.Optional;
 public class JsonConverter {
     private final ObjectMapper objectMapper;
 
-    public <T> Optional<String> toJson(final T object){
+    public <T> Optional<String> toJson(final T object) {
         try {
             return Optional.ofNullable(objectMapper.writeValueAsString(object));
         } catch (JsonProcessingException e) {
@@ -40,7 +40,7 @@ public class JsonConverter {
         return Optional.empty();
     }
 
-    public <T> Optional<T> toObject(final String json, final Class<T> target){
+    public <T> Optional<T> toObject(final String json, final Class<T> target) {
         try {
             return Optional.ofNullable(objectMapper.readValue(json, target));
         } catch (IOException e) {

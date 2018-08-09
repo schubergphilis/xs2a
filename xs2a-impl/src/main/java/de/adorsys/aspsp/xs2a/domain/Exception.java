@@ -27,8 +27,8 @@ import lombok.Data;
 
 public class Exception {
 
-	@ApiModelProperty(value = "transaction status", example = "Rejected")
-	private TransactionStatus transaction_status;
-	@ApiModelProperty(value = "Tpp message")
-	private TppMessageInformation tpp_message;
+    @ApiModelProperty(value = "transaction status", example = "Rejected")
+    private TransactionStatus transaction_status;
+    @ApiModelProperty(value = "Tpp message")
+    private TppMessageInformation tpp_message;
 }

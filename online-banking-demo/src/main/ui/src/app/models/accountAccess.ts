@@ -9,41 +9,42 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { AccountReference } from './accountReference';
+import {AccountReference} from './accountReference';
 
 
 /**
  * Account access
  */
 export interface AccountAccess {
-    /**
-     * detailed account information
-     */
-    accounts?: Array<AccountReference>;
-    /**
-     * only the value 'all-accounts' is admitted
-     */
-    allPsd2?: AccountAccess.AllPsd2Enum;
-    /**
-     * only the value 'all-accounts' is admitted
-     */
-    availableAccounts?: AccountAccess.AvailableAccountsEnum;
-    /**
-     * balances of the addressed accounts
-     */
-    balances?: Array<AccountReference>;
-    /**
-     * transactions of the addressed accounts
-     */
-    transactions?: Array<AccountReference>;
+  /**
+   * detailed account information
+   */
+  accounts?: Array<AccountReference>;
+  /**
+   * only the value 'all-accounts' is admitted
+   */
+  allPsd2?: AccountAccess.AllPsd2Enum;
+  /**
+   * only the value 'all-accounts' is admitted
+   */
+  availableAccounts?: AccountAccess.AvailableAccountsEnum;
+  /**
+   * balances of the addressed accounts
+   */
+  balances?: Array<AccountReference>;
+  /**
+   * transactions of the addressed accounts
+   */
+  transactions?: Array<AccountReference>;
 }
+
 export namespace AccountAccess {
-    export type AllPsd2Enum = 'all-accounts';
-    export const AllPsd2Enum = {
-        Accounts: 'all-accounts' as AllPsd2Enum
-    }
-    export type AvailableAccountsEnum = 'all-accounts';
-    export const AvailableAccountsEnum = {
-        Accounts: 'all-accounts' as AvailableAccountsEnum
-    }
+  export type AllPsd2Enum = 'all-accounts';
+  export const AllPsd2Enum = {
+    Accounts: 'all-accounts' as AllPsd2Enum
+  }
+  export type AvailableAccountsEnum = 'all-accounts';
+  export const AvailableAccountsEnum = {
+    Accounts: 'all-accounts' as AvailableAccountsEnum
+  }
 }

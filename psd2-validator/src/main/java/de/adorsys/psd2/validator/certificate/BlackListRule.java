@@ -23,20 +23,20 @@ import java.security.cert.X509Certificate;
 
 public class BlackListRule implements ValidatorRule {
 
-	private final CertificateBucket certificates;
+    private final CertificateBucket certificates;
 
-	BlackListRule(CertificateBucket certificates) {
-		this.certificates = certificates;
-	}
+    BlackListRule(CertificateBucket certificates) {
+        this.certificates = certificates;
+    }
 
-	@Override
-	public void validate(X509Certificate certificate) throws FailedCertValidationException {
-		for (X509Certificate cert : certificates) {
-			if (cert.equals(certificate)) {
+    @Override
+    public void validate(X509Certificate certificate) throws FailedCertValidationException {
+        for (X509Certificate cert : certificates) {
+            if (cert.equals(certificate)) {
                 throw new FailedCertValidationException(CertificateErrorMsgCode.CERTIFICATE_BLOCKED.name(),
-                                                        CertificateErrorMsgCode.CERTIFICATE_BLOCKED.toString()
+                    CertificateErrorMsgCode.CERTIFICATE_BLOCKED.toString()
                 );
             }
-		}
-	}
+        }
+    }
 }

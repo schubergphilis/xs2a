@@ -43,11 +43,11 @@ public enum PaymentType {
         }
     }
 
-    public String getValue(){
+    public String getValue() {
         return value;
     }
 
-    public static Optional<PaymentType> getByValue(String value){
+    public static Optional<PaymentType> getByValue(String value) {
         return Optional.ofNullable(container.get(value));
     }
 }

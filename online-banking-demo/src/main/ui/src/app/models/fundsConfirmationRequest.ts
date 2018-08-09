@@ -9,28 +9,28 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-import { AccountReference } from './accountReference';
-import { Amount } from './amount';
+import {AccountReference} from './accountReference';
+import {Amount} from './amount';
 
 
 /**
  * Request for the Confirmation Funds
  */
 export interface FundsConfirmationRequest {
-    /**
-     * Card Number of the card issued by the PIISP. Must be delivered if available.
-     */
-    cardNumber?: string;
-    /**
-     * Transaction amount to be checked within the funds check mechanism.
-     */
-    instructedAmount: Amount;
-    /**
-     * The merchant where the card is accepted as an information to the PSU.
-     */
-    payee?: string;
-    /**
-     * PSU’s account number.
-     */
-    psuAccount: AccountReference;
+  /**
+   * Card Number of the card issued by the PIISP. Must be delivered if available.
+   */
+  cardNumber?: string;
+  /**
+   * Transaction amount to be checked within the funds check mechanism.
+   */
+  instructedAmount: Amount;
+  /**
+   * The merchant where the card is accepted as an information to the PSU.
+   */
+  payee?: string;
+  /**
+   * PSU’s account number.
+   */
+  psuAccount: AccountReference;
 }

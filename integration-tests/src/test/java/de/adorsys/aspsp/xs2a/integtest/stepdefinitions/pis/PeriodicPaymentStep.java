@@ -44,14 +44,14 @@ public class PeriodicPaymentStep {
     private Context<ITPeriodicPayments, HashMap, PaymentInitialisationResponse> context;
 
     @Autowired
-    private ObjectMapper mapper;
+    private ObjectMapper objectMapper;
 
     @And("^PSU wants to initiate a recurring payment (.*) using the payment product (.*)$")
     public void loadTestDataForPeriodicPayment(String fileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
         File periodicPaymentJsonFile = new File("src/test/resources/data-input/pis/recurring/" + fileName);
 
-        TestData<ITPeriodicPayments, HashMap> data = mapper.readValue(periodicPaymentJsonFile, new TypeReference<TestData<ITPeriodicPayments, HashMap>>() {
+        TestData<ITPeriodicPayments, HashMap> data = objectMapper.readValue(periodicPaymentJsonFile, new TypeReference<TestData<ITPeriodicPayments, HashMap>>() {
         });
 
         context.setTestData(data);
@@ -99,8 +99,6 @@ public class PeriodicPaymentStep {
             ResponseEntity<PaymentInitialisationResponse> actualResponse = new ResponseEntity<>(
                 hce.getStatusCode());
             context.setActualResponse(actualResponse);
-
-            ObjectMapper objectMapper = new ObjectMapper();
 
             ITMessageError messageError = objectMapper.readValue(hce.getResponseBodyAsString(), ITMessageError.class);
             context.setMessageError(messageError);

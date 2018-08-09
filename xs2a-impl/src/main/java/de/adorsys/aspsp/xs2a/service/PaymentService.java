@@ -60,7 +60,7 @@ public class PaymentService {
      * @return Information about the status of a payment
      */
     public ResponseObject<TransactionStatus> getPaymentStatusById(String paymentId, String paymentProduct) {
-        TransactionStatus transactionStatus = paymentMapper.mapToTransactionStatus(paymentSpi.getPaymentStatusById(paymentId, paymentProduct,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); //
+        TransactionStatus transactionStatus = paymentMapper.mapToTransactionStatus(paymentSpi.getPaymentStatusById(paymentId, paymentProduct, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); //
         // https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         return Optional.ofNullable(transactionStatus)
                    .map(tr -> ResponseObject.<TransactionStatus>builder()

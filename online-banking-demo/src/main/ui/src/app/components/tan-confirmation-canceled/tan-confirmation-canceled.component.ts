@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-tan-confirmation-canceled',
@@ -6,7 +6,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TanConfirmationCanceledComponent implements OnInit {
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit() {
   }

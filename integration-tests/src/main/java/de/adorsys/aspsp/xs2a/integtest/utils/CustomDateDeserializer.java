@@ -24,7 +24,7 @@ public class CustomDateDeserializer<T> extends StdDeserializer<T> {
             Method now = Optional.ofNullable(vc.getMethod("now"))
                              .orElseThrow(() -> new IllegalArgumentException("Can't find method now"));
 
-            return (T)now.invoke(vc.getDeclaredClasses());
+            return (T) now.invoke(vc.getDeclaredClasses());
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             log.error("Can't invoke method 'now'");
         }

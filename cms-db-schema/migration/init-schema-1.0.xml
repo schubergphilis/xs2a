@@ -107,7 +107,8 @@
             </column>
         </createTable>
 
-        <addPrimaryKey columnNames="account_id, currency, type_access" constraintName="ais_account_access_pkey" tableName="ais_account_access"/>
+        <addPrimaryKey columnNames="account_id, currency, type_access" constraintName="ais_account_access_pkey"
+                       tableName="ais_account_access"/>
 
         <addForeignKeyConstraint baseColumnNames="account_id" baseTableName="ais_account_access"
                                  constraintName="account_id_fkey" deferrable="false" initiallyDeferred="false"

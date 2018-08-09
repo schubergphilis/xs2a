@@ -58,7 +58,7 @@ public class SignatureFilter implements Filter {
                 return;
             }
 
-            if(digestContainsErrors(httpRequest)) {
+            if (digestContainsErrors(httpRequest)) {
                 ((HttpServletResponse) response).sendError(HttpServletResponse.SC_BAD_REQUEST,
                     CertificateErrorMsgCode.FORMAT_ERROR.toString());
                 return;

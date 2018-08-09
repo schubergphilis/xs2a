@@ -15,12 +15,12 @@
  * Amount information
  */
 export interface Amount {
-    /**
-     * The amount given with fractional digits, where fractions must be compliant to the currency definition. The decimal separator is a dot
-     */
-    content: string;
-    /**
-     * ISO 4217 currency code
-     */
-    currency: string;
+  /**
+   * The amount given with fractional digits, where fractions must be compliant to the currency definition. The decimal separator is a dot
+   */
+  content: string;
+  /**
+   * ISO 4217 currency code
+   */
+  currency: string;
 }

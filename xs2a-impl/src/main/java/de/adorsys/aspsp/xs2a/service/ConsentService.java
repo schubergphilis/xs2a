@@ -50,8 +50,8 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     private final AccountMapper accountMapper;
 
     /**
-     * @param request              body of create consent request carrying such parameters as AccountAccess, validity terms etc.
-     * @param psuId                String representing PSU identification at ASPSP
+     * @param request body of create consent request carrying such parameters as AccountAccess, validity terms etc.
+     * @param psuId   String representing PSU identification at ASPSP
      * @return CreateConsentResp representing the complete response to create consent request
      * Performs create consent operation either by filling the appropriate AccountAccess fields with corresponding
      * account details or by getting account details from ASPSP by psuId and filling the appropriate fields in
@@ -196,7 +196,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     }
 
     private AccountAccess getAccessByPsuId(boolean isAllPSD2, String psuId) {
-        List<AccountReference> refs = accountMapper.mapToAccountReferencesFromDetails(accountSpi.readAccountsByPsuId(psuId,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        List<AccountReference> refs = accountMapper.mapToAccountReferencesFromDetails(accountSpi.readAccountsByPsuId(psuId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (CollectionUtils.isNotEmpty(refs)) {
             return isAllPSD2
                        ? new AccountAccess(refs, refs, refs, null, AccountAccessType.ALL_ACCOUNTS)

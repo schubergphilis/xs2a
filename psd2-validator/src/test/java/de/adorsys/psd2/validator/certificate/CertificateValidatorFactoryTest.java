@@ -11,38 +11,38 @@ import no.difi.certvalidator.util.SimpleCertificateBucket;
 
 public class CertificateValidatorFactoryTest {
 
-	private SimpleCertificateBucket blockedCertBucket;
-	private SimpleCertificateBucket rootCertBucket;
-	private SimpleCertificateBucket intermediateCertBucket;
+    private SimpleCertificateBucket blockedCertBucket;
+    private SimpleCertificateBucket rootCertBucket;
+    private SimpleCertificateBucket intermediateCertBucket;
 
-	@Before
-	public void init() {
+    @Before
+    public void init() {
 
-		blockedCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("blockedcert"));
-		rootCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("rootcert", "TCA3.crt"));
-		intermediateCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("intermediatecert"));
-	}
+        blockedCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("blockedcert"));
+        rootCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("rootcert", "TCA3.crt"));
+        intermediateCertBucket = new SimpleCertificateBucket(CertificateUtils.getCertificates("intermediatecert"));
+    }
 
-	@Test(expected = CertificateValidationException.class)
-	public void when_ValidCertificate_Expected_True() throws CertificateException, CertificateValidationException {
+    @Test(expected = CertificateValidationException.class)
+    public void when_ValidCertificate_Expected_True() throws CertificateException, CertificateValidationException {
 
-		String encodedCert = CertificateUtils.getCertificateByName("certificateValid.crt");
+        String encodedCert = CertificateUtils.getCertificateByName("certificateValid.crt");
 
-		CertificateValidatorFactory validatorFactory = new CertificateValidatorFactory(blockedCertBucket,
-				rootCertBucket, intermediateCertBucket);
+        CertificateValidatorFactory validatorFactory = new CertificateValidatorFactory(blockedCertBucket,
+            rootCertBucket, intermediateCertBucket);
 
-		validatorFactory.validate(encodedCert);
-	}
+        validatorFactory.validate(encodedCert);
+    }
 
-	@Test(expected = CertificateValidationException.class)
-	public void when_InValidCertificate_Expected_Exception()
-			throws CertificateException, CertificateValidationException {
+    @Test(expected = CertificateValidationException.class)
+    public void when_InValidCertificate_Expected_Exception()
+        throws CertificateException, CertificateValidationException {
 
-		String encodedCert = CertificateUtils.getCertificateByName("certificateInvalid.crt");
+        String encodedCert = CertificateUtils.getCertificateByName("certificateInvalid.crt");
 
-		CertificateValidatorFactory validatorFactory = new CertificateValidatorFactory(blockedCertBucket,
-				rootCertBucket, intermediateCertBucket);
+        CertificateValidatorFactory validatorFactory = new CertificateValidatorFactory(blockedCertBucket,
+            rootCertBucket, intermediateCertBucket);
 
-		validatorFactory.validate(encodedCert);
-	}
+        validatorFactory.validate(encodedCert);
+    }
 }

@@ -1,6 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ConsentConfirmationSuccessfulComponent } from './consent-confirmation-successful.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {RouterTestingModule} from '@angular/router/testing';
+import {ConsentConfirmationSuccessfulComponent} from './consent-confirmation-successful.component';
 
 describe('ConsentConfirmationSuccessfulComponent', () => {
   let component: ConsentConfirmationSuccessfulComponent;
@@ -9,9 +9,9 @@ describe('ConsentConfirmationSuccessfulComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [RouterTestingModule],
-      declarations: [ ConsentConfirmationSuccessfulComponent ]
+      declarations: [ConsentConfirmationSuccessfulComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
