@@ -28,7 +28,7 @@ public class ITPeriodicPayments extends SinglePayment {
 
     @JsonIgnore
     public boolean isValidDate() {
-        return isValidDated() && isValidStartDate() //TODO Should be removed with https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/167
+        return isValidDate() && isValidStartDate() //TODO Should be removed with https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/167
                    &&
                    Optional.ofNullable(this.endDate)
                        .map(d -> d.isAfter(this.startDate))

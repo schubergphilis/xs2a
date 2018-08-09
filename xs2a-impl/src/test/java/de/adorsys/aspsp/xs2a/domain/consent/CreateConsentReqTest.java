@@ -68,6 +68,7 @@ public class CreateConsentReqTest {
         //Given:
         CreateConsentReq req = new CreateConsentReq();
         req.setAccess(null);
+
         //When:
         Set<AccountReference> result = req.getAccountReferences();
         //Then:

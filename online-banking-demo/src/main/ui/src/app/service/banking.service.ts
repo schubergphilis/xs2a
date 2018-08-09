@@ -11,8 +11,8 @@ import {environment} from '../../environments/environment';
   providedIn: 'root'
 })
 export class BankingService {
-  mockServerUrl = environment.mockServerUrl
-  savedData = new Banking()
+  mockServerUrl = environment.mockServerUrl;
+  savedData = new Banking();
 
   constructor(private httpClient: HttpClient) {
   }
@@ -23,9 +23,15 @@ export class BankingService {
       iban: this.savedData.iban,
       consentId: this.savedData.consentId,
       paymentId: this.savedData.paymentId
+<<<<<<< HEAD
     }
     var headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(this.mockServerUrl + '/view/payment/confirmation/', body, {headers: headers})
+=======
+    };
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.mockServerUrl + '/payment/confirmation/', body, { headers: headers });
+>>>>>>> e752dab5f457b4c2cdf2eba66f032d4d7c7df2a4
   }
 
   postConsent(decision) {
@@ -33,14 +39,19 @@ export class BankingService {
       iban: this.savedData.iban,
       consentId: this.savedData.consentId,
       paymentId: this.savedData.paymentId
-    }
+    };
 
+<<<<<<< HEAD
     var headers = new HttpHeaders({'Content-Type': 'application/json'});
     return this.httpClient.post(this.mockServerUrl + '/view/payment/confirmation/consent?decision=' + decision, body, {headers: headers})
+=======
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    return this.httpClient.post(this.mockServerUrl + '/payment/confirmation/consent?decision=' + decision, body, { headers: headers });
+>>>>>>> e752dab5f457b4c2cdf2eba66f032d4d7c7df2a4
   }
 
   saveData(data) {
-    this.savedData = data
+    this.savedData = data;
   }
 
   loadData() {
@@ -52,6 +63,6 @@ export class BankingService {
       map(data => {
         return data;
       })
-    )
+    );
   }
 }
