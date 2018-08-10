@@ -16,9 +16,9 @@
 
 package de.adorsys.aspsp.aspspmockserver.config.email;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.MapUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,9 +34,9 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class EmailConfiguration {
-    @Autowired
-    private EmailConfigurationProperties emailConfigurationProperties;
+    private final EmailConfigurationProperties emailConfigurationProperties;
 
     @Bean
     public JavaMailSender javaMailSender() {
