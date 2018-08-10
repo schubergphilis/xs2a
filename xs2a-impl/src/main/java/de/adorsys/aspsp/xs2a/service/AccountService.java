@@ -74,7 +74,7 @@ public class AccountService {
         List<AccountDetails> accountDetails = getAccountDetailsFromReferences(withBalance, allowedAccountData.getBody());
         ResponseObject<Map<String, List<AccountDetails>>> response = accountDetails.isEmpty()
                                                                          ? ResponseObject.<Map<String, List<AccountDetails>>>builder()
-                                                                               .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build()
+                                                                               .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, CONSENT_INVALID)))).build()
                                                                          : ResponseObject.<Map<String, List<AccountDetails>>>builder()
                                                                                .body(Collections.singletonMap("accountList", accountDetails)).build();
         aisConsentService.consentActionLog(TPP_ID, consentId, withBalance, TypeAccess.ACCOUNT, response);
@@ -96,10 +96,10 @@ public class AccountService {
             return ResponseObject.<AccountDetails>builder()
                        .fail(allowedAccountData.getError()).build();
         }
-        AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (accountDetails == null) {
             return ResponseObject.<AccountDetails>builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404)))).build();
         }
         boolean isValid = withBalance
                               ? consentService.isValidAccountByAccess(accountDetails.getIban(), accountDetails.getCurrency(), allowedAccountData.getBody().getBalances())
@@ -112,7 +112,7 @@ public class AccountService {
                           : builder.body(getAccountDetailNoBalances(accountDetails));
         } else {
             builder = builder
-                          .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID)));
+                          .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, CONSENT_INVALID))));
         }
         aisConsentService.consentActionLog(TPP_ID, consentId, withBalance, TypeAccess.ACCOUNT, builder.build());
         return builder.build();
@@ -121,8 +121,8 @@ public class AccountService {
     /**
      * Gets AccountDetails based on accountId, details get checked with provided AIS-consent Balances section
      *
-     * @param consentId   String representing an AccountConsent identification
-     * @param accountId   String representing a PSU`s Account at ASPSP
+     * @param consentId String representing an AccountConsent identification
+     * @param accountId String representing a PSU`s Account at ASPSP
      * @return List of AccountBalances based on accountId if granted by consent
      */
     public ResponseObject<List<Balance>> getBalances(String consentId, String accountId) {
@@ -131,16 +131,16 @@ public class AccountService {
             return ResponseObject.<List<Balance>>builder()
                        .fail(allowedAccountData.getError()).build();
         }
-        AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (accountDetails == null) {
             return ResponseObject.<List<Balance>>builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404)))).build();
         }
         boolean isValid = consentService.isValidAccountByAccess(accountDetails.getIban(), accountDetails.getCurrency(), allowedAccountData.getBody().getBalances());
         ResponseObject<List<Balance>> response = isValid
-                                                      ? ResponseObject.<List<Balance>>builder().body(accountDetails.getBalances()).build()
-                                                      : ResponseObject.<List<Balance>>builder()
-                                                            .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
+                                                     ? ResponseObject.<List<Balance>>builder().body(accountDetails.getBalances()).build()
+                                                     : ResponseObject.<List<Balance>>builder()
+                                                           .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, CONSENT_INVALID)))).build();
 
         aisConsentService.consentActionLog(TPP_ID, consentId, false, TypeAccess.BALANCE, response);
         return response;
@@ -171,9 +171,9 @@ public class AccountService {
                        .fail(allowedAccountData.getError()).build();
         }
 
-        AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (accountDetails == null) {
-            return ResponseObject.<AccountReport>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+            return ResponseObject.<AccountReport>builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404)))).build();
         }
 
         boolean isValid = consentService.isValidAccountByAccess(accountDetails.getIban(), accountDetails.getCurrency(), allowedAccountData.getBody().getTransactions());
@@ -182,7 +182,7 @@ public class AccountService {
         ResponseObject<AccountReport> response = isValid && report.isPresent()
                                                      ? ResponseObject.<AccountReport>builder().body(report.get()).build()
                                                      : ResponseObject.<AccountReport>builder()
-                                                           .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
+                                                           .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, CONSENT_INVALID)))).build();
 
         aisConsentService.consentActionLog(TPP_ID, consentId, withBalance, TypeAccess.TRANSACTION, response);
         return response;
@@ -250,7 +250,7 @@ public class AccountService {
         LocalDate dateToChecked = Optional.ofNullable(dateTo)
                                       .orElse(LocalDate.now());
         validateAccountIdPeriod(accountId, dateFrom, dateToChecked);
-        return accountMapper.mapToAccountReport(accountSpi.readTransactionsByPeriod(accountId, dateFrom, dateTo,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        return accountMapper.mapToAccountReport(accountSpi.readTransactionsByPeriod(accountId, dateFrom, dateTo, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
     }
 
     public Optional<AccountDetails> getAccountDetailsByAccountReference(AccountReference reference) {

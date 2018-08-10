@@ -50,8 +50,8 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     private final AccountMapper accountMapper;
 
     /**
-     * @param request              body of create consent request carrying such parameters as AccountAccess, validity terms etc.
-     * @param psuId                String representing PSU identification at ASPSP
+     * @param request body of create consent request carrying such parameters as AccountAccess, validity terms etc.
+     * @param psuId   String representing PSU identification at ASPSP
      * @return CreateConsentResp representing the complete response to create consent request
      * Performs create consent operation either by filling the appropriate AccountAccess fields with corresponding
      * account details or by getting account details from ASPSP by psuId and filling the appropriate fields in
@@ -77,7 +77,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         //TODO v1.1 Add balances support
         return !StringUtils.isBlank(consentId)
                    ? ResponseObject.<CreateConsentResp>builder().body(new CreateConsentResp(RECEIVED, consentId, null, null, null)).build()
-                   : ResponseObject.<CreateConsentResp>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_400))).build();
+                   : ResponseObject.<CreateConsentResp>builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_400)))).build();
     }
 
     /**
@@ -89,7 +89,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         return consentMapper.mapToConsentStatus(aisConsentService.getAccountConsentStatusById(consentId))
                    .map(status -> ResponseObject.<ConsentStatus>builder().body(status).build())
                    .orElse(ResponseObject.<ConsentStatus>builder()
-                               .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))
+                               .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))))
                                .build());
     }
 
@@ -105,7 +105,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         }
 
         return ResponseObject.<Void>builder()
-                   .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build();
+                   .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))).build();
     }
 
     /**
@@ -115,7 +115,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     public ResponseObject<AccountConsent> getAccountConsentById(String consentId) {
         AccountConsent consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
         return consent == null
-                   ? ResponseObject.<AccountConsent>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build()
+                   ? ResponseObject.<AccountConsent>builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))).build()
                    : ResponseObject.<AccountConsent>builder().body(consent).build();
     }
 
@@ -123,15 +123,15 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         AccountConsent consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
         if (consent == null) {
             return ResponseObject.<AccountAccess>builder()
-                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build();
+                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))).build();
         }
         if (!consent.isValidStatus()) {
             return ResponseObject.<AccountAccess>builder()
-                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_EXPIRED))).build();
+                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_EXPIRED)))).build();
         }
         if (!consent.isValidFrequency()) {
             return ResponseObject.<AccountAccess>builder()
-                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.ACCESS_EXCEEDED))).build();
+                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.ACCESS_EXCEEDED)))).build();
         }
         return ResponseObject.<AccountAccess>builder().body(consent.getAccess()).build();
     }
@@ -196,7 +196,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     }
 
     private AccountAccess getAccessByPsuId(boolean isAllPSD2, String psuId) {
-        List<AccountReference> refs = accountMapper.mapToAccountReferencesFromDetails(accountSpi.readAccountsByPsuId(psuId,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        List<AccountReference> refs = accountMapper.mapToAccountReferencesFromDetails(accountSpi.readAccountsByPsuId(psuId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (CollectionUtils.isNotEmpty(refs)) {
             return isAllPSD2
                        ? new AccountAccess(refs, refs, refs, null, AccountAccessType.ALL_ACCOUNTS)

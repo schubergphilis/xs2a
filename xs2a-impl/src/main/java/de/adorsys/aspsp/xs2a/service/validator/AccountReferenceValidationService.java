@@ -11,6 +11,7 @@ import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -30,7 +31,7 @@ public class AccountReferenceValidationService {
                                             .anyMatch(Predicate.isEqual(false));
 
         return isInvalidReferenceSet
-                   ? Optional.of(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.FORMAT_ERROR)))
+                   ? Optional.of(new MessageError(TransactionStatus.RJCT, Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.FORMAT_ERROR))))
                    : Optional.empty();
     }
 

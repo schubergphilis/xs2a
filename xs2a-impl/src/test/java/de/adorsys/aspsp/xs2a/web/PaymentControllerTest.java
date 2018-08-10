@@ -31,6 +31,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
+
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_403;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
@@ -59,7 +61,7 @@ public class PaymentControllerTest {
         when(paymentService.getPaymentById(SINGLE, PAYMENT_PRODUCT, CORRECT_PAYMENT_ID))
             .thenReturn(ResponseObject.builder().body(getPayment()).build());
         when(paymentService.getPaymentById(SINGLE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID))
-            .thenReturn(ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
+            .thenReturn(ResponseObject.builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)))).build());
 
 
     }
@@ -77,7 +79,7 @@ public class PaymentControllerTest {
     @Test
     public void getPaymentById_Failure() {
         when(responseMapper.ok(any()))
-            .thenReturn(new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)), HttpStatus.FORBIDDEN));
+            .thenReturn(new ResponseEntity<>(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))), HttpStatus.FORBIDDEN));
 
         //When
         ResponseEntity response = paymentController.getPaymentById(SINGLE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID);

@@ -35,6 +35,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +63,7 @@ public class PaymentService {
         return Optional.ofNullable(transactionStatus)
                    .map(tr -> ResponseObject.<TransactionStatus>builder()
                                   .body(tr).build())
-                   .orElse(ResponseObject.<TransactionStatus>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
+                   .orElse(ResponseObject.<TransactionStatus>builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)))).build());
     }
 
     /**
@@ -77,10 +78,10 @@ public class PaymentService {
                    ? scaPaymentService.createPeriodicPayment(periodicPayment)
                          .map(resp -> ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build())
                          .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
-                                     .fail(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(ERROR, PAYMENT_FAILED)))
+                                     .fail(new MessageError(TransactionStatus.RJCT, Collections.singletonList(new TppMessageInformation(ERROR, PAYMENT_FAILED))))
                                      .build())
                    : ResponseObject.<PaymentInitialisationResponse>builder()
-                         .fail(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(ERROR, EXECUTION_DATE_INVALID)))
+                         .fail(new MessageError(TransactionStatus.RJCT, Collections.singletonList(new TppMessageInformation(ERROR, EXECUTION_DATE_INVALID))))
                          .build();
     }
 
@@ -94,7 +95,7 @@ public class PaymentService {
     public ResponseObject<List<PaymentInitialisationResponse>> createBulkPayments(List<SinglePayment> payments, String paymentProduct) {
         if (CollectionUtils.isEmpty(payments)) {
             return ResponseObject.<List<PaymentInitialisationResponse>>builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, FORMAT_ERROR))))
                        .build();
         }
         List<SinglePayment> validPayments = new ArrayList<>();
@@ -117,7 +118,7 @@ public class PaymentService {
             }
         }
         return ResponseObject.<List<PaymentInitialisationResponse>>builder()
-                   .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED))).build();
+                   .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, PAYMENT_FAILED)))).build();
     }
 
     /**
@@ -132,10 +133,10 @@ public class PaymentService {
                    ? scaPaymentService.createSinglePayment(singlePayment)
                          .map(resp -> ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build())
                          .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
-                                     .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED)))
+                                     .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, PAYMENT_FAILED))))
                                      .build())
                    : ResponseObject.<PaymentInitialisationResponse>builder()
-                         .fail(new MessageError(new TppMessageInformation(ERROR, EXECUTION_DATE_INVALID)))
+                         .fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, EXECUTION_DATE_INVALID))))
                          .build();
     }
 
@@ -152,7 +153,7 @@ public class PaymentService {
         Optional<Object> payment = Optional.ofNullable(service.getPayment(paymentProduct, paymentId));
         return payment.isPresent()
                    ? ResponseObject.builder().body(payment.get()).build()
-                   : ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build();
+                   : ResponseObject.builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)))).build();
 
     }
 }

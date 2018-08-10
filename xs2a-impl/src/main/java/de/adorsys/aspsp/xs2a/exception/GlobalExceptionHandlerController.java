@@ -28,6 +28,8 @@ import org.springframework.web.method.HandlerMethod;
 
 import javax.validation.ValidationException;
 
+import java.util.Collections;
+
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -39,8 +41,8 @@ public class GlobalExceptionHandlerController {
     public ResponseEntity validationException(ValidationException ex, HandlerMethod handlerMethod) {
         log.warn("ValidationException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
-        return new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR)
-                                                       .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR)
+                                                       .text(ex.getMessage()))), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
@@ -63,7 +65,7 @@ public class GlobalExceptionHandlerController {
     public ResponseEntity restException(RestException ex, HandlerMethod handlerMethod) {
         log.warn("RestException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
-        return new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, ex.getMessageErrorCode())
-                                                       .text(ex.getMessage())), ex.getHttpStatus());
+        return new ResponseEntity<>(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, ex.getMessageErrorCode())
+                                                       .text(ex.getMessage()))), ex.getHttpStatus());
     }
 }

@@ -23,6 +23,8 @@ import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageError {
@@ -31,14 +33,14 @@ public class MessageError {
     private TransactionStatus transactionStatus;
 
     @ApiModelProperty(value = "Tpp messages information of the Berlin Group XS2A Interface")
-    private TppMessageInformation tppMessage;
+    private List<TppMessageInformation> tppMessages;
 
-    public MessageError(TppMessageInformation tppMessage) {
-        this(TransactionStatus.RJCT, tppMessage);
+    public MessageError(List<TppMessageInformation> tppMessages) {
+        this(TransactionStatus.RJCT, tppMessages);
     }
 
-    public MessageError(TransactionStatus status, TppMessageInformation tppMessage) {
+    public MessageError(TransactionStatus status, List<TppMessageInformation> tppMessages) {
         this.transactionStatus = status;
-        this.tppMessage = tppMessage;
+        this.tppMessages = tppMessages;
     }
 }

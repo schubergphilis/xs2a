@@ -25,6 +25,8 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
+
 @Aspect
 @Component
 @AllArgsConstructor
@@ -47,9 +49,9 @@ public class FailResponseAspect {
 
     private ResponseObject doEnrich(ResponseObject response) {
         MessageError error = response.getError();
-        TppMessageInformation tppMessage = error.getTppMessage();
+        TppMessageInformation tppMessage = error.getTppMessages().get(0);
         tppMessage.setText(messageService.getMessage(tppMessage.getCode().name()));
-        error.setTppMessage(tppMessage);
+        error.setTppMessages(Collections.singletonList(tppMessage));
         return ResponseObject.builder()
             .fail(error)
             .build();
