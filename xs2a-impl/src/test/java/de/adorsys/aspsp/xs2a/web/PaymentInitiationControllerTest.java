@@ -44,7 +44,6 @@ import org.springframework.http.ResponseEntity;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Base64;
-import java.util.Collections;
 import java.util.Optional;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_403;
@@ -85,7 +84,7 @@ public class PaymentInitiationControllerTest {
         when(paymentService.getPaymentStatusById(PAYMENT_ID, PaymentProduct.SCT.getCode()))
             .thenReturn(ResponseObject.<TransactionStatus>builder().body(TransactionStatus.ACCP).build());
         when(paymentService.getPaymentStatusById(WRONG_PAYMENT_ID, PaymentProduct.SCT.getCode()))
-            .thenReturn(ResponseObject.<TransactionStatus>builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)))).build());
+            .thenReturn(ResponseObject.<TransactionStatus>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
         when(paymentService.createPaymentInitiation(any(), any())).thenReturn(readResponseObject());
         when(aspspProfileService.getPisRedirectUrlToAspsp()).thenReturn(REDIRECT_LINK);
     }
@@ -109,7 +108,7 @@ public class PaymentInitiationControllerTest {
     @Test
     public void getTransactionStatusById_WrongId() {
         when(responseMapper.ok(any()))
-            .thenReturn(new ResponseEntity<>(new MessageError(Collections.singletonList(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))), HttpStatus.FORBIDDEN));
+            .thenReturn(new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)), HttpStatus.FORBIDDEN));
         //Given:
         HttpStatus expectedHttpStatus = FORBIDDEN;
 

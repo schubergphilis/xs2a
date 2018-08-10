@@ -102,7 +102,7 @@ public class AccountServiceTest {
         //getAccountDetailsByAccountId_Failure_wrongAccount
         when(accountSpi.readAccountDetails(WRONG_ACCOUNT_ID, ASPSP_CONSENT_DATA)).thenReturn(new SpiResponse<>(null, ASPSP_CONSENT_DATA));
         //getAccountDetailsByAccountId_Failure_wrongConsent
-        when(consentService.getValidatedConsent(WRONG_CONSENT_ID)).thenReturn(ResponseObject.<AccountAccess>builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_403)))).build());
+        when(consentService.getValidatedConsent(WRONG_CONSENT_ID)).thenReturn(ResponseObject.<AccountAccess>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_403))).build());
 
         //getAccountDetailsListByConsent_Success
         when(accountSpi.readAccountDetailsByIban(IBAN, ASPSP_CONSENT_DATA)).thenReturn(new SpiResponse<>(Collections.singletonList(getSpiAccountDetails(ACCOUNT_ID, IBAN)), ASPSP_CONSENT_DATA));
@@ -146,7 +146,7 @@ public class AccountServiceTest {
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
         assertThat(response.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(RESOURCE_UNKNOWN_404);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(RESOURCE_UNKNOWN_404);
     }
 
     @Test
@@ -157,7 +157,7 @@ public class AccountServiceTest {
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
         assertThat(response.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(CONSENT_UNKNOWN_403);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(CONSENT_UNKNOWN_403);
     }
 
     //Get AccountsList By Consent
@@ -197,7 +197,7 @@ public class AccountServiceTest {
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
         assertThat(response.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(CONSENT_UNKNOWN_403);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(CONSENT_UNKNOWN_403);
     }
 
     //Get Balances
@@ -218,7 +218,7 @@ public class AccountServiceTest {
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
         assertThat(response.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(CONSENT_INVALID);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(CONSENT_INVALID);
     }
 
     @Test
@@ -229,7 +229,7 @@ public class AccountServiceTest {
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
         assertThat(response.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(CONSENT_UNKNOWN_403);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(CONSENT_UNKNOWN_403);
     }
 
     @Test
@@ -240,7 +240,7 @@ public class AccountServiceTest {
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
         assertThat(response.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(RESOURCE_UNKNOWN_404);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(RESOURCE_UNKNOWN_404);
     }
 
     //Get Transaction By TransactionId
@@ -261,7 +261,7 @@ public class AccountServiceTest {
 
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(CONSENT_UNKNOWN_403);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(CONSENT_UNKNOWN_403);
     }
 
     @Test
@@ -271,7 +271,7 @@ public class AccountServiceTest {
 
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(RESOURCE_UNKNOWN_404);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(RESOURCE_UNKNOWN_404);
     }
 
     //Get Transactions By Period
@@ -293,7 +293,7 @@ public class AccountServiceTest {
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
         assertThat(response.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(RESOURCE_UNKNOWN_404);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(RESOURCE_UNKNOWN_404);
     }
 
     @Test
@@ -304,7 +304,7 @@ public class AccountServiceTest {
         //Then:
         assertThat(response.hasError()).isEqualTo(true);
         assertThat(response.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
-        assertThat(response.getError().getTppMessages().get(0).getCode()).isEqualTo(CONSENT_UNKNOWN_403);
+        assertThat(response.getError().getResponseTppMessage().getCode()).isEqualTo(CONSENT_UNKNOWN_403);
     }
 
     //Test Stuff

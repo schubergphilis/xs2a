@@ -16,8 +16,8 @@
 
 package de.adorsys.aspsp.xs2a.service.consent.ais;
 
-import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.config.rest.consent.AisConsentRemoteUrls;
+import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
@@ -90,7 +90,7 @@ public class AisConsentService {
      */
     public void consentActionLog(String tppId, String consentId, boolean withBalance, TypeAccess access, ResponseObject response) {
         ActionStatus status = response.hasError()
-                                  ? consentMapper.mapActionStatusError(response.getError().getTppMessages().get(0).getCode(), withBalance, access)
+                                  ? consentMapper.mapActionStatusError(response.getError().getResponseTppMessage().getCode(), withBalance, access)
                                   : ActionStatus.SUCCESS;
 
         consentRestTemplate.postForEntity(remoteAisConsentUrls.consentActionLog(), new ConsentActionRequest(tppId, consentId, status), Void.class);

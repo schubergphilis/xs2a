@@ -77,7 +77,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         //TODO v1.1 Add balances support
         return !StringUtils.isBlank(consentId)
                    ? ResponseObject.<CreateConsentResp>builder().body(new CreateConsentResp(RECEIVED, consentId, null, null, null)).build()
-                   : ResponseObject.<CreateConsentResp>builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_400)))).build();
+                   : ResponseObject.<CreateConsentResp>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_400))).build();
     }
 
     /**
@@ -89,7 +89,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         return consentMapper.mapToConsentStatus(aisConsentService.getAccountConsentStatusById(consentId))
                    .map(status -> ResponseObject.<ConsentStatus>builder().body(status).build())
                    .orElse(ResponseObject.<ConsentStatus>builder()
-                               .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))))
+                               .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))
                                .build());
     }
 
@@ -105,7 +105,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         }
 
         return ResponseObject.<Void>builder()
-                   .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))).build();
+                   .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build();
     }
 
     /**
@@ -115,7 +115,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     public ResponseObject<AccountConsent> getAccountConsentById(String consentId) {
         AccountConsent consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
         return consent == null
-                   ? ResponseObject.<AccountConsent>builder().fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))).build()
+                   ? ResponseObject.<AccountConsent>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build()
                    : ResponseObject.<AccountConsent>builder().body(consent).build();
     }
 
@@ -123,15 +123,15 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         AccountConsent consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
         if (consent == null) {
             return ResponseObject.<AccountAccess>builder()
-                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))).build();
+                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build();
         }
         if (!consent.isValidStatus()) {
             return ResponseObject.<AccountAccess>builder()
-                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_EXPIRED)))).build();
+                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_EXPIRED))).build();
         }
         if (!consent.isValidFrequency()) {
             return ResponseObject.<AccountAccess>builder()
-                       .fail(new MessageError(Collections.singletonList(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.ACCESS_EXCEEDED)))).build();
+                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.ACCESS_EXCEEDED))).build();
         }
         return ResponseObject.<AccountAccess>builder().body(consent.getAccess()).build();
     }
