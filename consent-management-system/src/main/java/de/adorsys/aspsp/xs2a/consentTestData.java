@@ -37,7 +37,7 @@ public class consentTestData {
     public class AISConsentServiceTestData {
         private final AisConsentRepository aisConsentRepository;
 
-        public AISConsentServiceTestData(AisConsentRepository aisConsentRepository){
+        public AISConsentServiceTestData(AisConsentRepository aisConsentRepository) {
             this.aisConsentRepository = aisConsentRepository;
 
             fillAccountAccess();
@@ -84,7 +84,7 @@ public class consentTestData {
             return consent;
         }
 
-        private List<AisAccount> addAisAccount(){
+        private List<AisAccount> addAisAccount() {
             List<AisAccount> accounts = new LinkedList<>();
             accounts.add(getAisAccountsInfo("DE52500105173911841934", fillAccountAccess()));
 /*
@@ -95,7 +95,7 @@ public class consentTestData {
             return accounts;
         }
 
-        private Set<AccountAccess> fillAccountAccess(){
+        private Set<AccountAccess> fillAccountAccess() {
             Set<AccountAccess> accountAccesses = null;
             accountAccesses.add(new AccountAccess(Currency.getInstance("EUR"), TypeAccess.BALANCE));
             /*accountAccesses.add(new AccountAccess(EUR, ACCOUNT));
@@ -103,8 +103,8 @@ public class consentTestData {
             return accountAccesses;
         }
 
-        private AisAccount getAisAccountsInfo(String iban, Set<AccountAccess> accountAccesses){
-            return new AisAccount(iban, accountAccesses );
+        private AisAccount getAisAccountsInfo(String iban, Set<AccountAccess> accountAccesses) {
+            return new AisAccount(iban, accountAccesses);
         }
 
     }

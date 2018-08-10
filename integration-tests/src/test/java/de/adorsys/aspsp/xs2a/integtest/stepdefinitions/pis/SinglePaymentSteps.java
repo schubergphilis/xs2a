@@ -151,6 +151,8 @@ public class SinglePaymentSteps {
         headers.setAll(context.getTestData().getRequest().getHeader());
         headers.add("Authorization", "Bearer " + context.getAccessToken());
         headers.add("Content-Type", "application/json");
+        headers.add("x-request-id", "2f77a125-aa7a-45c0-b414-cea25a116035");
+        headers.add("psu-ip-address", "192.168.8.78");
 
         return new HttpEntity<>(context.getTestData().getRequest().getBody(), headers);
     }

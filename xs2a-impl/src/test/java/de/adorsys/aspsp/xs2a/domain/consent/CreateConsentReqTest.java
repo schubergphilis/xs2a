@@ -13,23 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package de.adorsys.aspsp.xs2a.domain.consent;
-
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
-
 public class CreateConsentReqTest {
-
     private static final String IBAN = "IBAN ";
-
     @Test
     public void getAccountReferences_all() {
         //Given:
@@ -40,7 +32,6 @@ public class CreateConsentReqTest {
         //Then:
         assertThat(result.size()).isEqualTo(3);
     }
-
     @Test
     public void getAccountReferences_1_null() {
         //Given:
@@ -51,7 +42,6 @@ public class CreateConsentReqTest {
         //Then:
         assertThat(result.size()).isEqualTo(3);
     }
-
     @Test
     public void getAccountReferences_all_null() {
         //Given:
@@ -62,23 +52,9 @@ public class CreateConsentReqTest {
         //Then:
         assertThat(result.size()).isEqualTo(0);
     }
-
-    @Test
-    public void getAccountReferences_access_null() {
-        //Given:
-        CreateConsentReq req = new CreateConsentReq();
-        req.setAccess(null);
-
-        //When:
-        Set<AccountReference> result = req.getAccountReferences();
-        //Then:
-        assertThat(result.size()).isEqualTo(0);
-    }
-
     private AccountAccess getAccess(List<AccountReference> accounts, List<AccountReference> balances, List<AccountReference> transactions) {
         return new AccountAccess(accounts, balances, transactions, null, null);
     }
-
     private List<AccountReference> getRefs(int qty) {
         List<AccountReference> list = new ArrayList<>();
         for (int i = 0; i < qty; i++) {
