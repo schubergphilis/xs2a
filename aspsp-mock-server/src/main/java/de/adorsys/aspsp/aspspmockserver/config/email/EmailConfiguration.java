@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.aspspmockserver.config.email;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -70,7 +71,9 @@ public class EmailConfiguration {
     }
 
     private boolean isAuthParametersExist() {
-        return !Boolean.parseBoolean(emailConfigurationProperties.getProperties().get(MAIL_SMTP_AUTH_PROPERTY))
+        Map<String, String> properties = emailConfigurationProperties.getProperties();
+        return MapUtils.isNotEmpty(properties)
+                   && !Boolean.parseBoolean(properties.get(MAIL_SMTP_AUTH_PROPERTY))
                    || isNotBlank(emailConfigurationProperties.getUsername())
                    && isNotBlank(emailConfigurationProperties.getPassword());
     }
