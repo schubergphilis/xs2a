@@ -16,7 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.exception;
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
