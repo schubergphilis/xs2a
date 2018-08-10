@@ -21,29 +21,32 @@ import de.adorsys.aspsp.xs2a.domain.code.FrequencyCode;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @ApiModel(description = "Periodic Payment Initialisation Request", value = "Periodic Payment")
 public class PeriodicPayment extends SinglePayment {
 
     @ApiModelProperty(name = "startDate", required = true, example = "2017-03-03")
-    @FutureOrPresent
+    @NotNull
     private LocalDate startDate;
 
-    @ApiModelProperty(name = "executionRule", required = false, example = "preceeding")
+    @ApiModelProperty(name = "executionRule", required = false, example = "preceding")
     private String executionRule;
 
     @ApiModelProperty(name = "endDate", required = false, example = "2018-03-03")
     private LocalDate endDate;
 
     @ApiModelProperty(name = "frequency", required = true, example = "ANNUAL")
+    @NotNull
     private FrequencyCode frequency;
 
     @ApiModelProperty(name = "dayOfExecution", required = false, example = "14")

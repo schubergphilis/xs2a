@@ -27,7 +27,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.FutureOrPresent;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -52,19 +53,23 @@ public class SinglePayment implements AccountReferenceCollector {
     private String ultimateDebtor;
 
     @ApiModelProperty(value = "instructed amount", required = true)
+    @NotNull @Valid
     private Amount instructedAmount;
 
     @ApiModelProperty(value = "creditor account", required = true)
+    @NotNull
     private AccountReference creditorAccount;
 
     @ApiModelProperty(value = "creditor agent")
     private BICFI creditorAgent;
 
     @ApiModelProperty(value = "creditor name", required = true, example = "Telekom")
+    @NotNull
     @Size(max = 70)
     private String creditorName;
 
     @ApiModelProperty(value = "creditor Address")
+    @Valid
     private Address creditorAddress;
 
     @ApiModelProperty(value = "ultimate creditor", example = "Telekom")
@@ -79,14 +84,13 @@ public class SinglePayment implements AccountReferenceCollector {
     private String remittanceInformationUnstructured;
 
     @ApiModelProperty(value = "remittance information structured")
+    @Valid
     private Remittance remittanceInformationStructured;
 
     @ApiModelProperty(value = "requested execution date", example = "2017-01-01")
-    @FutureOrPresent
     private LocalDate requestedExecutionDate;
 
     @ApiModelProperty(value = "requested execution time", example = "2017-10-25T15:30:35.035Z")
-    @FutureOrPresent
     private LocalDateTime requestedExecutionTime;
 
     @JsonIgnore
