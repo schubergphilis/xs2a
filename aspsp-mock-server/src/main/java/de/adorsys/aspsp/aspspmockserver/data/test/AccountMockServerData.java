@@ -176,7 +176,14 @@ public class AccountMockServerData {
             getNewAccountCucumberTest("12345-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(20000)), "DE06500105171657611553", null, null, "Jochen Mueller", "GIRO"),
             getNewAccountCucumberTest("23236-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(6500000)), "DE49500105175378548627", null, null, "Amazon", "GIRO"),
             getNewAccountCucumberTest("37289-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(9500000)), "DE21500105176194357737", null, null, "Holidaycheck.com", "GIRO"),
-            getNewAccountCucumberTest("10023-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(2500000)), "DE54500105173424724776", null, null, "Eventim", "GIRO")
+            getNewAccountCucumberTest("10023-999999999", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(2500000)), "DE54500105173424724776", null, null, "Eventim", "GIRO"),
+
+            // additional accounts for consent test data creation
+            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8abb", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(20000)), "DE28500105174342597929", null, null, "Alexander Mueller", "GIRO"),
+            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8acc", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(1000)), "DE75500105172377958695", null, null, "Alexander Mueller", "GIRO"),
+            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8aaa", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(80000)), "DE50500105177788564243", null, null, "Alexander Mueller", "GIRO"),
+            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8aee", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(5500)), "DE55500105177514478625", null, null, "Alexander Mueller", "GIRO"),
+            getNewAccountCucumberTest("42fb4cc3-91cb-45ba-9159-b87acf6d8aff", getNewBalanceListCucumberTests(EUR, BigDecimal.valueOf(800)), "DE48500105172747665854", null, null, "Alexander Mueller", "GIRO")
         );
     }
 
