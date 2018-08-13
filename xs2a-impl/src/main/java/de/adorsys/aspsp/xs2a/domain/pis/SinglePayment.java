@@ -46,6 +46,7 @@ public class SinglePayment implements AccountReferenceCollector {
     private String endToEndIdentification;
 
     @ApiModelProperty(value = "debtor account", required = true)
+    @NotNull
     private AccountReference debtorAccount;
 
     @ApiModelProperty(value = "ultimate debtor", example = "Mueller")
@@ -53,7 +54,8 @@ public class SinglePayment implements AccountReferenceCollector {
     private String ultimateDebtor;
 
     @ApiModelProperty(value = "instructed amount", required = true)
-    @NotNull @Valid
+    @Valid
+    @NotNull
     private Amount instructedAmount;
 
     @ApiModelProperty(value = "creditor account", required = true)
@@ -87,10 +89,10 @@ public class SinglePayment implements AccountReferenceCollector {
     @Valid
     private Remittance remittanceInformationStructured;
 
-    @ApiModelProperty(value = "requested execution date", example = "2017-01-01")
+    @ApiModelProperty(value = "requested execution date", example = "2020-01-01")
     private LocalDate requestedExecutionDate;
 
-    @ApiModelProperty(value = "requested execution time", example = "2017-10-25T15:30:35.035Z")
+    @ApiModelProperty(value = "requested execution time", example = "2020-01-01T15:30:35.035Z")
     private LocalDateTime requestedExecutionTime;
 
     @JsonIgnore
