@@ -33,7 +33,7 @@ public class TppMessageInformation {
 	private MessageCategory category;
 
 	@ApiModelProperty(value = "Code", required = true)
-	private MessageErrorCode code;
+	private MessageErrorCode messageErrorCode;
 
     @ApiModelProperty(value = "Path")
     private String path;
@@ -42,9 +42,9 @@ public class TppMessageInformation {
     @Size(max = 512)
 	private String text;
 
-    public TppMessageInformation(MessageCategory category, MessageErrorCode code) {
+    public TppMessageInformation(MessageCategory category, MessageErrorCode messageErrorCode) {
         this.category = category;
-        this.code = code;
+        this.messageErrorCode = messageErrorCode;
     }
 
     public TppMessageInformation path(String path){
