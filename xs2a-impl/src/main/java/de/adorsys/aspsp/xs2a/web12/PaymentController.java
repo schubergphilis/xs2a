@@ -19,16 +19,16 @@ package de.adorsys.aspsp.xs2a.web12;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
-import de.adorsys.psd2.api.V1Api;
+import de.adorsys.psd2.api.PaymentApi;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@AllArgsConstructor
 @RestController
-public class PaymentController implements V1Api {
+@AllArgsConstructor
+public class PaymentController implements PaymentApi {
 
     private final ResponseMapper responseMapper;
     private final PaymentService paymentService;

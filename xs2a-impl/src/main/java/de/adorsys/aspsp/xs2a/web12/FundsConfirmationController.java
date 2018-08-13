@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
-import de.adorsys.psd2.api.V1Api;
+import de.adorsys.psd2.api.FundsConfirmationApi;
 import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.ConfirmationOfFunds;
 import de.adorsys.psd2.model.InlineResponse200;
@@ -32,9 +32,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Optional;
 import java.util.UUID;
 
-@AllArgsConstructor
 @RestController
-public class FundsConfirmationController implements V1Api {
+@AllArgsConstructor
+public class FundsConfirmationController implements FundsConfirmationApi {
 
     private final FundsConfirmationService fundsConfirmationService;
     private final ResponseMapper responseMapper;

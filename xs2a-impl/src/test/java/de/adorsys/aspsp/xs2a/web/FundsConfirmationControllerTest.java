@@ -18,11 +18,11 @@ package de.adorsys.aspsp.xs2a.web;
 
 import com.google.gson.Gson;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
-import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.aspsp.xs2a.web12.FundsConfirmationController;
+import de.adorsys.psd2.model.ConfirmationOfFunds;
 import de.adorsys.psd2.model.InlineResponse200;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -66,15 +66,16 @@ public class FundsConfirmationControllerTest {
     public void fundConfirmation() throws IOException {
         when(responseMapper.ok(any())).thenReturn(new ResponseEntity<>(readResponseObject().getBody(), HttpStatus.OK));
         //Given
-        FundsConfirmationRequest fundsReq = readFundsConfirmationRequest();
+        ConfirmationOfFunds fundsReq = readFundsConfirmationRequest();
         HttpStatus expectedStatusCode = HttpStatus.OK;
 
         //When:
-        ResponseEntity<FundsConfirmationResponse> actualResult = fundsConfirmationController.fundConfirmation(fundsReq);
+        ResponseEntity<?> actualResult = fundsConfirmationController.checkAvailabilityOfFunds(fundsReq,
+            null, null, null, null);
 
         //Then:
         assertThat(actualResult.getStatusCode()).isEqualTo(expectedStatusCode);
-        assertThat(actualResult.getBody().isFundsAvailable()).isEqualTo(true);
+        assertThat(((InlineResponse200)actualResult.getBody()).isFundsAvailable()).isEqualTo(true);
     }
 
     private ResponseObject<InlineResponse200> readResponseObject() {
@@ -82,9 +83,9 @@ public class FundsConfirmationControllerTest {
                    .body(new InlineResponse200().fundsAvailable(true)).build();
     }
 
-    private FundsConfirmationRequest readFundsConfirmationRequest() throws IOException {
+    private ConfirmationOfFunds readFundsConfirmationRequest() throws IOException {
 
 
-        return new Gson().fromJson(IOUtils.resourceToString(FUNDS_REQ_DATA, UTF_8), FundsConfirmationRequest.class);
+        return new Gson().fromJson(IOUtils.resourceToString(FUNDS_REQ_DATA, UTF_8), ConfirmationOfFunds.class);
     }
 }

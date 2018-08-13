@@ -20,7 +20,7 @@ import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.service.AccountService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
-import de.adorsys.psd2.api.V1Api;
+import de.adorsys.psd2.api.AccountApi;
 import de.adorsys.psd2.model.AccountDetails;
 import de.adorsys.psd2.model.AccountReport;
 import de.adorsys.psd2.model.Balance;
@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-@AllArgsConstructor
 @RestController
-public class AccountController implements V1Api {
+@AllArgsConstructor
+public class AccountController implements AccountApi {
 
     private final AccountService accountService;
     private final ResponseMapper responseMapper;
@@ -47,15 +47,14 @@ public class AccountController implements V1Api {
     }
 
     @Override
-    public ResponseEntity<?> getBalances(String accountId, UUID xRequestID, String consentID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
-        ResponseObject<List<Balance>> responseObject = accountService.getBalances(consentID, accountId);
+    public ResponseEntity<?> readAccountDetails(String accountId, UUID xRequestID, String consentID, Boolean withBalance, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+        ResponseObject<AccountDetails> responseObject = accountService.getAccountDetails(consentID, accountId, withBalance);
         return responseMapper.ok(responseObject);
     }
 
     @Override
-    public ResponseEntity<?> getTransactionDetails(String accountId, String resourceId, UUID xRequestID, String consentID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
-        ResponseObject<AccountReport> responseObject =
-            accountService.getAccountReport(consentID, accountId, null, null, resourceId, false, null, false, false);
+    public ResponseEntity<?> getBalances(String accountId, UUID xRequestID, String consentID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+        ResponseObject<List<Balance>> responseObject = accountService.getBalances(consentID, accountId);
         return responseMapper.ok(responseObject);
     }
 
@@ -67,8 +66,9 @@ public class AccountController implements V1Api {
     }
 
     @Override
-    public ResponseEntity<?> readAccountDetails(String accountId, UUID xRequestID, String consentID, Boolean withBalance, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
-        ResponseObject<AccountDetails> responseObject = accountService.getAccountDetails(consentID, accountId, withBalance);
+    public ResponseEntity<?> getTransactionDetails(String accountId, String resourceId, UUID xRequestID, String consentID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+        ResponseObject<AccountReport> responseObject =
+            accountService.getAccountReport(consentID, accountId, null, null, resourceId, false, null, false, false);
         return responseMapper.ok(responseObject);
     }
 

@@ -22,6 +22,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.web12.PaymentController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,7 +69,9 @@ public class PaymentControllerTest {
     public void getPaymentById() {
         when(responseMapper.ok(any())).thenReturn(new ResponseEntity<>(getPayment(), OK));
         //When
-        ResponseEntity response = paymentController.getPaymentById(SINGLE, PAYMENT_PRODUCT, CORRECT_PAYMENT_ID);
+        ResponseEntity response = paymentController.getPaymentInformation(SINGLE.getValue(), CORRECT_PAYMENT_ID,
+            null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null);
         //Then
         assertThat(response.getStatusCode()).isEqualTo(OK);
         assertThat(response.getBody()).isEqualToComparingFieldByField(getPayment());
@@ -80,7 +83,9 @@ public class PaymentControllerTest {
             .thenReturn(new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)), HttpStatus.FORBIDDEN));
 
         //When
-        ResponseEntity response = paymentController.getPaymentById(SINGLE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID);
+        ResponseEntity response = paymentController.getPaymentInformation(SINGLE.getValue(), WRONG_PAYMENT_ID,
+            null, null, null, null, null, null, null,
+            null, null, null, null, null, null, null);
         //Then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }

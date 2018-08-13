@@ -22,14 +22,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.*;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
+import springfox.documentation.spi.service.ApiListingBuilderPlugin;
+import springfox.documentation.spi.service.ApiListingScannerPlugin;
+import springfox.documentation.spi.service.DefaultsProviderPlugin;
+import springfox.documentation.spi.service.contexts.ApiListingContext;
+import springfox.documentation.spi.service.contexts.DocumentationContext;
+import springfox.documentation.spi.service.contexts.DocumentationContextBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger.web.InMemorySwaggerResourcesProvider;
 import springfox.documentation.swagger.web.SecurityConfiguration;
+import springfox.documentation.swagger.web.SwaggerResource;
+import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -38,6 +49,7 @@ import static springfox.documentation.swagger.web.SecurityConfigurationBuilder.b
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+
     @Value("${license.url}")
     private String licenseUrl;
     @Autowired
@@ -46,29 +58,45 @@ public class SwaggerConfig {
     @Bean(name = "api")
     public Docket apiDocklet() {
         return new Docket(DocumentationType.SWAGGER_2)
-               .apiInfo(getApiInfo())
-               .select()
-               .apis(apis())
-               .paths(Predicates.not(PathSelectors.regex("/error.*?")))
-               .paths(Predicates.not(PathSelectors.regex("/connect.*")))
-               .paths(Predicates.not(PathSelectors.regex("/management.*")))
-               .build()
+            .apiInfo(getApiInfo())
+            .select()
+            .apis(apis())
+            .paths(Predicates.not(PathSelectors.regex("/error.*?")))
+            .paths(Predicates.not(PathSelectors.regex("/connect.*")))
+            .paths(Predicates.not(PathSelectors.regex("/management.*")))
+            .build()
             .securitySchemes(singletonList(securitySchema()));
     }
 
+    @Primary
+    @Bean
+    public SwaggerResourcesProvider swaggerResourcesProvider(InMemorySwaggerResourcesProvider defaultResourcesProvider) {
+        return () -> {
+            SwaggerResource wsResource = new SwaggerResource();
+            wsResource.setName("origin xs2a api");
+            wsResource.setSwaggerVersion("2.0");
+            wsResource.setLocation("/psd2-api-1.2-2018-07-26.yaml");
+
+            List<SwaggerResource> resources = new ArrayList<>(defaultResourcesProvider.get());
+            resources.add(wsResource);
+            return resources;
+        };
+    }
+
     private Predicate<RequestHandler> apis() {
-        return Predicates.and(RequestHandlerSelectors.basePackage("de.adorsys.aspsp.xs2a.web"),
-            RequestHandlerSelectors.basePackage("de.adorsys.aspsp.xs2a.web12"));
+        return Predicates.or(
+            RequestHandlerSelectors.basePackage("de.adorsys.aspsp.xs2a.web12")
+        );
     }
 
     private ApiInfo getApiInfo() {
         return new ApiInfoBuilder()
-           .title("XS2A REST API")
-           .contact(new Contact("adorsys GmbH & Co. KG", "http://www.github.com/adorsys/xs2a", "fpo@adorsys.de"))
-           .version("1.0")
-           .license("Apache License 2.0")
-           .licenseUrl(licenseUrl)
-           .build();
+            .title("XS2A REST API")
+            .contact(new Contact("adorsys GmbH & Co. KG", "http://www.github.com/adorsys/xs2a", "fpo@adorsys.de"))
+            .version("1.0")
+            .license("Apache License 2.0")
+            .licenseUrl(licenseUrl)
+            .build();
     }
 
     private OAuth securitySchema() {
@@ -98,4 +126,5 @@ public class SwaggerConfig {
             .useBasicAuthenticationWithAccessCodeGrant(false)
             .build();
     }
+
 }
