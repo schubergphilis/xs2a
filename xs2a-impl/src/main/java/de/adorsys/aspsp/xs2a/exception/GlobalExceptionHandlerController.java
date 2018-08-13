@@ -40,25 +40,19 @@ public class GlobalExceptionHandlerController {
     @ExceptionHandler(value = {ValidationException.class})
     public ResponseEntity validationException(ValidationException ex, HandlerMethod handlerMethod) {
         log.warn("ValidationException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
-
-        return new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR)
-                                                         .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR)), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public ResponseEntity httpMessageException(HttpMessageNotReadableException ex, HandlerMethod handlerMethod) {
-        log.warn("HttpMessageNotReadableException handled in Controller: {}, message: {}, stackTrace: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage(), ex);
-
-        HttpStatus status = HttpStatus.BAD_REQUEST;
-        return new ResponseEntity<>(status.getReasonPhrase(), status);
+        log.warn("Uncatched exception handled in Controller: {}, message: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
+        return new ResponseEntity<>(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR)), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {Exception.class})
     public ResponseEntity exception(Exception ex, HandlerMethod handlerMethod) {
         log.warn("Uncatched exception handled in Controller: {}, message: {}, stackTrace: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage(), ex);
-
-        HttpStatus status = INTERNAL_SERVER_ERROR;
-        return new ResponseEntity<>(status.getReasonPhrase(), status);
+        return new ResponseEntity<>(INTERNAL_SERVER_ERROR.getReasonPhrase(), INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = RestException.class)
