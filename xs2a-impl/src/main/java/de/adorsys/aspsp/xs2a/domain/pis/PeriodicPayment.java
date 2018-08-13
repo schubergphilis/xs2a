@@ -30,13 +30,13 @@ import java.time.LocalDate;
 import java.time.chrono.ChronoLocalDate;
 import java.util.Optional;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 @ApiModel(description = "Periodic Payment Initialisation Request", value = "Periodic Payment")
 public class PeriodicPayment extends SinglePayment {
 
-    @ApiModelProperty(name = "startDate", required = true, example = "2020-01-01")
     @NotNull
+    @ApiModelProperty(name = "startDate", required = true, example = "2020-01-01")
     private LocalDate startDate;
 
     @ApiModelProperty(name = "executionRule", required = false, example = "preceding")
@@ -45,13 +45,13 @@ public class PeriodicPayment extends SinglePayment {
     @ApiModelProperty(name = "endDate", required = false, example = "2020-02-01")
     private LocalDate endDate;
 
-    @ApiModelProperty(name = "frequency", required = true, example = "ANNUAL")
     @NotNull
+    @ApiModelProperty(name = "frequency", required = true, example = "ANNUAL")
     private FrequencyCode frequency;
 
-    @ApiModelProperty(name = "dayOfExecution", required = false, example = "14")
-    @Max(31)
     @Min(1)
+    @Max(31)
+    @ApiModelProperty(name = "dayOfExecution", required = false, example = "14")
     private int dayOfExecution; //Day here max 31
 
     @JsonIgnore
