@@ -1,67 +1,76 @@
-/*
- * Copyright 2018-2018 adorsys GmbH & Co KG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
-import java.time.LocalDate;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.Objects;
 
 /**
- * JSON response body consistion of the corresponding periodic SCT payment initation JSON body together with an optional transaction status
- * field.
+ * JSON response body consistion of the corresponding periodic SCT payment initation JSON body together with an optional transaction status field.
  */
 @ApiModel(description = "JSON response body consistion of the corresponding periodic SCT payment initation JSON body together with an optional transaction status field. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-06T12:02:27.187+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class PeriodicPaymentInitiationSctWithStatusResponse {
 
     @JsonProperty("endToEndIdentification")
     private String endToEndIdentification = null;
+
+
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
+
+
     @JsonProperty("instructedAmount")
     private Amount instructedAmount = null;
+
+
     @JsonProperty("creditorAccount")
     private Object creditorAccount = null;
+
+
     @JsonProperty("creditorAgent")
     private String creditorAgent = null;
+
+
     @JsonProperty("creditorName")
     private String creditorName = null;
+
+
     @JsonProperty("creditorAddress")
     private Address creditorAddress = null;
+
+
     @JsonProperty("remittanceInformationUnstructured")
     private String remittanceInformationUnstructured = null;
+
+
     @JsonProperty("startDate")
     private LocalDate startDate = null;
+
+
     @JsonProperty("endDate")
     private LocalDate endDate = null;
+
+
     @JsonProperty("executionRule")
     private ExecutionRule executionRule = null;
+
+
     @JsonProperty("frequency")
     private FrequencyCode frequency = null;
+
+
     @JsonProperty("dayOfExecution")
     private DayOfExecution dayOfExecution = null;
+
+
     @JsonProperty("transactionStatus")
     private TransactionStatus transactionStatus = null;
 
@@ -75,8 +84,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return endToEndIdentification
      **/
-    @ApiModelProperty(value = "")
-
+    @ApiModelProperty
     @Size(max = 35)
     public String getEndToEndIdentification() {
         return endToEndIdentification;
@@ -96,7 +104,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return debtorAccount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public Object getDebtorAccount() {
@@ -117,7 +125,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return instructedAmount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public Amount getInstructedAmount() {
@@ -138,7 +146,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return creditorAccount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public Object getCreditorAccount() {
@@ -159,7 +167,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return creditorAgent
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getCreditorAgent() {
         return creditorAgent;
     }
@@ -178,7 +186,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return creditorName
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public String getCreditorName() {
@@ -199,7 +207,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return creditorAddress
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public Address getCreditorAddress() {
         return creditorAddress;
@@ -219,7 +227,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return remittanceInformationUnstructured
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getRemittanceInformationUnstructured() {
         return remittanceInformationUnstructured;
     }
@@ -238,7 +246,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return startDate
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public LocalDate getStartDate() {
@@ -259,7 +267,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return endDate
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public LocalDate getEndDate() {
         return endDate;
@@ -279,7 +287,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return executionRule
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public ExecutionRule getExecutionRule() {
         return executionRule;
@@ -299,7 +307,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return frequency
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public FrequencyCode getFrequency() {
@@ -320,7 +328,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return dayOfExecution
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public DayOfExecution getDayOfExecution() {
         return dayOfExecution;
@@ -340,7 +348,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
      *
      * @return transactionStatus
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public TransactionStatus getTransactionStatus() {
         return transactionStatus;
@@ -349,6 +357,7 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
     public void setTransactionStatus(TransactionStatus transactionStatus) {
         this.transactionStatus = transactionStatus;
     }
+
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -359,28 +368,25 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
             return false;
         }
         PeriodicPaymentInitiationSctWithStatusResponse periodicPaymentInitiationSctWithStatusResponse = (PeriodicPaymentInitiationSctWithStatusResponse) o;
-        return Objects.equals(this.endToEndIdentification, periodicPaymentInitiationSctWithStatusResponse.endToEndIdentification)
-            && Objects.equals(this.debtorAccount, periodicPaymentInitiationSctWithStatusResponse.debtorAccount)
-            && Objects.equals(this.instructedAmount, periodicPaymentInitiationSctWithStatusResponse.instructedAmount)
-            && Objects.equals(this.creditorAccount, periodicPaymentInitiationSctWithStatusResponse.creditorAccount)
-            && Objects.equals(this.creditorAgent, periodicPaymentInitiationSctWithStatusResponse.creditorAgent)
-            && Objects.equals(this.creditorName, periodicPaymentInitiationSctWithStatusResponse.creditorName)
-            && Objects.equals(this.creditorAddress, periodicPaymentInitiationSctWithStatusResponse.creditorAddress)
-            && Objects.equals(this.remittanceInformationUnstructured,
-            periodicPaymentInitiationSctWithStatusResponse.remittanceInformationUnstructured)
-            && Objects.equals(this.startDate, periodicPaymentInitiationSctWithStatusResponse.startDate)
-            && Objects.equals(this.endDate, periodicPaymentInitiationSctWithStatusResponse.endDate)
-            && Objects.equals(this.executionRule, periodicPaymentInitiationSctWithStatusResponse.executionRule)
-            && Objects.equals(this.frequency, periodicPaymentInitiationSctWithStatusResponse.frequency)
-            && Objects.equals(this.dayOfExecution, periodicPaymentInitiationSctWithStatusResponse.dayOfExecution)
-            && Objects.equals(this.transactionStatus, periodicPaymentInitiationSctWithStatusResponse.transactionStatus);
+        return Objects.equals(this.endToEndIdentification, periodicPaymentInitiationSctWithStatusResponse.endToEndIdentification) &&
+            Objects.equals(this.debtorAccount, periodicPaymentInitiationSctWithStatusResponse.debtorAccount) &&
+            Objects.equals(this.instructedAmount, periodicPaymentInitiationSctWithStatusResponse.instructedAmount) &&
+            Objects.equals(this.creditorAccount, periodicPaymentInitiationSctWithStatusResponse.creditorAccount) &&
+            Objects.equals(this.creditorAgent, periodicPaymentInitiationSctWithStatusResponse.creditorAgent) &&
+            Objects.equals(this.creditorName, periodicPaymentInitiationSctWithStatusResponse.creditorName) &&
+            Objects.equals(this.creditorAddress, periodicPaymentInitiationSctWithStatusResponse.creditorAddress) &&
+            Objects.equals(this.remittanceInformationUnstructured, periodicPaymentInitiationSctWithStatusResponse.remittanceInformationUnstructured) &&
+            Objects.equals(this.startDate, periodicPaymentInitiationSctWithStatusResponse.startDate) &&
+            Objects.equals(this.endDate, periodicPaymentInitiationSctWithStatusResponse.endDate) &&
+            Objects.equals(this.executionRule, periodicPaymentInitiationSctWithStatusResponse.executionRule) &&
+            Objects.equals(this.frequency, periodicPaymentInitiationSctWithStatusResponse.frequency) &&
+            Objects.equals(this.dayOfExecution, periodicPaymentInitiationSctWithStatusResponse.dayOfExecution) &&
+            Objects.equals(this.transactionStatus, periodicPaymentInitiationSctWithStatusResponse.transactionStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(endToEndIdentification, debtorAccount, instructedAmount, creditorAccount, creditorAgent, creditorName,
-            creditorAddress, remittanceInformationUnstructured, startDate, endDate, executionRule, frequency, dayOfExecution,
-            transactionStatus);
+        return Objects.hash(endToEndIdentification, debtorAccount, instructedAmount, creditorAccount, creditorAgent, creditorName, creditorAddress, remittanceInformationUnstructured, startDate, endDate, executionRule, frequency, dayOfExecution, transactionStatus);
     }
 
     @Override
@@ -407,7 +413,8 @@ public class PeriodicPaymentInitiationSctWithStatusResponse {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

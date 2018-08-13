@@ -1,9 +1,12 @@
 package de.adorsys.aspsp.xs2a.service.validator;
 
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+
 import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.AccountReferenceIban;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,12 +73,21 @@ public class AccountReferenceValidationServiceTest {
     }
 
     private AccountReference getReference(String iban, String bban, String pan, String masked, String msisdn) {
-        AccountReference reference = new AccountReference();
-        reference.setIban(iban);
-        reference.setBban(bban);
-        reference.setPan(pan);
-        reference.setMaskedPan(masked);
-        reference.setMsisdn(msisdn);
-        return reference;
+        if (StringUtils.isNotEmpty(iban)) {
+            return new AccountReferenceIban().iban(iban);
+        }
+        if (StringUtils.isNotEmpty(bban)) {
+            return new AccountReferenceIban().iban(bban);
+        }
+        if (StringUtils.isNotEmpty(pan)) {
+            return new AccountReferenceIban().iban(pan);
+        }
+        if (StringUtils.isNotEmpty(masked)) {
+            return new AccountReferenceIban().iban(masked);
+        }
+        if (StringUtils.isNotEmpty(msisdn)) {
+            return new AccountReferenceIban().iban(msisdn);
+        }
+        return null;
     }
 }

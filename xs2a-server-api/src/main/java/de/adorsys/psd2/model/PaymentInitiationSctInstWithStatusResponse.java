@@ -1,19 +1,3 @@
-/*
- * Copyright 2018-2018 adorsys GmbH & Co KG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -27,30 +11,45 @@ import javax.validation.constraints.Size;
 import java.util.Objects;
 
 /**
- * JSON response body consistion of the corresponding SCT INST payment initation JSON body together with an optional transaction status
- * field.
+ * JSON response body consistion of the corresponding SCT INST payment initation JSON body together with an optional transaction status field.
  */
 @ApiModel(description = "JSON response body consistion of the corresponding SCT INST payment initation JSON body together with an optional transaction status field. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-06T12:02:27.187+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class PaymentInitiationSctInstWithStatusResponse {
 
     @JsonProperty("endToEndIdentification")
     private String endToEndIdentification = null;
+
+
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
+
+
     @JsonProperty("instructedAmount")
     private Amount instructedAmount = null;
+
+
     @JsonProperty("creditorAccount")
     private Object creditorAccount = null;
+
+
     @JsonProperty("creditorAgent")
     private String creditorAgent = null;
+
+
     @JsonProperty("creditorName")
     private String creditorName = null;
+
+
     @JsonProperty("creditorAddress")
     private Address creditorAddress = null;
+
+
     @JsonProperty("remittanceInformationUnstructured")
     private String remittanceInformationUnstructured = null;
+
+
     @JsonProperty("transactionStatus")
     private TransactionStatus transactionStatus = null;
 
@@ -64,8 +63,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return endToEndIdentification
      **/
-    @ApiModelProperty(value = "")
-
+    @ApiModelProperty
     @Size(max = 35)
     public String getEndToEndIdentification() {
         return endToEndIdentification;
@@ -85,7 +83,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return debtorAccount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public Object getDebtorAccount() {
@@ -106,7 +104,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return instructedAmount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public Amount getInstructedAmount() {
@@ -127,7 +125,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return creditorAccount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public Object getCreditorAccount() {
@@ -148,7 +146,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return creditorAgent
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getCreditorAgent() {
         return creditorAgent;
     }
@@ -167,7 +165,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return creditorName
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public String getCreditorName() {
@@ -188,7 +186,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return creditorAddress
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public Address getCreditorAddress() {
         return creditorAddress;
@@ -208,8 +206,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return remittanceInformationUnstructured
      **/
-    @ApiModelProperty(value = "")
-
+    @ApiModelProperty
     @Size(max = 140)
     public String getRemittanceInformationUnstructured() {
         return remittanceInformationUnstructured;
@@ -229,7 +226,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
      *
      * @return transactionStatus
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public TransactionStatus getTransactionStatus() {
         return transactionStatus;
@@ -238,6 +235,7 @@ public class PaymentInitiationSctInstWithStatusResponse {
     public void setTransactionStatus(TransactionStatus transactionStatus) {
         this.transactionStatus = transactionStatus;
     }
+
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -248,22 +246,20 @@ public class PaymentInitiationSctInstWithStatusResponse {
             return false;
         }
         PaymentInitiationSctInstWithStatusResponse paymentInitiationSctInstWithStatusResponse = (PaymentInitiationSctInstWithStatusResponse) o;
-        return Objects.equals(this.endToEndIdentification, paymentInitiationSctInstWithStatusResponse.endToEndIdentification)
-            && Objects.equals(this.debtorAccount, paymentInitiationSctInstWithStatusResponse.debtorAccount)
-            && Objects.equals(this.instructedAmount, paymentInitiationSctInstWithStatusResponse.instructedAmount)
-            && Objects.equals(this.creditorAccount, paymentInitiationSctInstWithStatusResponse.creditorAccount)
-            && Objects.equals(this.creditorAgent, paymentInitiationSctInstWithStatusResponse.creditorAgent)
-            && Objects.equals(this.creditorName, paymentInitiationSctInstWithStatusResponse.creditorName)
-            && Objects.equals(this.creditorAddress, paymentInitiationSctInstWithStatusResponse.creditorAddress)
-            && Objects.equals(this.remittanceInformationUnstructured,
-            paymentInitiationSctInstWithStatusResponse.remittanceInformationUnstructured)
-            && Objects.equals(this.transactionStatus, paymentInitiationSctInstWithStatusResponse.transactionStatus);
+        return Objects.equals(this.endToEndIdentification, paymentInitiationSctInstWithStatusResponse.endToEndIdentification) &&
+            Objects.equals(this.debtorAccount, paymentInitiationSctInstWithStatusResponse.debtorAccount) &&
+            Objects.equals(this.instructedAmount, paymentInitiationSctInstWithStatusResponse.instructedAmount) &&
+            Objects.equals(this.creditorAccount, paymentInitiationSctInstWithStatusResponse.creditorAccount) &&
+            Objects.equals(this.creditorAgent, paymentInitiationSctInstWithStatusResponse.creditorAgent) &&
+            Objects.equals(this.creditorName, paymentInitiationSctInstWithStatusResponse.creditorName) &&
+            Objects.equals(this.creditorAddress, paymentInitiationSctInstWithStatusResponse.creditorAddress) &&
+            Objects.equals(this.remittanceInformationUnstructured, paymentInitiationSctInstWithStatusResponse.remittanceInformationUnstructured) &&
+            Objects.equals(this.transactionStatus, paymentInitiationSctInstWithStatusResponse.transactionStatus);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(endToEndIdentification, debtorAccount, instructedAmount, creditorAccount, creditorAgent, creditorName,
-            creditorAddress, remittanceInformationUnstructured, transactionStatus);
+        return Objects.hash(endToEndIdentification, debtorAccount, instructedAmount, creditorAccount, creditorAgent, creditorName, creditorAddress, remittanceInformationUnstructured, transactionStatus);
     }
 
     @Override
@@ -285,7 +281,8 @@ public class PaymentInitiationSctInstWithStatusResponse {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

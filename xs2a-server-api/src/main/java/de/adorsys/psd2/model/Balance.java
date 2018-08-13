@@ -1,19 +1,3 @@
-/*
- * Copyright 2018-2018 adorsys GmbH & Co KG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,7 +9,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 
 /**
@@ -33,17 +17,25 @@ import java.util.Objects;
  */
 @ApiModel(description = "A single balance element ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-06T12:02:27.187+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class Balance {
 
     @JsonProperty("balanceAmount")
     private Amount balanceAmount = null;
+
+
     @JsonProperty("balanceType")
     private BalanceType balanceType = null;
+
+
     @JsonProperty("lastChangeDateTime")
-    private LocalDateTime lastChangeDateTime = null;
+    private OffsetDateTime lastChangeDateTime = null;
+
+
     @JsonProperty("referenceDate")
     private LocalDate referenceDate = null;
+
+
     @JsonProperty("lastCommittedTransaction")
     private String lastCommittedTransaction = null;
 
@@ -57,7 +49,7 @@ public class Balance {
      *
      * @return balanceAmount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public Amount getBalanceAmount() {
@@ -78,7 +70,7 @@ public class Balance {
      *
      * @return balanceType
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public BalanceType getBalanceType() {
@@ -89,24 +81,23 @@ public class Balance {
         this.balanceType = balanceType;
     }
 
-    public Balance lastChangeDateTime(LocalDateTime lastChangeDateTime) {
+    public Balance lastChangeDateTime(OffsetDateTime lastChangeDateTime) {
         this.lastChangeDateTime = lastChangeDateTime;
         return this;
     }
 
     /**
-     * This data element might be used to indicate e.g. with the expected or booked balance that no action is known on the account, which is
-     * not yet booked.
+     * This data element might be used to indicate e.g. with the expected or booked balance that no action is known  on the account, which is not yet booked.
      *
      * @return lastChangeDateTime
      **/
     @ApiModelProperty(value = "This data element might be used to indicate e.g. with the expected or booked balance that no action is known  on the account, which is not yet booked. ")
     @Valid
-    public LocalDateTime getLastChangeDateTime() {
+    public OffsetDateTime getLastChangeDateTime() {
         return lastChangeDateTime;
     }
 
-    public void setLastChangeDateTime(LocalDateTime lastChangeDateTime) {
+    public void setLastChangeDateTime(OffsetDateTime lastChangeDateTime) {
         this.lastChangeDateTime = lastChangeDateTime;
     }
 
@@ -136,7 +127,7 @@ public class Balance {
     }
 
     /**
-     * \"entryReference\" of the last commited transaction to support the TPP in identifying whether all PSU transactions are already known.
+     * \"entryReference\" of the last commited transaction to support the TPP in identifying whether all  PSU transactions are already known.
      *
      * @return lastCommittedTransaction
      **/
@@ -151,6 +142,7 @@ public class Balance {
         this.lastCommittedTransaction = lastCommittedTransaction;
     }
 
+
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {
@@ -160,10 +152,11 @@ public class Balance {
             return false;
         }
         Balance balance = (Balance) o;
-        return Objects.equals(this.balanceAmount, balance.balanceAmount) && Objects.equals(this.balanceType, balance.balanceType)
-            && Objects.equals(this.lastChangeDateTime, balance.lastChangeDateTime)
-            && Objects.equals(this.referenceDate, balance.referenceDate)
-            && Objects.equals(this.lastCommittedTransaction, balance.lastCommittedTransaction);
+        return Objects.equals(this.balanceAmount, balance.balanceAmount) &&
+            Objects.equals(this.balanceType, balance.balanceType) &&
+            Objects.equals(this.lastChangeDateTime, balance.lastChangeDateTime) &&
+            Objects.equals(this.referenceDate, balance.referenceDate) &&
+            Objects.equals(this.lastCommittedTransaction, balance.lastCommittedTransaction);
     }
 
     @Override
@@ -186,7 +179,8 @@ public class Balance {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

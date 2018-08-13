@@ -23,6 +23,7 @@ import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.psd2.model.InlineResponse200;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,9 +77,9 @@ public class FundsConfirmationControllerTest {
         assertThat(actualResult.getBody().isFundsAvailable()).isEqualTo(true);
     }
 
-    private ResponseObject<FundsConfirmationResponse> readResponseObject() {
-        return ResponseObject.<FundsConfirmationResponse>builder()
-                   .body(new FundsConfirmationResponse(true)).build();
+    private ResponseObject<InlineResponse200> readResponseObject() {
+        return ResponseObject.<InlineResponse200>builder()
+                   .body(new InlineResponse200().fundsAvailable(true)).build();
     }
 
     private FundsConfirmationRequest readFundsConfirmationRequest() throws IOException {

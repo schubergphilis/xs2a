@@ -58,8 +58,9 @@ public class AccountController {
         @RequestHeader(name = "consent-id") String consentId,
         @ApiParam(name = "with-balance", value = "If contained, this function reads the list of accessible payment accounts including the balance.")
         @RequestParam(name = "with-balance", required = false) boolean withBalance) {
-        ResponseObject<Map<String, List<AccountDetails>>> responseObject = accountService.getAccountDetailsList(consentId, withBalance);
-        return responseMapper.ok(responseObject);
+//        ResponseObject<Map<String, List<AccountDetails>>> responseObject = accountService.getAccountDetailsList(consentId, withBalance);
+//        return responseMapper.ok(responseObject);
+        throw new RuntimeException("not refactored to xs2a 1.2 spec");
     }
 
     @ApiOperation(value = "Reads details about an account, with balances where required. It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system. The addressed details of this account depends then on the stored consent addressed by consentId, respectively the OAuth2 access token", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
@@ -82,8 +83,9 @@ public class AccountController {
         @PathVariable(name = "account-id") String accountId,
         @ApiParam(name = "with-balance", value = "If contained, this function reads the list of accessible payment accounts including the balance.")
         @RequestParam(name = "with-balance", required = false) boolean withBalance) {
-        ResponseObject<AccountDetails> responseObject = accountService.getAccountDetails(consentId, accountId, withBalance);
-        return responseMapper.ok(responseObject);
+//        ResponseObject<AccountDetails> responseObject = accountService.getAccountDetails(consentId, accountId, withBalance);
+//        return responseMapper.ok(responseObject);
+        throw new RuntimeException("not refactored to xs2a 1.2 spec");
     }
 
     @ApiOperation(value = "Read a list of the balances for the given account", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
@@ -104,8 +106,9 @@ public class AccountController {
         @RequestHeader(name = "consent-id") String consentId,
         @ApiParam(name = "account-id", required = true, value = "This identification is denoting the addressed account, where the transaction has been performed")
         @PathVariable(name = "account-id") String accountId) {
-        ResponseObject<List<Balance>> responseObject = accountService.getBalances(consentId, accountId);
-        return responseMapper.ok(responseObject);
+//        ResponseObject<List<Balance>> responseObject = accountService.getBalances(consentId, accountId);
+//        return responseMapper.ok(responseObject);
+        throw new RuntimeException("not refactored to xs2a 1.2 spec");
     }
 
     @ApiOperation(value = "Reads account data from a given account addressed by \"account-id\".", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
@@ -140,8 +143,9 @@ public class AccountController {
                                                          @RequestParam(name = "withBalance", required = false) boolean withBalance,
                                                          @ApiParam(name = "deltaList", value = "This data attribute is indicating that the AISP is in favour to get all transactions after the last report access for this PSU")
                                                          @RequestParam(name = "deltaList", required = false) boolean deltaList) {
-        ResponseObject<AccountReport> responseObject =
-            accountService.getAccountReport(consentId, accountId, dateFrom, dateTo, transactionId, psuInvolved, BookingStatus.forValue(bookingStatus), withBalance, deltaList);
-        return responseMapper.ok(responseObject);
+//        ResponseObject<AccountReport> responseObject =
+//            accountService.getAccountReport(consentId, accountId, dateFrom, dateTo, transactionId, psuInvolved, BookingStatus.forValue(bookingStatus), withBalance, deltaList);
+//        return responseMapper.ok(responseObject);
+        throw new RuntimeException("not refactored to xs2a 1.2 spec");
     }
 }

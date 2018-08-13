@@ -19,7 +19,6 @@ package de.adorsys.aspsp.xs2a.service;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
@@ -29,6 +28,7 @@ import de.adorsys.aspsp.xs2a.service.mapper.ConsentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
+import de.adorsys.psd2.custom.AccountReference;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -136,7 +136,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         return ResponseObject.<AccountAccess>builder().body(consent.getAccess()).build();
     }
 
-    boolean isValidAccountByAccess(String iban, Currency currency, List<AccountReference> allowedAccountData) {
+    boolean isValidAccountByAccess(String iban, String currency, List<AccountReference> allowedAccountData) {
         return CollectionUtils.isNotEmpty(allowedAccountData)
                    && allowedAccountData.stream()
                           .anyMatch(a -> a.getIban().equals(iban)
@@ -192,7 +192,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
 
     private boolean isContainedRefInRefsList(AccountReference referenceMatched, List<AccountReference> references) {
         return references.stream()
-                   .anyMatch(r -> r.matches(referenceMatched));
+                   .anyMatch(r -> r.getIban().equals(referenceMatched.getIban()));
     }
 
     private AccountAccess getAccessByPsuId(boolean isAllPSD2, String psuId) {

@@ -16,7 +16,8 @@
 
 package de.adorsys.aspsp.xs2a.domain.consent;
 
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.AccountReferenceIban;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -81,7 +82,7 @@ public class CreateConsentReqTest {
     private List<AccountReference> getRefs(int qty) {
         List<AccountReference> list = new ArrayList<>();
         for (int i = 0; i < qty; i++) {
-            AccountReference reference = new AccountReference();
+            AccountReferenceIban reference = new AccountReferenceIban();
             reference.setIban(IBAN + i);
             list.add(reference);
         }

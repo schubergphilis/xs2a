@@ -16,7 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.service.mapper;
 
-import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
@@ -30,6 +29,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.*;
+import de.adorsys.psd2.model.Amount;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -127,7 +127,8 @@ public class PaymentMapper {
                        PaymentInitialisationResponse initialisationResponse = new PaymentInitialisationResponse();
                        initialisationResponse.setTransactionStatus(mapToTransactionStatus(pir.getTransactionStatus()));
                        initialisationResponse.setPaymentId(pir.getPaymentId());
-                       initialisationResponse.setTransactionFees(accountMapper.mapToAmount(pir.getSpiTransactionFees()));
+                       //TODO amount is now de.adorsys.psd2.model.Amount
+//                       initialisationResponse.setTransactionFees(accountMapper.mapToAmount(pir.getSpiTransactionFees()));
                        initialisationResponse.setTransactionFeeIndicator(pir.isSpiTransactionFeeIndicator());
                        initialisationResponse.setPsuMessage(pir.getPsuMessage());
                        initialisationResponse.setTppRedirectPreferred(pir.isTppRedirectPreferred());
@@ -281,7 +282,7 @@ public class PaymentMapper {
 
     private SpiAmount mapToSpiAmount(Amount amount) {
         return Optional.ofNullable(amount)
-                   .map(am -> new SpiAmount(am.getCurrency(), new BigDecimal(am.getContent())))
+                   .map(am -> new SpiAmount(am.getCurrency(), new BigDecimal(am.getAmount())))
                    .orElse(null);
     }
 

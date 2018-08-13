@@ -1,6 +1,6 @@
 package de.adorsys.aspsp.xs2a.domain;
 
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.psd2.custom.AccountReference;
 
 import java.util.Set;
 

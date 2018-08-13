@@ -19,13 +19,9 @@ package de.adorsys.aspsp.xs2a.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
-import de.adorsys.aspsp.xs2a.domain.Amount;
-import de.adorsys.aspsp.xs2a.domain.Balance;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
-import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.*;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,9 +32,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.Currency;
-import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,16 +59,16 @@ public class FundsConfirmationServiceTest {
     @Before
     public void setUp() throws IOException {
         when(accountService.getAccountDetailsByAccountReference(any(AccountReference.class)))
-            .thenReturn(Optional.of(new AccountDetails(null, null, null, null, null, null, null, null, null, null, null, getBalances())));
+            .thenReturn(Optional.of(new AccountDetails().balances(getBalances())));
     }
 
     @Test
     public void fundsConfirmation_success() throws Exception {
         //Given:
-        FundsConfirmationRequest request = readFundsConfirmationRequest();
+        ConfirmationOfFunds request = readFundsConfirmationRequest();
 
         //When:
-        ResponseObject<FundsConfirmationResponse> actualResponse = fundsConfirmationService.fundsConfirmation(request);
+        ResponseObject<InlineResponse200> actualResponse = fundsConfirmationService.fundsConfirmation(request);
 
         //Then
         assertThat(actualResponse.getBody().isFundsAvailable()).isEqualTo(true);
@@ -83,11 +77,11 @@ public class FundsConfirmationServiceTest {
     @Test
     public void fundsConfirmation_notEnoughMoney() throws Exception {
         //Given:
-        FundsConfirmationRequest request = readFundsConfirmationRequest();
+        ConfirmationOfFunds request = readFundsConfirmationRequest();
         request.setInstructedAmount(getAmount1600());
 
         //When:
-        ResponseObject<FundsConfirmationResponse> actualResponse = fundsConfirmationService.fundsConfirmation(request);
+        ResponseObject<InlineResponse200> actualResponse = fundsConfirmationService.fundsConfirmation(request);
 
         //Then
         assertThat(actualResponse.getBody().isFundsAvailable()).isEqualTo(false);
@@ -96,28 +90,31 @@ public class FundsConfirmationServiceTest {
     @Test
     public void fundsConfirmation_reqIsNull() {
         //Given:
-        FundsConfirmationRequest request = null;
+        ConfirmationOfFunds request = null;
 
         //When:
-        ResponseObject<FundsConfirmationResponse> actualResponse = fundsConfirmationService.fundsConfirmation(request);
+        ResponseObject<InlineResponse200> actualResponse = fundsConfirmationService.fundsConfirmation(request);
 
         //Then
         assertThat(actualResponse.getBody().isFundsAvailable()).isEqualTo(false);
     }
 
-    private FundsConfirmationRequest readFundsConfirmationRequest() throws IOException {
-        return jsonConverter.toObject(IOUtils.resourceToString(FUNDS_REQ_DATA, UTF_8), FundsConfirmationRequest.class).get();
+    private ConfirmationOfFunds readFundsConfirmationRequest() throws IOException {
+        return jsonConverter.toObject(IOUtils.resourceToString(FUNDS_REQ_DATA, UTF_8), ConfirmationOfFunds.class).get();
     }
 
     private Amount getAmount1600() {
         Amount amount = new Amount();
-        amount.setContent(AMOUNT_1600);
-        amount.setCurrency(EUR);
+        amount.setAmount(AMOUNT_1600);
+        amount.setCurrency(EUR.getCurrencyCode());
         return amount;
     }
 
-    private List<Balance> getBalances() throws IOException {
+    private BalanceList getBalances() throws IOException {
         Balance balance = jsonConverter.toObject(IOUtils.resourceToString(BALANCES_SOURCE, UTF_8), Balance.class).get();
-        return Collections.singletonList(balance);
+        BalanceList balances = new BalanceList();
+        balances.add(balance);
+
+        return balances;
     }
 }

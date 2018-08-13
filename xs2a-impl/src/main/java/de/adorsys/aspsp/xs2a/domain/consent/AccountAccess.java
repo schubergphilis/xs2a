@@ -17,7 +17,7 @@
 package de.adorsys.aspsp.xs2a.domain.consent;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.psd2.custom.AccountReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
@@ -45,11 +45,11 @@ public class AccountAccess {
     private AccountAccessType allPsd2;
 
     @JsonIgnore
-    public boolean isNotEmpty(){
-       return  !(CollectionUtils.isEmpty(accounts)
-              && CollectionUtils.isEmpty(balances)
-              && CollectionUtils.isEmpty(transactions)
-              && allPsd2 == null
-              && availableAccounts == null);
+    public boolean isNotEmpty() {
+        return !(CollectionUtils.isEmpty(accounts)
+            && CollectionUtils.isEmpty(balances)
+            && CollectionUtils.isEmpty(transactions)
+            && allPsd2 == null
+            && availableAccounts == null);
     }
 }

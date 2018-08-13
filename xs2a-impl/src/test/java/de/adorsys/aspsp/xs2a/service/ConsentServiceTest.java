@@ -19,7 +19,6 @@ package de.adorsys.aspsp.xs2a.service;
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.service.consent.ais.AisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
@@ -33,6 +32,8 @@ import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiAccountAccess;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiAccountAccessType;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.AccountReferenceIban;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -281,7 +282,7 @@ public class ConsentServiceTest {
     }
 
     private SpiAccountReference getSpiReference(String iban, Currency currency) {
-        return new SpiAccountReference(iban, null, null, null, null, currency);
+        return new SpiAccountReference(iban, null, null, null, null, currency.getCurrencyCode());
     }
 
     private List<SpiAccountReference> getSpiReferensesList(String iban) {
@@ -323,9 +324,9 @@ public class ConsentServiceTest {
     }
 
     private AccountReference getReference(String iban, Currency currency) {
-        AccountReference ref = new AccountReference();
+        AccountReferenceIban ref = new AccountReferenceIban();
         ref.setIban(iban);
-        ref.setCurrency(currency);
+        ref.setCurrency(currency.getCurrencyCode());
         return ref;
     }
 }

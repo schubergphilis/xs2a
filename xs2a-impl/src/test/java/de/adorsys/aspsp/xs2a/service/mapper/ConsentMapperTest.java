@@ -22,13 +22,14 @@ import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.consent.api.AccountInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccessInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentRequest;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.AccountConsent;
 import de.adorsys.aspsp.xs2a.domain.consent.ConsentStatus;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiCreateConsentRequest;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.AccountReferenceIban;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -149,7 +150,7 @@ public class ConsentMapperTest {
         assertThat(actualAccountConsent.getId()).isEqualTo("3dc3d5b3-7023-4848-9853-f5400a64e80f");
         assertThat(actualAccountConsent.getAccess().getBalances().get(0).getIban()).isEqualTo("DE2310010010123456789");
         assertThat(actualAccountConsent.getAccess().getBalances().get(1).getIban()).isEqualTo("DE2310010010123456790");
-        assertThat(actualAccountConsent.getAccess().getBalances().get(1).getCurrency().getCurrencyCode()).isEqualTo("USD");
+        assertThat(actualAccountConsent.getAccess().getBalances().get(1).getCurrency()).isEqualTo("USD");
         assertThat(actualAccountConsent.getAccess().getBalances().get(2).getIban()).isEqualTo("DE2310010010123456788");
         assertThat(actualAccountConsent.getAccess().getTransactions().get(0).getIban()).isEqualTo("DE2310010010123456789");
         assertThat(actualAccountConsent.getAccess().getTransactions().get(1).getMaskedPan()).isEqualTo("123456xxxxxx1234");
@@ -162,7 +163,6 @@ public class ConsentMapperTest {
 
     private String getCurrency(AccountReference reference) {
         return Optional.ofNullable(reference.getCurrency())
-                   .map(Currency::getCurrencyCode)
                    .orElse(null);
     }
 
@@ -176,10 +176,10 @@ public class ConsentMapperTest {
     }
 
     private AccountReference getReference(String iban, Currency currency, String masked) {
-        AccountReference ref = new AccountReference();
+        AccountReferenceIban ref = new AccountReferenceIban();
         ref.setIban(iban);
-        ref.setCurrency(currency);
-        ref.setMaskedPan(masked);
+        ref.setCurrency(currency.getCurrencyCode());
+//TODO iban & pan not possible at same time        ref.setMaskedPan(masked);
         return ref;
     }
 
@@ -193,7 +193,7 @@ public class ConsentMapperTest {
     }
 
     private SpiAccountReference getSpiReference(String iban, Currency currency, String masked) {
-        return new SpiAccountReference(iban, null, null, masked, null, currency);
+        return new SpiAccountReference(iban, null, null, masked, null, currency.getCurrencyCode());
     }
 
 }

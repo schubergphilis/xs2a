@@ -36,6 +36,7 @@
         <module>cms-db-schema</module>
         <module>online-banking-demo</module>
         <module>xs2a-server-api</module>
+        <module>xs2a-server</module>
     </modules>
     <packaging>pom</packaging>
 

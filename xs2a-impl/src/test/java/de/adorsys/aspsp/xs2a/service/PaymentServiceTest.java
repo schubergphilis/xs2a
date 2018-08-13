@@ -16,11 +16,9 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
@@ -34,6 +32,9 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.AccountReferenceIban;
+import de.adorsys.psd2.model.Amount;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -332,8 +333,8 @@ public class PaymentServiceTest {
         SinglePayments singlePayments = new SinglePayments();
         singlePayments.setEndToEndIdentification(PAYMENT_ID);
         Amount amount = new Amount();
-        amount.setCurrency(CURRENCY);
-        amount.setContent(amountToPay);
+        amount.setCurrency(CURRENCY.getCurrencyCode());
+        amount.setAmount(amountToPay);
         singlePayments.setInstructedAmount(amount);
         singlePayments.setDebtorAccount(getReference(iban));
         singlePayments.setCreditorAccount(getReference(iban));
@@ -341,22 +342,22 @@ public class PaymentServiceTest {
     }
 
     private AccountReference getReference(String iban) {
-        AccountReference reference = new AccountReference();
+        AccountReferenceIban reference = new AccountReferenceIban();
         reference.setIban(iban);
-        reference.setCurrency(CURRENCY);
+        reference.setCurrency(CURRENCY.getCurrencyCode());
 
         return reference;
     }
 
     private SpiAccountReference getSpiReference(String iban) {
-        return new SpiAccountReference(iban, null, null, null, null, CURRENCY);
+        return new SpiAccountReference(iban, null, null, null, null, CURRENCY.getCurrencyCode());
     }
 
     private PeriodicPayment getPeriodicPayment(String iban, String amountToPay) {
         PeriodicPayment payment = new PeriodicPayment();
         Amount amount = new Amount();
-        amount.setCurrency(CURRENCY);
-        amount.setContent(amountToPay);
+        amount.setCurrency(CURRENCY.getCurrencyCode());
+        amount.setAmount(amountToPay);
         payment.setInstructedAmount(amount);
         payment.setDebtorAccount(getReference(iban));
         payment.setCreditorAccount(getReference(iban));

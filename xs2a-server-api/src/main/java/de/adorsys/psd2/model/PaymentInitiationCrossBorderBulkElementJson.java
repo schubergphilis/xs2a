@@ -1,19 +1,3 @@
-/*
- * Copyright 2018-2018 adorsys GmbH & Co KG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,19 +15,29 @@ import java.util.Objects;
  */
 @ApiModel(description = "JSON body for a cross-border payment initation. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-06T12:02:27.187+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class PaymentInitiationCrossBorderBulkElementJson {
 
     @JsonProperty("instructedAmount")
     private Amount instructedAmount = null;
+
+
     @JsonProperty("creditorAccount")
     private Object creditorAccount = null;
+
+
     @JsonProperty("creditorAgent")
     private String creditorAgent = null;
+
+
     @JsonProperty("creditorName")
     private String creditorName = null;
+
+
     @JsonProperty("creditorAddress")
     private Address creditorAddress = null;
+
+
     @JsonProperty("remittanceInformationUnstructured")
     private String remittanceInformationUnstructured = null;
 
@@ -57,7 +51,7 @@ public class PaymentInitiationCrossBorderBulkElementJson {
      *
      * @return instructedAmount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public Amount getInstructedAmount() {
@@ -78,7 +72,7 @@ public class PaymentInitiationCrossBorderBulkElementJson {
      *
      * @return creditorAccount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public Object getCreditorAccount() {
@@ -99,7 +93,7 @@ public class PaymentInitiationCrossBorderBulkElementJson {
      *
      * @return creditorAgent
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getCreditorAgent() {
         return creditorAgent;
     }
@@ -118,7 +112,7 @@ public class PaymentInitiationCrossBorderBulkElementJson {
      *
      * @return creditorName
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public String getCreditorName() {
@@ -139,7 +133,7 @@ public class PaymentInitiationCrossBorderBulkElementJson {
      *
      * @return creditorAddress
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public Address getCreditorAddress() {
         return creditorAddress;
@@ -159,8 +153,7 @@ public class PaymentInitiationCrossBorderBulkElementJson {
      *
      * @return remittanceInformationUnstructured
      **/
-    @ApiModelProperty(value = "")
-
+    @ApiModelProperty
     @Size(max = 140)
     public String getRemittanceInformationUnstructured() {
         return remittanceInformationUnstructured;
@@ -169,6 +162,7 @@ public class PaymentInitiationCrossBorderBulkElementJson {
     public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
         this.remittanceInformationUnstructured = remittanceInformationUnstructured;
     }
+
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -179,19 +173,17 @@ public class PaymentInitiationCrossBorderBulkElementJson {
             return false;
         }
         PaymentInitiationCrossBorderBulkElementJson paymentInitiationCrossBorderBulkElementJson = (PaymentInitiationCrossBorderBulkElementJson) o;
-        return Objects.equals(this.instructedAmount, paymentInitiationCrossBorderBulkElementJson.instructedAmount)
-            && Objects.equals(this.creditorAccount, paymentInitiationCrossBorderBulkElementJson.creditorAccount)
-            && Objects.equals(this.creditorAgent, paymentInitiationCrossBorderBulkElementJson.creditorAgent)
-            && Objects.equals(this.creditorName, paymentInitiationCrossBorderBulkElementJson.creditorName)
-            && Objects.equals(this.creditorAddress, paymentInitiationCrossBorderBulkElementJson.creditorAddress)
-            && Objects.equals(this.remittanceInformationUnstructured,
-            paymentInitiationCrossBorderBulkElementJson.remittanceInformationUnstructured);
+        return Objects.equals(this.instructedAmount, paymentInitiationCrossBorderBulkElementJson.instructedAmount) &&
+            Objects.equals(this.creditorAccount, paymentInitiationCrossBorderBulkElementJson.creditorAccount) &&
+            Objects.equals(this.creditorAgent, paymentInitiationCrossBorderBulkElementJson.creditorAgent) &&
+            Objects.equals(this.creditorName, paymentInitiationCrossBorderBulkElementJson.creditorName) &&
+            Objects.equals(this.creditorAddress, paymentInitiationCrossBorderBulkElementJson.creditorAddress) &&
+            Objects.equals(this.remittanceInformationUnstructured, paymentInitiationCrossBorderBulkElementJson.remittanceInformationUnstructured);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(instructedAmount, creditorAccount, creditorAgent, creditorName, creditorAddress,
-            remittanceInformationUnstructured);
+        return Objects.hash(instructedAmount, creditorAccount, creditorAgent, creditorName, creditorAddress, remittanceInformationUnstructured);
     }
 
     @Override
@@ -210,7 +202,8 @@ public class PaymentInitiationCrossBorderBulkElementJson {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

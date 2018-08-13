@@ -1,19 +1,3 @@
-/*
- * Copyright 2018-2018 adorsys GmbH & Co KG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,21 +15,33 @@ import java.util.Objects;
  */
 @ApiModel(description = "Body for a bulk TARGET-2 payment initation. ")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-06T12:02:27.187+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class PaymentInitiationTarget2BulkElementJson {
 
     @JsonProperty("endToEndIdentification")
     private String endToEndIdentification = null;
+
+
     @JsonProperty("instructedAmount")
     private Amount instructedAmount = null;
+
+
     @JsonProperty("creditorAccount")
     private Object creditorAccount = null;
+
+
     @JsonProperty("creditorAgent")
     private String creditorAgent = null;
+
+
     @JsonProperty("creditorName")
     private String creditorName = null;
+
+
     @JsonProperty("creditorAddress")
     private Address creditorAddress = null;
+
+
     @JsonProperty("remittanceInformationUnstructured")
     private String remittanceInformationUnstructured = null;
 
@@ -59,8 +55,7 @@ public class PaymentInitiationTarget2BulkElementJson {
      *
      * @return endToEndIdentification
      **/
-    @ApiModelProperty(value = "")
-
+    @ApiModelProperty
     @Size(max = 35)
     public String getEndToEndIdentification() {
         return endToEndIdentification;
@@ -80,7 +75,7 @@ public class PaymentInitiationTarget2BulkElementJson {
      *
      * @return instructedAmount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public Amount getInstructedAmount() {
@@ -101,7 +96,7 @@ public class PaymentInitiationTarget2BulkElementJson {
      *
      * @return creditorAccount
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public Object getCreditorAccount() {
@@ -122,7 +117,7 @@ public class PaymentInitiationTarget2BulkElementJson {
      *
      * @return creditorAgent
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getCreditorAgent() {
         return creditorAgent;
     }
@@ -141,7 +136,7 @@ public class PaymentInitiationTarget2BulkElementJson {
      *
      * @return creditorName
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public String getCreditorName() {
@@ -162,7 +157,7 @@ public class PaymentInitiationTarget2BulkElementJson {
      *
      * @return creditorAddress
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public Address getCreditorAddress() {
         return creditorAddress;
@@ -182,8 +177,7 @@ public class PaymentInitiationTarget2BulkElementJson {
      *
      * @return remittanceInformationUnstructured
      **/
-    @ApiModelProperty(value = "")
-
+    @ApiModelProperty
     @Size(max = 140)
     public String getRemittanceInformationUnstructured() {
         return remittanceInformationUnstructured;
@@ -192,6 +186,7 @@ public class PaymentInitiationTarget2BulkElementJson {
     public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
         this.remittanceInformationUnstructured = remittanceInformationUnstructured;
     }
+
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -202,19 +197,18 @@ public class PaymentInitiationTarget2BulkElementJson {
             return false;
         }
         PaymentInitiationTarget2BulkElementJson paymentInitiationTarget2BulkElementJson = (PaymentInitiationTarget2BulkElementJson) o;
-        return Objects.equals(this.endToEndIdentification, paymentInitiationTarget2BulkElementJson.endToEndIdentification)
-            && Objects.equals(this.instructedAmount, paymentInitiationTarget2BulkElementJson.instructedAmount)
-            && Objects.equals(this.creditorAccount, paymentInitiationTarget2BulkElementJson.creditorAccount)
-            && Objects.equals(this.creditorAgent, paymentInitiationTarget2BulkElementJson.creditorAgent)
-            && Objects.equals(this.creditorName, paymentInitiationTarget2BulkElementJson.creditorName)
-            && Objects.equals(this.creditorAddress, paymentInitiationTarget2BulkElementJson.creditorAddress) && Objects.equals(
-            this.remittanceInformationUnstructured, paymentInitiationTarget2BulkElementJson.remittanceInformationUnstructured);
+        return Objects.equals(this.endToEndIdentification, paymentInitiationTarget2BulkElementJson.endToEndIdentification) &&
+            Objects.equals(this.instructedAmount, paymentInitiationTarget2BulkElementJson.instructedAmount) &&
+            Objects.equals(this.creditorAccount, paymentInitiationTarget2BulkElementJson.creditorAccount) &&
+            Objects.equals(this.creditorAgent, paymentInitiationTarget2BulkElementJson.creditorAgent) &&
+            Objects.equals(this.creditorName, paymentInitiationTarget2BulkElementJson.creditorName) &&
+            Objects.equals(this.creditorAddress, paymentInitiationTarget2BulkElementJson.creditorAddress) &&
+            Objects.equals(this.remittanceInformationUnstructured, paymentInitiationTarget2BulkElementJson.remittanceInformationUnstructured);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(endToEndIdentification, instructedAmount, creditorAccount, creditorAgent, creditorName, creditorAddress,
-            remittanceInformationUnstructured);
+        return Objects.hash(endToEndIdentification, instructedAmount, creditorAccount, creditorAgent, creditorName, creditorAddress, remittanceInformationUnstructured);
     }
 
     @Override
@@ -234,7 +228,8 @@ public class PaymentInitiationTarget2BulkElementJson {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

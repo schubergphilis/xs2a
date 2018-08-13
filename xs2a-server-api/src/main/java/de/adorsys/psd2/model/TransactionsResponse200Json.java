@@ -1,19 +1,3 @@
-/*
- * Copyright 2018-2018 adorsys GmbH & Co KG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -30,15 +14,21 @@ import java.util.Objects;
  */
 @ApiModel(description = "Body of the JSON response for a successful read transaction list request.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-06T12:02:27.187+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class TransactionsResponse200Json {
 
     @JsonProperty("account")
     private Object account = null;
+
+
     @JsonProperty("transactions")
     private AccountReport transactions = null;
+
+
     @JsonProperty("balances")
     private BalanceList balances = null;
+
+
     @JsonProperty("_links")
     private Map _links = null;
 
@@ -52,7 +42,7 @@ public class TransactionsResponse200Json {
      *
      * @return account
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public Object getAccount() {
         return account;
     }
@@ -71,7 +61,7 @@ public class TransactionsResponse200Json {
      *
      * @return transactions
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public AccountReport getTransactions() {
         return transactions;
@@ -91,7 +81,7 @@ public class TransactionsResponse200Json {
      *
      * @return balances
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public BalanceList getBalances() {
         return balances;
@@ -111,7 +101,7 @@ public class TransactionsResponse200Json {
      *
      * @return _links
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public Map getLinks() {
         return _links;
@@ -120,6 +110,7 @@ public class TransactionsResponse200Json {
     public void setLinks(Map _links) {
         this._links = _links;
     }
+
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -130,10 +121,10 @@ public class TransactionsResponse200Json {
             return false;
         }
         TransactionsResponse200Json transactionsResponse200Json = (TransactionsResponse200Json) o;
-        return Objects.equals(this.account, transactionsResponse200Json.account)
-            && Objects.equals(this.transactions, transactionsResponse200Json.transactions)
-            && Objects.equals(this.balances, transactionsResponse200Json.balances)
-            && Objects.equals(this._links, transactionsResponse200Json._links);
+        return Objects.equals(this.account, transactionsResponse200Json.account) &&
+            Objects.equals(this.transactions, transactionsResponse200Json.transactions) &&
+            Objects.equals(this.balances, transactionsResponse200Json.balances) &&
+            Objects.equals(this._links, transactionsResponse200Json._links);
     }
 
     @Override
@@ -155,7 +146,8 @@ public class TransactionsResponse200Json {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

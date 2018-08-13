@@ -1,19 +1,3 @@
-/*
- * Copyright 2018-2018 adorsys GmbH & Co KG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,17 +12,25 @@ import java.util.Objects;
  * LinksAccountReport
  */
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-06T12:02:27.187+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class LinksAccountReport extends HashMap<String, String> {
 
     @JsonProperty("account")
     private String account = null;
+
+
     @JsonProperty("first")
     private String first = null;
+
+
     @JsonProperty("next")
     private String next = null;
+
+
     @JsonProperty("previous")
     private String previous = null;
+
+
     @JsonProperty("last")
     private String last = null;
 
@@ -52,7 +44,7 @@ public class LinksAccountReport extends HashMap<String, String> {
      *
      * @return account
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
 
     public String getAccount() {
@@ -73,7 +65,7 @@ public class LinksAccountReport extends HashMap<String, String> {
      *
      * @return first
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getFirst() {
         return first;
     }
@@ -92,7 +84,7 @@ public class LinksAccountReport extends HashMap<String, String> {
      *
      * @return next
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getNext() {
         return next;
     }
@@ -111,7 +103,7 @@ public class LinksAccountReport extends HashMap<String, String> {
      *
      * @return previous
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getPrevious() {
         return previous;
     }
@@ -130,7 +122,7 @@ public class LinksAccountReport extends HashMap<String, String> {
      *
      * @return last
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getLast() {
         return last;
     }
@@ -138,6 +130,7 @@ public class LinksAccountReport extends HashMap<String, String> {
     public void setLast(String last) {
         this.last = last;
     }
+
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -148,9 +141,12 @@ public class LinksAccountReport extends HashMap<String, String> {
             return false;
         }
         LinksAccountReport _linksAccountReport = (LinksAccountReport) o;
-        return Objects.equals(this.account, _linksAccountReport.account) && Objects.equals(this.first, _linksAccountReport.first)
-            && Objects.equals(this.next, _linksAccountReport.next) && Objects.equals(this.previous, _linksAccountReport.previous)
-            && Objects.equals(this.last, _linksAccountReport.last) && super.equals(o);
+        return Objects.equals(this.account, _linksAccountReport.account) &&
+            Objects.equals(this.first, _linksAccountReport.first) &&
+            Objects.equals(this.next, _linksAccountReport.next) &&
+            Objects.equals(this.previous, _linksAccountReport.previous) &&
+            Objects.equals(this.last, _linksAccountReport.last) &&
+            super.equals(o);
     }
 
     @Override
@@ -173,7 +169,8 @@ public class LinksAccountReport extends HashMap<String, String> {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

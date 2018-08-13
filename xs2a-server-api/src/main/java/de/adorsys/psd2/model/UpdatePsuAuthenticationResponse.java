@@ -1,19 +1,3 @@
-/*
- * Copyright 2018-2018 adorsys GmbH & Co KG
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,19 +15,29 @@ import java.util.Objects;
  */
 @ApiModel(description = "Body of the JSON response for a successful update PSU Authentication request.")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-06T12:02:27.187+02:00[Europe/Berlin]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class UpdatePsuAuthenticationResponse {
 
     @JsonProperty("chosenScaMethod")
     private ChosenScaMethod chosenScaMethod = null;
+
+
     @JsonProperty("challengeData")
     private ChallengeData challengeData = null;
+
+
     @JsonProperty("scaMethods")
     private ScaMethods scaMethods = null;
+
+
     @JsonProperty("_links")
     private Map _links = null;
+
+
     @JsonProperty("scaStatus")
     private ScaStatus scaStatus = null;
+
+
     @JsonProperty("psuMessage")
     private String psuMessage = null;
 
@@ -57,7 +51,7 @@ public class UpdatePsuAuthenticationResponse {
      *
      * @return chosenScaMethod
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public ChosenScaMethod getChosenScaMethod() {
         return chosenScaMethod;
@@ -77,7 +71,7 @@ public class UpdatePsuAuthenticationResponse {
      *
      * @return challengeData
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public ChallengeData getChallengeData() {
         return challengeData;
@@ -97,7 +91,7 @@ public class UpdatePsuAuthenticationResponse {
      *
      * @return scaMethods
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public ScaMethods getScaMethods() {
         return scaMethods;
@@ -117,7 +111,7 @@ public class UpdatePsuAuthenticationResponse {
      *
      * @return _links
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     @Valid
     public Map getLinks() {
         return _links;
@@ -137,7 +131,7 @@ public class UpdatePsuAuthenticationResponse {
      *
      * @return scaStatus
      **/
-    @ApiModelProperty(required = true, value = "")
+    @ApiModelProperty(required = true)
     @NotNull
     @Valid
     public ScaStatus getScaStatus() {
@@ -158,7 +152,7 @@ public class UpdatePsuAuthenticationResponse {
      *
      * @return psuMessage
      **/
-    @ApiModelProperty(value = "")
+    @ApiModelProperty
     public String getPsuMessage() {
         return psuMessage;
     }
@@ -166,6 +160,7 @@ public class UpdatePsuAuthenticationResponse {
     public void setPsuMessage(String psuMessage) {
         this.psuMessage = psuMessage;
     }
+
 
     @Override
     public boolean equals(java.lang.Object o) {
@@ -176,12 +171,12 @@ public class UpdatePsuAuthenticationResponse {
             return false;
         }
         UpdatePsuAuthenticationResponse updatePsuAuthenticationResponse = (UpdatePsuAuthenticationResponse) o;
-        return Objects.equals(this.chosenScaMethod, updatePsuAuthenticationResponse.chosenScaMethod)
-            && Objects.equals(this.challengeData, updatePsuAuthenticationResponse.challengeData)
-            && Objects.equals(this.scaMethods, updatePsuAuthenticationResponse.scaMethods)
-            && Objects.equals(this._links, updatePsuAuthenticationResponse._links)
-            && Objects.equals(this.scaStatus, updatePsuAuthenticationResponse.scaStatus)
-            && Objects.equals(this.psuMessage, updatePsuAuthenticationResponse.psuMessage);
+        return Objects.equals(this.chosenScaMethod, updatePsuAuthenticationResponse.chosenScaMethod) &&
+            Objects.equals(this.challengeData, updatePsuAuthenticationResponse.challengeData) &&
+            Objects.equals(this.scaMethods, updatePsuAuthenticationResponse.scaMethods) &&
+            Objects.equals(this._links, updatePsuAuthenticationResponse._links) &&
+            Objects.equals(this.scaStatus, updatePsuAuthenticationResponse.scaStatus) &&
+            Objects.equals(this.psuMessage, updatePsuAuthenticationResponse.psuMessage);
     }
 
     @Override
@@ -205,7 +200,8 @@ public class UpdatePsuAuthenticationResponse {
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
      */
     private String toIndentedString(java.lang.Object o) {
         if (o == null) {

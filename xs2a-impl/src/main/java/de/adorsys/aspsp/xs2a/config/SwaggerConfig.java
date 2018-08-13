@@ -16,11 +16,13 @@
 
 package de.adorsys.aspsp.xs2a.config;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.*;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
@@ -46,12 +48,17 @@ public class SwaggerConfig {
         return new Docket(DocumentationType.SWAGGER_2)
                .apiInfo(getApiInfo())
                .select()
-               .apis(RequestHandlerSelectors.basePackage("de.adorsys.aspsp.xs2a.web"))
+               .apis(apis())
                .paths(Predicates.not(PathSelectors.regex("/error.*?")))
                .paths(Predicates.not(PathSelectors.regex("/connect.*")))
                .paths(Predicates.not(PathSelectors.regex("/management.*")))
                .build()
             .securitySchemes(singletonList(securitySchema()));
+    }
+
+    private Predicate<RequestHandler> apis() {
+        return Predicates.and(RequestHandlerSelectors.basePackage("de.adorsys.aspsp.xs2a.web"),
+            RequestHandlerSelectors.basePackage("de.adorsys.aspsp.xs2a.web12"));
     }
 
     private ApiInfo getApiInfo() {

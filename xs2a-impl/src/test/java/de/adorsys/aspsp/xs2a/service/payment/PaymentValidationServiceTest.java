@@ -16,15 +16,16 @@
 
 package de.adorsys.aspsp.xs2a.service.payment;
 
-import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
-import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.code.BICFI;
 import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.AccountService;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.AccountDetails;
+import de.adorsys.psd2.model.AccountReferenceIban;
+import de.adorsys.psd2.model.Amount;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -204,8 +205,8 @@ public class PaymentValidationServiceTest {
     private PeriodicPayment getPeriodicPayment(String iban, String amountToPay, LocalDate execution, LocalDateTime executionTime, LocalDate start, LocalDate end) {
         PeriodicPayment payment = new PeriodicPayment();
         Amount amount = new Amount();
-        amount.setCurrency(CURRENCY);
-        amount.setContent(amountToPay);
+        amount.setCurrency(CURRENCY.getCurrencyCode());
+        amount.setAmount(amountToPay);
         BICFI bicfi = new BICFI();
         bicfi.setCode("vnldkvn");
         payment.setInstructedAmount(amount);
@@ -229,8 +230,8 @@ public class PaymentValidationServiceTest {
     private SinglePayments getPayment(String iban, String amountToPay, LocalDate execution, LocalDateTime executionTime) {
         SinglePayments payment = new SinglePayments();
         Amount amount = new Amount();
-        amount.setCurrency(CURRENCY);
-        amount.setContent(amountToPay);
+        amount.setCurrency(CURRENCY.getCurrencyCode());
+        amount.setAmount(amountToPay);
         BICFI bicfi = new BICFI();
         bicfi.setCode("vnldkvn");
         payment.setInstructedAmount(amount);
@@ -248,13 +249,13 @@ public class PaymentValidationServiceTest {
     }
 
     private AccountDetails getDetails(String iban) {
-        return new AccountDetails("123", iban, null, null, null, null, CURRENCY, null, null, null, null, null);
+        return new AccountDetails().resourceId("123").iban(iban).currency(CURRENCY.getCurrencyCode());
     }
 
     private AccountReference getReference(String iban) {
-        AccountReference reference = new AccountReference();
+        AccountReferenceIban reference = new AccountReferenceIban();
         reference.setIban(iban);
-        reference.setCurrency(CURRENCY);
+        reference.setCurrency(CURRENCY.getCurrencyCode());
 
         return reference;
     }

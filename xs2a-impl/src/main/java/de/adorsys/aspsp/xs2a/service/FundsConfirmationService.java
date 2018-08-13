@@ -16,19 +16,13 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.domain.Amount;
-import de.adorsys.aspsp.xs2a.domain.BalanceType;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.Balance;
-import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
-import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,43 +37,43 @@ public class FundsConfirmationService {
      * @param request Contains the requested balanceAmount in order to comparing with available balanceAmount on account
      * @return Response with result 'true' if there are enough funds on the account, 'false' if not
      */
-    public ResponseObject<FundsConfirmationResponse> fundsConfirmation(FundsConfirmationRequest request) {
+    public ResponseObject<InlineResponse200> fundsConfirmation(ConfirmationOfFunds request) {
         Boolean fundsAvailable = Optional.ofNullable(request)
-                                     .map(req -> isFundsAvailable(req.getPsuAccount(), req.getInstructedAmount()))
-                                     .orElse(false);
+            .map(req -> isFundsAvailable((AccountReference) req.getAccount(), req.getInstructedAmount()))
+            .orElse(false);
 
-        return ResponseObject.<FundsConfirmationResponse>builder()
-                   .body(new FundsConfirmationResponse(fundsAvailable)).build();
+        return ResponseObject.<InlineResponse200>builder()
+            .body(new InlineResponse200().fundsAvailable(fundsAvailable)).build();
     }
 
     private boolean isFundsAvailable(AccountReference accountReference, Amount requiredAmount) {
         List<Balance> balances = getAccountBalancesByAccountReference(accountReference);
 
         return balances.stream()
-                   .filter(bal -> BalanceType.INTERIM_AVAILABLE == bal.getBalanceType())
-                   .findFirst()
-                   .map(Balance::getBalanceAmount)
-                   .map(am -> isRequiredAmountEnough(requiredAmount, am))
-                   .orElse(false);
+            .filter(bal -> BalanceType.INTERIMAVAILABLE == bal.getBalanceType())
+            .findFirst()
+            .map(Balance::getBalanceAmount)
+            .map(am -> isRequiredAmountEnough(requiredAmount, am))
+            .orElse(false);
     }
 
     private boolean isRequiredAmountEnough(Amount requiredAmount, Amount availableAmount) {
-        return convertToBigDecimal(availableAmount.getContent()).compareTo(convertToBigDecimal(requiredAmount.getContent())) >= 0 &&
-                   availableAmount.getCurrency() == requiredAmount.getCurrency();
+        return convertToBigDecimal(availableAmount.getAmount()).compareTo(convertToBigDecimal(requiredAmount.getAmount())) >= 0 &&
+            availableAmount.getCurrency() == requiredAmount.getCurrency();
     }
 
     private BigDecimal convertToBigDecimal(String content) {
         return Optional.ofNullable(content)
-                   .map(BigDecimal::new)
-                   .orElse(BigDecimal.ZERO);
+            .map(BigDecimal::new)
+            .orElse(BigDecimal.ZERO);
     }
 
-    private List<Balance> getAccountBalancesByAccountReference(AccountReference reference) {
+    private BalanceList getAccountBalancesByAccountReference(AccountReference reference) {
         return Optional.ofNullable(reference)
-                   .map(accountService::getAccountDetailsByAccountReference)
-                   .filter(Optional::isPresent)
-                   .map(Optional::get)
-                   .map(AccountDetails::getBalances)
-                   .orElse(Collections.emptyList());
+            .map(accountService::getAccountDetailsByAccountReference)
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(AccountDetails::getBalances)
+            .orElse(new BalanceList());
     }
 }

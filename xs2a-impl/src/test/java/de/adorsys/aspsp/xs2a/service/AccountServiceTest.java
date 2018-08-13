@@ -18,9 +18,6 @@ package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.*;
-import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReport;
 import de.adorsys.aspsp.xs2a.domain.consent.AccountAccess;
 import de.adorsys.aspsp.xs2a.domain.consent.AccountAccessType;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
@@ -33,6 +30,12 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.*;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
+import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.psd2.model.*;
+import de.adorsys.psd2.model.Amount;
+import de.adorsys.psd2.model.Balance;
+import de.adorsys.psd2.model.TransactionStatus;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -95,10 +98,10 @@ public class AccountServiceTest {
         //getAccountDetailsByAccountId_WoB_Success
         when(accountSpi.readAccountDetails(ACCOUNT_ID, ASPSP_CONSENT_DATA)).thenReturn(new SpiResponse<>(getSpiAccountDetails(ACCOUNT_ID, IBAN), ASPSP_CONSENT_DATA));
         when(consentService.getValidatedConsent(CONSENT_ID_WOB)).thenReturn(getAccessResponse(getReferences(IBAN, IBAN_1), null, null, false, false));
-        when(consentService.isValidAccountByAccess(IBAN, CURRENCY, getReferences(IBAN, IBAN_1))).thenReturn(true);
+        when(consentService.isValidAccountByAccess(IBAN, CURRENCY.getCurrencyCode(), getReferences(IBAN, IBAN_1))).thenReturn(true);
         //getAccountDetailsByAccountId_WB_Success
         when(consentService.getValidatedConsent(CONSENT_ID_WB)).thenReturn(getAccessResponse(getReferences(IBAN, IBAN_1), getReferences(IBAN, IBAN_1), null, false, false));
-        when(consentService.isValidAccountByAccess(IBAN, CURRENCY, getReferences(IBAN, IBAN_1))).thenReturn(true);
+        when(consentService.isValidAccountByAccess(IBAN, CURRENCY.getCurrencyCode(), getReferences(IBAN, IBAN_1))).thenReturn(true);
         //getAccountDetailsByAccountId_Failure_wrongAccount
         when(accountSpi.readAccountDetails(WRONG_ACCOUNT_ID, ASPSP_CONSENT_DATA)).thenReturn(new SpiResponse<>(null, ASPSP_CONSENT_DATA));
         //getAccountDetailsByAccountId_Failure_wrongConsent
@@ -124,7 +127,7 @@ public class AccountServiceTest {
         ResponseObject<AccountDetails> response = accountService.getAccountDetails(CONSENT_ID_WOB, ACCOUNT_ID, false);
 
         //Then:
-        assertThat(response.getBody().getId()).isEqualTo(ACCOUNT_ID);
+        assertThat(response.getBody().getResourceId()).isEqualTo(ACCOUNT_ID);
         assertThat(response.getBody().getBalances()).isEqualTo(null);
     }
 
@@ -134,7 +137,7 @@ public class AccountServiceTest {
         ResponseObject<AccountDetails> response = accountService.getAccountDetails(CONSENT_ID_WB, ACCOUNT_ID, true);
 
         //Then:
-        assertThat(response.getBody().getId()).isEqualTo(ACCOUNT_ID);
+        assertThat(response.getBody().getResourceId()).isEqualTo(ACCOUNT_ID);
         assertThat(response.getBody().getBalances()).isEqualTo(getBalancesList());
     }
 
@@ -167,12 +170,12 @@ public class AccountServiceTest {
         ResponseObject<Map<String, List<AccountDetails>>> response = accountService.getAccountDetailsList(CONSENT_ID_WOB, false);
 
         //Then:
-        assertThat(response.getBody().get("accountList").get(0).getId()).isEqualTo(ACCOUNT_ID);
-        assertThat(response.getBody().get("accountList").get(1).getId()).isEqualTo(ACCOUNT_ID_1);
+        assertThat(response.getBody().get("accountList").get(0).getResourceId()).isEqualTo(ACCOUNT_ID);
+        assertThat(response.getBody().get("accountList").get(1).getResourceId()).isEqualTo(ACCOUNT_ID_1);
         assertThat(response.getBody().get("accountList").get(0).getBalances()).isEqualTo(null);
         assertThat(response.getBody().get("accountList").get(1).getBalances()).isEqualTo(null);
-        assertThat(response.getBody().get("accountList").get(0).getLinks()).isEqualTo(new Links());
-        assertThat(response.getBody().get("accountList").get(1).getLinks()).isEqualTo(new Links());
+        assertThat(response.getBody().get("accountList").get(0).getLinks()).isEqualTo(new HashMap<>());
+        assertThat(response.getBody().get("accountList").get(1).getLinks()).isEqualTo(new HashMap());
     }
 
     @Test
@@ -181,8 +184,8 @@ public class AccountServiceTest {
         ResponseObject<Map<String, List<AccountDetails>>> response = accountService.getAccountDetailsList(CONSENT_ID_WB, true);
 
         //Then:
-        assertThat(response.getBody().get("accountList").get(0).getId()).isEqualTo(ACCOUNT_ID);
-        assertThat(response.getBody().get("accountList").get(1).getId()).isEqualTo(ACCOUNT_ID_1);
+        assertThat(response.getBody().get("accountList").get(0).getResourceId()).isEqualTo(ACCOUNT_ID);
+        assertThat(response.getBody().get("accountList").get(1).getResourceId()).isEqualTo(ACCOUNT_ID_1);
         assertThat(response.getBody().get("accountList").get(0).getBalances()).isEqualTo(getBalancesList());
         assertThat(response.getBody().get("accountList").get(1).getBalances()).isEqualTo(getBalancesList());
         assertThat(response.getBody().get("accountList").get(0).getLinks()).isEqualTo(getAccountDetails(ACCOUNT_ID, IBAN).getLinks());
@@ -251,7 +254,7 @@ public class AccountServiceTest {
 
         //Then:
         assertThat(response.getError()).isEqualTo(null);
-        assertThat(response.getBody().getBooked()[0].getTransactionId()).isEqualTo(getTransaction().getTransactionId());
+        assertThat(response.getBody().getBooked().get(0).getTransactionId()).isEqualTo(getTransaction().getTransactionId());
     }
 
     @Test
@@ -282,7 +285,7 @@ public class AccountServiceTest {
 
         //Then:
         assertThat(response.getError()).isEqualTo(null);
-        assertThat(response.getBody().getBooked()[0].getTransactionId()).isEqualTo(getTransaction().getTransactionId());
+        assertThat(response.getBody().getBooked().get(0).getTransactionId()).isEqualTo(getTransaction().getTransactionId());
     }
 
     @Test
@@ -318,40 +321,35 @@ public class AccountServiceTest {
 
     private AccountReference getAccountReference() {
         AccountDetails details = getAccountDetails(ACCOUNT_ID, IBAN);
-        AccountReference rf = new AccountReference();
-        rf.setCurrency(details.getCurrency());
-        rf.setIban(details.getIban());
-        rf.setPan(details.getPan());
-        rf.setMaskedPan(details.getMaskedPan());
-        rf.setMsisdn(details.getMsisdn());
-        rf.setBban(details.getBban());
-        return rf;
+
+        if (StringUtils.isNotEmpty(details.getIban())) {
+            return new AccountReferenceIban().iban(details.getIban()).currency(details.getCurrency());
+        } else if (StringUtils.isNotEmpty(details.getBban())) {
+            return new AccountReferenceBban().bban(details.getBban()).currency(details.getCurrency());
+        } else if (StringUtils.isNotEmpty(details.getMsisdn())) {
+            return new AccountReferencePan().pan(details.getMsisdn()).currency(details.getCurrency());
+        }
+        return null;
     }
 
     private AccountDetails getAccountDetails(String accountId, String iban) {
-        return new AccountDetails(
-            accountId,
-            iban,
-            "zz22",
-            null,
-            null,
-            null,
-            CURRENCY,
-            "David Muller",
-            null,
-            null,
-            null,
-            getBalancesList());
+        return new AccountDetails().resourceId(accountId)
+            .iban(iban)
+            .currency(CURRENCY.getCurrencyCode())
+            .balances(getBalancesList())
+            .name("David Muller");
     }
 
-    private List<Balance> getBalancesList() {
-        Balance balances = new Balance();
+    private BalanceList getBalancesList() {
+        BalanceList balances = new BalanceList();
         Balance sb = new Balance();
         Amount amount = new Amount();
-        amount.setCurrency(CURRENCY);
-        amount.setContent("1000");
+        amount.setCurrency(CURRENCY.getCurrencyCode());
+        amount.setAmount("1000");
         sb.setBalanceAmount(amount);
-        return Collections.singletonList(sb);
+
+        balances.add(sb);
+        return balances;
     }
 
     private SpiAccountDetails getSpiAccountDetails(String accountId, String iban) {
@@ -374,7 +372,7 @@ public class AccountServiceTest {
 
     private List<SpiAccountBalance> getSpiBalances() {
         SpiAccountBalance sb = new SpiAccountBalance();
-        SpiAmount amount = new SpiAmount(CURRENCY, BigDecimal.valueOf(1000));
+        SpiAmount amount = new SpiAmount(CURRENCY.getCurrencyCode(), BigDecimal.valueOf(1000));
         sb.setSpiBalanceAmount(amount);
         sb.setSpiBalanceType(SpiBalanceType.INTERIM_AVAILABLE);
         return Collections.singletonList(sb);
@@ -385,21 +383,23 @@ public class AccountServiceTest {
         transaction.setTransactionId(TRANSACTION_ID);
         transaction.setBookingDate(DATE);
         transaction.setValueDate(DATE);
-        transaction.setCreditorAccount(getAccountReference());
+        //TODO transaction.setCreditorAccount(getAccountReference());
         Amount amount = new Amount();
-        amount.setContent("1000");
-        amount.setCurrency(CURRENCY);
-        transaction.setAmount(amount);
+        amount.setAmount("1000");
+        amount.setCurrency(CURRENCY.getCurrencyCode());
+        //TODO  transaction.setAmount(amount);
         return transaction;
     }
 
     private SpiTransaction getSpiTransaction() {
         Transactions t = getTransaction();
-        return new SpiTransaction(t.getTransactionId(), null, null, null, t.getBookingDate(),
-            t.getValueDate(), new SpiAmount(t.getAmount().getCurrency(), new BigDecimal(t.getAmount().getContent())), null,
-            mapToSpiAccountRef(t.getCreditorAccount()), null, null,
-            mapToSpiAccountRef(t.getDebtorAccount()), null, null,
-            null, null, null);
+        return null;
+        //TODO payment 1.2 spec refactoring needed
+//        return new SpiTransaction(t.getTransactionId(), null, null, null, t.getBookingDate(),
+//            t.getValueDate(), new SpiAmount(t.getAmount().getCurrency().getCurrencyCode(), new BigDecimal(t.getAmount().getContent())), null,
+//            mapToSpiAccountRef(t.getCreditorAccount()), null, null,
+//            mapToSpiAccountRef(t.getDebtorAccount()), null, null,
+//            null, null, null);
     }
 
     private SpiAccountReference mapToSpiAccountRef(AccountReference reference) {
@@ -412,13 +412,13 @@ public class AccountServiceTest {
     }
 
     private AccountReference getReference(String iban) {
-        AccountReference reference = new AccountReference();
+        AccountReferenceIban reference = new AccountReferenceIban();
         reference.setIban(iban);
-        reference.setCurrency(iban.equals(IBAN) ? CURRENCY : CURRENCY_1);
+        reference.setCurrency(iban.equals(IBAN) ? CURRENCY.getCurrencyCode() : CURRENCY_1.getCurrencyCode());
         return reference;
     }
 
     private AccountReport getReport() {
-        return new AccountReport(new Transactions[]{getTransaction()}, new Transactions[]{});
+        return new AccountReport().booked(new TransactionList()).pending(new TransactionList());
     }
 }
