@@ -27,12 +27,8 @@ import springfox.documentation.RequestHandler;
 import springfox.documentation.builders.*;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spi.service.ApiListingBuilderPlugin;
 import springfox.documentation.spi.service.ApiListingScannerPlugin;
-import springfox.documentation.spi.service.DefaultsProviderPlugin;
-import springfox.documentation.spi.service.contexts.ApiListingContext;
 import springfox.documentation.spi.service.contexts.DocumentationContext;
-import springfox.documentation.spi.service.contexts.DocumentationContextBuilder;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.InMemorySwaggerResourcesProvider;
 import springfox.documentation.swagger.web.SecurityConfiguration;
@@ -41,6 +37,8 @@ import springfox.documentation.swagger.web.SwaggerResourcesProvider;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -72,14 +70,14 @@ public class SwaggerConfig {
     @Bean
     public SwaggerResourcesProvider swaggerResourcesProvider(InMemorySwaggerResourcesProvider defaultResourcesProvider) {
         return () -> {
-            SwaggerResource wsResource = new SwaggerResource();
-            wsResource.setName("origin xs2a api");
-            wsResource.setSwaggerVersion("2.0");
-            wsResource.setLocation("/psd2-api-1.2-2018-07-26.yaml");
+            SwaggerResource swaggerResource = new SwaggerResource();
+            swaggerResource.setName("XS2A API");
+            swaggerResource.setSwaggerVersion("2.0");
+            swaggerResource.setLocation("/psd2-api-1.2-2018-07-26.yaml");
 
-            List<SwaggerResource> resources = new ArrayList<>(defaultResourcesProvider.get());
-            resources.add(wsResource);
-            return resources;
+//            List<SwaggerResource> resources = new ArrayList<>(defaultResourcesProvider.get());
+//            resources.add(swaggerResource);
+            return Arrays.asList(swaggerResource);
         };
     }
 
@@ -126,5 +124,6 @@ public class SwaggerConfig {
             .useBasicAuthenticationWithAccessCodeGrant(false)
             .build();
     }
+
 
 }
