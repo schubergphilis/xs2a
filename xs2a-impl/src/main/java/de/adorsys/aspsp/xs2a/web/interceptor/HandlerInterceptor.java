@@ -54,7 +54,17 @@ public class HandlerInterceptor extends HandlerInterceptorAdapter {
             MessageErrorCode messageCode = getActualMessageErrorCode(firstError.getKey());
 
             log.debug("Handled error {}", messageCode.name() + ": " + firstError.getValue());
-            response.sendError(messageCode.getCode(), messageCode.name() + ": " + firstError.getValue());
+            response.resetBuffer();
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setHeader("Content-Type", "application/json");
+            response.getWriter().write("{\n" +
+                                           "    \"transactionStatus\": \"RJCT\",\n" +
+                                           "    \"tppMessage\": {\n" +
+                                           "        \"category\": \"ERROR\",\n" +
+                                           "        \"code\": \"FORMAT_ERROR\"\n" +
+                                           "    }\n" +
+                                           "}");
+            response.flushBuffer();
             return false;
         }
     }
