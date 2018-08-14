@@ -63,22 +63,16 @@ public class SinglePaymentSteps {
     @When("^PSU sends the single payment initiating request$")
     public void sendPaymentInitiatingRequest() {
         HttpEntity<SinglePayment> entity = getSinglePaymentsHttpEntity();
-//        ResponseEntity<PaymentInitialisationResponse> response =
 
-            try {
-                restTemplate.exchange(
-                    context.getBaseUrl() + "/payments/" + context.getPaymentProduct(),
-                    HttpMethod.POST,
-                    entity,
-                    PaymentInitialisationResponse.class);
-            } catch (HttpClientErrorException hce) {
-                ResponseEntity<PaymentInitialisationResponse> actualResponse = new ResponseEntity<>(
-                    hce.getStatusCode());
-                context.setActualResponse(actualResponse);
+        ResponseEntity<PaymentInitialisationResponse> response = restTemplate.exchange(
+            context.getBaseUrl() + "/payments/" + context.getPaymentProduct(),
+            HttpMethod.POST,
+            entity,
+            PaymentInitialisationResponse.class);
 
-            }
+        context.setActualResponse(response);
+
     }
-        //context.setActualResponse(response);
 
     @Then("^a successful response code and the appropriate single payment response data$")
     public void checkResponseCode() {

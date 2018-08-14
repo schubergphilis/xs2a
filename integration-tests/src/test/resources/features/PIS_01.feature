@@ -78,9 +78,9 @@ Feature: Payment Initiation Service
         Then an error response code is displayed the appropriate error response
         Examples:
             | payment-product       | recurring-payment                           |
-            #| sepa-credit-transfers | recPayInit-incorrect-syntax.json            |
+            | sepa-credit-transfers | recPayInit-incorrect-syntax.json            |
             | sepa-credit-trans     | recPayInit-incorrect-payment-product.json   |
-            #| sepa-credit-transfers | recPayInit-no-frequency.json                |
+            | sepa-credit-transfers | recPayInit-no-frequency.json                |
             #| sepa-credit-transfers | recPayInit-not-defined-frequency.json       |
             | sepa-credit-transfers | recPayInit-no-request-id.json               |
             | sepa-credit-transfers | recPayInit-no-ip-address.json               |
