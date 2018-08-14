@@ -16,15 +16,15 @@
 
 package de.adorsys.aspsp.xs2a.service.consent.ais;
 
-import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.config.rest.consent.AisConsentRemoteUrls;
+import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
 import de.adorsys.aspsp.xs2a.service.mapper.ConsentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
+import de.adorsys.psd2.model.Consents;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class AisConsentService {
      * @param tppId   String representation of TPP`s identifier from TPP Certificate
      * @return String representation of identifier of stored consent
      */
-    public String createConsent(CreateConsentReq request, String psuId, String tppId) {
+    public String createConsent(Consents request, String psuId, String tppId) {
         return consentRestTemplate.postForEntity(remoteAisConsentUrls.createAisConsent(), consentMapper.mapToAisConsentRequest(request, psuId, tppId), String.class).getBody();
     }
 
@@ -90,8 +90,8 @@ public class AisConsentService {
      */
     public void consentActionLog(String tppId, String consentId, boolean withBalance, TypeAccess access, ResponseObject response) {
         ActionStatus status = response.hasError()
-                                  ? consentMapper.mapActionStatusError(response.getError().getTppMessage().getCode(), withBalance, access)
-                                  : ActionStatus.SUCCESS;
+            ? consentMapper.mapActionStatusError(response.getError().getTppMessage().getCode(), withBalance, access)
+            : ActionStatus.SUCCESS;
 
         consentRestTemplate.postForEntity(remoteAisConsentUrls.consentActionLog(), new ConsentActionRequest(tppId, consentId, status), Void.class);
     }

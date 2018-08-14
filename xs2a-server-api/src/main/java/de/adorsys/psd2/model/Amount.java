@@ -17,7 +17,6 @@ public class Amount {
     @JsonProperty("currency")
     private String currency = null;
 
-
     @JsonProperty("amount")
     private String amount = null;
 
@@ -62,7 +61,6 @@ public class Amount {
     public void setAmount(String amount) {
         this.amount = amount;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

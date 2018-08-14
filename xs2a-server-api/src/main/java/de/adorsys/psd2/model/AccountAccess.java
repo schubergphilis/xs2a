@@ -24,17 +24,17 @@ public class AccountAccess {
     @Valid
     private List<Object> accounts = null;
 
-
     @JsonProperty("balances")
     @Valid
     private List<Object> balances = null;
 
-
     @JsonProperty("transactions")
     @Valid
     private List<Object> transactions = null;
+
     @JsonProperty("availableAccounts")
     private AvailableAccountsEnum availableAccounts = null;
+
     @JsonProperty("allPsd2")
     private AllPsd2Enum allPsd2 = null;
 

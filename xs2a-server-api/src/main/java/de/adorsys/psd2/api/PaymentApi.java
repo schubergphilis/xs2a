@@ -203,7 +203,6 @@ public interface PaymentApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-
     @ApiOperation(value = "Get Payment Information", nickname = "getPaymentInformation", notes = "Returns the content of a payment object", response = Object.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Payment Initiation Service (PIS)",})
     @ApiResponses(value = {
@@ -249,7 +248,6 @@ public interface PaymentApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Get Payment Initiation Authorisation Sub-Resources Request", nickname = "getPaymentInitiationAuthorisation", notes = "Read a list of all authorisation subresources IDs which have been created.  This function returns an array of hyperlinks to all generated authorisation sub-resources. ", response = Authorisations.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Payment Initiation Service (PIS)", "Common AIS and PIS Services",})
@@ -343,7 +341,6 @@ public interface PaymentApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-
     @ApiOperation(value = "Read the SCA Status of the payment authorisation", nickname = "getPaymentInitiationScaStatus", notes = "This method returns the SCA status of a payment initiation's authorisation sub-resource. ", response = ScaStatusResponse.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Payment Initiation Service (PIS)", "Common AIS and PIS Services",})
     @ApiResponses(value = {
@@ -390,7 +387,6 @@ public interface PaymentApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Payment initiation status request", nickname = "getPaymentInitiationStatus", notes = "Check the transaction status of a payment initiation.", response = PaymentInitiationStatusResponse200Json.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Payment Initiation Service (PIS)",})
@@ -487,7 +483,6 @@ public interface PaymentApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Start the authorisation process for the cancellation of the addressed payment", nickname = "startPaymentInitiationCancellationAuthorisation", notes = "Creates an authorisation sub-resource and start the authorisation process of the cancellation of the addressed payment.  The message might in addition transmit authentication and authorisation related data.  This method is iterated n times for a n times SCA authorisation in a  corporate context, each creating an own authorisation sub-endpoint for  the corresponding PSU authorising the cancellation-authorisation.  The ASPSP might make the usage of this access method unnecessary in case  of only one SCA process needed, since the related authorisation resource  might be automatically created by the ASPSP after the submission of the  payment data with the first POST payments/{payment-product} call.  The start authorisation process is a process which is needed for creating a new authorisation  or cancellation sub-resource.   This applies in the following scenarios:    * The ASPSP has indicated with an 'startAuthorisation' hyperlink in the preceeding Payment      Initiation Response that an explicit start of the authorisation process is needed by the TPP.      The 'startAuthorisation' hyperlink can transport more information about data which needs to be      uploaded by using the extended forms.     * 'startAuthorisationWithPsuIdentfication',      * 'startAuthorisationWithPsuAuthentication'     * 'startAuthorisationWithAuthentciationMethodSelection'    * The related payment initiation cannot yet be executed since a multilevel SCA is mandated.   * The ASPSP has indicated with an 'startAuthorisation' hyperlink in the preceeding      Payment Cancellation Response that an explicit start of the authorisation process is needed by the TPP.      The 'startAuthorisation' hyperlink can transport more information about data which needs to be uploaded      by using the extended forms as indicated above.   * The related payment cancellation request cannot be applied yet since a multilevel SCA is mandate for      executing the cancellation.   * The signing basket needs to be authorised yet. ", response = StartScaprocessResponse.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Payment Initiation Service (PIS)", "Common AIS and PIS Services",})
@@ -591,7 +586,6 @@ public interface PaymentApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Update PSU data for payment initiation", nickname = "updatePaymentPsuData", notes = "This methods updates PSU data on the authorisation resource if needed.  It may authorise a payment within the Embedded SCA Approach where needed.  Independently from the SCA Approach it supports e.g. the selection of  the authentication method and a non-SCA PSU authentication.  There are several possible Update PSU Data requests in the context of payment initiation services needed,  which depends on the SCA approach:  * Redirect SCA Approach:   A specific Update PSU Data Request is applicable for      * the selection of authentication methods, before choosing the actual SCA approach. * Decoupled SCA Approach:   A specific Update PSU Data Request is only applicable for   * adding the PSU Identification, if not provided yet in the Payment Initiation Request or the Account Information Consent Request, or if no OAuth2 access token is used, or   * the selection of authentication methods. * Embedded SCA Approach:    The Update PSU Data Request might be used    * to add credentials as a first factor authentication data of the PSU and   * to select the authentication method and   * transaction authorisation.  The SCA Approach might depend on the chosen SCA method.  For that reason, the following possible Update PSU Data request can apply to all SCA approaches:  * Select an SCA method in case of several SCA methods are available for the customer.  There are the following request types on this access path:   * Update PSU Identification   * Update PSU Authentication   * Select PSU Autorization Method      WARNING: This method need a reduced header,      therefore many optional elements are not present.      Maybe in a later version the access path will change.   * Transaction Authorisation     WARNING: This method need a reduced header,      therefore many optional elements are not present.      Maybe in a later version the access path will change. ", response = Object.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Payment Initiation Service (PIS)", "Common AIS and PIS Services",})

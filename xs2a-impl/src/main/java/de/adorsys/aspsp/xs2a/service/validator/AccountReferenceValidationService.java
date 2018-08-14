@@ -1,13 +1,12 @@
 package de.adorsys.aspsp.xs2a.service.validator;
 
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
-import de.adorsys.psd2.custom.AccountReference;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +22,7 @@ public class AccountReferenceValidationService {
 
     private final AspspProfileService profileService;
 
-    public Optional<MessageError> validateAccountReference(AccountReference accountReference) {
+    public Optional<MessageError> validateAccountReference(Object accountReference) {
         List<SupportedAccountReferenceField> supportedFields = profileService.getSupportedAccountReferenceFields();
 
         boolean isValidAccountReference = isValidAccountReference(accountReference, supportedFields);
@@ -33,7 +32,7 @@ public class AccountReferenceValidationService {
             : Optional.empty();
     }
 
-    public Optional<MessageError> validateAccountReferences(Set<AccountReference> references) {
+    public Optional<MessageError> validateAccountReferences(Set<Object> references) {
         List<SupportedAccountReferenceField> supportedFields = profileService.getSupportedAccountReferenceFields();
 
         boolean isInvalidReferenceSet = references.stream()
@@ -45,7 +44,7 @@ public class AccountReferenceValidationService {
             : Optional.empty();
     }
 
-    private boolean isValidAccountReference(AccountReference reference, List<SupportedAccountReferenceField> supportedFields) {
+    private boolean isValidAccountReference(Object reference, List<SupportedAccountReferenceField> supportedFields) {
         List<Boolean> list = supportedFields.stream()
             .map(f -> f.isValid(reference))
             .filter(Optional::isPresent)

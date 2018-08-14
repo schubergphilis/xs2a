@@ -93,8 +93,7 @@ public class AccountMapperTest {
         AccountReport actualAccountReport;
         actualAccountReport = aAR.orElseGet(() -> new AccountReport().pending(new TransactionList()).booked(new TransactionList()));
 
-
-        //Then:
+    //Then:
         assertThat(actualAccountReport.getBooked().get(0).getTransactionId())
             .isEqualTo(expectedBooked[0].getTransactionId());
         assertThat(actualAccountReport.getBooked().get(0).getBookingDate()).isEqualTo(expectedBooked[0].getBookingDate());

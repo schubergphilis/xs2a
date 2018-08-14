@@ -16,66 +16,59 @@
 
 package de.adorsys.aspsp.xs2a.service.validator;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
-
+import de.adorsys.psd2.validator.certificate.util.TppRole;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.stereotype.Service;
 
-import de.adorsys.psd2.validator.certificate.util.TppRole;
+import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
 
 @Service
 public class TppRoleValidationService {
 
-	private Map<String, TppRole> patternRoleMap;
-	private List<AntPathRequestMatcher> matchers;
-	// NOPMD TODO API_BASE_PATH should not be define here,
-	// https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/140
-	private final static String API_BASE_PATH = "/api/v1";
+    // NOPMD TODO API_BASE_PATH should not be define here,
+    // https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/140
+    private final static String API_BASE_PATH = "/api/v1";
+    private Map<String, TppRole> patternRoleMap;
+    private List<AntPathRequestMatcher> matchers;
 
-	@PostConstruct
-	void initCertificatePathMatchers() {
-		patternRoleMap = new HashMap<>();
-		patternRoleMap.put(API_BASE_PATH + "/accounts/**", TppRole.AISP);
-		patternRoleMap.put(API_BASE_PATH + "/consents/**", TppRole.AISP);
-		patternRoleMap.put(API_BASE_PATH + "/funds-confirmations/**", TppRole.PIISP);
-		patternRoleMap.put(API_BASE_PATH + "/bulk-payments/**", TppRole.PISP);
-		patternRoleMap.put(API_BASE_PATH + "/payments/**", TppRole.PISP);
-		patternRoleMap.put(API_BASE_PATH + "/periodic-payments/**", TppRole.PISP);
+    @PostConstruct
+    void initCertificatePathMatchers() {
+        patternRoleMap = new HashMap<>();
+        patternRoleMap.put(API_BASE_PATH + "/accounts/**", TppRole.AISP);
+        patternRoleMap.put(API_BASE_PATH + "/consents/**", TppRole.AISP);
+        patternRoleMap.put(API_BASE_PATH + "/funds-confirmations/**", TppRole.PIISP);
+        patternRoleMap.put(API_BASE_PATH + "/bulk-payments/**", TppRole.PISP);
+        patternRoleMap.put(API_BASE_PATH + "/payments/**", TppRole.PISP);
+        patternRoleMap.put(API_BASE_PATH + "/periodic-payments/**", TppRole.PISP);
 
-		regexMatchers(patternRoleMap.keySet());
-	}
+        regexMatchers(patternRoleMap.keySet());
+    }
 
-	private void regexMatchers(Set<String> regexPatterns) {
-		matchers = new ArrayList<AntPathRequestMatcher>();
-		for (String pattern : regexPatterns) {
-			matchers.add(new AntPathRequestMatcher(pattern));
-		}
-	}
+    private void regexMatchers(Set<String> regexPatterns) {
+        matchers = new ArrayList<AntPathRequestMatcher>();
+        for (String pattern : regexPatterns) {
+            matchers.add(new AntPathRequestMatcher(pattern));
+        }
+    }
 
-	/**
-	 * Check and validate if a request with tpp roles is allow to pass
-	 * 
-	 * @param request
-	 * @param roles
-	 * @return true or false
-	 */
-	public boolean validate(HttpServletRequest request, List<TppRole> roles) {
+    /**
+     * Check and validate if a request with tpp roles is allow to pass
+     *
+     * @param request
+     * @param roles
+     * @return true or false
+     */
+    public boolean validate(HttpServletRequest request, List<TppRole> roles) {
 
-		for (AntPathRequestMatcher matcher : matchers) {
-			if (matcher.matches(request)) {
-				TppRole tppRole = patternRoleMap.get(matcher.getPattern());
-				return Optional.ofNullable(roles).map(r -> r.contains(tppRole)).orElse(false);
-			}
-		}
-		return true;
-	}
+        for (AntPathRequestMatcher matcher : matchers) {
+            if (matcher.matches(request)) {
+                TppRole tppRole = patternRoleMap.get(matcher.getPattern());
+                return Optional.ofNullable(roles).map(r -> r.contains(tppRole)).orElse(false);
+            }
+        }
+        return true;
+    }
 
 }

@@ -20,18 +20,14 @@ public class AuthenticationObject {
     @JsonProperty("authenticationType")
     private AuthenticationType authenticationType = null;
 
-
     @JsonProperty("authenticationVersion")
     private String authenticationVersion = null;
-
 
     @JsonProperty("authenticationMethodId")
     private String authenticationMethodId = null;
 
-
     @JsonProperty("name")
     private String name = null;
-
 
     @JsonProperty("explanation")
     private String explanation = null;
@@ -68,7 +64,6 @@ public class AuthenticationObject {
      * @return authenticationVersion
      **/
     @ApiModelProperty(value = "Depending on the \"authenticationType\". This version can be used by differentiating authentication tools used within performing OTP generation in the same authentication type. This version can be referred to in the ASPSP?s documentation. ")
-
     public String getAuthenticationVersion() {
         return authenticationVersion;
     }
@@ -89,7 +84,6 @@ public class AuthenticationObject {
      **/
     @ApiModelProperty(required = true)
     @NotNull
-
     public String getAuthenticationMethodId() {
         return authenticationMethodId;
     }
@@ -109,7 +103,6 @@ public class AuthenticationObject {
      * @return name
      **/
     @ApiModelProperty(example = "SMS OTP on phone +49160 xxxxx 28", value = "This is the name of the authentication method defined by the PSU in the Online Banking frontend of the ASPSP. Alternatively this could be a description provided by the ASPSP like \"SMS OTP on phone +49160 xxxxx 28\". This name shall be used by the TPP when presenting a list of authentication methods to the PSU, if available. ")
-
     public String getName() {
         return name;
     }
@@ -129,7 +122,6 @@ public class AuthenticationObject {
      * @return explanation
      **/
     @ApiModelProperty(example = "Detailed information about the SCA method for the PSU.", value = "Detailed information about the SCA method for the PSU. ")
-
     public String getExplanation() {
         return explanation;
     }
@@ -137,7 +129,6 @@ public class AuthenticationObject {
     public void setExplanation(String explanation) {
         this.explanation = explanation;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

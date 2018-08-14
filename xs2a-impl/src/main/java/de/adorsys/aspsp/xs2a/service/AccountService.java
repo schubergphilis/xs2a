@@ -20,7 +20,6 @@ import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.domain.consent.AccountAccess;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.consent.ais.AisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
@@ -29,7 +28,6 @@ import de.adorsys.aspsp.xs2a.service.validator.ValueValidatorService;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiTransaction;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
-import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +38,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.CONSENT_INVALID;
@@ -52,12 +53,12 @@ import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 @Validated
 @AllArgsConstructor
 public class AccountService {
+    private final static String TPP_ID = "This is a test TppId"; //TODO v1.1 add corresponding request header Task #149 https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/149
     private final AccountSpi accountSpi;
     private final AccountMapper accountMapper;
     private final ValueValidatorService validatorService;
     private final ConsentService consentService;
     private final AisConsentService aisConsentService;
-    private final static String TPP_ID = "This is a test TppId"; //TODO v1.1 add corresponding request header Task #149 https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/149
 
     /**
      * Gets AccountDetails list based on accounts in provided AIS-consent, depending on withBalance variable and
@@ -191,7 +192,7 @@ public class AccountService {
     }
 
     private List<AccountDetails> getAccountDetailsFromReferences(boolean withBalance, AccountAccess accountAccess) {
-        List<AccountReference> references = withBalance
+        List<Object> references = withBalance
             ? accountAccess.getBalances()
             : accountAccess.getAccounts();
         List<AccountDetails> details = getAccountDetailsFromReferences(references);
@@ -200,7 +201,7 @@ public class AccountService {
             : getAccountDetailsNoBalances(details);
     }
 
-    private List<AccountDetails> getAccountDetailsFromReferences(List<AccountReference> references) {
+    private List<AccountDetails> getAccountDetailsFromReferences(List<Object> references) {
         return CollectionUtils.isEmpty(references)
             ? Collections.emptyList()
             : references.stream()
@@ -256,13 +257,17 @@ public class AccountService {
         return accountMapper.mapToAccountReport(accountSpi.readTransactionsByPeriod(accountId, dateFrom, dateTo, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
     }
 
-    public Optional<AccountDetails> getAccountDetailsByAccountReference(AccountReference reference) {
-        return Optional.ofNullable(reference) // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Refactor to procedure style - we read data inside the stream here
-            .map(ref -> accountSpi.readAccountDetailsByIban(ref.getIban(), new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()) // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
-            .map(Collection::stream)
-            .flatMap(accDts -> accDts
-                .filter(spiAcc -> spiAcc.getCurrency().getCurrencyCode().equals(reference.getCurrency()))
-                .findFirst())
+    public Optional<AccountDetails> getAccountDetailsByAccountReference(Object reference) {
+        if (reference == null || !(reference instanceof AccountReferenceIban)) {
+            return Optional.empty(); //TODO implementation for any kind of account references needed!
+        }
+
+        AccountReferenceIban ref = (AccountReferenceIban) reference;
+
+        return accountSpi.readAccountDetailsByIban(ref.getIban(), new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload() // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Refactor to procedure style - we read data inside the stream here
+            .stream()
+            .filter(spiAcc -> spiAcc.getCurrency().getCurrencyCode().equals(ref.getCurrency()))
+            .findFirst()
             .map(accountMapper::mapToAccountDetails);
     }
 
@@ -284,7 +289,7 @@ public class AccountService {
         validatorService.validate(fieldValidator, ValidationGroup.AccountIdAndTransactionIdIsValid.class);
     }
 
-    public boolean isInvalidPaymentProductForPsu(AccountReference reference, String paymentProduct) {
+    public boolean isInvalidPaymentProductForPsu(Object reference, String paymentProduct) {
         return !accountSpi.readPsuAllowedPaymentProductList(accountMapper.mapToSpiAccountReference(reference), new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload() // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
             .contains(paymentProduct);
     }

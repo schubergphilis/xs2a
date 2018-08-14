@@ -21,18 +21,14 @@ public class PeriodicPaymentInitiationXmlPart2StandingorderTypeJson {
     @JsonProperty("startDate")
     private LocalDate startDate = null;
 
-
     @JsonProperty("endDate")
     private LocalDate endDate = null;
-
 
     @JsonProperty("executionRule")
     private ExecutionRule executionRule = null;
 
-
     @JsonProperty("frequency")
     private FrequencyCode frequency = null;
-
 
     @JsonProperty("dayOfExecution")
     private DayOfExecution dayOfExecution = null;
@@ -138,7 +134,6 @@ public class PeriodicPaymentInitiationXmlPart2StandingorderTypeJson {
     public void setDayOfExecution(DayOfExecution dayOfExecution) {
         this.dayOfExecution = dayOfExecution;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

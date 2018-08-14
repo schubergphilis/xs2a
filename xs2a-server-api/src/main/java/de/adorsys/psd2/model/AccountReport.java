@@ -21,10 +21,8 @@ public class AccountReport {
     @JsonProperty("booked")
     private TransactionList booked = null;
 
-
     @JsonProperty("pending")
     private TransactionList pending = null;
-
 
     @JsonProperty("_links")
     private Map _links = null;
@@ -90,7 +88,6 @@ public class AccountReport {
     public void setLinks(Map _links) {
         this._links = _links;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

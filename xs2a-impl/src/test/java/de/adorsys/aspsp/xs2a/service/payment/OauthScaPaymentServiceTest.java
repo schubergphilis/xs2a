@@ -50,8 +50,7 @@ public class OauthScaPaymentServiceTest {
     private static final String PAYMENT_ID = "123456789";
     private final AspspConsentData ASPSP_CONSENT_DATA = new AspspConsentData("zzzzzzzzzzzzzz".getBytes());
 
-
-    @InjectMocks
+@InjectMocks
     OauthScaPaymentService oauthScaPaymentService;
     @Mock
     PaymentMapper paymentMapper;

@@ -41,7 +41,6 @@ public class PaymentInitiationStatusResponse200Json {
         this.transactionStatus = transactionStatus;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {

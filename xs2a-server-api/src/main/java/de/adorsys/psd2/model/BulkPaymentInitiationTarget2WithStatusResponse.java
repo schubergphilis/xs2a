@@ -23,19 +23,15 @@ public class BulkPaymentInitiationTarget2WithStatusResponse {
     @JsonProperty("batchBookingPreferred")
     private Boolean batchBookingPreferred = null;
 
-
     @JsonProperty("requestedExecutionDate")
     private LocalDate requestedExecutionDate = null;
-
 
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
 
-
     @JsonProperty("payments")
     @Valid
     private List<PaymentInitiationTarget2Json> payments = new ArrayList<>();
-
 
     @JsonProperty("transactionStatus")
     private TransactionStatus transactionStatus = null;
@@ -145,7 +141,6 @@ public class BulkPaymentInitiationTarget2WithStatusResponse {
     public void setTransactionStatus(TransactionStatus transactionStatus) {
         this.transactionStatus = transactionStatus;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

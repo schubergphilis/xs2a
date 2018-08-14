@@ -18,38 +18,29 @@ public class LinksSigningBasket {
     @JsonProperty("scaRedirect")
     private String scaRedirect = null;
 
-
     @JsonProperty("scaOAuth")
     private String scaOAuth = null;
-
 
     @JsonProperty("startAuthorisation")
     private String startAuthorisation = null;
 
-
     @JsonProperty("startAuthorisationWithPsuIdentification")
     private String startAuthorisationWithPsuIdentification = null;
-
 
     @JsonProperty("startAuthorisationWithPsuAuthentication")
     private String startAuthorisationWithPsuAuthentication = null;
 
-
     @JsonProperty("startAuthorisationWithAuthenticationMethodSelection")
     private String startAuthorisationWithAuthenticationMethodSelection = null;
-
 
     @JsonProperty("startAuthorisationWithTransactionAuthorisation")
     private String startAuthorisationWithTransactionAuthorisation = null;
 
-
     @JsonProperty("self")
     private String self = null;
 
-
     @JsonProperty("status")
     private String status = null;
-
 
     @JsonProperty("scaStatus")
     private String scaStatus = null;
@@ -243,7 +234,6 @@ public class LinksSigningBasket {
     public void setScaStatus(String scaStatus) {
         this.scaStatus = scaStatus;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

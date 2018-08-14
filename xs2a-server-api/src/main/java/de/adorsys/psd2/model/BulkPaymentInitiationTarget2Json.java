@@ -23,14 +23,11 @@ public class BulkPaymentInitiationTarget2Json {
     @JsonProperty("batchBookingPreferred")
     private Boolean batchBookingPreferred = null;
 
-
     @JsonProperty("requestedExecutionDate")
     private LocalDate requestedExecutionDate = null;
 
-
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
-
 
     @JsonProperty("payments")
     @Valid
@@ -121,7 +118,6 @@ public class BulkPaymentInitiationTarget2Json {
     public void setPayments(List<PaymentInitiationTarget2BulkElementJson> payments) {
         this.payments = payments;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

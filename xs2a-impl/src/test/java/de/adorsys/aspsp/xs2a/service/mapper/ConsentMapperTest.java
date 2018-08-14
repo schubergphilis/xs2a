@@ -22,14 +22,10 @@ import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.consent.api.AccountInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccessInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentRequest;
-import de.adorsys.aspsp.xs2a.domain.consent.AccountConsent;
-import de.adorsys.aspsp.xs2a.domain.consent.ConsentStatus;
-import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiCreateConsentRequest;
-import de.adorsys.psd2.custom.AccountReference;
-import de.adorsys.psd2.model.AccountReferenceIban;
+import de.adorsys.psd2.model.*;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.util.*;
@@ -76,19 +73,19 @@ public class ConsentMapperTest {
     public void mapToAisConsentRequest() throws IOException {
         //Given:
         String aicConRequestJson = IOUtils.resourceToString(CREATE_CONSENT_REQ_JSON_PATH, UTF_8);
-        CreateConsentReq donorRequest = jsonConverter.toObject(aicConRequestJson, CreateConsentReq.class).get();
+        Consents donorRequest = jsonConverter.toObject(aicConRequestJson, Consents.class).get();
         AisConsentRequest expectedResult = getAisConsentReq(donorRequest, PSU_ID, TPP_ID);
         //When:
         AisConsentRequest mapedResult = consentMapper.mapToAisConsentRequest(donorRequest, PSU_ID, TPP_ID);
         assertThat(mapedResult).isEqualTo(expectedResult);
     }
 
-    private AisConsentRequest getAisConsentReq(CreateConsentReq consentReq, String psuId, String tppId) {
+    private AisConsentRequest getAisConsentReq(Consents consentReq, String psuId, String tppId) {
         AisConsentRequest req = new AisConsentRequest();
         req.setPsuId(psuId);
         req.setTppId(tppId);
         req.setCombinedServiceIndicator(consentReq.isCombinedServiceIndicator());
-        req.setRecurringIndicator(consentReq.isRecurringIndicator());
+        req.setRecurringIndicator(consentReq.getRecurringIndicator());
         req.setValidUntil(consentReq.getValidUntil());
         req.setTppRedirectPreferred(false);
         req.setFrequencyPerDay(consentReq.getFrequencyPerDay());
@@ -104,25 +101,26 @@ public class ConsentMapperTest {
         return req;
     }
 
-    private List<AccountInfo> getAccountInfo(List<AccountReference> references) {
+    private List<AccountInfo> getAccountInfo(List<Object> references) {
 
         return Optional.ofNullable(references)
-                   .map(ref -> ref.stream()
-                                   .map(ar -> {
-                                       AccountInfo ai = new AccountInfo();
-                                       ai.setIban(ar.getIban());
-                                       ai.setCurrency(getCurrency(ar));
-                                       return ai;
-                                   })
-                                   .collect(Collectors.toList()))
-                   .orElse(Collections.emptyList());
+            .map(ref -> ref.stream()
+                .filter(o -> o instanceof AccountReferenceIban)
+                .map(ar -> {
+                    AccountInfo ai = new AccountInfo();
+                    ai.setIban(((AccountReferenceIban) ar).getIban());
+                    ai.setCurrency(getCurrency(ar));
+                    return ai;
+                })
+                .collect(Collectors.toList()))
+            .orElse(Collections.emptyList());
     }
 
     @Test
     public void mapSpiCreateConsentRequest() throws IOException {
         //Given:
         String aicRequestJson = IOUtils.resourceToString(CREATE_CONSENT_REQ_JSON_PATH, UTF_8);
-        CreateConsentReq donorRequest = jsonConverter.toObject(aicRequestJson, CreateConsentReq.class).get();
+        Consents donorRequest = jsonConverter.toObject(aicRequestJson, Consents.class).get();
         SpiCreateConsentRequest expectedRequest = jsonConverter.toObject(aicRequestJson, SpiCreateConsentRequest.class).get();
 
         //When:
@@ -144,30 +142,33 @@ public class ConsentMapperTest {
 
         //When:
         assertNotNull(donorAccountConsent);
-        AccountConsent actualAccountConsent = consentMapper.mapToAccountConsent(donorAccountConsent);
+        ConsentInformationResponse200Json actualAccountConsent = consentMapper.mapToAccountConsent(donorAccountConsent);
 
         //Then:
-        assertThat(actualAccountConsent.getId()).isEqualTo("3dc3d5b3-7023-4848-9853-f5400a64e80f");
-        assertThat(actualAccountConsent.getAccess().getBalances().get(0).getIban()).isEqualTo("DE2310010010123456789");
-        assertThat(actualAccountConsent.getAccess().getBalances().get(1).getIban()).isEqualTo("DE2310010010123456790");
-        assertThat(actualAccountConsent.getAccess().getBalances().get(1).getCurrency()).isEqualTo("USD");
-        assertThat(actualAccountConsent.getAccess().getBalances().get(2).getIban()).isEqualTo("DE2310010010123456788");
-        assertThat(actualAccountConsent.getAccess().getTransactions().get(0).getIban()).isEqualTo("DE2310010010123456789");
-        assertThat(actualAccountConsent.getAccess().getTransactions().get(1).getMaskedPan()).isEqualTo("123456xxxxxx1234");
-        assertThat(actualAccountConsent.isRecurringIndicator()).isTrue();
+        assertThat(((AccountReferenceIban) actualAccountConsent.getAccess().getBalances().get(0)).getIban()).isEqualTo("DE2310010010123456789");
+        assertThat(((AccountReferenceIban) actualAccountConsent.getAccess().getBalances().get(1)).getIban()).isEqualTo("DE2310010010123456790");
+        assertThat(((AccountReferenceIban) actualAccountConsent.getAccess().getBalances().get(1)).getCurrency()).isEqualTo("USD");
+        assertThat(((AccountReferenceIban) actualAccountConsent.getAccess().getBalances().get(2)).getIban()).isEqualTo("DE2310010010123456788");
+        assertThat(((AccountReferenceIban) actualAccountConsent.getAccess().getTransactions().get(0)).getIban()).isEqualTo("DE2310010010123456789");
+        assertThat(((AccountReferenceMaskedPan) actualAccountConsent.getAccess().getTransactions().get(1)).getMaskedPan()).isEqualTo("123456xxxxxx1234");
+        assertThat(actualAccountConsent.getRecurringIndicator()).isTrue();
         assertThat(actualAccountConsent.getValidUntil()).isEqualTo(LocalDate.parse("2017-11-01"));
         assertThat(actualAccountConsent.getFrequencyPerDay()).isEqualTo(4);
         assertThat(actualAccountConsent.getLastActionDate()).isEqualTo(LocalDate.parse("2017-11-01"));
         assertThat(actualAccountConsent.getConsentStatus()).isEqualTo(ConsentStatus.VALID);
     }
 
-    private String getCurrency(AccountReference reference) {
-        return Optional.ofNullable(reference.getCurrency())
-                   .orElse(null);
+    private String getCurrency(Object reference) {
+        try {
+            Field f = reference.getClass().getDeclaredField("currency");
+            return (String) f.get(reference);
+        } catch (NoSuchFieldException | IllegalAccessException ex) {
+            return null;
+        }
     }
 
-    private List<AccountReference> getReferences() {
-        List<AccountReference> refs = new ArrayList<>();
+    private List<Object> getReferences() {
+        List<Object> refs = new ArrayList<>();
         refs.add(getReference("DE2310010010123456789", null, "123456xxxxxx1234"));
         refs.add(getReference("DE2310010010123456790", Currency.getInstance("USD"), "123456xxxxxx1234"));
         refs.add(getReference("DE2310010010123456788", null, null));
@@ -175,7 +176,7 @@ public class ConsentMapperTest {
         return refs;
     }
 
-    private AccountReference getReference(String iban, Currency currency, String masked) {
+    private Object getReference(String iban, Currency currency, String masked) {
         AccountReferenceIban ref = new AccountReferenceIban();
         ref.setIban(iban);
         ref.setCurrency(currency.getCurrencyCode());

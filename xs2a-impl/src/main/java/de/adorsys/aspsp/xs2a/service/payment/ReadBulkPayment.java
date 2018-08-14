@@ -29,7 +29,7 @@ import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.BULK;
 public class ReadBulkPayment extends ReadPayment<List<SinglePayments>> {
     @Override
     public List<SinglePayments> getPayment(String paymentProduct, String paymentId) {
-        List<SpiSinglePayments> bulkPayments = paymentSpi.getBulkPaymentById(paymentMapper.mapToSpiPaymentType(BULK), paymentProduct, paymentId,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        List<SpiSinglePayments> bulkPayments = paymentSpi.getBulkPaymentById(paymentMapper.mapToSpiPaymentType(BULK), paymentProduct, paymentId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         return paymentMapper.mapToBulkPayment(bulkPayments);
     }
 }

@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.web.interceptor;
 
 
 import de.adorsys.aspsp.xs2a.service.validator.RequestValidatorService;
-import de.adorsys.aspsp.xs2a.web.ConsentInformationController;
+import de.adorsys.aspsp.xs2a.web12.ConsentController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -46,7 +46,7 @@ public class HandlerInterceptorTest {
     RequestValidatorService requestValidatorService;
 
     @InjectMocks
-    private ConsentInformationController consentInformationController;
+    private ConsentController consentInformationController;
 
     @Test
     public void preHandle() throws Exception {

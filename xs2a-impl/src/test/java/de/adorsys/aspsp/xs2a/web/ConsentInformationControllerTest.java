@@ -16,15 +16,15 @@
 
 package de.adorsys.aspsp.xs2a.web;
 
-import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.web12.ConsentController;
+import de.adorsys.psd2.model.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,9 +35,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -49,7 +51,7 @@ public class ConsentInformationControllerTest {
     private final String WRONG_CONSENT_ID = "YYYY-YYYY-YYYY-YYYY";
 
     @InjectMocks
-    private ConsentInformationController consentInformationController;
+    private ConsentController consentInformationController;
 
     @Mock
     private ConsentService consentService;
@@ -61,8 +63,8 @@ public class ConsentInformationControllerTest {
     public void setUp() {
         when(consentService.createAccountConsentsWithResponse(any(), eq(CORRECT_PSU_ID))).thenReturn(createConsentResponse(CONSENT_ID));
         when(consentService.createAccountConsentsWithResponse(any(), eq(WRONG_PSU_ID))).thenReturn(createConsentResponse(null));
-        when(consentService.getAccountConsentsStatusById(CONSENT_ID)).thenReturn(ResponseObject.<ConsentStatus>builder().body(ConsentStatus.RECEIVED).build());
-        when(consentService.getAccountConsentsStatusById(WRONG_CONSENT_ID)).thenReturn(ResponseObject.<ConsentStatus>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build());
+        when(consentService.getAccountConsentsStatusById(CONSENT_ID)).thenReturn(ResponseObject.<ConsentStatusResponse200>builder().body(new ConsentStatusResponse200().consentStatus(ConsentStatus.RECEIVED)).build());
+        when(consentService.getAccountConsentsStatusById(WRONG_CONSENT_ID)).thenReturn(ResponseObject.<ConsentStatusResponse200>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build());
         when(consentService.getAccountConsentById(CONSENT_ID)).thenReturn(getConsent(CONSENT_ID));
         when(consentService.getAccountConsentById(WRONG_CONSENT_ID)).thenReturn(getConsent(WRONG_CONSENT_ID));
         when(consentService.deleteAccountConsentsById(CONSENT_ID)).thenReturn(ResponseObject.<Void>builder().build());
@@ -73,11 +75,14 @@ public class ConsentInformationControllerTest {
     public void createAccountConsent_Success() {
         when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(createConsentResponse(CONSENT_ID).getBody(), HttpStatus.CREATED));
         //Given:
-        CreateConsentReq consentRequest = new CreateConsentReq();
+        Consents consentRequest = new Consents();
 
         //When:
-        ResponseEntity responseEntity = consentInformationController.createAccountConsent(CORRECT_PSU_ID, consentRequest);
-        CreateConsentResp resp = (CreateConsentResp) responseEntity.getBody();
+        ResponseEntity responseEntity = consentInformationController.createConsent(null, consentRequest, null,
+            null, null, CORRECT_PSU_ID, null, null, null, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null, null, null);
+        ConsentsResponse201 resp = (ConsentsResponse201) responseEntity.getBody();
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -89,9 +94,12 @@ public class ConsentInformationControllerTest {
     public void createAccountConsent_Failure() {
         when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(createConsentResponse(null).getError(), HttpStatus.NOT_FOUND));
         //Given:
-        CreateConsentReq consentRequest = new CreateConsentReq();
+        Consents consentRequest = new Consents();
         //When:
-        ResponseEntity responseEntity = consentInformationController.createAccountConsent(WRONG_PSU_ID, consentRequest);
+        ResponseEntity responseEntity = consentInformationController.createConsent(null, consentRequest, null,
+            null, null, WRONG_PSU_ID, null, null, null, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null, null, null);
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -100,7 +108,9 @@ public class ConsentInformationControllerTest {
     public void getAccountConsentsStatusById_Success() {
         when(responseMapper.ok(any())).thenReturn(new ResponseEntity<>(ConsentStatus.RECEIVED, HttpStatus.OK));
         //When:
-        ResponseEntity responseEntity = consentInformationController.getAccountConsentsStatusById(CONSENT_ID);
+        ResponseEntity responseEntity = consentInformationController.getConsentStatus(CONSENT_ID, null, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null, null);
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(responseEntity.getBody()).isEqualTo(ConsentStatus.RECEIVED);
@@ -110,7 +120,9 @@ public class ConsentInformationControllerTest {
     public void getAccountConsentsStatusById_Failure() {
         when(responseMapper.ok(any())).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         //When:
-        ResponseEntity responseEntity = consentInformationController.getAccountConsentsStatusById(WRONG_CONSENT_ID);
+        ResponseEntity responseEntity = consentInformationController.getConsentStatus(WRONG_CONSENT_ID, null, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null, null);
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -119,17 +131,23 @@ public class ConsentInformationControllerTest {
     public void getAccountConsentsInformationById_Success() {
         when(responseMapper.ok(any())).thenReturn(new ResponseEntity<>(getConsent(CONSENT_ID).getBody(), HttpStatus.OK));
         //When:
-        ResponseEntity responseEntity = consentInformationController.getAccountConsentsInformationById(CONSENT_ID);
+        ResponseEntity responseEntity = consentInformationController.getConsentInformation(CONSENT_ID, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null,
+            null, null);
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isExactlyInstanceOf(AccountConsent.class);
+        assertThat(responseEntity.getBody()).isExactlyInstanceOf(ConsentInformationResponse200Json.class);
     }
 
     @Test
     public void getAccountConsentsInformationById_Failure() {
         when(responseMapper.ok(any())).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         //When:
-        ResponseEntity responseEntity = consentInformationController.getAccountConsentsInformationById(WRONG_CONSENT_ID);
+        ResponseEntity responseEntity = consentInformationController.getConsentInformation(WRONG_CONSENT_ID, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null,
+            null, null);
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -138,7 +156,10 @@ public class ConsentInformationControllerTest {
     public void deleteAccountConsent_Success() {
         when(responseMapper.delete(any())).thenReturn(new ResponseEntity<>(HttpStatus.NO_CONTENT));
         //When:
-        ResponseEntity responseEntity = consentInformationController.deleteAccountConsent(CONSENT_ID);
+        ResponseEntity responseEntity = consentInformationController.deleteConsent(CONSENT_ID, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null,
+            null, null);
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }
@@ -147,25 +168,33 @@ public class ConsentInformationControllerTest {
     public void deleteAccountConsent_Failure() {
         when(responseMapper.delete(any())).thenReturn(new ResponseEntity<>(HttpStatus.NOT_FOUND));
         //When:
-        ResponseEntity responseEntity = consentInformationController.deleteAccountConsent(WRONG_CONSENT_ID);
+        ResponseEntity responseEntity = consentInformationController.deleteConsent(WRONG_CONSENT_ID, null,
+            null, null, null, null, null, null,
+            null, null, null, null, null,
+            null, null);
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-
     private ResponseObject createConsentResponse(String consentId) {
         return isEmpty(consentId)
-                   ? ResponseObject.builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build()
-                   : ResponseObject.builder().body(new CreateConsentResp(ConsentStatus.RECEIVED, consentId, null, new Links(), null)).build();
+            ? ResponseObject.builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build()
+            : ResponseObject.builder().body(new ConsentsResponse201().consentStatus(ConsentStatus.RECEIVED).consentId(consentId)._links(new HashMap())).build();
     }
 
     private ResponseObject getConsent(String consentId) {
-        AccountConsent accountConsent = consentId.equals(WRONG_CONSENT_ID)
-                                            ? null
-                                            : new AccountConsent(consentId, new AccountAccess(null, null, null, null, null), false, LocalDate.now(), 4, LocalDate.now(), ConsentStatus.VALID, false, false);
+        ConsentInformationResponse200Json accountConsent = consentId.equals(WRONG_CONSENT_ID)
+            ? null
+            : new ConsentInformationResponse200Json()
+            .access(new AccountAccess())
+            .lastActionDate(LocalDate.now())
+            .validUntil(LocalDate.now())
+            .frequencyPerDay(4)
+            .consentStatus(ConsentStatus.VALID)
+            .recurringIndicator(false);
         return isEmpty(accountConsent)
-                   ? ResponseObject.builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build()
-                   : ResponseObject.builder().body(accountConsent).build();
+            ? ResponseObject.builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build()
+            : ResponseObject.builder().body(accountConsent).build();
     }
 
 }

@@ -39,7 +39,6 @@ public interface AccountApi {
         return getRequest().map(r -> r.getHeader("Accept"));
     }
 
-
     @ApiOperation(value = "Read Account List", nickname = "getAccountList", notes = "Read the identifiers of the available payment account together with  booking balance information, depending on the consent granted.  It is assumed that a consent of the PSU to this access is already given and stored on the ASPSP system.  The addressed list of accounts depends then on the PSU ID and the stored consent addressed by consentId,  respectively the OAuth2 access token.   Returns all identifiers of the accounts, to which an account access has been granted to through  the /consents endpoint by the PSU.  In addition, relevant information about the accounts and hyperlinks to corresponding account  information resources are provided if a related consent has been already granted.  Remark: Note that the /consents endpoint optionally offers to grant an access on all available  payment accounts of a PSU.  In this case, this endpoint will deliver the information about all available payment accounts  of the PSU at this ASPSP. ", response = AccountList.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Account Information Service (AIS)",})
     @ApiResponses(value = {
@@ -85,7 +84,6 @@ public interface AccountApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Read Balance", nickname = "getBalances", notes = "Reads account data from a given account addressed by \"account-id\".   **Remark:** This account-id can be a tokenised identification due to data protection reason since the path  information might be logged on intermediary servers within the ASPSP sphere.  This account-id then can be retrieved by the \"GET Account List\" call.  The account-id is constant at least throughout the lifecycle of a given consent. ", response = ReadBalanceResponse200.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Account Information Service (AIS)",})
@@ -133,7 +131,6 @@ public interface AccountApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-
     @ApiOperation(value = "Read Transaction Details", nickname = "getTransactionDetails", notes = "Reads transaction details from a given transaction addressed by \"resourceId\" on a given account addressed by \"account-id\".  This call is only available on transactions as reported in a JSON format.  **Remark:** Please note that the PATH might be already given in detail by the corresponding entry of the response of the  \"Read Transaction List\" call within the _links subfield. ", response = TransactionDetails.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Account Information Service (AIS)",})
     @ApiResponses(value = {
@@ -180,7 +177,6 @@ public interface AccountApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Read Transaction List", nickname = "getTransactionList", notes = "Read transaction reports or transaction lists of a given account adressed by \"account-id\", depending on the steering parameter  \"bookingStatus\" together with balances.  For a given account, additional parameters are e.g. the attributes \"dateFrom\" and \"dateTo\".  The ASPSP might add balance information, if transaction lists without balances are not supported. ", response = TransactionsResponse200Json.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Account Information Service (AIS)",})
@@ -232,7 +228,6 @@ public interface AccountApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Read Account Details", nickname = "readAccountDetails", notes = "Reads details about an account, with balances where required.  It is assumed that a consent of the PSU to  this access is already given and stored on the ASPSP system.  The addressed details of this account depends then on the stored consent addressed by consentId,  respectively the OAuth2 access token.  **NOTE:** The account-id can represent a multicurrency account.  In this case the currency code is set to \"XXX\".  Give detailed information about the addressed account.  Give detailed information about the addressed account together with balance information ", response = AccountDetails.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Account Information Service (AIS)",})

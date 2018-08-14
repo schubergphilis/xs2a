@@ -23,14 +23,11 @@ public class BulkPaymentInitiationSctJson {
     @JsonProperty("batchBookingPreferred")
     private Boolean batchBookingPreferred = null;
 
-
     @JsonProperty("requestedExecutionDate")
     private LocalDate requestedExecutionDate = null;
 
-
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
-
 
     @JsonProperty("payments")
     @Valid
@@ -121,7 +118,6 @@ public class BulkPaymentInitiationSctJson {
     public void setPayments(List<PaymentInitiationSctBulkElementJson> payments) {
         this.payments = payments;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

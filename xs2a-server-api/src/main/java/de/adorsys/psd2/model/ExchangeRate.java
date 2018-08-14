@@ -21,22 +21,17 @@ public class ExchangeRate {
     @JsonProperty("currencyFrom")
     private String currencyFrom = null;
 
-
     @JsonProperty("rateFrom")
     private String rateFrom = null;
-
 
     @JsonProperty("currencyTo")
     private String currencyTo = null;
 
-
     @JsonProperty("rateTo")
     private String rateTo = null;
 
-
     @JsonProperty("rateDate")
     private LocalDate rateDate = null;
-
 
     @JsonProperty("rateContract")
     private String rateContract = null;
@@ -164,7 +159,6 @@ public class ExchangeRate {
     public void setRateContract(String rateContract) {
         this.rateContract = rateContract;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

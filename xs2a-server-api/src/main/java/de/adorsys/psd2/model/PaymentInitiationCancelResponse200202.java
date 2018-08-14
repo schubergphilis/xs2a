@@ -21,18 +21,14 @@ public class PaymentInitiationCancelResponse200202 {
     @JsonProperty("transactionStatus")
     private TransactionStatus transactionStatus = null;
 
-
     @JsonProperty("scaMethods")
     private ScaMethods scaMethods = null;
-
 
     @JsonProperty("chosenScaMethod")
     private ChosenScaMethod chosenScaMethod = null;
 
-
     @JsonProperty("challengeData")
     private ChallengeData challengeData = null;
-
 
     @JsonProperty("_links")
     private Map _links = null;
@@ -137,7 +133,6 @@ public class PaymentInitiationCancelResponse200202 {
     public void setLinks(Map _links) {
         this._links = _links;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

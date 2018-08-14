@@ -18,18 +18,14 @@ public class Address {
     @JsonProperty("street")
     private String street = null;
 
-
     @JsonProperty("buildingNumber")
     private String buildingNumber = null;
-
 
     @JsonProperty("city")
     private String city = null;
 
-
     @JsonProperty("postalCode")
     private String postalCode = null;
-
 
     @JsonProperty("country")
     private String country = null;
@@ -123,7 +119,6 @@ public class Address {
      **/
     @ApiModelProperty(required = true)
     @NotNull
-
     public String getCountry() {
         return country;
     }
@@ -131,7 +126,6 @@ public class Address {
     public void setCountry(String country) {
         this.country = country;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

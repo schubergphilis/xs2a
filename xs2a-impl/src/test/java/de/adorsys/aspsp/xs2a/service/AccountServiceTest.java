@@ -18,19 +18,19 @@ package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.*;
-import de.adorsys.aspsp.xs2a.domain.consent.AccountAccess;
-import de.adorsys.aspsp.xs2a.domain.consent.AccountAccessType;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.consent.ais.AisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
 import de.adorsys.aspsp.xs2a.service.validator.ValueValidatorService;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
-import de.adorsys.aspsp.xs2a.spi.domain.account.*;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountBalance;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiBalanceType;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiTransaction;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
-import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.*;
 import de.adorsys.psd2.model.Amount;
 import de.adorsys.psd2.model.Balance;
@@ -311,15 +311,20 @@ public class AccountServiceTest {
     }
 
     //Test Stuff
-    private ResponseObject<AccountAccess> getAccessResponse(List<AccountReference> accounts, List<AccountReference> balances, List<AccountReference> transactions, boolean allAccounts, boolean allPsd2) {
+    private ResponseObject<AccountAccess> getAccessResponse(List<Object> accounts, List<Object> balances, List<Object> transactions, boolean allAccounts, boolean allPsd2) {
         return ResponseObject.<AccountAccess>builder().body(getAccessForMock(accounts, balances, transactions, allAccounts, allPsd2)).build();
     }
 
-    private AccountAccess getAccessForMock(List<AccountReference> accounts, List<AccountReference> balances, List<AccountReference> transactions, boolean allAccounts, boolean allPsd2) {
-        return new AccountAccess(accounts, balances, transactions, allAccounts ? AccountAccessType.ALL_ACCOUNTS : null, allPsd2 ? AccountAccessType.ALL_ACCOUNTS : null);
+    private AccountAccess getAccessForMock(List<Object> accounts, List<Object> balances, List<Object> transactions, boolean allAccounts, boolean allPsd2) {
+        return new AccountAccess()
+            .accounts(accounts)
+            .balances(balances)
+            .transactions(transactions)
+            .availableAccounts(allAccounts ? AccountAccess.AvailableAccountsEnum.ALLACCOUNTS : null)
+            .allPsd2(allPsd2 ? AccountAccess.AllPsd2Enum.ALLACCOUNTS : null);
     }
 
-    private AccountReference getAccountReference() {
+    private Object getAccountReference() {
         AccountDetails details = getAccountDetails(ACCOUNT_ID, IBAN);
 
         if (StringUtils.isNotEmpty(details.getIban())) {
@@ -402,16 +407,16 @@ public class AccountServiceTest {
 //            null, null, null);
     }
 
-    private SpiAccountReference mapToSpiAccountRef(AccountReference reference) {
-        return Optional.ofNullable(reference).map(r -> new SpiAccountReference(r.getIban(), r.getBban(), r.getPan(),
-            r.getMaskedPan(), r.getMsisdn(), r.getCurrency())).orElse(null);
-    }
+//    private SpiAccountReference mapToSpiAccountRef(AccountReference reference) {
+//        return Optional.ofNullable(reference).map(r -> new SpiAccountReference(r.getIban(), r.getBban(), r.getPan(),
+//            r.getMaskedPan(), r.getMsisdn(), r.getCurrency())).orElse(null);
+//    }
 
-    private List<AccountReference> getReferences(String iban, String iban1) {
+    private List<Object> getReferences(String iban, String iban1) {
         return Arrays.asList(getReference(iban), getReference(iban1));
     }
 
-    private AccountReference getReference(String iban) {
+    private Object getReference(String iban) {
         AccountReferenceIban reference = new AccountReferenceIban();
         reference.setIban(iban);
         reference.setCurrency(iban.equals(IBAN) ? CURRENCY.getCurrencyCode() : CURRENCY_1.getCurrencyCode());

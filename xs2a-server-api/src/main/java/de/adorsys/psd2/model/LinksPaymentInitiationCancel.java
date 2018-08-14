@@ -19,10 +19,8 @@ public class LinksPaymentInitiationCancel extends HashMap<String, String> {
     @JsonProperty("startAuthorisation")
     private String startAuthorisation = null;
 
-
     @JsonProperty("startAuthorisationWithPsuIdentification")
     private String startAuthorisationWithPsuIdentification = null;
-
 
     @JsonProperty("startAuthorisationWithPsuAuthentication")
     private String startAuthorisationWithPsuAuthentication = null;
@@ -83,7 +81,6 @@ public class LinksPaymentInitiationCancel extends HashMap<String, String> {
     public void setStartAuthorisationWithPsuAuthentication(String startAuthorisationWithPsuAuthentication) {
         this.startAuthorisationWithPsuAuthentication = startAuthorisationWithPsuAuthentication;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

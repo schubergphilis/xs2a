@@ -38,7 +38,6 @@ public class LinksUpdatePsuIdentification extends HashMap<String, String> {
         this.scaStatus = scaStatus;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {

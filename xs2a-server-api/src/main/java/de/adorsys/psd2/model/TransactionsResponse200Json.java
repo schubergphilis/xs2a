@@ -20,14 +20,11 @@ public class TransactionsResponse200Json {
     @JsonProperty("account")
     private Object account = null;
 
-
     @JsonProperty("transactions")
     private AccountReport transactions = null;
 
-
     @JsonProperty("balances")
     private BalanceList balances = null;
-
 
     @JsonProperty("_links")
     private Map _links = null;
@@ -110,7 +107,6 @@ public class TransactionsResponse200Json {
     public void setLinks(Map _links) {
         this._links = _links;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

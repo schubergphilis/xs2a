@@ -22,7 +22,6 @@ import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
 import de.adorsys.psd2.api.FundsConfirmationApi;
-import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.ConfirmationOfFunds;
 import de.adorsys.psd2.model.InlineResponse200;
 import lombok.AllArgsConstructor;
@@ -43,7 +42,7 @@ public class FundsConfirmationController implements FundsConfirmationApi {
     @Override
     public ResponseEntity<?> checkAvailabilityOfFunds(ConfirmationOfFunds confirmationOfFunds, UUID xRequestID, String digest, String signature, byte[] tpPSignatureCertificate) {
         //TODO not bad request?
-        Optional<MessageError> error = referenceValidationService.validateAccountReference((AccountReference) confirmationOfFunds.getAccount());
+        Optional<MessageError> error = referenceValidationService.validateAccountReference(confirmationOfFunds.getAccount());
         return responseMapper.ok(
             error
                 .map(e -> ResponseObject.<InlineResponse200>builder().fail(e).build())

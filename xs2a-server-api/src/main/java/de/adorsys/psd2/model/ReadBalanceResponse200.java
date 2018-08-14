@@ -20,7 +20,6 @@ public class ReadBalanceResponse200 {
     @JsonProperty("account")
     private Object account = null;
 
-
     @JsonProperty("balances")
     private BalanceList balances = null;
 
@@ -63,7 +62,6 @@ public class ReadBalanceResponse200 {
     public void setBalances(BalanceList balances) {
         this.balances = balances;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

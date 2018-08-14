@@ -20,14 +20,11 @@ public class TppMessageGeneric {
     @JsonProperty("category")
     private TppMessageCategory category = null;
 
-
     @JsonProperty("code")
     private Object code = null;
 
-
     @JsonProperty("path")
     private String path = null;
-
 
     @JsonProperty("text")
     private String text = null;
@@ -111,7 +108,6 @@ public class TppMessageGeneric {
     public void setText(String text) {
         this.text = text;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

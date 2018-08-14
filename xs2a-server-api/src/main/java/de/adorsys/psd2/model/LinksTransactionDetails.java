@@ -39,7 +39,6 @@ public class LinksTransactionDetails extends HashMap<String, String> {
         this.transactionDetails = transactionDetails;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {

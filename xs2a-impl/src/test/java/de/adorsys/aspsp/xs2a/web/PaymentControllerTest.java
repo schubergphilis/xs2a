@@ -62,8 +62,7 @@ public class PaymentControllerTest {
         when(paymentService.getPaymentById(SINGLE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID))
             .thenReturn(ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
 
-
-    }
+}
 
     @Test
     public void getPaymentById() {

@@ -21,22 +21,17 @@ public class StartScaprocessResponse {
     @JsonProperty("scaStatus")
     private ScaStatus scaStatus = null;
 
-
     @JsonProperty("scaMethods")
     private ScaMethods scaMethods = null;
-
 
     @JsonProperty("chosenScaMethod")
     private ChosenScaMethod chosenScaMethod = null;
 
-
     @JsonProperty("challengeData")
     private ChallengeData challengeData = null;
 
-
     @JsonProperty("_links")
     private Map _links = null;
-
 
     @JsonProperty("psuMessage")
     private String psuMessage = null;
@@ -161,7 +156,6 @@ public class StartScaprocessResponse {
     public void setPsuMessage(String psuMessage) {
         this.psuMessage = psuMessage;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

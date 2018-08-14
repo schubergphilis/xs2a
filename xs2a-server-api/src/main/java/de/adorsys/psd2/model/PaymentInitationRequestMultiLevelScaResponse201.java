@@ -21,26 +21,20 @@ public class PaymentInitationRequestMultiLevelScaResponse201 {
     @JsonProperty("transactionStatus")
     private TransactionStatus transactionStatus = null;
 
-
     @JsonProperty("paymentId")
     private String paymentId = null;
-
 
     @JsonProperty("transactionFees")
     private Amount transactionFees = null;
 
-
     @JsonProperty("transactionFeeIndicator")
     private Boolean transactionFeeIndicator = null;
-
 
     @JsonProperty("_links")
     private Map _links = null;
 
-
     @JsonProperty("psuMessage")
     private String psuMessage = null;
-
 
     @JsonProperty("tppMessages")
     private TppMessages tppMessages = null;
@@ -185,7 +179,6 @@ public class PaymentInitationRequestMultiLevelScaResponse201 {
     public void setTppMessages(TppMessages tppMessages) {
         this.tppMessages = tppMessages;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

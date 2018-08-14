@@ -1,5 +1,6 @@
 package de.adorsys.aspsp.xs2a.domain.account;
 
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
 import de.adorsys.psd2.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
@@ -154,7 +155,7 @@ public class SupportedAccountReferenceFieldTest {
         assertThat(result.get()).isFalse();
     }
 
-    private de.adorsys.psd2.custom.AccountReference getReference(String iban, String bban, String pan, String masked, String msisdn) {
+    private Object getReference(String iban, String bban, String pan, String masked, String msisdn) {
         if (StringUtils.isNotEmpty(iban)) {
             return new AccountReferenceIban().iban(iban);
         } else if (StringUtils.isNotEmpty(bban)) {

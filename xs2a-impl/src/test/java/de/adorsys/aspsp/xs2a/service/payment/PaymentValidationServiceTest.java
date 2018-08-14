@@ -22,7 +22,6 @@ import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.AccountService;
-import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.AccountDetails;
 import de.adorsys.psd2.model.AccountReferenceIban;
 import de.adorsys.psd2.model.Amount;
@@ -252,7 +251,7 @@ public class PaymentValidationServiceTest {
         return new AccountDetails().resourceId("123").iban(iban).currency(CURRENCY.getCurrencyCode());
     }
 
-    private AccountReference getReference(String iban) {
+    private Object getReference(String iban) {
         AccountReferenceIban reference = new AccountReferenceIban();
         reference.setIban(iban);
         reference.setCurrency(CURRENCY.getCurrencyCode());

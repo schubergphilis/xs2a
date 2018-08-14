@@ -21,30 +21,23 @@ public class PaymentInitiationTarget2Json {
     @JsonProperty("endToEndIdentification")
     private String endToEndIdentification = null;
 
-
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
-
 
     @JsonProperty("instructedAmount")
     private Amount instructedAmount = null;
 
-
     @JsonProperty("creditorAccount")
     private Object creditorAccount = null;
-
 
     @JsonProperty("creditorAgent")
     private String creditorAgent = null;
 
-
     @JsonProperty("creditorName")
     private String creditorName = null;
 
-
     @JsonProperty("creditorAddress")
     private Address creditorAddress = null;
-
 
     @JsonProperty("remittanceInformationUnstructured")
     private String remittanceInformationUnstructured = null;
@@ -211,7 +204,6 @@ public class PaymentInitiationTarget2Json {
     public void setRemittanceInformationUnstructured(String remittanceInformationUnstructured) {
         this.remittanceInformationUnstructured = remittanceInformationUnstructured;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

@@ -23,14 +23,11 @@ public class BulkPaymentInitiationCrossBorderJson {
     @JsonProperty("batchBookingPreferred")
     private Boolean batchBookingPreferred = null;
 
-
     @JsonProperty("requestedExecutionDate")
     private LocalDate requestedExecutionDate = null;
 
-
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
-
 
     @JsonProperty("payments")
     @Valid
@@ -121,7 +118,6 @@ public class BulkPaymentInitiationCrossBorderJson {
     public void setPayments(List<PaymentInitiationCrossBorderBulkElementJson> payments) {
         this.payments = payments;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

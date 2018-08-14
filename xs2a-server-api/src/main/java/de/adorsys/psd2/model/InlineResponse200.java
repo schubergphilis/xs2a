@@ -37,7 +37,6 @@ public class InlineResponse200 {
         this.fundsAvailable = fundsAvailable;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {

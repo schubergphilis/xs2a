@@ -20,7 +20,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.*;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -58,7 +57,7 @@ public class FundsConfirmationServiceTest {
 
     @Before
     public void setUp() throws IOException {
-        when(accountService.getAccountDetailsByAccountReference(any(AccountReference.class)))
+        when(accountService.getAccountDetailsByAccountReference(any(Object.class)))
             .thenReturn(Optional.of(new AccountDetails().balances(getBalances())));
     }
 

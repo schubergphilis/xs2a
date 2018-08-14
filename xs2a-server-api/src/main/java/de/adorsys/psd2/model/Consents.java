@@ -21,18 +21,14 @@ public class Consents {
     @JsonProperty("access")
     private AccountAccess access = null;
 
-
     @JsonProperty("recurringIndicator")
     private Boolean recurringIndicator = null;
-
 
     @JsonProperty("validUntil")
     private LocalDate validUntil = null;
 
-
     @JsonProperty("frequencyPerDay")
     private Integer frequencyPerDay = null;
-
 
     @JsonProperty("combinedServiceIndicator")
     private Boolean combinedServiceIndicator = null;
@@ -141,7 +137,6 @@ public class Consents {
     public void setCombinedServiceIndicator(Boolean combinedServiceIndicator) {
         this.combinedServiceIndicator = combinedServiceIndicator;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

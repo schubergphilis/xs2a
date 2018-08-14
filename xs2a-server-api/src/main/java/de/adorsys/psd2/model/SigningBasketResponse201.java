@@ -20,30 +20,23 @@ public class SigningBasketResponse201 {
     @JsonProperty("transactionStatus")
     private TransactionStatus transactionStatus = null;
 
-
     @JsonProperty("basketId")
     private String basketId = null;
-
 
     @JsonProperty("scaMethods")
     private ScaMethods scaMethods = null;
 
-
     @JsonProperty("chosenScaMethod")
     private ChosenScaMethod chosenScaMethod = null;
-
 
     @JsonProperty("challengeData")
     private ChallengeData challengeData = null;
 
-
     @JsonProperty("_links")
     private LinksSigningBasket _links = null;
 
-
     @JsonProperty("psuMessage")
     private String psuMessage = null;
-
 
     @JsonProperty("tppMessages")
     private TppMessages tppMessages = null;
@@ -209,7 +202,6 @@ public class SigningBasketResponse201 {
     public void setTppMessages(TppMessages tppMessages) {
         this.tppMessages = tppMessages;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

@@ -22,26 +22,20 @@ public class ConsentsResponse201 {
     @JsonProperty("consentStatus")
     private ConsentStatus consentStatus = null;
 
-
     @JsonProperty("consentId")
     private String consentId = null;
-
 
     @JsonProperty("scaMethods")
     private ScaMethods scaMethods = null;
 
-
     @JsonProperty("chosenScaMethod")
     private ChosenScaMethod chosenScaMethod = null;
-
 
     @JsonProperty("challengeData")
     private ChallengeData challengeData = null;
 
-
     @JsonProperty("_links")
     private Map _links = null;
-
 
     @JsonProperty("message")
     private String message = null;
@@ -189,7 +183,6 @@ public class ConsentsResponse201 {
     public void setMessage(String message) {
         this.message = message;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

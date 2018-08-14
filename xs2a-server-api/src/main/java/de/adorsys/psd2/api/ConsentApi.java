@@ -180,7 +180,6 @@ public interface ConsentApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-
     @ApiOperation(value = "Read the SCA status of the consent authorisation.", nickname = "getConsentScaStatus", notes = "This method returns the SCA status of a consent initiation's authorisation sub-resource. ", response = ScaStatusResponse.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Account Information Service (AIS)", "Common AIS and PIS Services",})
     @ApiResponses(value = {
@@ -226,7 +225,6 @@ public interface ConsentApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Consent status request", nickname = "getConsentStatus", notes = "Read the status of an account information consent resource.", response = ConsentStatusResponse200.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Account Information Service (AIS)",})
@@ -367,7 +365,6 @@ public interface ConsentApi {
         }
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
-
 
     @ApiOperation(value = "Update PSU Data for consents", nickname = "updateConsentsPsuData", notes = "This method update PSU data on the consents  resource if needed.  It may authorise a consent within the Embedded SCA Approach where needed.  Independently from the SCA Approach it supports e.g. the selection of  the authentication method and a non-SCA PSU authentication.  This methods updates PSU data on the cancellation authorisation resource if needed.   There are several possible Update PSU Data requests in the context of a consent request if needed,  which depends on the SCA approach:  * Redirect SCA Approach:   A specific Update PSU Data Request is applicable for      * the selection of authentication methods, before choosing the actual SCA approach. * Decoupled SCA Approach:   A specific Update PSU Data Request is only applicable for   * adding the PSU Identification, if not provided yet in the Payment Initiation Request or the Account Information Consent Request, or if no OAuth2 access token is used, or   * the selection of authentication methods. * Embedded SCA Approach:    The Update PSU Data Request might be used    * to add credentials as a first factor authentication data of the PSU and   * to select the authentication method and   * transaction authorisation.  The SCA Approach might depend on the chosen SCA method.  For that reason, the following possible Update PSU Data request can apply to all SCA approaches:  * Select an SCA method in case of several SCA methods are available for the customer.  There are the following request types on this access path:   * Update PSU Identification   * Update PSU Authentication   * Select PSU Autorization Method      WARNING: This method need a reduced header,      therefore many optional elements are not present.      Maybe in a later version the access path will change.   * Transaction Authorisation     WARNING: This method need a reduced header,      therefore many optional elements are not present.      Maybe in a later version the access path will change. ", response = Object.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Account Information Service (AIS)", "Common AIS and PIS Services",})

@@ -32,7 +32,6 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
-import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.AccountReferenceIban;
 import de.adorsys.psd2.model.Amount;
 import org.junit.Before;
@@ -70,8 +69,7 @@ public class PaymentServiceTest {
     private static final String ALLOWED_PAYMENT_PRODUCT = "sepa-credit-transfers";
     private final AspspConsentData ASPSP_CONSENT_DATA = new AspspConsentData("zzzzzzzzzzzzzz".getBytes());
 
-
-    private final PeriodicPayment PERIODIC_PAYMENT_OK = getPeriodicPayment(IBAN, AMOUNT);
+private final PeriodicPayment PERIODIC_PAYMENT_OK = getPeriodicPayment(IBAN, AMOUNT);
     private final PeriodicPayment PERIODIC_PAYMENT_NOK_IBAN = getPeriodicPayment(WRONG_IBAN, AMOUNT);
     private final PeriodicPayment PERIODIC_PAYMENT_NOK_AMOUNT = getPeriodicPayment(IBAN, EXCESSIVE_AMOUNT);
 
@@ -341,7 +339,7 @@ public class PaymentServiceTest {
         return singlePayments;
     }
 
-    private AccountReference getReference(String iban) {
+    private Object getReference(String iban) {
         AccountReferenceIban reference = new AccountReferenceIban();
         reference.setIban(iban);
         reference.setCurrency(CURRENCY.getCurrencyCode());

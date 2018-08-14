@@ -19,10 +19,10 @@ package de.adorsys.aspsp.xs2a.service.validator.header;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.service.validator.header.impl.*;
 import de.adorsys.aspsp.xs2a.web.BulkPaymentInitiationController;
-import de.adorsys.aspsp.xs2a.web.ConsentInformationController;
 import de.adorsys.aspsp.xs2a.web.PaymentInitiationController;
 import de.adorsys.aspsp.xs2a.web.PeriodicPaymentsController;
 import de.adorsys.aspsp.xs2a.web12.AccountController;
+import de.adorsys.aspsp.xs2a.web12.ConsentController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +39,7 @@ public class HeadersFactory {
         controllerClassMap.put(AccountController.class, AccountRequestHeader.class);
         controllerClassMap.put(AccountController.class, FundsConfirmationRequestHeader.class);
         controllerClassMap.put(AccountController.class, PaymentInitiationRequestHeader.class);
-        controllerClassMap.put(ConsentInformationController.class, ConsentRequestHeader.class);
+        controllerClassMap.put(ConsentController.class, ConsentRequestHeader.class);
         controllerClassMap.put(PaymentInitiationController.class, PaymentRequestHeader.class);
         controllerClassMap.put(BulkPaymentInitiationController.class, PaymentInitiationRequestHeader.class);
         controllerClassMap.put(PeriodicPaymentsController.class, PaymentInitiationRequestHeader.class);

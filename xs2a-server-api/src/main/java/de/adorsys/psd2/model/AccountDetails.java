@@ -23,42 +23,32 @@ public class AccountDetails {
     @JsonProperty("resourceId")
     private String resourceId = null;
 
-
     @JsonProperty("iban")
     private String iban = null;
-
 
     @JsonProperty("bban")
     private String bban = null;
 
-
     @JsonProperty("msisdn")
     private String msisdn = null;
-
 
     @JsonProperty("currency")
     private String currency = null;
 
-
     @JsonProperty("name")
     private String name = null;
-
 
     @JsonProperty("product")
     private String product = null;
 
-
     @JsonProperty("cashAccountType")
     private String cashAccountType = null;
-
 
     @JsonProperty("status")
     private AccountStatus status = null;
 
-
     @JsonProperty("bic")
     private String bic = null;
-
 
     @JsonProperty("linkedAccounts")
     private String linkedAccounts = null;

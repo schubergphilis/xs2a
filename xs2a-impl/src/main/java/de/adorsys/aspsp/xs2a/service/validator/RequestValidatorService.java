@@ -46,13 +46,6 @@ import java.util.stream.Collectors;
 @Log4j
 @Service
 public class RequestValidatorService {
-    @Autowired
-    private ParametersFactory parametersFactory;
-    @Autowired
-    private Validator validator;
-    @Autowired
-    private AspspProfileService aspspProfileService;
-
     private static final String PAYMENT_PRODUCT_PATH_VAR = "payment-product";
     private final static Map<Object, PisPaymentType> classMap = new HashMap<>();
 
@@ -61,6 +54,13 @@ public class RequestValidatorService {
         classMap.put(BulkPaymentInitiationController.class, PisPaymentType.BULK);
         classMap.put(PeriodicPaymentsController.class, PisPaymentType.PERIODIC);
     }
+
+    @Autowired
+    private ParametersFactory parametersFactory;
+    @Autowired
+    private Validator validator;
+    @Autowired
+    private AspspProfileService aspspProfileService;
 
     public Map<String, String> getRequestViolationMap(HttpServletRequest request, Object handler) {
         Map<String, String> violationMap = new HashMap<>();
@@ -99,8 +99,8 @@ public class RequestValidatorService {
 
     Map<String, String> getPaymentTypeViolationMap(Object handler) {
         return Optional.ofNullable(classMap.get(((HandlerMethod) handler).getBeanType()))
-                   .map(this::getViolationMapForPaymentType)
-                   .orElse(Collections.emptyMap());
+            .map(this::getViolationMapForPaymentType)
+            .orElse(Collections.emptyMap());
     }
 
     Map<String, String> getRequestHeaderViolationMap(HttpServletRequest request, Object handler) {
@@ -137,9 +137,9 @@ public class RequestValidatorService {
 
     private Map<String, String> getRequestParametersMap(HttpServletRequest request) {
         return request.getParameterMap().entrySet().stream()
-                   .collect(Collectors.toMap(
-                       Map.Entry::getKey,
-                       e -> String.join(",", e.getValue())));
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> String.join(",", e.getValue())));
     }
 
     private Map<String, String> checkPaymentProductByRequest(HttpServletRequest request) {
@@ -147,29 +147,28 @@ public class RequestValidatorService {
         Map<String, String> pathVariableMap = (Map) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
 
         return Optional.ofNullable(pathVariableMap)
-                   .map(mp -> mp.get(PAYMENT_PRODUCT_PATH_VAR))
-                   .map(this::checkPaymentProductSupportAndGetViolationMap)
-                   .orElse(Collections.emptyMap());
+            .map(mp -> mp.get(PAYMENT_PRODUCT_PATH_VAR))
+            .map(this::checkPaymentProductSupportAndGetViolationMap)
+            .orElse(Collections.emptyMap());
     }
 
     private Map<String, String> checkPaymentProductSupportAndGetViolationMap(String paymentProduct) {
         return Optional.ofNullable(paymentProduct)
-                   .flatMap(PaymentProduct::getByCode)
-                   .map(this::getViolationMapForPaymentProduct)
-                   .orElse(Collections.singletonMap(MessageErrorCode.PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct));
+            .flatMap(PaymentProduct::getByCode)
+            .map(this::getViolationMapForPaymentProduct)
+            .orElse(Collections.singletonMap(MessageErrorCode.PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct));
     }
 
     private Map<String, String> getViolationMapForPaymentProduct(PaymentProduct paymentProduct) {
         return isPaymentProductAvailable(paymentProduct)
-                   ? Collections.emptyMap()
-                   : Collections.singletonMap(MessageErrorCode.PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct.getCode());
+            ? Collections.emptyMap()
+            : Collections.singletonMap(MessageErrorCode.PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct.getCode());
     }
-
 
     private Map<String, String> getViolationMapForPaymentType(PisPaymentType paymentType) {
         return isPaymentTypeAvailable(paymentType)
-                   ? Collections.emptyMap()
-                   : Collections.singletonMap(MessageErrorCode.PARAMETER_NOT_SUPPORTED.getName(), "Wrong payment type: " + paymentType.getValue());
+            ? Collections.emptyMap()
+            : Collections.singletonMap(MessageErrorCode.PARAMETER_NOT_SUPPORTED.getName(), "Wrong payment type: " + paymentType.getValue());
     }
 
     private boolean isPaymentProductAvailable(PaymentProduct paymentProduct) {
@@ -184,8 +183,8 @@ public class RequestValidatorService {
 
     private <T> Map<String, String> getViolationMessagesMap(Set<ConstraintViolation<T>> collection) {
         return collection.stream()
-                   .collect(Collectors.toMap(
-                       violation -> violation.getPropertyPath().toString(),
-                       violation -> "'" + violation.getPropertyPath().toString() + "' " + violation.getMessage()));
+            .collect(Collectors.toMap(
+                violation -> violation.getPropertyPath().toString(),
+                violation -> "'" + violation.getPropertyPath().toString() + "' " + violation.getMessage()));
     }
 }

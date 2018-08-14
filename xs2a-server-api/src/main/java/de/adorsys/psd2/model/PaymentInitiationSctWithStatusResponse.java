@@ -21,34 +21,26 @@ public class PaymentInitiationSctWithStatusResponse {
     @JsonProperty("endToEndIdentification")
     private String endToEndIdentification = null;
 
-
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
-
 
     @JsonProperty("instructedAmount")
     private Amount instructedAmount = null;
 
-
     @JsonProperty("creditorAccount")
     private Object creditorAccount = null;
-
 
     @JsonProperty("creditorAgent")
     private String creditorAgent = null;
 
-
     @JsonProperty("creditorName")
     private String creditorName = null;
-
 
     @JsonProperty("creditorAddress")
     private Address creditorAddress = null;
 
-
     @JsonProperty("remittanceInformationUnstructured")
     private String remittanceInformationUnstructured = null;
-
 
     @JsonProperty("transactionStatus")
     private TransactionStatus transactionStatus = null;
@@ -234,7 +226,6 @@ public class PaymentInitiationSctWithStatusResponse {
     public void setTransactionStatus(TransactionStatus transactionStatus) {
         this.transactionStatus = transactionStatus;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

@@ -18,18 +18,14 @@ public class LinksAccountReport extends HashMap<String, String> {
     @JsonProperty("account")
     private String account = null;
 
-
     @JsonProperty("first")
     private String first = null;
-
 
     @JsonProperty("next")
     private String next = null;
 
-
     @JsonProperty("previous")
     private String previous = null;
-
 
     @JsonProperty("last")
     private String last = null;
@@ -130,7 +126,6 @@ public class LinksAccountReport extends HashMap<String, String> {
     public void setLast(String last) {
         this.last = last;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

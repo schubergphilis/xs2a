@@ -21,14 +21,12 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiTransaction;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
-import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
-import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -88,7 +86,6 @@ public class AccountMapper {
                 .map(this::mapToTransaction)
                 .collect(Collectors.toList()));
 
-
         return Optional.of(
             new AccountReport()
                 .booked(booked)
@@ -96,14 +93,14 @@ public class AccountMapper {
         );
     }
 
-    public AccountReference mapToAccountReference(SpiAccountReference spiAccountReference) {
+    public Object mapToAccountReference(SpiAccountReference spiAccountReference) {
         return Optional.ofNullable(spiAccountReference)
             .map(ar -> getAccountReference(ar.getIban(), ar.getBban(), ar.getPan(), ar.getMaskedPan(), ar.getMsisdn(), ar.getCurrency()))
             .orElse(null);
 
     }
 
-    public List<SpiAccountReference> mapToSpiAccountReferences(List<AccountReference> references) {
+    public List<SpiAccountReference> mapToSpiAccountReferences(List<Object> references) {
         return Optional.ofNullable(references)
             .map(ref -> ref.stream()
                 .map(this::mapToSpiAccountReference)
@@ -111,27 +108,27 @@ public class AccountMapper {
             .orElse(Collections.emptyList());
     }
 
-    public SpiAccountReference mapToSpiAccountReference(AccountReference account) {
+    public SpiAccountReference mapToSpiAccountReference(Object account) {
         return Optional.ofNullable(account)
             .map(ac -> {
                 SpiAccountReference accountReference = null;
                 if (account instanceof AccountReferenceBban) {
-                    accountReference = new SpiAccountReference(null, ((AccountReferenceBban) account).getBban(), null, null, null, account.getCurrency());
+                    accountReference = new SpiAccountReference(null, ((AccountReferenceBban) account).getBban(), null, null, null, ((AccountReferenceBban) account).getCurrency());
                 } else if (account instanceof AccountReferenceIban) {
-                    accountReference = new SpiAccountReference(((AccountReferenceIban) account).getIban(), null, null, null, null, account.getCurrency());
+                    accountReference = new SpiAccountReference(((AccountReferenceIban) account).getIban(), null, null, null, null, ((AccountReferenceIban) account).getCurrency());
                 } else if (account instanceof AccountReferenceMaskedPan) {
-                    accountReference = new SpiAccountReference(null, null, null, ((AccountReferenceMaskedPan) account).getMaskedPan(), null, account.getCurrency());
+                    accountReference = new SpiAccountReference(null, null, null, ((AccountReferenceMaskedPan) account).getMaskedPan(), null, ((AccountReferenceMaskedPan) account).getCurrency());
                 } else if (account instanceof AccountReferenceMsisdn) {
-                    accountReference = new SpiAccountReference(null, null, null, null, ((AccountReferenceMsisdn) account).getMsisdn(), account.getCurrency());
+                    accountReference = new SpiAccountReference(null, null, null, null, ((AccountReferenceMsisdn) account).getMsisdn(), ((AccountReferenceMsisdn) account).getCurrency());
                 } else if (account instanceof AccountReferencePan) {
-                    accountReference = new SpiAccountReference(null, null, ((AccountReferencePan) account).getPan(), null, null, account.getCurrency());
+                    accountReference = new SpiAccountReference(null, null, ((AccountReferencePan) account).getPan(), null, null, ((AccountReferencePan) account).getCurrency());
                 }
                 return accountReference;
             })
             .orElse(null);
     }
 
-    public List<AccountReference> mapToAccountReferences(List<SpiAccountReference> references) {
+    public List<Object> mapToAccountReferences(List<SpiAccountReference> references) {
         return Optional.ofNullable(references)
             .map(ref -> ref.stream()
                 .map(this::mapToAccountReference)
@@ -165,7 +162,7 @@ public class AccountMapper {
             .orElse(null);
     }
 
-    public List<AccountReference> mapToAccountReferencesFromDetails(List<SpiAccountDetails> details) {
+    public List<Object> mapToAccountReferencesFromDetails(List<SpiAccountDetails> details) {
         return Optional.ofNullable(details)
             .map(det -> det.stream()
                 .map(this::mapToAccountDetails)
@@ -184,18 +181,17 @@ public class AccountMapper {
             .map(this::mapToBalance)
             .collect(Collectors.toList()));
 
-
         return balances;
     }
 
-    private AccountReference mapToAccountReference(AccountDetails details) {
+    private Object mapToAccountReference(AccountDetails details) {
         return Optional.ofNullable(details)
             .map(det -> getAccountReference(det.getIban(), det.getBban(), null, null, det.getMsisdn(), det.getCurrency()))
             .orElse(null);
 
     }
 
-    private AccountReference getAccountReference(String iban, String bban, String pan, String maskedPan, String msisdn, String currency) {
+    private Object getAccountReference(String iban, String bban, String pan, String maskedPan, String msisdn, String currency) {
         if (StringUtils.isNotEmpty(iban)) {
             return new AccountReferenceIban().iban(iban).currency(currency);
         } else if (StringUtils.isNotEmpty(bban)) {

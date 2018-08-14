@@ -20,10 +20,8 @@ public class SigningBasketResponse200 {
     @JsonProperty("payments")
     private PaymentIdList payments = null;
 
-
     @JsonProperty("consents")
     private ConsentIdList consents = null;
-
 
     @JsonProperty("transactionStatus")
     private TransactionStatus transactionStatus = null;
@@ -88,7 +86,6 @@ public class SigningBasketResponse200 {
     public void setTransactionStatus(TransactionStatus transactionStatus) {
         this.transactionStatus = transactionStatus;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

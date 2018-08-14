@@ -60,12 +60,12 @@ public class PaymentService {
      * @return Information about the status of a payment
      */
     public ResponseObject<TransactionStatus> getPaymentStatusById(String paymentId, String paymentProduct) {
-        TransactionStatus transactionStatus = paymentMapper.mapToTransactionStatus(paymentSpi.getPaymentStatusById(paymentId, paymentProduct,  new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); //
+        TransactionStatus transactionStatus = paymentMapper.mapToTransactionStatus(paymentSpi.getPaymentStatusById(paymentId, paymentProduct, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); //
         // https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         return Optional.ofNullable(transactionStatus)
-                   .map(tr -> ResponseObject.<TransactionStatus>builder()
-                                  .body(tr).build())
-                   .orElse(ResponseObject.<TransactionStatus>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
+            .map(tr -> ResponseObject.<TransactionStatus>builder()
+                .body(tr).build())
+            .orElse(ResponseObject.<TransactionStatus>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
     }
 
     /**
@@ -79,14 +79,14 @@ public class PaymentService {
         Optional<MessageErrorCode> messageErrorCode = paymentValidationService.validatePeriodicPayment(periodicPayment, paymentProduct);
         if (messageErrorCode.isPresent()) {
             return ResponseObject.<PaymentInitialisationResponse>builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, messageErrorCode.get())))
-                       .build();
+                .fail(new MessageError(new TppMessageInformation(ERROR, messageErrorCode.get())))
+                .build();
         }
         return scaPaymentService.createPeriodicPayment(periodicPayment)
-                   .map(resp -> ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build())
-                   .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
-                               .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED)))
-                               .build());
+            .map(resp -> ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build())
+            .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
+                .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED)))
+                .build());
     }
 
     /**
@@ -100,8 +100,8 @@ public class PaymentService {
         // TODO: should be validated by interceptors https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/166
         if (CollectionUtils.isEmpty(payments)) {
             return ResponseObject.<List<PaymentInitialisationResponse>>builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
-                       .build();
+                .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                .build();
         }
         List<SinglePayments> validPayments = new ArrayList<>();
         List<PaymentInitialisationResponse> invalidPayments = new ArrayList<>();
@@ -117,14 +117,14 @@ public class PaymentService {
         if (CollectionUtils.isNotEmpty(validPayments)) {
             List<PaymentInitialisationResponse> paymentResponses = scaPaymentService.createBulkPayment(validPayments);
             if (CollectionUtils.isNotEmpty(paymentResponses) && paymentResponses.stream()
-                                                                    .anyMatch(pr -> pr.getTransactionStatus() != TransactionStatus.RJCT)) {
+                .anyMatch(pr -> pr.getTransactionStatus() != TransactionStatus.RJCT)) {
                 paymentResponses.addAll(invalidPayments);
                 return ResponseObject.<List<PaymentInitialisationResponse>>builder()
-                           .body(paymentResponses).build();
+                    .body(paymentResponses).build();
             }
         }
         return ResponseObject.<List<PaymentInitialisationResponse>>builder()
-                   .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED))).build();
+            .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED))).build();
     }
 
     /**
@@ -138,14 +138,14 @@ public class PaymentService {
         Optional<MessageErrorCode> messageErrorCode = paymentValidationService.validateSinglePayment(singlePayment, paymentProduct);
         if (messageErrorCode.isPresent()) {
             return ResponseObject.<PaymentInitialisationResponse>builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, messageErrorCode.get())))
-                       .build();
+                .fail(new MessageError(new TppMessageInformation(ERROR, messageErrorCode.get())))
+                .build();
         }
         return scaPaymentService.createSinglePayment(singlePayment)
-                   .map(resp -> ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build())
-                   .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
-                               .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED)))
-                               .build());
+            .map(resp -> ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build())
+            .orElse(ResponseObject.<PaymentInitialisationResponse>builder()
+                .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED)))
+                .build());
     }
 
     /**
@@ -160,8 +160,8 @@ public class PaymentService {
         ReadPayment service = readPaymentFactory.getService(paymentType.getValue());
         Optional<Object> payment = Optional.ofNullable(service.getPayment(paymentProduct, paymentId));
         return payment.isPresent()
-                   ? ResponseObject.builder().body(payment.get()).build()
-                   : ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build();
+            ? ResponseObject.builder().body(payment.get()).build()
+            : ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build();
 
     }
 }

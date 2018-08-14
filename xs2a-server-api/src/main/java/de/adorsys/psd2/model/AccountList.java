@@ -49,7 +49,6 @@ public class AccountList {
         this.accounts = accounts;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {

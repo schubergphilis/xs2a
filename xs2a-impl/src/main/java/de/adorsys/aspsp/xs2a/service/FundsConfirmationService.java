@@ -17,7 +17,6 @@
 package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.psd2.custom.AccountReference;
 import de.adorsys.psd2.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -39,14 +38,14 @@ public class FundsConfirmationService {
      */
     public ResponseObject<InlineResponse200> fundsConfirmation(ConfirmationOfFunds request) {
         Boolean fundsAvailable = Optional.ofNullable(request)
-            .map(req -> isFundsAvailable((AccountReference) req.getAccount(), req.getInstructedAmount()))
+            .map(req -> isFundsAvailable(req.getAccount(), req.getInstructedAmount()))
             .orElse(false);
 
         return ResponseObject.<InlineResponse200>builder()
             .body(new InlineResponse200().fundsAvailable(fundsAvailable)).build();
     }
 
-    private boolean isFundsAvailable(AccountReference accountReference, Amount requiredAmount) {
+    private boolean isFundsAvailable(Object accountReference, Amount requiredAmount) {
         List<Balance> balances = getAccountBalancesByAccountReference(accountReference);
 
         return balances.stream()
@@ -68,7 +67,7 @@ public class FundsConfirmationService {
             .orElse(BigDecimal.ZERO);
     }
 
-    private BalanceList getAccountBalancesByAccountReference(AccountReference reference) {
+    private BalanceList getAccountBalancesByAccountReference(Object reference) {
         return Optional.ofNullable(reference)
             .map(accountService::getAccountDetailsByAccountReference)
             .filter(Optional::isPresent)

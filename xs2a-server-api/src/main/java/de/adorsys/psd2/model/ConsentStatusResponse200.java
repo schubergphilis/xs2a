@@ -41,7 +41,6 @@ public class ConsentStatusResponse200 {
         this.consentStatus = consentStatus;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {

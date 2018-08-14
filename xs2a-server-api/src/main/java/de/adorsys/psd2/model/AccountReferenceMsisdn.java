@@ -1,7 +1,6 @@
 package de.adorsys.psd2.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.adorsys.psd2.custom.AccountReference;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.validation.annotation.Validated;
@@ -15,11 +14,10 @@ import java.util.Objects;
 @ApiModel(description = "An alias to access a payment account via a registered mobile phone number. ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
-public class AccountReferenceMsisdn extends AccountReference {
+public class AccountReferenceMsisdn {
 
     @JsonProperty("msisdn")
     private String msisdn = null;
-
 
     @JsonProperty("currency")
     private String currency = null;
@@ -63,7 +61,6 @@ public class AccountReferenceMsisdn extends AccountReference {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

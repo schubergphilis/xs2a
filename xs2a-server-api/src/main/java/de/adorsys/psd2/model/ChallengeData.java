@@ -20,14 +20,11 @@ public class ChallengeData {
     @JsonProperty("image")
     private byte[] image = null;
 
-
     @JsonProperty("data")
     private String data = null;
 
-
     @JsonProperty("imageLink")
     private String imageLink = null;
-
 
     @JsonProperty("otpMaxLength")
     private Integer otpMaxLength = null;

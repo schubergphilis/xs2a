@@ -198,7 +198,6 @@ public interface SigningBasketApi {
         return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-
     @ApiOperation(value = "Read the SCA status of the signing basket authorisation", nickname = "getSigningBasketScaStatus", notes = "This method returns the SCA status of a signing basket's authorisation sub-resource. ", response = ScaStatusResponse.class, authorizations = {
         @Authorization(value = "BearerAuthOAuth")}, tags = {"Signing Baskets", "Common AIS and PIS Services"})
     @ApiResponses(value = {

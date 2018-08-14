@@ -19,7 +19,6 @@ public class LinksAccountDetails extends HashMap<String, String> {
     @JsonProperty("balances")
     private String balances = null;
 
-
     @JsonProperty("transactions")
     private String transactions = null;
 
@@ -60,7 +59,6 @@ public class LinksAccountDetails extends HashMap<String, String> {
     public void setTransactions(String transactions) {
         this.transactions = transactions;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

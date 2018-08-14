@@ -16,7 +16,8 @@
 
 package de.adorsys.aspsp.xs2a.domain.consent;
 
-import de.adorsys.psd2.custom.AccountReference;
+import de.adorsys.aspsp.xs2a.service.ConsentService;
+import de.adorsys.psd2.model.AccountAccess;
 import de.adorsys.psd2.model.AccountReferenceIban;
 import org.junit.Test;
 
@@ -34,10 +35,9 @@ public class CreateConsentReqTest {
     @Test
     public void getAccountReferences_all() {
         //Given:
-        CreateConsentReq req = new CreateConsentReq();
-        req.setAccess(getAccess(getRefs(1),getRefs(2),getRefs(3)));
+        AccountAccess access = getAccess(getRefs(1), getRefs(2), getRefs(3));
         //When:
-        Set<AccountReference> result = req.getAccountReferences();
+        Set<Object> result = ConsentService.getAccountReferences(access);
         //Then:
         assertThat(result.size()).isEqualTo(3);
     }
@@ -45,10 +45,9 @@ public class CreateConsentReqTest {
     @Test
     public void getAccountReferences_1_null() {
         //Given:
-        CreateConsentReq req = new CreateConsentReq();
-        req.setAccess(getAccess(null,getRefs(2),getRefs(3)));
+        AccountAccess access = getAccess(null, getRefs(2), getRefs(3));
         //When:
-        Set<AccountReference> result = req.getAccountReferences();
+        Set<Object> result = ConsentService.getAccountReferences(access);
         //Then:
         assertThat(result.size()).isEqualTo(3);
     }
@@ -56,31 +55,27 @@ public class CreateConsentReqTest {
     @Test
     public void getAccountReferences_all_null() {
         //Given:
-        CreateConsentReq req = new CreateConsentReq();
-        req.setAccess(getAccess(null,null,null));
+        AccountAccess access = getAccess(null, null, null);
         //When:
-        Set<AccountReference> result = req.getAccountReferences();
+        Set<Object> result = ConsentService.getAccountReferences(access);
         //Then:
         assertThat(result.size()).isEqualTo(0);
     }
 
     @Test
     public void getAccountReferences_access_null() {
-        //Given:
-        CreateConsentReq req = new CreateConsentReq();
-        req.setAccess(null);
         //When:
-        Set<AccountReference> result = req.getAccountReferences();
+        Set<Object> result = ConsentService.getAccountReferences(null);
         //Then:
         assertThat(result.size()).isEqualTo(0);
     }
 
-    private AccountAccess getAccess(List<AccountReference> accounts, List<AccountReference> balances, List<AccountReference> transactions) {
-        return new AccountAccess(accounts, balances, transactions, null, null);
+    private AccountAccess getAccess(List<Object> accounts, List<Object> balances, List<Object> transactions) {
+        return new AccountAccess().accounts(accounts).balances(balances).transactions(transactions);
     }
 
-    private List<AccountReference> getRefs(int qty) {
-        List<AccountReference> list = new ArrayList<>();
+    private List<Object> getRefs(int qty) {
+        List<Object> list = new ArrayList<>();
         for (int i = 0; i < qty; i++) {
             AccountReferenceIban reference = new AccountReferenceIban();
             reference.setIban(IBAN + i);

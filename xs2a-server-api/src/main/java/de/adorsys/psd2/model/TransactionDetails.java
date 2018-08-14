@@ -23,86 +23,65 @@ public class TransactionDetails {
     @JsonProperty("transactionId")
     private String transactionId = null;
 
-
     @JsonProperty("entryReference")
     private String entryReference = null;
-
 
     @JsonProperty("endToEndId")
     private String endToEndId = null;
 
-
     @JsonProperty("mandateId")
     private String mandateId = null;
-
 
     @JsonProperty("checkId")
     private String checkId = null;
 
-
     @JsonProperty("creditorId")
     private String creditorId = null;
-
 
     @JsonProperty("bookingDate")
     private LocalDate bookingDate = null;
 
-
     @JsonProperty("valueDate")
     private LocalDate valueDate = null;
-
 
     @JsonProperty("transactionAmount")
     private Amount transactionAmount = null;
 
-
     @JsonProperty("exchangeRate")
     private ExchangeRateList exchangeRate = null;
-
 
     @JsonProperty("creditorName")
     private String creditorName = null;
 
-
     @JsonProperty("creditorAccount")
     private Object creditorAccount = null;
-
 
     @JsonProperty("ultimateCreditor")
     private String ultimateCreditor = null;
 
-
     @JsonProperty("debtorName")
     private String debtorName = null;
-
 
     @JsonProperty("debtorAccount")
     private Object debtorAccount = null;
 
-
     @JsonProperty("ultimateDebtor")
     private String ultimateDebtor = null;
-
 
     @JsonProperty("remittanceInformationUnstructured")
     private String remittanceInformationUnstructured = null;
 
-
     @JsonProperty("remittanceInformationStructured")
     private String remittanceInformationStructured = null;
-
 
     @JsonProperty("purposeCode")
     private PurposeCode purposeCode = null;
 
-
     @JsonProperty("bankTransactionCode")
     private String bankTransactionCode = null;
 
-
     @JsonProperty("proprietaryBankTransactionCode")
     private String proprietaryBankTransactionCode = null;
-
 
     @JsonProperty("_links")
     private Map _links = null;
@@ -545,7 +524,6 @@ public class TransactionDetails {
     public void setLinks(Map _links) {
         this._links = _links;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

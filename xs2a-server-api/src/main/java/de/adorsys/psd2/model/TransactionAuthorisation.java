@@ -40,7 +40,6 @@ public class TransactionAuthorisation {
         this.scaAuthenticationData = scaAuthenticationData;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {

@@ -61,9 +61,9 @@ public class KeycloakInvokerService {
             });
 
         String accessToken = null;
-        if(response.getBody() != null){
+        if (response.getBody() != null) {
             accessToken = AuthorizationConstant.AUTHORIZATION_HEADER + ": " + BEARER_TOKEN_PREFIX + response.getBody()
-                                                                                                        .get(AuthorizationConstant.ACCESS_TOKEN);
+                .get(AuthorizationConstant.ACCESS_TOKEN);
         }
         return accessToken;
     }

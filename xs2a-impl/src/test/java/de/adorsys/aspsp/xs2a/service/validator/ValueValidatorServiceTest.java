@@ -44,8 +44,7 @@ public class ValueValidatorServiceTest {
         valueValidatorService = new ValueValidatorService(Validation.buildDefaultValidatorFactory().getValidator());
     }
 
-
-    @Test
+@Test
     public void validate_AccountAndPeriod() {
         //Given:
         ValidationGroup fields = new ValidationGroup();

@@ -20,10 +20,8 @@ public class RemittanceInformationStructured {
     @JsonProperty("reference")
     private String reference = null;
 
-
     @JsonProperty("referenceType")
     private String referenceType = null;
-
 
     @JsonProperty("referenceIssuer")
     private String referenceIssuer = null;
@@ -89,7 +87,6 @@ public class RemittanceInformationStructured {
     public void setReferenceIssuer(String referenceIssuer) {
         this.referenceIssuer = referenceIssuer;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

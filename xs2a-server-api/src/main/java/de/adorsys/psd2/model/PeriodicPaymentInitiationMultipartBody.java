@@ -19,7 +19,6 @@ public class PeriodicPaymentInitiationMultipartBody {
     @JsonProperty("xml_sct")
     private Object xmlSct = null;
 
-
     @JsonProperty("json_standingorderType")
     private PeriodicPaymentInitiationXmlPart2StandingorderTypeJson jsonStandingorderType = null;
 
@@ -61,7 +60,6 @@ public class PeriodicPaymentInitiationMultipartBody {
     public void setJsonStandingorderType(PeriodicPaymentInitiationXmlPart2StandingorderTypeJson jsonStandingorderType) {
         this.jsonStandingorderType = jsonStandingorderType;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

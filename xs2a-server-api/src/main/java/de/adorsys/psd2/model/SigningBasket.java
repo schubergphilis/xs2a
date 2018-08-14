@@ -20,7 +20,6 @@ public class SigningBasket {
     @JsonProperty("paymentIds")
     private PaymentIdList paymentIds = null;
 
-
     @JsonProperty("consentIds")
     private ConsentIdList consentIds = null;
 
@@ -65,7 +64,6 @@ public class SigningBasket {
     public void setConsentIds(ConsentIdList consentIds) {
         this.consentIds = consentIds;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

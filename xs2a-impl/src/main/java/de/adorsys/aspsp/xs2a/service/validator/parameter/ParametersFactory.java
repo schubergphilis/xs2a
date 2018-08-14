@@ -33,13 +33,13 @@ import java.util.Map;
 @AllArgsConstructor
 public class ParametersFactory {
 
-    private final ObjectMapper objectMapper;
-
     private static final Map<Class, Class> controllerClassMap = new HashMap<>();
 
     static {
         controllerClassMap.put(AccountController.class, AccountRequestParameter.class);
     }
+
+    private final ObjectMapper objectMapper;
 
     public RequestParameter getParameterImpl(Map<String, String> requestParametersMap, Class controllerClass) {
         Class<? extends RequestParameter> headerClass = controllerClassMap.get(controllerClass);

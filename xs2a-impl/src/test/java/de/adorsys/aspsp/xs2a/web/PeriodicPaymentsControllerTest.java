@@ -54,8 +54,7 @@ public class PeriodicPaymentsControllerTest {
     private final Charset UTF_8 = Charset.forName("utf-8");
     private static final String REDIRECT_LINK = "http://localhost:28080/view/payment/confirmation/";
 
-
-    @InjectMocks
+@InjectMocks
     private PeriodicPaymentsController periodicPaymentsController;
     private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private JsonConverter jsonConverter = new JsonConverter(objectMapper);

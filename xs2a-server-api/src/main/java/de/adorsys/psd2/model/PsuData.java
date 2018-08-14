@@ -40,7 +40,6 @@ public class PsuData {
         this.password = password;
     }
 
-
     @Override
     public boolean equals(java.lang.Object o) {
         if (this == o) {

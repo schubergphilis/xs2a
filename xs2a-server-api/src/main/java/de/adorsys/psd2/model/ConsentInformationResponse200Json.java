@@ -21,22 +21,17 @@ public class ConsentInformationResponse200Json {
     @JsonProperty("access")
     private AccountAccess access = null;
 
-
     @JsonProperty("recurringIndicator")
     private Boolean recurringIndicator = null;
-
 
     @JsonProperty("validUntil")
     private LocalDate validUntil = null;
 
-
     @JsonProperty("frequencyPerDay")
     private Integer frequencyPerDay = null;
 
-
     @JsonProperty("lastActionDate")
     private LocalDate lastActionDate = null;
-
 
     @JsonProperty("consentStatus")
     private ConsentStatus consentStatus = null;
@@ -166,7 +161,6 @@ public class ConsentInformationResponse200Json {
     public void setConsentStatus(ConsentStatus consentStatus) {
         this.consentStatus = consentStatus;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

@@ -39,8 +39,8 @@ public class PaymentValidationService {
             return of(FORMAT_ERROR);
         }
         return payment.isValidDate()
-                   ? containsPaymentRelatedErrors(payment, paymentProduct)
-                   : of(EXECUTION_DATE_INVALID);
+            ? containsPaymentRelatedErrors(payment, paymentProduct)
+            : of(EXECUTION_DATE_INVALID);
     }
 
     public Optional<MessageErrorCode> validateSinglePayment(SinglePayments payment, String paymentProduct) {
@@ -48,8 +48,8 @@ public class PaymentValidationService {
             return of(FORMAT_ERROR);
         }
         return payment.isValidDated() //TODO Should be removed with https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/167
-                   ? containsPaymentRelatedErrors(payment, paymentProduct)
-                   : of(EXECUTION_DATE_INVALID);
+            ? containsPaymentRelatedErrors(payment, paymentProduct)
+            : of(EXECUTION_DATE_INVALID);
     }
 
     private Optional<MessageErrorCode> containsPaymentRelatedErrors(SinglePayments payment, String paymentProduct) {

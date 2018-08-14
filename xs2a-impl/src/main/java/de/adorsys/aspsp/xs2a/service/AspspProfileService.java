@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.service;
 import de.adorsys.aspsp.xs2a.config.rest.profile.AspspProfileRemoteUrls;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.ScaApproach;
-import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,12 +47,12 @@ public class AspspProfileService {
      */
     public List<PaymentProduct> getAvailablePaymentProducts() {
         return Optional.ofNullable(readAvailablePaymentProducts())
-                   .map(list -> list.stream()
-                                    .map(PaymentProduct::getByCode)
-                                    .filter(Optional::isPresent)
-                                    .map(Optional::get)
-                                    .collect(Collectors.toList()))
-                   .orElse(Collections.emptyList());
+            .map(list -> list.stream()
+                .map(PaymentProduct::getByCode)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList()))
+            .orElse(Collections.emptyList());
     }
 
     /**
@@ -62,12 +62,12 @@ public class AspspProfileService {
      */
     public List<PisPaymentType> getAvailablePaymentTypes() {
         return Optional.ofNullable(readAvailablePaymentTypes())
-                   .map(list -> list.stream()
-                                    .map(PisPaymentType::getByValue)
-                                    .filter(Optional::isPresent)
-                                    .map(Optional::get)
-                                    .collect(Collectors.toList()))
-                   .orElse(Collections.emptyList());
+            .map(list -> list.stream()
+                .map(PisPaymentType::getByValue)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList()))
+            .orElse(Collections.emptyList());
     }
 
     /**
@@ -78,7 +78,7 @@ public class AspspProfileService {
     public boolean isRedirectMode() {
         ScaApproach scaApproach = readScaApproach();
         return scaApproach == ScaApproach.REDIRECT
-                   || scaApproach == ScaApproach.DECOUPLED;
+            || scaApproach == ScaApproach.DECOUPLED;
     }
 
     private List<String> readAvailablePaymentProducts() {

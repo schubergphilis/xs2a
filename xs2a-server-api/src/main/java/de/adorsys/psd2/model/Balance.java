@@ -23,18 +23,14 @@ public class Balance {
     @JsonProperty("balanceAmount")
     private Amount balanceAmount = null;
 
-
     @JsonProperty("balanceType")
     private BalanceType balanceType = null;
-
 
     @JsonProperty("lastChangeDateTime")
     private OffsetDateTime lastChangeDateTime = null;
 
-
     @JsonProperty("referenceDate")
     private LocalDate referenceDate = null;
-
 
     @JsonProperty("lastCommittedTransaction")
     private String lastCommittedTransaction = null;
@@ -141,7 +137,6 @@ public class Balance {
     public void setLastCommittedTransaction(String lastCommittedTransaction) {
         this.lastCommittedTransaction = lastCommittedTransaction;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

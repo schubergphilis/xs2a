@@ -21,10 +21,8 @@ public class UpdatePsuIdenticationResponse {
     @JsonProperty("_links")
     private Map _links = null;
 
-
     @JsonProperty("scaStatus")
     private ScaStatus scaStatus = null;
-
 
     @JsonProperty("psuMessage")
     private String psuMessage = null;
@@ -89,7 +87,6 @@ public class UpdatePsuIdenticationResponse {
     public void setPsuMessage(String psuMessage) {
         this.psuMessage = psuMessage;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

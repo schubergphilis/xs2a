@@ -19,22 +19,17 @@ public class LinksSelectPsuAuthenticationMethod extends HashMap<String, String> 
     @JsonProperty("scaRedirect")
     private String scaRedirect = null;
 
-
     @JsonProperty("scaOAuth")
     private String scaOAuth = null;
-
 
     @JsonProperty("updatePsuIdentification")
     private String updatePsuIdentification = null;
 
-
     @JsonProperty("updatePsuAuthentication")
     private String updatePsuAuthentication = null;
 
-
     @JsonProperty("authoriseTransaction")
     private String authoriseTransaction = null;
-
 
     @JsonProperty("scaStatus")
     private String scaStatus = null;
@@ -152,7 +147,6 @@ public class LinksSelectPsuAuthenticationMethod extends HashMap<String, String> 
     public void setScaStatus(String scaStatus) {
         this.scaStatus = scaStatus;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

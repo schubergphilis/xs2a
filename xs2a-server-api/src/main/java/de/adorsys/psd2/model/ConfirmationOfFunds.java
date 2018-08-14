@@ -21,14 +21,11 @@ public class ConfirmationOfFunds {
     @JsonProperty("cardNumber")
     private String cardNumber = null;
 
-
     @JsonProperty("account")
     private Object account = null;
 
-
     @JsonProperty("payee")
     private String payee = null;
-
 
     @JsonProperty("instructedAmount")
     private Amount instructedAmount = null;
@@ -115,7 +112,6 @@ public class ConfirmationOfFunds {
     public void setInstructedAmount(Amount instructedAmount) {
         this.instructedAmount = instructedAmount;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {

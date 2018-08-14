@@ -19,18 +19,14 @@ public class LinksPaymentInitiationMultiLevelSca extends HashMap<String, String>
     @JsonProperty("startAuthorisation")
     private String startAuthorisation = null;
 
-
     @JsonProperty("startAuthorisationWithPsuIdentification")
     private String startAuthorisationWithPsuIdentification = null;
-
 
     @JsonProperty("startAuthorisationWithPsuAuthentication")
     private String startAuthorisationWithPsuAuthentication = null;
 
-
     @JsonProperty("self")
     private String self = null;
-
 
     @JsonProperty("status")
     private String status = null;
@@ -129,7 +125,6 @@ public class LinksPaymentInitiationMultiLevelSca extends HashMap<String, String>
     public void setStatus(String status) {
         this.status = status;
     }
-
 
     @Override
     public boolean equals(java.lang.Object o) {
