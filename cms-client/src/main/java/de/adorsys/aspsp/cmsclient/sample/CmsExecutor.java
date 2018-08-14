@@ -41,7 +41,7 @@ public class CmsExecutor {
     private static final String CMS_BASE_URL = "http://localhost:38080";
     private static final int CONNECTION_TIMEOUT = 5000;
     private static final int CONNECTION_REQUEST_TIMEOUT = 5000;
-    private static String consentId;
+    private static String consentId = "Test consent id";
 
     public static void main(String[] args) throws IOException, URISyntaxException {
         Configuration configuration = new Configuration(CMS_BASE_URL, CONNECTION_TIMEOUT, CONNECTION_REQUEST_TIMEOUT);
@@ -56,14 +56,9 @@ public class CmsExecutor {
     }
 
     private static void createAisConsent(CmsServiceInvoker cmsServiceInvoker) throws IOException, URISyntaxException {
-        String consentId = null;
         Optional<CreateAisConsentResponse> createAisResponse = Optional.ofNullable(cmsServiceInvoker.invoke(new CreateAisConsentMethod(buildAisConsentRequest())));
-        if (createAisResponse.isPresent()) {
-            consentId = createAisResponse.get()
-                            .getConsentId();
-        }
+        createAisResponse.ifPresent(resp -> consentId = resp.getConsentId());
         logger.info("Consent ID: " + consentId);
-        CmsExecutor.consentId = consentId;
     }
 
     private static void getAisConsentById(CmsServiceInvoker cmsServiceInvoker) throws IOException, URISyntaxException {
@@ -89,7 +84,7 @@ public class CmsExecutor {
     private static void updateConsentStatus(CmsServiceInvoker cmsServiceInvoker) throws IOException, URISyntaxException {
         HttpUriParams uriParams = HttpUriParams.builder()
                                       .addPathVariable("consent-id", consentId)
-                                      .addPathVariable("status", "REVOKED_BY_PSU")
+                                      .addPathVariable("status", ConsentStatus.REVOKED_BY_PSU.name())
                                       .build();
         cmsServiceInvoker.invoke(new UpdateConsentStatusMethod(uriParams));
     }
