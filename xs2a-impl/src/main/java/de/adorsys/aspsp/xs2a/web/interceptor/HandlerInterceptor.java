@@ -16,7 +16,11 @@
 
 package de.adorsys.aspsp.xs2a.web.interceptor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
+import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
+import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
+import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.validator.RequestValidatorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +32,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
+import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
+
 @Slf4j
 @Component
 public class HandlerInterceptor extends HandlerInterceptorAdapter {
     private final RequestValidatorService requestValidatorService;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public HandlerInterceptor(RequestValidatorService requestValidatorService) {
+    public HandlerInterceptor(RequestValidatorService requestValidatorService, ObjectMapper objectMapper) {
         this.requestValidatorService = requestValidatorService;
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -56,14 +64,10 @@ public class HandlerInterceptor extends HandlerInterceptorAdapter {
             log.debug("Handled error {}", messageCode.name() + ": " + firstError.getValue());
             response.resetBuffer();
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setCharacterEncoding("UTF-8");
             response.setHeader("Content-Type", "application/json");
-            response.getWriter().write("{\n" +
-                                           "    \"transactionStatus\": \"RJCT\",\n" +
-                                           "    \"tppMessage\": {\n" +
-                                           "        \"category\": \"ERROR\",\n" +
-                                           "        \"code\": \"FORMAT_ERROR\"\n" +
-                                           "    }\n" +
-                                           "}");
+            response.getWriter().write(objectMapper.writeValueAsString(
+                new MessageError(TransactionStatus.RJCT, new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR))));
             response.flushBuffer();
             return false;
         }
