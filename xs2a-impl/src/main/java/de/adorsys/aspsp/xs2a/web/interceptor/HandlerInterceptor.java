@@ -67,7 +67,7 @@ public class HandlerInterceptor extends HandlerInterceptorAdapter {
             response.setCharacterEncoding("UTF-8");
             response.setHeader("Content-Type", "application/json");
             response.getWriter().write(objectMapper.writeValueAsString(
-                new MessageError(TransactionStatus.RJCT, new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR))));
+                new MessageError(TransactionStatus.RJCT, new TppMessageInformation(ERROR, messageCode))));
             response.flushBuffer();
             return false;
         }
