@@ -16,22 +16,19 @@
 
 package de.adorsys.aspsp.xs2a.consent.api;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
-import java.util.Currency;
+@Data
+@ApiModel(description = "Remittance in cms", value = "CmsRemittance")
+public class CmsRemittance {
+    @ApiModelProperty(value = "the actual reference", required = true, example = "Ref Number Merchant")
+    private String reference;
 
-@Getter
-@AllArgsConstructor
-public class AccountReference {
-    private String iban;
-    private String bban;
-    private String pan;
-    private String maskedPan;
-    private String msisdn;
-    private Currency currency;
+    @ApiModelProperty(value = "reference type", example = "reference type")
+    private String referenceType;
 
-    public AccountReference(String iban, Currency currency) {
-        this(iban, "", "", "", "", currency);
-    }
+    @ApiModelProperty(value = "reference issuer", example = "reference issuer")
+    private String referenceIssuer;
 }
