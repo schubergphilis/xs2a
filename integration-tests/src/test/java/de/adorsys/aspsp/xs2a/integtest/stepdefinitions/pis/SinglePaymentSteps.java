@@ -11,7 +11,6 @@ import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
-import de.adorsys.aspsp.xs2a.integtest.util.PaymentUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
@@ -64,15 +63,22 @@ public class SinglePaymentSteps {
     @When("^PSU sends the single payment initiating request$")
     public void sendPaymentInitiatingRequest() {
         HttpEntity<SinglePayment> entity = getSinglePaymentsHttpEntity();
+//        ResponseEntity<PaymentInitialisationResponse> response =
 
-        ResponseEntity<PaymentInitialisationResponse> response = restTemplate.exchange(
-            context.getBaseUrl() + "/payments/" + context.getPaymentProduct(),
-            HttpMethod.POST,
-            entity,
-            PaymentInitialisationResponse.class);
+            try {
+                restTemplate.exchange(
+                    context.getBaseUrl() + "/payments/" + context.getPaymentProduct(),
+                    HttpMethod.POST,
+                    entity,
+                    PaymentInitialisationResponse.class);
+            } catch (HttpClientErrorException hce) {
+                ResponseEntity<PaymentInitialisationResponse> actualResponse = new ResponseEntity<>(
+                    hce.getStatusCode());
+                context.setActualResponse(actualResponse);
 
-        context.setActualResponse(response);
+            }
     }
+        //context.setActualResponse(response);
 
     @Then("^a successful response code and the appropriate single payment response data$")
     public void checkResponseCode() {
@@ -151,8 +157,6 @@ public class SinglePaymentSteps {
         headers.setAll(context.getTestData().getRequest().getHeader());
         headers.add("Authorization", "Bearer " + context.getAccessToken());
         headers.add("Content-Type", "application/json");
-        headers.add("x-request-id", "2f77a125-aa7a-45c0-b414-cea25a116035");
-        headers.add("psu-ip-address", "192.168.8.78");
 
         return new HttpEntity<>(context.getTestData().getRequest().getBody(), headers);
     }
