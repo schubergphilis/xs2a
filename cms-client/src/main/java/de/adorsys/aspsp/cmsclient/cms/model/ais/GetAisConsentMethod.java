@@ -22,9 +22,9 @@ import de.adorsys.aspsp.cmsclient.core.util.HttpUriParams;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountConsent;
 
 public class GetAisConsentMethod extends RestCmsRequestMethod<Void, AisAccountConsent> {
-    private static final String GET_AIS_CONSENT_BY_ID = "api/v1/ais/consent/{consent-id}";
+    private static final String GET_AIS_CONSENT_BY_ID_URI = "api/v1/ais/consent/{consent-id}";
 
     public GetAisConsentMethod(HttpUriParams uriParams) {
-        super(HttpMethod.GET, GET_AIS_CONSENT_BY_ID, uriParams);
+        super(HttpMethod.GET, GET_AIS_CONSENT_BY_ID_URI, uriParams);
     }
 }

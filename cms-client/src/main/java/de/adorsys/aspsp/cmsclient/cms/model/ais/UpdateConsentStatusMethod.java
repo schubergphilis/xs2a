@@ -21,9 +21,9 @@ import de.adorsys.aspsp.cmsclient.core.HttpMethod;
 import de.adorsys.aspsp.cmsclient.core.util.HttpUriParams;
 
 public class UpdateConsentStatusMethod extends RestCmsRequestMethod<Void, Void> {
-    private static final String UPDATE_CONSENT_STATUS = "api/v1/ais/consent/{consent-id}/status/{status}";
+    private static final String UPDATE_CONSENT_STATUS_URI = "api/v1/ais/consent/{consent-id}/status/{status}";
 
     public UpdateConsentStatusMethod(HttpUriParams uriParams) {
-        super(HttpMethod.PUT, UPDATE_CONSENT_STATUS, uriParams);
+        super(HttpMethod.PUT, UPDATE_CONSENT_STATUS_URI, uriParams);
     }
 }
