@@ -24,7 +24,7 @@ import java.time.LocalDate;
 
 @Data
 @ApiModel(description = "Ais consent request", value = "AisConsentRequest")
-public class AisConsentRequest {
+public class CreateAisConsentRequest {
 
     @ApiModelProperty(value = "ID of the corresponding PSU", required = true, example = "32aad578-58a6-4d5d-8b0c-45546dd88f07")
     private String psuId;
@@ -49,4 +49,7 @@ public class AisConsentRequest {
 
     @ApiModelProperty(value = "If 'true' indicates that a payment initiation service will be addressed in the same 'session'", required = true, example = "false")
     private boolean combinedServiceIndicator;
+
+    @ApiModelProperty(value = "ASPSP consent data", example = "zzzzzzzz")
+    private byte[] aspspConsentData;
 }

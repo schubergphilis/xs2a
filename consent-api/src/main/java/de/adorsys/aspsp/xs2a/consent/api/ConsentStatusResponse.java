@@ -14,18 +14,13 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis;
+package de.adorsys.aspsp.xs2a.consent.api;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.util.Currency;
-
-@Value
-public class PisAccountReference {
-    private String iban;
-    private String bban;
-    private String pan;
-    private String maskedPan;
-    private String msisdn;
-    private Currency currency;
+@Data
+@AllArgsConstructor
+public class ConsentStatusResponse {
+    private ConsentStatus consentStatus;
 }

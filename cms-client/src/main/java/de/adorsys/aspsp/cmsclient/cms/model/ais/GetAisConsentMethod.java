@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis;
+package de.adorsys.aspsp.cmsclient.cms.model.ais;
 
-import lombok.Data;
+import de.adorsys.aspsp.cmsclient.cms.RestCmsRequestMethod;
+import de.adorsys.aspsp.cmsclient.core.HttpMethod;
+import de.adorsys.aspsp.cmsclient.core.util.HttpUriParams;
+import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountConsent;
 
-import java.time.LocalDate;
+public class GetAisConsentMethod extends RestCmsRequestMethod<Void, AisAccountConsent> {
+    private static final String GET_AIS_CONSENT_BY_ID_URI = "api/v1/ais/consent/{consent-id}";
 
-@Data
-public class PisPeriodicPayment extends PisSinglePayment {
-
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String executionRule;
-    private String frequency;
-    private int dayOfExecution; //Day here max 31
+    public GetAisConsentMethod(HttpUriParams uriParams) {
+        super(HttpMethod.GET, GET_AIS_CONSENT_BY_ID_URI, uriParams);
+    }
 }

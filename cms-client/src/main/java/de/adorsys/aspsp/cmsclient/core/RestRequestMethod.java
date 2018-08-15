@@ -14,15 +14,24 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis;
+package de.adorsys.aspsp.cmsclient.core;
 
-import lombok.Value;
+import de.adorsys.aspsp.cmsclient.core.util.HttpUriParams;
+import org.apache.http.Header;
 
-@Value
-public class PisAddress {
-    private String street;
-    private String buildingNumber;
-    private String city;
-    private String postalCode;
-    private String country;
+import java.util.List;
+
+public interface RestRequestMethod<I, R> {
+
+    HttpMethod httpMethod();
+
+    String path();
+
+    Class<R> responseClass();
+
+    I requestBody();
+
+    List<Header> headers();
+
+    HttpUriParams uriParams();
 }

@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis;
+package de.adorsys.aspsp.xs2a.consent.api.pis.proto;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.math.BigDecimal;
-import java.util.Currency;
-
-@Value
-public class PisAmount {
-    private Currency currency;
-    private BigDecimal content;
+@Data
+@AllArgsConstructor
+public class CreatePisConsentResponse {
+    private String consentId;
 }

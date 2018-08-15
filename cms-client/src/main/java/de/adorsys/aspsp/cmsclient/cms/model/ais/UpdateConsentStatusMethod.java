@@ -14,24 +14,16 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api;
+package de.adorsys.aspsp.cmsclient.cms.model.ais;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import de.adorsys.aspsp.cmsclient.cms.RestCmsRequestMethod;
+import de.adorsys.aspsp.cmsclient.core.HttpMethod;
+import de.adorsys.aspsp.cmsclient.core.util.HttpUriParams;
 
-import java.util.Currency;
+public class UpdateConsentStatusMethod extends RestCmsRequestMethod<Void, Void> {
+    private static final String UPDATE_CONSENT_STATUS_URI = "api/v1/ais/consent/{consent-id}/status/{status}";
 
-@Getter
-@AllArgsConstructor
-public class AccountReference {
-    private String iban;
-    private String bban;
-    private String pan;
-    private String maskedPan;
-    private String msisdn;
-    private Currency currency;
-
-    public AccountReference(String iban, Currency currency) {
-        this(iban, "", "", "", "" ,currency);
+    public UpdateConsentStatusMethod(HttpUriParams uriParams) {
+        super(HttpMethod.PUT, UPDATE_CONSENT_STATUS_URI, uriParams);
     }
 }

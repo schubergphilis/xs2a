@@ -22,7 +22,7 @@ import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.ConsentStatus;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccessInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountConsent;
-import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentRequest;
+import de.adorsys.aspsp.xs2a.consent.api.ais.CreateAisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.AccountAccess;
 import de.adorsys.aspsp.xs2a.domain.AisAccount;
 import de.adorsys.aspsp.xs2a.domain.AisConsent;
@@ -59,7 +59,7 @@ public class AISConsentService {
      * @return String consent id
      */
     @Transactional
-    public Optional<String> createConsent(AisConsentRequest request) {
+    public Optional<String> createConsent(CreateAisConsentRequest request) {
         int minFrequencyPerDay = profileService.getMinFrequencyPerDay(request.getFrequencyPerDay());
         AisConsent consent = new AisConsent();
         consent.setExternalId(UUID.randomUUID().toString());
@@ -75,6 +75,7 @@ public class AISConsentService {
         consent.setRecurringIndicator(request.isRecurringIndicator());
         consent.setTppRedirectPreferred(request.isTppRedirectPreferred());
         consent.setCombinedServiceIndicator(request.isCombinedServiceIndicator());
+        consent.setAspspConsentData(request.getAspspConsentData());
         AisConsent saved = aisConsentRepository.save(consent);
         return saved.getId() != null
                    ? Optional.ofNullable(saved.getExternalId())

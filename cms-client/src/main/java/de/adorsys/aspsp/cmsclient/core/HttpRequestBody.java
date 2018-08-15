@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis;
+package de.adorsys.aspsp.cmsclient.core;
 
-public enum PisConsentType {
-    BULK,
-    SINGLE,
-    PERIODIC
+import org.apache.http.client.methods.HttpRequestBase;
+
+public interface HttpRequestBody {
+
+    default <R> HttpRequestBase getHttpRequest(R requestBody) {
+        throw new UnsupportedOperationException("This method has to be overridden before usage");
+    }
+
+    default HttpRequestBase getHttpRequest() {
+        throw new UnsupportedOperationException("This method has to be overridden before usage");
+    }
 }

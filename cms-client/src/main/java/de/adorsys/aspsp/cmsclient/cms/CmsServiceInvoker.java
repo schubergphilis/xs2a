@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis.proto;
+package de.adorsys.aspsp.cmsclient.cms;
 
-import lombok.Value;
+import de.adorsys.aspsp.cmsclient.core.AbstractServiceInvoker;
+import de.adorsys.aspsp.cmsclient.core.RestClientConfig;
 
-@Value
-public class PisConsentPeriodicPaymentRequest {
-    private String periodicPaymentId;
+public class CmsServiceInvoker extends AbstractServiceInvoker {
+
+    public CmsServiceInvoker(RestClientConfig restClientConfig) {
+        super(restClientConfig);
+    }
 }
