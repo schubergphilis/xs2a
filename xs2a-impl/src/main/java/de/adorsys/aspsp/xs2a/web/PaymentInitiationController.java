@@ -21,7 +21,6 @@ import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatusResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
@@ -32,7 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -71,11 +69,11 @@ public class PaymentInitiationController {
         @RequestHeader(name = "tpp-signature-certificate", required = false) String tppSignatureCertificate,
         @ApiParam(name = "singlePayment", required = true)
         @RequestBody @Valid SinglePayment singlePayment) {
-        Optional<MessageError> error = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
+        ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
         return responseMapper.created(
-            error
-                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(e).build())
-                .orElse(paymentService.createPaymentInitiation(singlePayment, tppSignatureCertificate, paymentProduct)));
+            accountReferenceValidationResponse.hasError()
+                ? ResponseObject.<PaymentInitialisationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+                : paymentService.createPaymentInitiation(singlePayment, tppSignatureCertificate, paymentProduct));
     }
 
     @ApiOperation(value = "Get information  about the status of a payment initialisation ", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})

@@ -54,10 +54,10 @@ public class FundsConfirmationController {
         @ApiImplicitParam(name = "signature", value = "98c0", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "tpp-signature-certificate", value = "some certificate", dataType = "String", paramType = "header")})
     public ResponseEntity<FundsConfirmationResponse> fundConfirmation(@RequestBody @Valid FundsConfirmationRequest request) {
-        Optional<MessageError> error = referenceValidationService.validateAccountReferences(request.getAccountReferences());
+        ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(request.getAccountReferences());
         return responseMapper.ok(
-            error
-                .map(e -> ResponseObject.<FundsConfirmationResponse>builder().fail(e).build())
-                .orElse(fundsConfirmationService.fundsConfirmation(request)));
+            accountReferenceValidationResponse.hasError()
+                ? ResponseObject.<FundsConfirmationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+                : fundsConfirmationService.fundsConfirmation(request));
     }
 }

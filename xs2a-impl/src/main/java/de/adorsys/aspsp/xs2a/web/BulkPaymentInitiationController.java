@@ -62,9 +62,9 @@ public class BulkPaymentInitiationController {
         @ApiParam(name = "Bulk Payment", value = "All data relevant for the corresponding payment product and necessary for execution of the standing order.", required = true)
         @RequestBody List<SinglePayment> payments) {
         for (SinglePayment payment : payments) {
-            Optional<MessageError> error = referenceValidationService.validateAccountReferences(payment.getAccountReferences());
-            if (error.isPresent()) {
-                return responseMapper.created(ResponseObject.<List<PaymentInitialisationResponse>>builder().fail(error.get()).build());
+            ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(payment.getAccountReferences());
+            if (accountReferenceValidationResponse.hasError()) {
+                return responseMapper.created(ResponseObject.<List<PaymentInitialisationResponse>>builder().fail(accountReferenceValidationResponse.getError()).build());
             }
         }
         return responseMapper.created(paymentService.createBulkPayments(payments, tppSignatureCertificate, paymentProduct));

@@ -1,6 +1,7 @@
 package de.adorsys.aspsp.xs2a.service.validator;
 
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
+import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
@@ -13,10 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -26,7 +24,7 @@ import java.util.stream.Collectors;
 public class AccountReferenceValidationService {
     private final AspspProfileService profileService;
 
-    public Optional<MessageError> validateAccountReferences(Set<AccountReference> references) {
+    public ResponseObject validateAccountReferences(Set<AccountReference> references) {
         List<SupportedAccountReferenceField> supportedFields = profileService.getSupportedAccountReferenceFields();
 
         boolean isInvalidReferenceSet = references.stream()
@@ -34,8 +32,8 @@ public class AccountReferenceValidationService {
                                             .anyMatch(Predicate.isEqual(false));
 
         return isInvalidReferenceSet
-                   ? Optional.of(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.FORMAT_ERROR)))
-                   : Optional.empty();
+                   ? ResponseObject.builder().fail(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.FORMAT_ERROR))).build()
+                   : ResponseObject.builder().build();
     }
 
     private boolean isValidAccountReference(AccountReference reference, List<SupportedAccountReferenceField> supportedFields) {

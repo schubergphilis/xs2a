@@ -74,7 +74,7 @@ public class PeriodicPaymentsControllerTest {
         when(paymentService.initiatePeriodicPayment(any(), any(), any())).thenReturn(readResponseObject());
         when(aspspProfileService.getPisRedirectUrlToAspsp()).thenReturn(REDIRECT_LINK);
         when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(getPaymentInitializationResponse(), HttpStatus.CREATED));
-        when(referenceValidationService.validateAccountReferences(any())).thenReturn(Optional.empty());
+        when(referenceValidationService.validateAccountReferences(any())).thenReturn(ResponseObject.builder().build());
 
     }
 

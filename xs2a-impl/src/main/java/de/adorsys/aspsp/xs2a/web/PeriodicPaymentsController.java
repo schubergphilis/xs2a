@@ -61,10 +61,10 @@ public class PeriodicPaymentsController {
         @RequestHeader(name = "tpp-signature-certificate", required = false) String tppSignatureCertificate,
         @ApiParam(name = "Periodic Payment", value = "All data relevant for the corresponding payment product and necessary for execution of the standing order.", required = true)
         @RequestBody @Valid PeriodicPayment periodicPayment) {
-        Optional<MessageError> error = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
+        ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
         return responseMapper.created(
-            error
-                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(e).build())
-                .orElse(paymentService.initiatePeriodicPayment(periodicPayment, tppSignatureCertificate, paymentProduct)));
+            accountReferenceValidationResponse.hasError()
+                ? ResponseObject.<PaymentInitialisationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+                : paymentService.initiatePeriodicPayment(periodicPayment, tppSignatureCertificate, paymentProduct));
     }
 }
