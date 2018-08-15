@@ -28,7 +28,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
-import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +41,6 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;

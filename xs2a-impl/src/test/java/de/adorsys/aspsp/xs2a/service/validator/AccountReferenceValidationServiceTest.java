@@ -3,7 +3,7 @@ package de.adorsys.aspsp.xs2a.service.validator;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
+import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,7 +14,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;

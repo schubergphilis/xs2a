@@ -19,10 +19,9 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
-import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor

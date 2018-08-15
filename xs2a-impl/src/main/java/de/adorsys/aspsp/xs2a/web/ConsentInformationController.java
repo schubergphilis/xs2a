@@ -19,10 +19,9 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
-import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +29,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
