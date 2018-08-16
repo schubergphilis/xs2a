@@ -71,10 +71,10 @@ public class PaymentInitiationController {
         @ApiParam(name = "singlePayment", required = true)
         @RequestBody @Valid SinglePayment singlePayment) {
         ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
-        return responseMapper.created(
-            accountReferenceValidationResponse.hasError()
-                ? ResponseObject.<PaymentInitialisationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
-                : paymentService.createPaymentInitiation(singlePayment, tppSignatureCertificate, paymentProduct));
+        ResponseObject<PaymentInitialisationResponse> response = accountReferenceValidationResponse.hasError()
+                                                                     ? ResponseObject.<PaymentInitialisationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+                                                                     : paymentService.createPaymentInitiation(singlePayment, tppSignatureCertificate, paymentProduct);
+        return responseMapper.created(response);
     }
 
     @ApiOperation(value = "Get information  about the status of a payment initialisation ", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})

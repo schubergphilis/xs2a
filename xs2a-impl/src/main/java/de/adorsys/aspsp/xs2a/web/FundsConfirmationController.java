@@ -54,9 +54,9 @@ public class FundsConfirmationController {
         @ApiImplicitParam(name = "tpp-signature-certificate", value = "some certificate", dataType = "String", paramType = "header")})
     public ResponseEntity<FundsConfirmationResponse> fundConfirmation(@RequestBody @Valid FundsConfirmationRequest request) {
         ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(request.getAccountReferences());
-        return responseMapper.ok(
-            accountReferenceValidationResponse.hasError()
-                ? ResponseObject.<FundsConfirmationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
-                : fundsConfirmationService.fundsConfirmation(request));
+        ResponseObject<FundsConfirmationResponse> response = accountReferenceValidationResponse.hasError()
+                                                                 ? ResponseObject.<FundsConfirmationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+                                                                 : fundsConfirmationService.fundsConfirmation(request);
+        return responseMapper.ok(response);
     }
 }
