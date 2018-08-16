@@ -51,7 +51,7 @@ public class FailResponseAspect {
         MessageError error = response.getError();
         TppMessageInformation tppMessage = error.getTppMessage();
         tppMessage.setText(messageService.getMessage(tppMessage.getMessageErrorCode().name()));
-        error.setTppMessages(Collections.singletonList(tppMessage));
+        error.setTppMessages(Collections.singleton(tppMessage));
         return ResponseObject.builder()
                    .fail(error)
                    .build();
