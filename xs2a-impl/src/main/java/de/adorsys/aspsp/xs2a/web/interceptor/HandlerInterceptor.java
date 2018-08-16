@@ -70,7 +70,7 @@ public class HandlerInterceptor extends HandlerInterceptorAdapter {
             response.setStatus(messageCode.getCode());
             response.setCharacterEncoding("UTF-8");
             response.setHeader("Content-Type", "application/json");
-            response.getWriter().write(objectMapper.writeValueAsString(setMessageError(messageCode)));
+            response.getWriter().write(objectMapper.writeValueAsString(getMessageError(messageCode)));
             response.flushBuffer();
             return false;
         }
@@ -81,7 +81,7 @@ public class HandlerInterceptor extends HandlerInterceptorAdapter {
                    .orElse(MessageErrorCode.FORMAT_ERROR);
     }
 
-    private MessageError setMessageError(MessageErrorCode errorCode) {
+    private MessageError getMessageError(MessageErrorCode errorCode) {
         String message = messageSource.getMessage(errorCode.name(), null, forLanguageTag("en"));
         TppMessageInformation messageInformation = new TppMessageInformation(ERROR, errorCode);
         messageInformation.setText(message);

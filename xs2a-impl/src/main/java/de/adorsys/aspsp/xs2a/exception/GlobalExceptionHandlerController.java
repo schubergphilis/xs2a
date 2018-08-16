@@ -42,20 +42,20 @@ public class GlobalExceptionHandlerController {
     private MessageService messageService;
 
     @Autowired
-    GlobalExceptionHandlerController(MessageService messageService) {
+    public GlobalExceptionHandlerController(MessageService messageService) {
         this.messageService = messageService;
     }
 
     @ExceptionHandler(value = {ValidationException.class})
     public ResponseEntity validationException(ValidationException ex, HandlerMethod handlerMethod) {
         log.warn("ValidationException handled in service: {}, message: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
-        return new ResponseEntity<>(setMessageError(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(getMessageError(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
     public ResponseEntity httpMessageException(HttpMessageNotReadableException ex, HandlerMethod handlerMethod) {
         log.warn("Uncatched exception handled in Controller: {}, message: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
-        return new ResponseEntity<>(setMessageError(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(getMessageError(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {Exception.class})
@@ -76,10 +76,10 @@ public class GlobalExceptionHandlerController {
     public ResponseEntity requestBodyValidationException(MethodArgumentNotValidException ex, HandlerMethod handlerMethod) {
         log.warn("RequestBodyValidationException handled in controller: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
-        return new ResponseEntity<>(setMessageError(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(getMessageError(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
     }
 
-    private MessageError setMessageError(MessageErrorCode errorCode) {
+    private MessageError getMessageError(MessageErrorCode errorCode) {
         TppMessageInformation messageInformation = new TppMessageInformation(ERROR, errorCode);
         messageInformation.setText(messageService.getMessage(errorCode.name()));
         return new MessageError(TransactionStatus.RJCT, messageInformation);
