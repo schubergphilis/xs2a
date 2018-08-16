@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import lombok.Data;
 
-import java.util.List;
+import java.util.Set;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -13,5 +13,5 @@ import java.util.List;
 public class ITMessageError {
 
     private TransactionStatus transactionStatus;
-    private List<ITTppMessageInformation> tppMessages;
+    private Set<ITTppMessageInformation> tppMessages;
 }

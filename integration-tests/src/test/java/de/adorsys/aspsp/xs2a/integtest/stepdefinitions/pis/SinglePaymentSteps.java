@@ -9,6 +9,7 @@ import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
+import de.adorsys.aspsp.xs2a.integtest.entities.ITTppMessageInformation;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.IOUtils.resourceToString;
@@ -127,20 +126,33 @@ public class SinglePaymentSteps {
 
     @Then("^an error response code is displayed the appropriate error response$")
     public void anErrorResponseCodeIsDisplayedTheAppropriateErrorResponse() {
-        ITMessageError givenErrorObject = context.getMessageError();
+        ITMessageError actualErrorObject = context.getMessageError();
         Map givenResponseBody = context.getTestData().getResponse().getBody();
 
         HttpStatus httpStatus = context.getTestData().getResponse().getHttpStatus();
         assertThat(context.getActualResponse().getStatusCode(), equalTo(httpStatus));
 
-        LinkedHashMap tppMessageContent = (LinkedHashMap) givenResponseBody.get("tppMessage");
+        Set<LinkedHashMap> givenTppMessageContent = (Set<LinkedHashMap>) givenResponseBody.get("tppMessage");
 
         // for cases when transactionStatus and tppMessage created after request
         //if (givenErrorObject.getTppMessage() != null) {
-        assertThat(givenErrorObject.getTransactionStatus().name(), equalTo(givenResponseBody.get("transactionStatus")));
-        assertThat(givenErrorObject.getTppMessages().get(0).getCategory().name(), equalTo(tppMessageContent.get("category")));
-        assertThat(givenErrorObject.getTppMessages().get(0).getCode().name(), equalTo(tppMessageContent.get("code")));
-        //}
+        assertThat(actualErrorObject.getTransactionStatus().name(), equalTo(givenResponseBody.get("transactionStatus")));
+
+        Iterator<ITTppMessageInformation> iterator = actualErrorObject.getTppMessages().iterator();
+        Iterator<LinkedHashMap> givenMessageIterator = givenTppMessageContent.iterator();
+        assertThat(givenTppMessageContent.size(), equalTo(actualErrorObject.getTppMessages().size()));
+
+        // TODO:In progress
+//        while(iterator.hasNext()) {
+//            ITTppMessageInformation tppMessage = iterator.next();
+//            assertThat(tppMessage.getCategory().name(), equalTo(givenTppMessageContent.get("category")));
+//            assertThat(tppMessage.getCode().name(), equalTo(givenTppMessageContent.get("code")));
+//        }
+
+//        for(givenErrorObject.getTppMessages().iterator().next().getCategory())
+//        assertThat(givenErrorObject.getTppMessages().get(0).getCategory().name(), equalTo(tppMessageContent.get("category")));
+//        assertThat(givenErrorObject.getTppMessages().get(0).getCode().name(), equalTo(tppMessageContent.get("code")));
+//        //}
     }
 
     private HttpEntity<SinglePayment> getSinglePaymentsHttpEntity() {
