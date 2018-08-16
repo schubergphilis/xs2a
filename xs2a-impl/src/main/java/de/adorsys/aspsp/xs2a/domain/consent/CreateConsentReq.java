@@ -57,9 +57,7 @@ public class CreateConsentReq implements AccountReferenceCollector {
     @JsonIgnore
     @Override
     public Set<AccountReference> getAccountReferences() {
-        return Optional.ofNullable(this.access)
-                   .map(a -> getReferenceSet(a.getAccounts(), a.getBalances(), a.getTransactions()))
-                   .orElse(Collections.emptySet());
+        return getReferenceSet(this.access.getAccounts(), this.access.getBalances(), this.access.getTransactions());
     }
 
     @JsonIgnore
@@ -74,6 +72,6 @@ public class CreateConsentReq implements AccountReferenceCollector {
     @JsonIgnore
     private List<AccountReference> getReferenceList(List<AccountReference> reference) {
         return Optional.ofNullable(reference)
-                   .orElse(Collections.emptyList());
+                   .orElseGet(Collections::emptyList);
     }
 }

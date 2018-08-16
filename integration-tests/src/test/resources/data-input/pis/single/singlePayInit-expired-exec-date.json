@@ -2,7 +2,8 @@
   "request": {
     "header": {
       "x-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
-      "psu-ip-address": "192.168.0.26"
+      "psu-ip-address": "192.168.0.26",
+      "date": "Sun, 11 Aug 2019 15:02:37 GMT"
     },
     "body": {
       "creditorAccount": {
@@ -18,6 +19,9 @@
         "postalCode": "90543",
         "street": "WBG Straße"
       },
+      "creditorAgent": {
+        "code": "BCENECEQ"
+      },
       "creditorName": "WBG",
       "debtorAccount": {
         "currency": "EUR",
@@ -32,7 +36,9 @@
         "code": "Monatsmiete Mueller, Alexander"
       },
       "remittanceInformationStructured": {
-        "reference": "Ref Number Merchant"
+        "reference": "Ref Number Merchant",
+        "referenceIssuer": "string",
+        "referenceType": "string"
       },
       "remittanceInformationUnstructured": "Ref. Number WBG-1222",
       "requestedExecutionDate": "2015-08-18",
