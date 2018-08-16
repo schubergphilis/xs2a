@@ -55,10 +55,10 @@
     "header": {},
     "body": {
       "transactionStatus": "RJCT",
-      "tppMessage": {
+      "tppMessage": [{
         "category": "ERROR",
         "code": "START_DATE_INVALID"
-      }
+      }]
     }
   }
 }

@@ -47,10 +47,10 @@
     "header": {},
     "body": {
       "transactionStatus": "RJCT",
-      "tppMessage": {
+      "tppMessage": [{
         "category": "ERROR",
         "code": "PRODUCT_UNKNOWN"
-      }
+      }]
     }
   }
 }
