@@ -31,7 +31,6 @@ Feature: Payment Initiation Service
             #| instant-sepa-credit-transfers | singlePayInit-unavailable-product-for-psu.json |
 
 
-
     Scenario Outline: Successful payment initiation request for single payments (oauth)
         Given PSU request access token for oauth approach
         Given PSU wants to initiate a single payment <single-payment> using the payment product <payment-product>
@@ -60,20 +59,20 @@ Feature: Payment Initiation Service
     Scenario Outline: Failed payment initiation request for bulk payments (redirect)
         Given PSU wants to initiate a multiple payments <bulk-payment> using the payment product <payment-product>
         When PSU sends the bulk payment initiating request with error
-        Then an error response code is displayed the appropriate error response
+        Then error responses are displayed the appropriate error response
         Examples:
-            | payment-product                   | bulk-payment                                               |
-            | sepa-credit-transfers             | bulkPayInit-exceeding-amount.json                          |
-            | sepa-credit-transfers             | bulkPayInit-expired-exec-date.json                         |
-            | sepa-credit-trans                 | bulkPayInit-incorrect-payment-product.json                 |
-            | sepa-credit-transfers             | bulkPayInit-incorrect-syntax.json                          |
-            | sepa-credit-transfers             | bulkPayInit-no-ip-address.json                             |
-            | sepa-credit-transfers             | bulkPayInit-no-request-id.json                             |
-            | sepa-credit-transfers             | bulkPayInit-no-transaction-id.json                         |
-            | instant-sepa-credit-transfers     | bulkPayInit-unavailable-product-for-psu.json               |
-            | sepa-credit-transfers             | bulkPayInit-wrong-format-psu-ip-address.json               |
-            | sepa-credit-transfers             | bulkPayInit-wrong-format-request-id.json                   |
-            | sepa-credit-transfers             | bulkPayInit-wrong-format-transaction-id.json               |
+            | payment-product               | bulk-payment                                               |
+            | sepa-credit-transfers         | bulkPayInit-exceeding-amount.json                          |
+            | sepa-credit-transfers         | bulkPayInit-expired-exec-date.json                         |
+            | sepa-credit-trans             | bulkPayInit-incorrect-payment-product.json                 |
+            | sepa-credit-transfers         | bulkPayInit-incorrect-syntax.json                          |
+            | sepa-credit-transfers         | bulkPayInit-no-ip-address.json                             |
+            | sepa-credit-transfers         | bulkPayInit-no-request-id.json                             |
+            | sepa-credit-transfers         | bulkPayInit-no-transaction-id.json                         |
+            | instant-sepa-credit-transfers | bulkPayInit-unavailable-product-for-psu.json               |
+            | sepa-credit-transfers         | bulkPayInit-wrong-format-psu-ip-address.json               |
+            | sepa-credit-transfers         | bulkPayInit-wrong-format-request-id.json                   |
+            | sepa-credit-transfers         | bulkPayInit-wrong-format-transaction-id.json               |
 
 
 
