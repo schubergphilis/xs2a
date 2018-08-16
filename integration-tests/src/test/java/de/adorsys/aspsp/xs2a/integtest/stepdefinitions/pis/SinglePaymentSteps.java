@@ -136,11 +136,11 @@ public class SinglePaymentSteps {
         LinkedHashMap tppMessageContent = (LinkedHashMap) givenResponseBody.get("tppMessage");
 
         // for cases when transactionStatus and tppMessage created after request
-        if (givenErrorObject.getTppMessage() != null) {
-            assertThat(givenErrorObject.getTransactionStatus().name(), equalTo(givenResponseBody.get("transactionStatus")));
-            assertThat(givenErrorObject.getTppMessage().getCategory().name(), equalTo(tppMessageContent.get("category")));
-            assertThat(givenErrorObject.getTppMessage().getCode().name(), equalTo(tppMessageContent.get("code")));
-        }
+        //if (givenErrorObject.getTppMessage() != null) {
+        assertThat(givenErrorObject.getTransactionStatus().name(), equalTo(givenResponseBody.get("transactionStatus")));
+        assertThat(givenErrorObject.getTppMessages().get(0).getCategory().name(), equalTo(tppMessageContent.get("category")));
+        assertThat(givenErrorObject.getTppMessages().get(0).getCode().name(), equalTo(tppMessageContent.get("code")));
+        //}
     }
 
     private HttpEntity<SinglePayment> getSinglePaymentsHttpEntity() {
