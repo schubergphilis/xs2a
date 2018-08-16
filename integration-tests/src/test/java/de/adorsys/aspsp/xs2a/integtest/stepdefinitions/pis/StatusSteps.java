@@ -6,8 +6,8 @@ import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
+import de.adorsys.aspsp.xs2a.integtest.entities.ITTppMessageInformation;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.*;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.IOUtils.resourceToString;
@@ -39,7 +39,7 @@ public class StatusSteps {
     private ObjectMapper mapper;
 
     @Given("^PSU wants to request a payment status without an existing payment-id (.*) using the payment product (.*)$")
-    public void setPaymentParameters(String paymentId, String paymentProduct) throws IOException {
+    public void setPaymentParameters(String paymentId, String paymentProduct) {
         context.setPaymentProduct(paymentProduct);
         context.setPaymentId(paymentId);
     }
@@ -77,21 +77,20 @@ public class StatusSteps {
     }
 
     @Then("^an appropriate response code and the status is delivered to the PSU$")
-    public void checkStatus() throws IOException {
+    public void checkStatus() {
         HttpStatus httpStatus = context.getTestData().getResponse().getHttpStatus();
         assertThat(context.getActualResponse().getStatusCode(), equalTo(httpStatus));
 
         ITMessageError givenErrorObject = context.getMessageError();
         HashMap givenResponseBody = context.getTestData().getResponse().getBody();
-        String status = (String) givenResponseBody.get("transactionStatus");
-        HashMap tppMessageContent = (HashMap) givenResponseBody.get("tppMessage");
 
+        ArrayList<LinkedHashMap> tppMessageContent = (ArrayList<LinkedHashMap>) givenResponseBody.get("tppMessages");
+
+        //TO DO: adapt getTppMessages when ITMessageError class is changed
         if (givenErrorObject.getTransactionStatus() != null ) {
-            assertThat(givenErrorObject.getTransactionStatus().toString(), equalTo(status));
-        }
-        if (givenErrorObject.getTppMessage() != null ) {
-            assertThat(givenErrorObject.getTppMessage().getCategory().name(), equalTo(tppMessageContent.get("category")));
-            assertThat(givenErrorObject.getTppMessage().getCode().name(), equalTo(tppMessageContent.get("code")));
+            assertThat(givenErrorObject.getTransactionStatus().toString(), equalTo(givenResponseBody.get("transactionStatus")));
+            assertThat(givenErrorObject.getTppMessages().iterator().next().getCategory().name(), equalTo(tppMessageContent.iterator().next().get("category")));
+            assertThat(givenErrorObject.getTppMessages().iterator().next().getCode().name(), equalTo(tppMessageContent.iterator().next().get("code")));
         }
     }
 
