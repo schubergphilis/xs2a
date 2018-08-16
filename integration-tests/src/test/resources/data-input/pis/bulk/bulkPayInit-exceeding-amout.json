@@ -86,17 +86,21 @@
     "body": [
       {
         "transactionStatus": "RJCT",
-        "tppMessage": {
+        "tppMessages": [
+        {
           "category": "ERROR",
           "code": "PAYMENT_FAILED"
         }
+        ]
       },
       {
         "transactionStatus": "RJCT",
-        "tppMessage": {
-          "category": "ERROR",
-          "code": "PAYMENT_FAILED"
-        }
+        "tppMessages": [
+          {
+            "category": "ERROR",
+            "code": "PAYMENT_FAILED"
+          }
+        ]
       }
     ]
   }

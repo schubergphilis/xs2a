@@ -85,10 +85,10 @@
     "header": {},
     "body": [
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
       },
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
       }
     ]
   }

@@ -85,17 +85,21 @@
     "body": [
       {
         "transactionStatus": "RJCT",
-        "tppMessage": {
-          "category": "ERROR",
-          "code": "PRODUCT_UNKNOWN"
-        }
+        "tppMessages": [
+          {
+            "category": "ERROR",
+            "code": "FORMAT_ERROR"
+          }
+        ]
       },
       {
         "transactionStatus": "RJCT",
-        "tppMessage": {
-          "category": "ERROR",
-          "code": "PRODUCT_UNKNOWN"
-        }
+        "tppMessages": [
+          {
+            "category": "ERROR",
+            "code": "FORMAT_ERROR"
+          }
+        ]
       }
     ]
   }

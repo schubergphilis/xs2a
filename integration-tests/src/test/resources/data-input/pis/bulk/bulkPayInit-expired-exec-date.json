@@ -81,14 +81,26 @@
     ]
   },
   "response": {
-    "code": "201",
+    "code": "400",
     "header": {},
     "body": [
       {
-        "transactionStatus": "RJCT"
+        "transactionStatus": "RJCT",
+        "tppMessages": [
+          {
+            "category": "ERROR",
+            "code": "EXECUTION_DATE_INVALID"
+          }
+        ]
       },
       {
-        "transactionStatus": "RJCT"
+        "transactionStatus": "RJCT",
+        "tppMessages": [
+          {
+            "category": "ERROR",
+            "code": "EXECUTION_DATE_INVALID"
+          }
+        ]
       }
     ]
   }
