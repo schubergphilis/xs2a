@@ -81,14 +81,22 @@
     ]
   },
   "response": {
-    "code": "201",
+    "code": "403",
     "header": {},
     "body": [
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
+        "tppMessage": {
+          "category": "ERROR",
+          "code": "PRODUCT_INVALID"
+        }
       },
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
+        "tppMessage": {
+          "category": "ERROR",
+          "code": "PRODUCT_INVALID"
+        }
       }
     ]
   }

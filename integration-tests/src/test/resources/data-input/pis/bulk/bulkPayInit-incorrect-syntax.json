@@ -23,7 +23,7 @@
         "creditorName": "WBG",
         "debtorAccount": {
           "currency": "EUR",
-          "iban": "DE52500105173911841934"
+          "iban": "DE525001051739118419"
         },
         "endToEndIdentification": "WBG-123456789",
         "instructedAmount": {
@@ -45,7 +45,7 @@
       {
         "creditorAccount": {
           "currency": "EUR",
-          "iban": "DE03500105172351985719"
+          "iban": "DE525001051739118419"
         },
         "creditorAddress": {
           "buildingNumber": "74",
@@ -81,14 +81,22 @@
     ]
   },
   "response": {
-    "code": "201",
+    "code": "400",
     "header": {},
     "body": [
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
+        "tppMessage": {
+          "category": "ERROR",
+          "code": "FORMAT_ERROR"
+        }
       },
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
+        "tppMessage": {
+          "category": "ERROR",
+          "code": "FORMAT_ERROR"
+        }
       }
     ]
   }

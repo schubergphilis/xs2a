@@ -27,7 +27,7 @@
         },
         "endToEndIdentification": "WBG-123456789",
         "instructedAmount": {
-          "content": "52.00",
+          "content": "520.00",
           "currency": "EUR"
         },
         "purposeCode": {
@@ -63,7 +63,7 @@
         },
         "endToEndIdentification": "RI-234567890",
         "instructedAmount": {
-          "content": "71.07",
+          "content": "710.07",
           "currency": "EUR"
         },
         "purposeCode": {
@@ -81,14 +81,22 @@
     ]
   },
   "response": {
-    "code": "201",
+    "code": "404",
     "header": {},
     "body": [
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
+        "tppMessage": {
+          "category": "ERROR",
+          "code": "PRODUCT_UNKNOWN"
+        }
       },
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
+        "tppMessage": {
+          "category": "ERROR",
+          "code": "PRODUCT_UNKNOWN"
+        }
       }
     ]
   }

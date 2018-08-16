@@ -57,6 +57,26 @@ Feature: Payment Initiation Service
             | sepa-credit-transfers | bulkPayInit-successful.json |
 
 
+    Scenario Outline: Failed payment initiation request for bulk payments (redirect)
+        Given PSU wants to initiate a multiple payments <bulk-payment> using the payment product <payment-product>
+        When PSU sends the bulk payment initiating request with error
+        Then an error response code is displayed the appropriate error response
+        Examples:
+            | payment-product                   | bulk-payment                                               |
+            | sepa-credit-transfers             | bulkPayInit-exceeding-amount.json                          |
+            | sepa-credit-transfers             | bulkPayInit-expired-exec-date.json                         |
+            | sepa-credit-trans                 | bulkPayInit-incorrect-payment-product.json                 |
+            | sepa-credit-transfers             | bulkPayInit-incorrect-syntax.json                          |
+            | sepa-credit-transfers             | bulkPayInit-no-ip-address.json                             |
+            | sepa-credit-transfers             | bulkPayInit-no-request-id.json                             |
+            | sepa-credit-transfers             | bulkPayInit-no-transaction-id.json                         |
+            | instant-sepa-credit-transfers     | bulkPayInit-unavailable-product-for-psu.json               |
+            | sepa-credit-transfers             | bulkPayInit-wrong-format-psu-ip-address.json               |
+            | sepa-credit-transfers             | bulkPayInit-wrong-format-request-id.json                   |
+            | sepa-credit-transfers             | bulkPayInit-wrong-format-transaction-id.json               |
+
+
+
     ####################################################################################################################
     #                                                                                                                  #
     # Recurring Payments                                                                                               #
@@ -78,18 +98,18 @@ Feature: Payment Initiation Service
 #        Then an error response code is displayed the appropriate error response
 #        Examples:
 #            | payment-product      | recurring-payment                           |
-#            | sepa-credit-transfer | recPayInit-incorrect-syntax.json            |
+#            | sepa-credit-transfers | recPayInit-incorrect-syntax.json            |
 #            | sepa-credit-trans    | recPayInit-incorrect-payment-product.json   |
-#            | sepa-credit-transfer | recPayInit-no-frequency.json                |
-#            | sepa-credit-transfer | recPayInit-not-defined-frequency.json       |
-#            | sepa-credit-transfer | recPayInit-no-request-id.json               |
-#            | sepa-credit-transfer | recPayInit-no-ip-address.json               |
-#            | sepa-credit-transfer | recPayInit-wrong-format-request-id.json     |
-#            | sepa-credit-transfer | recPayInit-wrong-format-psu-ip-address.json |
-#            | sepa-credit-transfer | recPayInit-exceeding-amount.json            |
-#            | sepa-credit-transfer | recPayInit-expired-exec-time.json           |
-#            | sepa-credit-transfer | recPayInit-start-date-in-past.json          |
-#            | sepa-credit-transfer | recPayInit-end-date-before-start-date.json  |
+#            | sepa-credit-transfers | recPayInit-no-frequency.json                |
+#            | sepa-credit-transfers | recPayInit-not-defined-frequency.json       |
+#            | sepa-credit-transfers | recPayInit-no-request-id.json               |
+#            | sepa-credit-transfers | recPayInit-no-ip-address.json               |
+#            | sepa-credit-transfers | recPayInit-wrong-format-request-id.json     |
+#            | sepa-credit-transfers | recPayInit-wrong-format-psu-ip-address.json |
+#            | sepa-credit-transfers | recPayInit-exceeding-amount.json            |
+#            | sepa-credit-transfers | recPayInit-expired-exec-time.json           |
+#            | sepa-credit-transfers | recPayInit-start-date-in-past.json          |
+#            | sepa-credit-transfers | recPayInit-end-date-before-start-date.json  |
 
 
     ####################################################################################################################

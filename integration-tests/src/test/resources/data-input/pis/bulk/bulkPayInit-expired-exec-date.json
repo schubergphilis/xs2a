@@ -27,7 +27,7 @@
         },
         "endToEndIdentification": "WBG-123456789",
         "instructedAmount": {
-          "content": "52.00",
+          "content": "520.00",
           "currency": "EUR"
         },
         "purposeCode": {
@@ -37,7 +37,7 @@
           "reference": "Ref Number Merchant"
         },
         "remittanceInformationUnstructured": "Ref. Number WBG-1234",
-        "requestedExecutionDate": "2018-10-01",
+        "requestedExecutionDate": "2015-08-18",
         "requestedExecutionTime": "2018-10-01T10:30:35.035",
         "ultimateCreditor": "WBG",
         "ultimateDebtor": "Alexander Mueller"
@@ -63,7 +63,7 @@
         },
         "endToEndIdentification": "RI-234567890",
         "instructedAmount": {
-          "content": "71.07",
+          "content": "710.07",
           "currency": "EUR"
         },
         "purposeCode": {
@@ -73,7 +73,7 @@
           "reference": "Ref Number Merchant"
         },
         "remittanceInformationUnstructured": "Ref. Number GRUENSTROM-2444",
-        "requestedExecutionDate": "2018-10-01",
+        "requestedExecutionDate": "2015-08-18",
         "requestedExecutionTime": "2018-10-01T09:02:16.341",
         "ultimateCreditor": "Grünstrom",
         "ultimateDebtor": "Alexander Mueller"
@@ -85,10 +85,10 @@
     "header": {},
     "body": [
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT"
       },
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT"
       }
     ]
   }

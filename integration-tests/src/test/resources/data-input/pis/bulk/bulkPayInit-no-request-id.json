@@ -1,7 +1,6 @@
 {
   "request": {
     "header": {
-      "x-request-id": "2f77a125-aa7a-45c0-b414-cea25a116035",
       "psu-ip-address": "192.168.0.26",
       "date": "Sun, 11 Aug 2019 15:02:37 GMT"
     },
@@ -27,7 +26,7 @@
         },
         "endToEndIdentification": "WBG-123456789",
         "instructedAmount": {
-          "content": "52.00",
+          "content": "520.00",
           "currency": "EUR"
         },
         "purposeCode": {
@@ -63,7 +62,7 @@
         },
         "endToEndIdentification": "RI-234567890",
         "instructedAmount": {
-          "content": "71.07",
+          "content": "710.07",
           "currency": "EUR"
         },
         "purposeCode": {
@@ -81,14 +80,22 @@
     ]
   },
   "response": {
-    "code": "201",
+    "code": "400",
     "header": {},
     "body": [
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
+        "tppMessage": {
+          "category": "ERROR",
+          "code": "PRODUCT_UNKNOWN"
+        }
       },
       {
-        "transactionStatus": "RCVD"
+        "transactionStatus": "RJCT",
+        "tppMessage": {
+          "category": "ERROR",
+          "code": "PRODUCT_UNKNOWN"
+        }
       }
     ]
   }
