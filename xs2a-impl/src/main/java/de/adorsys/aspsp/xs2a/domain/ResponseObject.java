@@ -16,18 +16,21 @@
 
 package de.adorsys.aspsp.xs2a.domain;
 
-import de.adorsys.aspsp.xs2a.exception.MessageError;
+import de.adorsys.psd2.model.TppMessageGeneric;
+import de.adorsys.psd2.model.TppMessages;
 import lombok.Getter;
+
+import java.util.List;
 
 /**
  * Response Object passing the information about performed operation
  *
- * @see MessageError
+ * @see de.adorsys.psd2.model.TppMessages
  */
 @Getter
 public class ResponseObject<T> {
     private final T body;
-    private final MessageError error;
+    private final List<TppMessageGeneric> error;
 
     private ResponseObject(ResponseBuilder<T> builder) {
         this.body = builder.body;
@@ -40,15 +43,15 @@ public class ResponseObject<T> {
 
     public static class ResponseBuilder<T> {
         private T body;
-        private MessageError error;
+        private List<TppMessageGeneric> error;
 
         public ResponseBuilder<T> body(T body){
             this.body = body;
             return this;
         }
 
-        public ResponseBuilder<T> fail(MessageError error){
-            this.error = error;
+        public ResponseBuilder<T> fail(List<TppMessageGeneric> messages){
+            this.error = messages;
             return this;
         }
 

@@ -19,15 +19,16 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
@@ -56,10 +57,10 @@ public class PeriodicPaymentsController {
         @PathVariable("payment-product") String paymentProduct,
         @ApiParam(name = "Periodic Payment", value = "All data relevant for the corresponding payment product and necessary for execution of the standing order.", required = true)
         @RequestBody PeriodicPayment periodicPayment) {
-        Optional<MessageError> error = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
+        Optional<TppMessageGeneric> error = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
         return responseMapper.created(
             error
-                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(e).build())
+                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(Arrays.asList(e)).build())
                 .orElse(paymentService.initiatePeriodicPayment(periodicPayment, paymentProduct)));
     }
 }

@@ -16,8 +16,9 @@
 
 package de.adorsys.aspsp.xs2a.exception;
 
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
+import de.adorsys.psd2.model.TppMessageCategory;
+import de.adorsys.psd2.model.TppMessageGENERICFORMATERROR400;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
 
 import javax.validation.ValidationException;
+import java.util.Arrays;
 
-import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 @Slf4j
@@ -39,8 +40,10 @@ public class GlobalExceptionHandlerController {
     public ResponseEntity validationException(ValidationException ex, HandlerMethod handlerMethod) {
         log.warn("ValidationException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
-        return new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, MessageErrorCode.FORMAT_ERROR)
-                                                       .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(Arrays.asList(new TppMessageGeneric()
+            .category(TppMessageCategory.ERROR)
+            .code(TppMessageGENERICFORMATERROR400.CodeEnum.ERROR)
+            .text(ex.getMessage())), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {HttpMessageNotReadableException.class})
@@ -63,7 +66,9 @@ public class GlobalExceptionHandlerController {
     public ResponseEntity restException(RestException ex, HandlerMethod handlerMethod) {
         log.warn("RestException handled in service: {}, message: {} ", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
 
-        return new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, ex.getMessageErrorCode())
-                                                       .text(ex.getMessage())), ex.getHttpStatus());
+        return new ResponseEntity<>(Arrays.asList(new TppMessageGeneric()
+            .category(TppMessageCategory.ERROR)
+            .code(ex.getMessageErrorCode())
+            .text(ex.getMessage())), ex.getHttpStatus());
     }
 }

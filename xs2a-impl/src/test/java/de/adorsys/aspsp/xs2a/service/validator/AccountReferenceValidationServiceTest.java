@@ -2,9 +2,9 @@ package de.adorsys.aspsp.xs2a.service.validator;
 
 
 import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import de.adorsys.psd2.model.AccountReferenceIban;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class AccountReferenceValidationServiceTest {
         //Given:
         Set<Object> references = new HashSet<>(Arrays.asList(getReference(IBAN, BBAN, PAN, MASKED_PAN, MSISDN), getReference(null, BBAN, null, null, WRONG_MSISDN)));
         //When:
-        Optional<MessageError> error = validationService.validateAccountReferences(references);
+        Optional<TppMessageGeneric> error = validationService.validateAccountReferences(references);
         //Then:
         assertThat(error.isPresent()).isFalse();
     }
@@ -56,7 +56,7 @@ public class AccountReferenceValidationServiceTest {
         //Given:
         Set<Object> references = new HashSet<>(Arrays.asList(getReference(null, null, PAN, MASKED_PAN, MSISDN), getReference(null, BBAN, null, null, WRONG_MSISDN)));
         //When:
-        Optional<MessageError> error = validationService.validateAccountReferences(references);
+        Optional<TppMessageGeneric> error = validationService.validateAccountReferences(references);
         //Then:
         assertThat(error.isPresent()).isTrue();
     }
@@ -66,7 +66,7 @@ public class AccountReferenceValidationServiceTest {
         //Given:
         Set<Object> references = new HashSet<>(Arrays.asList(getReference(WRONG_IBAN, null, null, null, null), getReference(null, BBAN, null, null, null)));
         //When:
-        Optional<MessageError> error = validationService.validateAccountReferences(references);
+        Optional<TppMessageGeneric> error = validationService.validateAccountReferences(references);
         //Then:
         assertThat(error.isPresent()).isTrue();
     }

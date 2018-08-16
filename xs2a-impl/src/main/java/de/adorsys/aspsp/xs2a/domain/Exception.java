@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,5 +31,5 @@ public class Exception {
 	@ApiModelProperty(value = "transaction status", example = "Rejected")
 	private TransactionStatus transaction_status;
 	@ApiModelProperty(value = "Tpp message")
-	private TppMessageInformation tpp_message;
+	private TppMessageGeneric tpp_message;
 }

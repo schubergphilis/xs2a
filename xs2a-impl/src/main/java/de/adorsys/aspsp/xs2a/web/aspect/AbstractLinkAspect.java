@@ -17,8 +17,8 @@
 package de.adorsys.aspsp.xs2a.web.aspect;
 
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -49,6 +49,6 @@ public abstract class AbstractLinkAspect<T> {
     protected <B> boolean hasError(ResponseEntity<B> target) {
         Optional<B> body = Optional.ofNullable(target.getBody());
         return body.isPresent() && body.get().getClass()
-                                       .isAssignableFrom(MessageError.class);
+                                       .isAssignableFrom(TppMessageGeneric.class);
     }
 }

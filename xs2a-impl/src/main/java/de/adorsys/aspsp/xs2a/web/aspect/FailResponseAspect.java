@@ -17,8 +17,6 @@
 package de.adorsys.aspsp.xs2a.web.aspect;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.MessageService;
 import lombok.AllArgsConstructor;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -29,6 +27,7 @@ import org.springframework.stereotype.Component;
 @Component
 @AllArgsConstructor
 public class FailResponseAspect {
+
     private final MessageService messageService;
 
     @AfterReturning(pointcut = "execution(public * de.adorsys.aspsp.xs2a.service.*.*(..))", returning = "result")
@@ -46,12 +45,11 @@ public class FailResponseAspect {
     }
 
     private ResponseObject doEnrich(ResponseObject response) {
-        MessageError error = response.getError();
-        TppMessageInformation tppMessage = error.getTppMessage();
-        tppMessage.setText(messageService.getMessage(tppMessage.getCode().name()));
-        error.setTppMessage(tppMessage);
+        response.getError().forEach(tppMessageGeneric -> {
+//TODO            tppMessageGeneric.setText(messageService.getMessage(tppMessageGeneric.getCode().toString()));
+        });
         return ResponseObject.builder()
-            .fail(error)
+            .fail(response.getError())
             .build();
     }
 }

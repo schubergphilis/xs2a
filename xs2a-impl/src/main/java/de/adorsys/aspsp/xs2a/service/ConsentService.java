@@ -16,11 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.exception.MessageCategory;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.consent.ais.AisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ConsentMapper;
@@ -94,7 +90,11 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         //TODO v1.1 Add balances support
         return !StringUtils.isBlank(consentId)
             ? ResponseObject.<ConsentsResponse201>builder().body(new ConsentsResponse201().consentStatus(ConsentStatus.RECEIVED).consentId(consentId)).build()
-            : ResponseObject.<ConsentsResponse201>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_400))).build();
+            : ResponseObject.<ConsentsResponse201>builder()
+            .fail(Arrays.asList(new TppMessageGeneric()
+                .category(TppMessageCategory.ERROR)
+                .code(TppMessageGENERICCONSENTUNKNOWN403400.CodeEnum.UNKNOWN)))
+            .build();
     }
 
     /**
@@ -107,7 +107,9 @@ public class ConsentService { //TODO change format of consentRequest to mandator
             .map(consentStatus -> new ConsentStatusResponse200().consentStatus(consentStatus))
             .map(status -> ResponseObject.<ConsentStatusResponse200>builder().body(status).build())
             .orElse(ResponseObject.<ConsentStatusResponse200>builder()
-                .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400)))
+                .fail(Arrays.asList(new TppMessageGeneric()
+                    .category(TppMessageCategory.ERROR)
+                    .code(TppMessageGENERICCONSENTUNKNOWN403400.CodeEnum.UNKNOWN)))
                 .build());
     }
 
@@ -123,7 +125,10 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         }
 
         return ResponseObject.<Void>builder()
-            .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build();
+            .fail(Arrays.asList(new TppMessageGeneric()
+                .category(TppMessageCategory.ERROR)
+                .code(TppMessageGENERICCONSENTUNKNOWN403400.CodeEnum.UNKNOWN)))
+            .build();
     }
 
     /**
@@ -133,7 +138,11 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     public ResponseObject<ConsentInformationResponse200Json> getAccountConsentById(String consentId) {
         ConsentInformationResponse200Json consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
         return consent == null
-            ? ResponseObject.<ConsentInformationResponse200Json>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build()
+            ? ResponseObject.<ConsentInformationResponse200Json>builder()
+            .fail(Arrays.asList(new TppMessageGeneric()
+                .category(TppMessageCategory.ERROR)
+                .code(TppMessageGENERICCONSENTUNKNOWN403400.CodeEnum.UNKNOWN)))
+            .build()
             : ResponseObject.<ConsentInformationResponse200Json>builder().body(consent).build();
     }
 
@@ -141,15 +150,24 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         ConsentInformationResponse200Json consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
         if (consent == null) {
             return ResponseObject.<AccountAccess>builder()
-                .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build();
+                .fail(Arrays.asList(new TppMessageGeneric()
+                    .category(TppMessageCategory.ERROR)
+                    .code(TppMessageGENERICCONSENTUNKNOWN403400.CodeEnum.UNKNOWN)))
+                .build();
         }
         if (EnumSet.of(ConsentStatus.VALID, ConsentStatus.RECEIVED).contains(consent.getConsentStatus())) {
             return ResponseObject.<AccountAccess>builder()
-                .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_EXPIRED))).build();
+                .fail(Arrays.asList(new TppMessageGeneric()
+                    .category(TppMessageCategory.ERROR)
+                    .code(TppMessageGENERICCONSENTEXPIRED401.CodeEnum.EXPIRED)))
+                .build();
         }
         if (consent.getFrequencyPerDay() <= 0) {
             return ResponseObject.<AccountAccess>builder()
-                .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.ACCESS_EXCEEDED))).build();
+                .fail(Arrays.asList(new TppMessageGeneric()
+                    .category(TppMessageCategory.ERROR)
+                    .code(TppMessageAISACCESSEXCEEDED429.CodeEnum.EXCEEDED)))
+                .build();
         }
         return ResponseObject.<AccountAccess>builder().body(consent.getAccess()).build();
     }

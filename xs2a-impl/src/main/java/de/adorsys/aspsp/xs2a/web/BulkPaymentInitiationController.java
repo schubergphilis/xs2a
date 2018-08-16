@@ -20,15 +20,16 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -57,9 +58,9 @@ public class BulkPaymentInitiationController {
         @PathVariable("payment-product") String paymentProduct,
         @RequestBody List<SinglePayments> payments) {
         for (SinglePayments payment : payments) {
-            Optional<MessageError> error = referenceValidationService.validateAccountReferences(payment.getAccountReferences());
+            Optional<TppMessageGeneric> error = referenceValidationService.validateAccountReferences(payment.getAccountReferences());
             if (error.isPresent()) {
-                return responseMapper.created(ResponseObject.<List<PaymentInitialisationResponse>>builder().fail(error.get()).build());
+                return responseMapper.created(ResponseObject.<List<PaymentInitialisationResponse>>builder().fail(Arrays.asList(error.get())).build());
             }
         }
         return responseMapper.created(paymentService.createBulkPayments(payments, paymentProduct));

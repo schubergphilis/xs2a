@@ -17,19 +17,16 @@
 package de.adorsys.aspsp.xs2a.web12;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
 import de.adorsys.psd2.api.ConsentApi;
-import de.adorsys.psd2.model.ConsentInformationResponse200Json;
-import de.adorsys.psd2.model.ConsentStatusResponse200;
-import de.adorsys.psd2.model.Consents;
-import de.adorsys.psd2.model.ConsentsResponse201;
+import de.adorsys.psd2.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -57,13 +54,14 @@ public class ConsentController implements ConsentApi {
     @Override
     public ResponseEntity<?> createConsent(UUID xRequestID, Consents consents, String digest, String signature, byte[] tpPSignatureCertificate, String PSU_ID, String psUIDType, String psUCorporateID, String psUCorporateIDType, Boolean tpPRedirectPreferred, String tpPRedirectURI, String tpPNokRedirectURI, Boolean tpPExplicitAuthorisationPreferred, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         Set<Object> references = consentService.getAccountReferences(consents.getAccess());
-        Optional<MessageError> error = references.isEmpty()
+        Optional<TppMessageGeneric> error = references.isEmpty()
             ? Optional.empty()
             : referenceValidationService.validateAccountReferences(references);
         return responseMapper.created(
             error
-                .map(e -> ResponseObject.<ConsentsResponse201>builder().fail(e).build())
-                .orElse(consentService.createAccountConsentsWithResponse(consents, PSU_ID)));
+                .map(e -> ResponseObject.<ConsentsResponse201>builder().fail(Arrays.asList(e)).build())
+                .orElse(consentService.createAccountConsentsWithResponse(consents, PSU_ID))
+        );
     }
 
     @Override

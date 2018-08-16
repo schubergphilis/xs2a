@@ -16,7 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.service.payment;
 
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
@@ -34,8 +33,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.PAYMENT_FAILED;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +57,8 @@ public class OauthScaPaymentService implements ScaPaymentService {
             .map(Optional::get)
             .peek(resp -> {
                 if (StringUtils.isBlank(resp.getPaymentId()) || resp.getTransactionStatus() == TransactionStatus.RJCT) {
-                    resp.setTppMessages(new MessageErrorCode[]{PAYMENT_FAILED});
+                    //TODO fix it, messages is a list
+//                    resp.setTppMessages(new MessageErrorCode[]{PAYMENT_FAILED});
                     resp.setTransactionStatus(TransactionStatus.RJCT);
                 }
             })

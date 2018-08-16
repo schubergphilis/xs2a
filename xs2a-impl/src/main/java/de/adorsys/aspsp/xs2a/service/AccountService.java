@@ -19,8 +19,6 @@ package de.adorsys.aspsp.xs2a.service;
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.consent.ais.AisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
 import de.adorsys.aspsp.xs2a.service.validator.ValidationGroup;
@@ -38,15 +36,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
-
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.CONSENT_INVALID;
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_404;
-import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 
 @Slf4j
 @Service
@@ -77,7 +68,10 @@ public class AccountService {
         List<AccountDetails> accountDetails = getAccountDetailsFromReferences(withBalance, allowedAccountData.getBody());
         ResponseObject<Map<String, List<AccountDetails>>> response = accountDetails.isEmpty()
             ? ResponseObject.<Map<String, List<AccountDetails>>>builder()
-            .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build()
+            .fail(Arrays.asList(new TppMessageGeneric()
+                .category(TppMessageCategory.ERROR)
+                .code(TppMessageAISCONSENTINVALID401.CodeEnum.INVALID)))
+            .build()
             : ResponseObject.<Map<String, List<AccountDetails>>>builder()
             .body(Collections.singletonMap("accountList", accountDetails)).build();
         aisConsentService.consentActionLog(TPP_ID, consentId, withBalance, TypeAccess.ACCOUNT, response);
@@ -102,7 +96,10 @@ public class AccountService {
         AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (accountDetails == null) {
             return ResponseObject.<AccountDetails>builder()
-                .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+                .fail(Arrays.asList(new TppMessageGeneric()
+                    .category(TppMessageCategory.ERROR)
+                    .code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+                .build();
         }
         boolean isValid = withBalance
             ? consentService.isValidAccountByAccess(accountDetails.getIban(), accountDetails.getCurrency(), allowedAccountData.getBody().getBalances())
@@ -115,7 +112,9 @@ public class AccountService {
                 : builder.body(getAccountDetailNoBalances(accountDetails));
         } else {
             builder = builder
-                .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID)));
+                .fail(Arrays.asList(new TppMessageGeneric()
+                    .category(TppMessageCategory.ERROR)
+                    .code(TppMessageAISCONSENTINVALID401.CodeEnum.INVALID)));
         }
         aisConsentService.consentActionLog(TPP_ID, consentId, withBalance, TypeAccess.ACCOUNT, builder.build());
         return builder.build();
@@ -137,13 +136,19 @@ public class AccountService {
         AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (accountDetails == null) {
             return ResponseObject.<List<Balance>>builder()
-                .fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+                .fail(Arrays.asList(new TppMessageGeneric()
+                    .category(TppMessageCategory.ERROR)
+                    .code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+                .build();
         }
         boolean isValid = consentService.isValidAccountByAccess(accountDetails.getIban(), accountDetails.getCurrency(), allowedAccountData.getBody().getBalances());
         ResponseObject<List<Balance>> response = isValid
             ? ResponseObject.<List<Balance>>builder().body(accountDetails.getBalances()).build()
             : ResponseObject.<List<Balance>>builder()
-            .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
+            .fail(Arrays.asList(new TppMessageGeneric()
+                .category(TppMessageCategory.ERROR)
+                .code(TppMessageAISCONSENTINVALID401.CodeEnum.INVALID)))
+            .build();
 
         aisConsentService.consentActionLog(TPP_ID, consentId, false, TypeAccess.BALANCE, response);
         return response;
@@ -176,7 +181,11 @@ public class AccountService {
 
         AccountDetails accountDetails = accountMapper.mapToAccountDetails(accountSpi.readAccountDetails(accountId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (accountDetails == null) {
-            return ResponseObject.<AccountReport>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+            return ResponseObject.<AccountReport>builder()
+                .fail(Arrays.asList(new TppMessageGeneric()
+                    .category(TppMessageCategory.ERROR)
+                    .code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+                .build();
         }
 
         boolean isValid = consentService.isValidAccountByAccess(accountDetails.getIban(), accountDetails.getCurrency(), allowedAccountData.getBody().getTransactions());
@@ -185,7 +194,10 @@ public class AccountService {
         ResponseObject<AccountReport> response = isValid && report.isPresent()
             ? ResponseObject.<AccountReport>builder().body(report.get()).build()
             : ResponseObject.<AccountReport>builder()
-            .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
+            .fail(Arrays.asList(new TppMessageGeneric()
+                .category(TppMessageCategory.ERROR)
+                .code(TppMessageAISCONSENTINVALID401.CodeEnum.INVALID)))
+            .build();
 
         aisConsentService.consentActionLog(TPP_ID, consentId, withBalance, TypeAccess.TRANSACTION, response);
         return response;

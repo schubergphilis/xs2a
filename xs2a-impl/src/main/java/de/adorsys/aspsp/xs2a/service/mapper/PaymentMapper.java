@@ -29,6 +29,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.payment.*;
 import de.adorsys.psd2.model.Address;
 import de.adorsys.psd2.model.Amount;
 import de.adorsys.psd2.model.AuthenticationObject;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
@@ -144,7 +145,8 @@ public class PaymentMapper {
                 PaymentInitialisationResponse response = new PaymentInitialisationResponse();
                 response.setTransactionStatus(TransactionStatus.RJCT);
                 response.setPaymentId(p.getEndToEndIdentification());
-                response.setTppMessages(new MessageErrorCode[]{error});
+                //TODO fix it, response errors is a list of messages!
+                // response.setTppMessages(new MessageErrorCode[]{error});
                 return response;
             });
     }
@@ -213,8 +215,8 @@ public class PaymentMapper {
         return new AuthenticationObject[]{};//TODO Fill in th Linx
     }
 
-    private MessageErrorCode[] mapToMessageCodes(String[] messageCodes) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115
-        return new MessageErrorCode[]{};//TODO Fill in th Linx
+    private TppMessageGeneric[] mapToMessageCodes(String[] messageCodes) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115
+        return new TppMessageGeneric[]{};//TODO Fill in th Linx
     }
 
     private SpiAddress mapToSpiAddress(Address address) {

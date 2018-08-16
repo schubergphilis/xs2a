@@ -20,16 +20,17 @@ import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 @Slf4j
@@ -64,10 +65,10 @@ public class PaymentInitiationController {
         @ApiParam(name = "payment-product", value = "The addressed payment product endpoint for payments e.g. for a SEPA Credit Transfers", allowableValues = "sepa-credit-transfers, target-2-payments,instant-sepa-credit-transfers, cross-border-credit-transfers")
         @PathVariable("payment-product") String paymentProduct,
         @RequestBody SinglePayments singlePayment) {
-        Optional<MessageError> error = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
+        Optional<TppMessageGeneric> error = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
         return responseMapper.created(
             error
-                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(e).build())
+                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(Arrays.asList(e)).build())
                 .orElse(paymentService.createPaymentInitiation(singlePayment, paymentProduct)));
     }
 

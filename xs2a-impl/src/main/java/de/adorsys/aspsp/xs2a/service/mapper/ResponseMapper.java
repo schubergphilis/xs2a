@@ -17,11 +17,13 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -51,7 +53,9 @@ public class ResponseMapper {
             : new ResponseEntity<>(response.getBody(), status);
     }
 
-    private ResponseEntity enrichError(MessageError error) {
-        return new ResponseEntity<>(error, valueOf(error.getTppMessage().getCode().getCode()));
+    private ResponseEntity enrichError(List<TppMessageGeneric> error) {
+//TODO code to http status code mapping needed
+// return new ResponseEntity<>(error, valueOf(error.getTppMessage().getCode().getCode()));
+        return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
     }
 }

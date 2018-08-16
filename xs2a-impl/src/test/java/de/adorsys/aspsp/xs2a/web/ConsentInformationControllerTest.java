@@ -16,11 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.web;
 
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.exception.MessageCategory;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.web12.ConsentController;
@@ -35,6 +31,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -64,11 +61,15 @@ public class ConsentInformationControllerTest {
         when(consentService.createAccountConsentsWithResponse(any(), eq(CORRECT_PSU_ID))).thenReturn(createConsentResponse(CONSENT_ID));
         when(consentService.createAccountConsentsWithResponse(any(), eq(WRONG_PSU_ID))).thenReturn(createConsentResponse(null));
         when(consentService.getAccountConsentsStatusById(CONSENT_ID)).thenReturn(ResponseObject.<ConsentStatusResponse200>builder().body(new ConsentStatusResponse200().consentStatus(ConsentStatus.RECEIVED)).build());
-        when(consentService.getAccountConsentsStatusById(WRONG_CONSENT_ID)).thenReturn(ResponseObject.<ConsentStatusResponse200>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build());
+        when(consentService.getAccountConsentsStatusById(WRONG_CONSENT_ID)).thenReturn(ResponseObject.<ConsentStatusResponse200>builder()
+            .fail(Arrays.asList(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+            .build());
         when(consentService.getAccountConsentById(CONSENT_ID)).thenReturn(getConsent(CONSENT_ID));
         when(consentService.getAccountConsentById(WRONG_CONSENT_ID)).thenReturn(getConsent(WRONG_CONSENT_ID));
         when(consentService.deleteAccountConsentsById(CONSENT_ID)).thenReturn(ResponseObject.<Void>builder().build());
-        when(consentService.deleteAccountConsentsById(WRONG_CONSENT_ID)).thenReturn(ResponseObject.<Void>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build());
+        when(consentService.deleteAccountConsentsById(WRONG_CONSENT_ID)).thenReturn(ResponseObject.<Void>builder()
+            .fail(Arrays.asList(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+            .build());
     }
 
     @Test
@@ -178,7 +179,9 @@ public class ConsentInformationControllerTest {
 
     private ResponseObject createConsentResponse(String consentId) {
         return isEmpty(consentId)
-            ? ResponseObject.builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build()
+            ? ResponseObject.builder()
+            .fail(Arrays.asList(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+            .build()
             : ResponseObject.builder().body(new ConsentsResponse201().consentStatus(ConsentStatus.RECEIVED).consentId(consentId)._links(new HashMap())).build();
     }
 
@@ -193,7 +196,9 @@ public class ConsentInformationControllerTest {
             .consentStatus(ConsentStatus.VALID)
             .recurringIndicator(false);
         return isEmpty(accountConsent)
-            ? ResponseObject.builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_404))).build()
+            ? ResponseObject.builder()
+            .fail(Arrays.asList(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+            .build()
             : ResponseObject.builder().body(accountConsent).build();
     }
 

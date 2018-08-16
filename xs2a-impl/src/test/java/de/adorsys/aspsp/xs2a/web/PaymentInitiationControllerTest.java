@@ -21,16 +21,17 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.psd2.model.TppMessageCategory;
+import de.adorsys.psd2.model.TppMessageGENERICRESOURCEUNKNOWN404403400;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,11 +44,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.Optional;
 
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_403;
-import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -84,7 +84,9 @@ public class PaymentInitiationControllerTest {
         when(paymentService.getPaymentStatusById(PAYMENT_ID, PaymentProduct.SCT.getCode()))
             .thenReturn(ResponseObject.<TransactionStatus>builder().body(TransactionStatus.ACCP).build());
         when(paymentService.getPaymentStatusById(WRONG_PAYMENT_ID, PaymentProduct.SCT.getCode()))
-            .thenReturn(ResponseObject.<TransactionStatus>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
+            .thenReturn(ResponseObject.<TransactionStatus>builder()
+                .fail(Arrays.asList(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+                .build());
         when(paymentService.createPaymentInitiation(any(), any())).thenReturn(readResponseObject());
         when(aspspProfileService.getPisRedirectUrlToAspsp()).thenReturn(REDIRECT_LINK);
     }
@@ -108,7 +110,7 @@ public class PaymentInitiationControllerTest {
     @Test
     public void getTransactionStatusById_WrongId() {
         when(responseMapper.ok(any()))
-            .thenReturn(new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)), HttpStatus.FORBIDDEN));
+            .thenReturn(new ResponseEntity<>(Arrays.asList(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)), HttpStatus.FORBIDDEN));
         //Given:
         HttpStatus expectedHttpStatus = FORBIDDEN;
 
@@ -130,7 +132,7 @@ public class PaymentInitiationControllerTest {
 
         //When:
         ResponseEntity<PaymentInitialisationResponse> actualResult = paymentInitiationController
-                                                                         .createPaymentInitiation(paymentProduct.getCode(), payment);
+            .createPaymentInitiation(paymentProduct.getCode(), payment);
 
         //Then:
         assertThat(actualResult.getStatusCode()).isEqualTo(expectedResult.getStatusCode());

@@ -89,9 +89,11 @@ public class AisConsentService {
      * @param response    AIS Service response
      */
     public void consentActionLog(String tppId, String consentId, boolean withBalance, TypeAccess access, ResponseObject response) {
-        ActionStatus status = response.hasError()
-            ? consentMapper.mapActionStatusError(response.getError().getTppMessage().getCode(), withBalance, access)
-            : ActionStatus.SUCCESS;
+        //TODO fix it, response errors is a list!
+        ActionStatus status = null;
+//        ActionStatus status = response.hasError()
+//            ? consentMapper.mapActionStatusError(response.getError().getTppMessage().getCode(), withBalance, access)
+//            : ActionStatus.SUCCESS;
 
         consentRestTemplate.postForEntity(remoteAisConsentUrls.consentActionLog(), new ConsentActionRequest(tppId, consentId, status), Void.class);
     }

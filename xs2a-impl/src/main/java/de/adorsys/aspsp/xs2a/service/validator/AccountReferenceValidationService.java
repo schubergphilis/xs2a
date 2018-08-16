@@ -1,12 +1,10 @@
 package de.adorsys.aspsp.xs2a.service.validator;
 
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
-import de.adorsys.aspsp.xs2a.exception.MessageCategory;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
+import de.adorsys.psd2.model.TppMessageCategory;
+import de.adorsys.psd2.model.TppMessageGENERICFORMATERROR400;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +20,17 @@ public class AccountReferenceValidationService {
 
     private final AspspProfileService profileService;
 
-    public Optional<MessageError> validateAccountReference(Object accountReference) {
+    public Optional<TppMessageGeneric> validateAccountReference(Object accountReference) {
         List<SupportedAccountReferenceField> supportedFields = profileService.getSupportedAccountReferenceFields();
 
         boolean isValidAccountReference = isValidAccountReference(accountReference, supportedFields);
 
         return isValidAccountReference
-            ? Optional.of(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.FORMAT_ERROR)))
+            ? Optional.of(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICFORMATERROR400.CodeEnum.ERROR))
             : Optional.empty();
     }
 
-    public Optional<MessageError> validateAccountReferences(Set<Object> references) {
+    public Optional<TppMessageGeneric> validateAccountReferences(Set<Object> references) {
         List<SupportedAccountReferenceField> supportedFields = profileService.getSupportedAccountReferenceFields();
 
         boolean isInvalidReferenceSet = references.stream()
@@ -40,7 +38,7 @@ public class AccountReferenceValidationService {
             .anyMatch(Predicate.isEqual(false));
 
         return isInvalidReferenceSet
-            ? Optional.of(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.FORMAT_ERROR)))
+            ? Optional.of(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICFORMATERROR400.CodeEnum.ERROR))
             : Optional.empty();
     }
 

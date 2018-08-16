@@ -17,12 +17,13 @@
 package de.adorsys.aspsp.xs2a.web;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.aspsp.xs2a.web12.PaymentController;
+import de.adorsys.psd2.model.TppMessageCategory;
+import de.adorsys.psd2.model.TppMessageGENERICRESOURCEUNKNOWN404403400;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,9 +33,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_403;
+import java.util.Arrays;
+
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
-import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
@@ -60,7 +61,8 @@ public class PaymentControllerTest {
         when(paymentService.getPaymentById(SINGLE, PAYMENT_PRODUCT, CORRECT_PAYMENT_ID))
             .thenReturn(ResponseObject.builder().body(getPayment()).build());
         when(paymentService.getPaymentById(SINGLE, PAYMENT_PRODUCT, WRONG_PAYMENT_ID))
-            .thenReturn(ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
+            .thenReturn(ResponseObject.builder().fail(Arrays.asList(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN))
+            ).build());
 
 }
 
@@ -79,7 +81,7 @@ public class PaymentControllerTest {
     @Test
     public void getPaymentById_Failure() {
         when(responseMapper.ok(any()))
-            .thenReturn(new ResponseEntity<>(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403)), HttpStatus.FORBIDDEN));
+            .thenReturn(new ResponseEntity<>(Arrays.asList(new TppMessageGeneric().category(TppMessageCategory.ERROR).code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)), HttpStatus.FORBIDDEN));
 
         //When
         ResponseEntity response = paymentController.getPaymentInformation(SINGLE.getValue(), WRONG_PAYMENT_ID,
