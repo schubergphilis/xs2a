@@ -57,7 +57,7 @@ Feature: Payment Initiation Service
 
 
     Scenario Outline: Failed payment initiation request for bulk payments (redirect)
-        Given PSU wants to initiate a multiple payments <bulk-payment> using the payment product <payment-product>
+        Given PSU wants to initiate multiple payments <bulk-payment> using the payment product <payment-product>
         When PSU sends the bulk payment initiating request with error
         Then error responses are displayed the appropriate error response
         Examples:
