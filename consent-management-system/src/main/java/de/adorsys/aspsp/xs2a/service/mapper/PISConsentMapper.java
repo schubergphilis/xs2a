@@ -42,7 +42,8 @@ public class PISConsentMapper {
                        consent.setPisPaymentType(request.getPaymentType());
                        consent.setPisPaymentProduct(request.getPaymentProduct());
                        consent.setConsentType(ConsentType.PIS);
-                       consent.setConsentStatus(ConsentStatus.RECEIVED);
+                       consent.setConsentStatus(CmsConsentStatus.RECEIVED);
+                       consent.setAspspConsentData(request.getAspspConsentData());
                        return consent;
                    });
     }
@@ -108,7 +109,7 @@ public class PISConsentMapper {
                        response.setPaymentType(pc.getPisPaymentType());
                        response.setPaymentProduct(pc.getPisPaymentProduct());
                        response.setTppInfo(mapToTppInfo(pc.getPisTppInfo()));
-
+                       response.setAspspConsentData(pc.getAspspConsentData());
                        return response;
                    });
     }

@@ -21,10 +21,9 @@ import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatusResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
+import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
-import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -40,7 +38,9 @@ import java.util.Optional;
 @RequestMapping(path = "api/v1/payments/{payment-product}")
 @Api(value = "api/v1/payments/{payment-product}", tags = "PISP, Payments", description = "Provides access to the PIS")
 public class PaymentInitiationController {
-    private final static String TPP_INFO = "eyJuYXRpb25hbENvbXBldGVudEF1dGhvcml0eSI6ICJOYXRpb25hbCBjb21wZXRlbnQgYXV0aG9yaXR5IiwKICAgICJub2tSZWRpcmVjdFVyaSI6ICJOb2sgcmVkaXJlY3QgVVJJIiwKICAgICJyZWRpcmVjdFVyaSI6ICJSZWRpcmVjdCBVUkkiLAogICAgInJlZ2lzdHJhdGlvbk51bWJlciI6ICIxMjM0X3JlZ2lzdHJhdGlvbk51bWJlciIsCiAgICAidHBwTmFtZSI6ICJUcHAgY29tcGFueSIsCiAgICAidHBwUm9sZSI6ICJUcHAgcm9sZSIKICB9";
+    private final static String TPP_INFO = "eyJuYXRpb25hbENvbXBldGVudEF1dGhvcml0eSI6ICJOYXRpb25hbCBjb21wZXRlbnQgYXV0aG9yaXR5IiwKICAgICJub2tSZWRpcmVjdFVyaSI6I" +
+                                               "CJOb2sgcmVkaXJlY3QgVVJJIiwKICAgICJyZWRpcmVjdFVyaSI6ICJSZWRpcmVjdCBVUkkiLAogICAgInJlZ2lzdHJhdGlvbk51bWJlciI6IC" +
+                                               "IxMjM0X3JlZ2lzdHJhdGlvbk51bWJlciIsCiAgICAidHBwTmFtZSI6ICJUcHAgY29tcGFueSIsCiAgICAidHBwUm9sZSI6ICJUcHAgcm9sZSIKICB9";
     private final ResponseMapper responseMapper;
     private final PaymentService paymentService;
     private final AccountReferenceValidationService referenceValidationService;
@@ -52,6 +52,7 @@ public class PaymentInitiationController {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "x-request-id", value = "2f77a125-aa7a-45c0-b414-cea25a116035", required = true, dataType = "UUID", paramType = "header"),
         @ApiImplicitParam(name = "psu-ip-address", value = "192.168.8.78", required = true, dataType = "String", paramType = "header"), //NOPMD value is correct according to specification
+        @ApiImplicitParam(name = "date", value = "Sun, 11 Aug 2019 15:02:37 GMT", required = true, dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "psu-id", value = "12312324", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "psu-id-type", value = "Type of the PSU-ID", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "psu-corporate-id", value = "Might be mandated in the ASPSP’s documentation", dataType = "String", paramType = "header"),
@@ -62,18 +63,18 @@ public class PaymentInitiationController {
         @ApiImplicitParam(name = "tpp-redirect-uri", value = "Uri of TPP", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "digest", value = "730f75dafd73e047b86acb2dbd74e75dcb93272fa084a9082848f2341aa1abb6", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "signature", value = "A signature of the request by TPP", dataType = "String", paramType = "header"),
-        @ApiImplicitParam(name = "tpp-signature-certificate", value = TPP_INFO, dataType = "String", paramType = "header")})
+        @ApiImplicitParam(name = "tpp-signature-certificate", defaultValue = TPP_INFO, dataType = "String", paramType = "header")})
     public ResponseEntity<PaymentInitialisationResponse> createPaymentInitiation(
         @ApiParam(name = "payment-product", value = "The addressed payment product endpoint for payments e.g. for a SEPA Credit Transfers", allowableValues = "sepa-credit-transfers, target-2-payments,instant-sepa-credit-transfers, cross-border-credit-transfers")
         @PathVariable("payment-product") String paymentProduct,
         @RequestHeader(name = "tpp-signature-certificate", required = false) String tppSignatureCertificate,
         @ApiParam(name = "singlePayment", required = true)
         @RequestBody @Valid SinglePayment singlePayment) {
-        Optional<MessageError> error = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
-        return responseMapper.created(
-            error
-                .map(e -> ResponseObject.<PaymentInitialisationResponse>builder().fail(e).build())
-                .orElse(paymentService.createPaymentInitiation(singlePayment, tppSignatureCertificate,  paymentProduct)));
+        ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
+        ResponseObject<PaymentInitialisationResponse> response = accountReferenceValidationResponse.hasError()
+                                                                     ? ResponseObject.<PaymentInitialisationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+                                                                     : paymentService.createPaymentInitiation(singlePayment, tppSignatureCertificate, paymentProduct);
+        return responseMapper.created(response);
     }
 
     @ApiOperation(value = "Get information  about the status of a payment initialisation ", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
@@ -82,6 +83,7 @@ public class PaymentInitiationController {
     @GetMapping(path = "/{paymentId}/status")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "x-request-id", value = "2f77a125-aa7a-45c0-b414-cea25a116035", required = true, dataType = "UUID", paramType = "header"),
+        @ApiImplicitParam(name = "date", value = "Sun, 11 Aug 2019 15:02:37 GMT", required = true, dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "digest", value = "730f75dafd73e047b86acb2dbd74e75dcb93272fa084a9082848f2341aa1abb6", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "signature", value = "98c0", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "tpp-signature-certificate", value = "some certificate", dataType = "String", paramType = "header")})
