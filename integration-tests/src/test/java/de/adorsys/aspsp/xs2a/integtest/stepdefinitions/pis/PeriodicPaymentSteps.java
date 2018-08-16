@@ -34,7 +34,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -51,6 +51,9 @@ import static org.hamcrest.Matchers.notNullValue;
 @FeatureFileSteps
 public class PeriodicPaymentSteps {
 
+    private static final long DAYS_OFFSET = 1L;
+    private static final long MONTHS_OFFSET = 100L;
+
     @Autowired
     @Qualifier("xs2a")
     private RestTemplate restTemplate;
@@ -61,9 +64,12 @@ public class PeriodicPaymentSteps {
     @Autowired
     private ObjectMapper mapper;
 
+    private String dataFileName;
+
     @And("^PSU wants to initiate a recurring payment (.*) using the payment product (.*)$")
     public void loadTestDataForPeriodicPayment(String dataFileName, String paymentProduct) throws IOException {
         context.setPaymentProduct(paymentProduct);
+        this.dataFileName = dataFileName;
 
         TestData<ITPeriodicPayments, HashMap> data = mapper.readValue(resourceToString("/data-input/pis/recurring/" + dataFileName, UTF_8), new TypeReference<TestData<ITPeriodicPayments, HashMap>>() {
         });
@@ -102,6 +108,13 @@ public class PeriodicPaymentSteps {
     public void sendFalsePeriodicPaymentInitiatingRequest() throws IOException {
         HttpEntity<ITPeriodicPayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
+        if (dataFileName.contains("expired-exec-date")) {
+            makeEndDateOffset(entity);
+        }
+        if (dataFileName.contains("end-date-before-start-date")) {
+            makeEndDateBeforeStartDate(entity);
+        }
+
         try {
             restTemplate.exchange(
                 context.getBaseUrl() + "/periodic-payments/" + context.getPaymentProduct(),
@@ -110,14 +123,26 @@ public class PeriodicPaymentSteps {
                 new ParameterizedTypeReference<PaymentInitialisationResponse>() {
                 });
 
-        } catch (HttpClientErrorException hce) {
-            ResponseEntity<PaymentInitialisationResponse> actualResponse = new ResponseEntity<>(
-                hce.getStatusCode());
-            context.setActualResponse(actualResponse);
-
-            ITMessageError messageError = mapper.readValue(hce.getResponseBodyAsString(), ITMessageError.class);
-            context.setMessageError(messageError);
+        } catch (RestClientResponseException rce) {
+            handlePeriodicRequestError(rce);
         }
+    }
+
+    private void makeEndDateOffset(HttpEntity<ITPeriodicPayments> entity) {
+        entity.getBody().setEndDate(entity.getBody().getEndDate().plusDays(MONTHS_OFFSET));
+    }
+
+    private void makeEndDateBeforeStartDate(HttpEntity<ITPeriodicPayments> entity) {
+        entity.getBody().setEndDate(entity.getBody().getStartDate().minusDays(DAYS_OFFSET));
+    }
+
+    private void handlePeriodicRequestError(RestClientResponseException exceptionObject) throws IOException {
+        ResponseEntity<PaymentInitialisationResponse> actualResponse = new ResponseEntity<>(
+            HttpStatus.valueOf(exceptionObject.getRawStatusCode()));
+        context.setActualResponse(actualResponse);
+
+        ITMessageError messageError = mapper.readValue(exceptionObject.getResponseBodyAsString(), ITMessageError.class);
+        context.setMessageError(messageError);
     }
 
     /*
