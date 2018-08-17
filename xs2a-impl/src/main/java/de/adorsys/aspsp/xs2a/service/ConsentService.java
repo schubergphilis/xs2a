@@ -48,6 +48,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     private final AisConsentService aisConsentService;
     private final AccountSpi accountSpi;
     private final AccountMapper accountMapper;
+    private final AspspProfileService aspspProfileService;
 
     /**
      * @param request body of create consent request carrying such parameters as AccountAccess, validity terms etc.
@@ -60,7 +61,11 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     public ResponseObject<CreateConsentResponse> createAccountConsentsWithResponse(CreateConsentReq request, String psuId) {
         String tppId = "This is a test TppId"; //TODO v1.1 add corresponding request header
         CreateConsentReq checkedRequest = new CreateConsentReq();
-        if (isNotEmptyAccess(request.getAccess()) && request.getValidUntil().isAfter(LocalDate.now())) {
+        if (isNotEmptyAccess(request.getAccess())) {
+            if (!isValidExpirationDate(request.getValidUntil())) {
+                   return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PERIOD_INVALID))).build();
+            }
+
             if (isAllAccountsRequest(request) && psuId != null) {
                 checkedRequest.setAccess(getAccessByPsuId(AccountAccessType.ALL_ACCOUNTS == request.getAccess().getAllPsd2(), psuId));
             } else {
@@ -141,6 +146,11 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                    && allowedAccountData.stream()
                           .anyMatch(a -> a.getIban().equals(iban)
                                              && a.getCurrency() == currency);
+    }
+
+    private boolean isValidExpirationDate(LocalDate validUntil) {
+        int consentLifetime = Math.abs(aspspProfileService.getConsentLifetime());
+        return validUntil.isAfter(LocalDate.now()) && (consentLifetime == 0 || validUntil.isBefore(LocalDate.now().plusDays(consentLifetime)));
     }
 
     private Set<String> getIbansFromAccountReference(List<AccountReference> references) {

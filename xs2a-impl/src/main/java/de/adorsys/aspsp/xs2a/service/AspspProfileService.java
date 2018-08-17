@@ -139,6 +139,17 @@ public class AspspProfileService {
             }).getBody();
     }
 
+    /**
+     * Read value of maximum consent lifetime
+     *
+     * @return int value of maximum consent lifetime
+     */
+    public int getConsentLifetime() {
+        return aspspProfileRestTemplate.exchange(
+            aspspProfileRemoteUrls.getConsentLifetime(), HttpMethod.GET, null, new ParameterizedTypeReference<Integer>() {
+            }).getBody();
+    }
+
     private List<String> readAvailablePaymentTypes() {
         return aspspProfileRestTemplate.exchange(
             aspspProfileRemoteUrls.getAvailablePaymentTypes(), HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {

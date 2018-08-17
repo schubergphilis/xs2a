@@ -75,6 +75,8 @@ public class ConsentServiceTest {
     AccountMapper accountMapper;
     @Mock
     ConsentMapper consentMapper;
+    @Mock
+    AspspProfileService aspspProfileService;
 
     @Before
     public void setUp() {
@@ -129,6 +131,9 @@ public class ConsentServiceTest {
         when(aisConsentService.getAccountConsentStatusById(WRONG_CONSENT_ID))
             .thenReturn(null);
         doNothing().when(aisConsentService).revokeConsent(anyString());
+
+        when(aspspProfileService.getConsentLifetime())
+            .thenReturn(0);
     }
 
     @Test
