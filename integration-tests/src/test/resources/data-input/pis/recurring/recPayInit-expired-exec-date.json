@@ -33,7 +33,7 @@
       "executionRule": "latest",
       "frequency": "MONTHLY",
       "instructedAmount": {
-        "content": "52000.00",
+        "content": "44.99",
         "currency": "EUR"
       },
       "purposeCode": {

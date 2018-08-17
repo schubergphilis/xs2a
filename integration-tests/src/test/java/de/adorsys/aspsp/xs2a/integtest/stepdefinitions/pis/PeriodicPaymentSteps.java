@@ -106,7 +106,7 @@ public class PeriodicPaymentSteps {
 
     @When("^PSU sends the recurring payment initiating request with error$")
     public void sendFalsePeriodicPaymentInitiatingRequest() throws IOException {
-        HttpEntity<ITPeriodicPayments> entity = PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
+        HttpEntity<ITPeriodicPayments> entity =     PaymentUtils.getPaymentsHttpEntity(context.getTestData().getRequest(), context.getAccessToken());
 
         if (dataFileName.contains("expired-exec-date")) {
             makeEndDateOffset(entity);
