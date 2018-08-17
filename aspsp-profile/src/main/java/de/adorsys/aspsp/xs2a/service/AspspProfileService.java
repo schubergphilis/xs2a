@@ -58,6 +58,14 @@ public class AspspProfileService {
     }
 
     /**
+     * Reads if ASPSP support Bank Offered Consent model
+     */
+
+    public boolean isBankOfferConsentSupport() {
+        return profileConfiguration.isBankOfferConsentSupport();
+    }
+
+    /**
      * Update combined service indicator
      *
      * @param combinedServiceIndicator the new value of combinedServiceIndicator
