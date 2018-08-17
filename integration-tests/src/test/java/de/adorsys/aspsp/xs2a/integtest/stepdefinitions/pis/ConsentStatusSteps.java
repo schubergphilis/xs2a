@@ -19,12 +19,9 @@ package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.consent.ConsentStatus;
 import de.adorsys.aspsp.xs2a.domain.consent.ConsentStatusResponse;
-import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
-import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentResponse;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +31,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
@@ -63,26 +59,6 @@ public class ConsentStatusSteps {
         context.setTestData(data);
     }
 
-//    @When("^PAISP requests consent status$")
-//    public void sendConsentStatusRequest() throws HttpClientErrorException, IOException {
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.setAll(context.getTestData().getRequest().getHeader());
-//        headers.add("Authorization", "Bearer " + context.getAccessToken());
-//        headers.add("Content-Type", "application/json");
-//        HttpEntity<ConsentStatus> entity = new HttpEntity<>(context.getTestData().getRequest().getBody(), headers);
-//        try {
-//            restTemplate.exchange(
-//                context.getBaseUrl() + "/consents/" + context.getConsentID() + "status",
-//                HttpMethod.POST,
-//                entity,
-//                HashMap.class);
-//        } catch (RestClientResponseException rex) {
-//            handleRequestError(rex);
-//        }
-//    }
-
-
-    //WARUM GEHT DAS JETZT? VERGLEICH ZUM VORHERIGEN CODE BLOCK
     @When("^AISP requests consent status$")
     public void sendConsentStatusRequest() throws HttpClientErrorException {
         HttpHeaders headers = new HttpHeaders();
