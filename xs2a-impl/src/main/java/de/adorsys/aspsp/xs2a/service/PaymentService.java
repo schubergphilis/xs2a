@@ -17,7 +17,6 @@
 package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatusResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
@@ -25,23 +24,25 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
+import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.payment.ReadPayment;
 import de.adorsys.aspsp.xs2a.service.payment.ReadPaymentFactory;
 import de.adorsys.aspsp.xs2a.service.payment.ScaPaymentService;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
+import de.adorsys.psd2.model.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
-import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
+import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_403;
 
 @Slf4j
 @Service
@@ -93,7 +94,9 @@ public class PaymentService {
     public ResponseObject<List<PaymentInitialisationResponse>> createBulkPayments(List<SinglePayment> payments, String tppSignatureCertificate, String paymentProduct) {
         if (CollectionUtils.isEmpty(payments)) {
             return ResponseObject.<List<PaymentInitialisationResponse>>builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                       .fail(Arrays.asList(new TppMessageGeneric()
+                                               .category(TppMessageCategory.ERROR)
+                                               .code(TppMessageGENERICFORMATERROR400.CodeEnum.ERROR)))
                        .build();
         }
         List<SinglePayment> validPayments = new ArrayList<>();
@@ -117,7 +120,10 @@ public class PaymentService {
             }
         }
         return ResponseObject.<List<PaymentInitialisationResponse>>builder()
-                   .fail(new MessageError(new TppMessageInformation(ERROR, PAYMENT_FAILED))).build();
+                   .fail(Arrays.asList(new TppMessageGeneric()
+                                           .category(TppMessageCategory.ERROR)
+                                           .code(TppMessagePISPAYMENTFAILED400.CodeEnum.FAILED)))
+                   .build()
     }
 
     /**
@@ -148,15 +154,21 @@ public class PaymentService {
         Optional<Object> payment = Optional.ofNullable(service.getPayment(paymentProduct, paymentId));
         return payment.isPresent()
                    ? ResponseObject.builder().body(payment.get()).build()
-                   : ResponseObject.builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build();
+                   : ResponseObject.builder()
+                         .fail(Arrays.asList(new TppMessageGeneric()
+                                                 .category(TppMessageCategory.ERROR)
+                                                 .code(TppMessageGENERICRESOURCEUNKNOWN404403400.CodeEnum.UNKNOWN)))
+                         .build();
     }
 
     private ResponseObject<PaymentInitialisationResponse> getPaymentFailedErrorResponse() {
         log.warn("Payment initiation has an error: {}", PAYMENT_FAILED);
 
         return ResponseObject.<PaymentInitialisationResponse>builder()
-                   .fail(new MessageError(TransactionStatus.RJCT, new TppMessageInformation(ERROR, PAYMENT_FAILED)))
-                   .build();
+                   .fail(Arrays.asList(new TppMessageGeneric()
+                                           .category(TppMessageCategory.ERROR)
+                                           .code(TppMessagePISPAYMENTFAILED400.CodeEnum.FAILED)))
+                   .build());
     }
 
     private ResponseObject<PaymentInitialisationResponse> getExecutionDateInvalidErrorResponse() {

@@ -291,8 +291,8 @@ public class PaymentMapper {
 
     private SpiAmount mapToSpiAmount(Amount amount) {
         return Optional.ofNullable(amount)
-                   .map(am -> new SpiAmount(am.getCurrency(), new BigDecimal(am.getContent())))
-                   .orElse(null);
+            .map(am -> new SpiAmount(am.getCurrency(), new BigDecimal(am.getAmount())))
+            .orElse(null);
     }
 
     public TppInfo mapToTppInfo(String tppSignatureCertificate) {

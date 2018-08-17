@@ -21,12 +21,13 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 @Data
 public class SpiAccountBalance {
     private SpiAmount spiBalanceAmount;
     private SpiBalanceType spiBalanceType;
-    private LocalDateTime lastChangeDateTime;
+    private OffsetDateTime lastChangeDateTime;
     private LocalDate referenceDate;
     private String lastCommittedTransaction;
 }

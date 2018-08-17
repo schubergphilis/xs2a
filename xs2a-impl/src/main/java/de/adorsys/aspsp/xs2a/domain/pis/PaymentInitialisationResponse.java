@@ -22,9 +22,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import de.adorsys.aspsp.xs2a.domain.Amount;
 import de.adorsys.aspsp.xs2a.domain.Links;
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.consent.AuthenticationObject;
+import de.adorsys.psd2.model.AuthenticationObject;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -54,7 +54,7 @@ public class PaymentInitialisationResponse {
     private String psuMessage;
 
     @ApiModelProperty(value = "Messages to the TPP on operational issues.")
-    private MessageErrorCode[] tppMessages;
+    private TppMessageGeneric[] tppMessages;
 
     @ApiModelProperty(value = "Links: a list of hyperlinks to be recognised by the TPP.")
     @JsonProperty("_links")

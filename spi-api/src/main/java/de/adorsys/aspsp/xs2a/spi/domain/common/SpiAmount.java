@@ -20,11 +20,10 @@ import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
-import java.util.Currency;
 
 @Slf4j
 @Value
 public class SpiAmount {
-    private Currency currency;
+    private String currency;
     private BigDecimal content;
 }

@@ -22,12 +22,16 @@ import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
@@ -61,6 +65,10 @@ public class PeriodicPaymentsController {
         @ApiParam(name = "Periodic Payment", value = "All data relevant for the corresponding payment product and necessary for execution of the standing order.", required = true)
         @RequestBody @Valid PeriodicPayment periodicPayment) {
         ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
+
+        !!!!!! Optional<TppMessageGeneric> error = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
+
+
         ResponseObject<PaymentInitialisationResponse> response = accountReferenceValidationResponse.hasError()
                                                                      ? ResponseObject.<PaymentInitialisationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
                                                                      : paymentService.initiatePeriodicPayment(periodicPayment, tppSignatureCertificate, paymentProduct);

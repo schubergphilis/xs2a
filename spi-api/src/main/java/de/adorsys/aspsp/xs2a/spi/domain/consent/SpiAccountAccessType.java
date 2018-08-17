@@ -17,7 +17,8 @@
 package de.adorsys.aspsp.xs2a.spi.domain.consent;
 
 public enum SpiAccountAccessType {
-    ALL_ACCOUNTS("all-accounts");
+    ALL_ACCOUNTS("all-accounts"),
+    ALLACCOUNTSWITHBALANCES("allAccountsWithBalances");
 
     private String description;
 

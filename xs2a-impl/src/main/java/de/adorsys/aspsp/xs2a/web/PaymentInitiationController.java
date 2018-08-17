@@ -22,8 +22,11 @@ import de.adorsys.aspsp.xs2a.domain.TransactionStatusResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
+import de.adorsys.aspsp.xs2a.domain.pis.SinglePayments;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.service.validator.AccountReferenceValidationService;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +34,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -71,6 +76,9 @@ public class PaymentInitiationController {
         @ApiParam(name = "singlePayment", required = true)
         @RequestBody @Valid SinglePayment singlePayment) {
         ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
+
+      !!!!!!!!   Optional<TppMessageGeneric> error = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
+
         ResponseObject<PaymentInitialisationResponse> response = accountReferenceValidationResponse.hasError()
                                                                      ? ResponseObject.<PaymentInitialisationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
                                                                      : paymentService.createPaymentInitiation(singlePayment, tppSignatureCertificate, paymentProduct);

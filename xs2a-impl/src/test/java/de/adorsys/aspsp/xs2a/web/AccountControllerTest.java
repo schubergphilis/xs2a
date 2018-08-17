@@ -19,12 +19,13 @@ package de.adorsys.aspsp.xs2a.web;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
-import de.adorsys.aspsp.xs2a.domain.Balance;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReport;
 import de.adorsys.aspsp.xs2a.service.AccountService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
+import de.adorsys.aspsp.xs2a.web12.AccountController;
+import de.adorsys.psd2.model.AccountDetails;
+import de.adorsys.psd2.model.AccountReport;
+import de.adorsys.psd2.model.Balance;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,7 +83,9 @@ public class AccountControllerTest {
         ResponseObject<AccountDetails> expectedResult = getAccountDetails();
 
         //When
-        AccountDetails result = accountController.readAccountDetails(CONSENT_ID, ACCOUNT_ID, withBalance).getBody();
+        Object result = accountController.readAccountDetails(ACCOUNT_ID, null, CONSENT_ID, withBalance, null,
+            null, null, null, null, null, null, null,
+            null, null, null, null, null).getBody();
 
         //Then:
         assertThat(result).isEqualTo(expectedResult.getBody());
@@ -96,7 +99,9 @@ public class AccountControllerTest {
         Map<String, List<AccountDetails>> expectedResult = createAccountDetailsList(ACCOUNT_DETAILS_SOURCE).getBody();
 
         //When:
-        Map<String, List<AccountDetails>> result = accountController.getAccounts("id", withBalance).getBody();
+        Object result = accountController.getAccountList(null, "id", withBalance,
+            null, null, null, null, null, null, null,
+            null, null, null, null, null, null).getBody();
 
         //Then:
         assertThat(result).isEqualTo(expectedResult);
@@ -111,7 +116,9 @@ public class AccountControllerTest {
         expectedResult.add(expectedBalances);
 
         //When:
-        List<Balance> result = accountController.getBalances(CONSENT_ID, ACCOUNT_ID).getBody();
+        Object result = accountController.getBalances(ACCOUNT_ID, null, CONSENT_ID,
+            null, null, null, null, null, null, null,
+            null, null, null, null, null, null).getBody();
 
         //Then:
         assertThat(result).isEqualTo(expectedResult);
@@ -125,7 +132,9 @@ public class AccountControllerTest {
         AccountReport expectedResult = jsonConverter.toObject(IOUtils.resourceToString(ACCOUNT_REPORT_SOURCE, UTF_8), AccountReport.class).get();
 
         //When
-        AccountReport result = accountController.getTransactions(ACCOUNT_ID, "123", null, null, TRANSACTION_ID, psuInvolved, "both", false, false).getBody();
+        Object result = accountController.getTransactionDetails(ACCOUNT_ID, TRANSACTION_ID, null, "123",
+            null, null, null, null, null, null, null,
+            null, null, null, null, null, null).getBody();
 
         //Then:
         assertThat(result).isEqualTo(expectedResult);

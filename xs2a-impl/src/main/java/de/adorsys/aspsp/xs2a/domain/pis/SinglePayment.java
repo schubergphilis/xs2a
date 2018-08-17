@@ -18,11 +18,10 @@ package de.adorsys.aspsp.xs2a.domain.pis;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.aspsp.xs2a.domain.AccountReferenceCollector;
-import de.adorsys.aspsp.xs2a.domain.Amount;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.address.Address;
 import de.adorsys.aspsp.xs2a.domain.code.BICFI;
 import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
+import de.adorsys.psd2.model.Address;
+import de.adorsys.psd2.model.Amount;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -47,7 +46,7 @@ public class SinglePayment implements AccountReferenceCollector {
 
     @NotNull
     @ApiModelProperty(value = "debtor account", required = true)
-    private AccountReference debtorAccount;
+    private Object debtorAccount;
 
     @Size(max = 70)
     @ApiModelProperty(value = "ultimate debtor", example = "Mueller")
@@ -60,7 +59,7 @@ public class SinglePayment implements AccountReferenceCollector {
 
     @NotNull
     @ApiModelProperty(value = "creditor account", required = true)
-    private AccountReference creditorAccount;
+    private Object creditorAccount;
 
     @ApiModelProperty(value = "creditor agent")
     private BICFI creditorAgent;
@@ -108,7 +107,7 @@ public class SinglePayment implements AccountReferenceCollector {
 
     @JsonIgnore
     @Override
-    public Set<AccountReference> getAccountReferences() {
+    public Set<Object> getAccountReferences() {
         return new HashSet<>(Arrays.asList(this.debtorAccount, this.creditorAccount));
     }
 }

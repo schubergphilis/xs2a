@@ -19,7 +19,6 @@ package de.adorsys.aspsp.xs2a.service.payment;
 import com.google.common.collect.Lists;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
@@ -32,6 +31,9 @@ import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPeriodicPayment;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
+import de.adorsys.psd2.model.AccountReferenceIban;
+import de.adorsys.psd2.model.TppMessageGeneric;
+import de.adorsys.psd2.model.TppMessagePISPAYMENTFAILED400;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -113,7 +115,7 @@ public class RedirectScaPaymentService implements ScaPaymentService {
         for (PaymentInitialisationResponse resp : paymentResponses) {
             if (StringUtils.isBlank(resp.getPaymentId())
                     || resp.getTransactionStatus() == TransactionStatus.RJCT) {
-                resp.setTppMessages(new MessageErrorCode[]{PAYMENT_FAILED});
+                resp.setTppMessages(new TppMessageGeneric[]{new TppMessageGeneric().code(TppMessagePISPAYMENTFAILED400.CodeEnum.FAILED)});
                 resp.setTransactionStatus(TransactionStatus.RJCT);
             }
         }
@@ -167,6 +169,7 @@ public class RedirectScaPaymentService implements ScaPaymentService {
 
     private Optional<String> getDebtorIbanFromPayments(List<SinglePayment> payments) {
         return Optional.ofNullable(payments.get(0).getDebtorAccount())
+                   .filter(o -> o instanceof AccountReferenceIban)
                    .map(AccountReference::getIban);
     }
 }

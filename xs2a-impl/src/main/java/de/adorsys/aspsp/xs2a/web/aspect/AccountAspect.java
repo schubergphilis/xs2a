@@ -16,10 +16,11 @@
 
 package de.adorsys.aspsp.xs2a.web.aspect;
 
-import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReport;
-import de.adorsys.aspsp.xs2a.domain.Links;
-import de.adorsys.aspsp.xs2a.web.AccountController;
+import de.adorsys.aspsp.xs2a.web12.AccountController;
+import de.adorsys.psd2.model.AccountDetails;
+import de.adorsys.psd2.model.AccountReport;
+import de.adorsys.psd2.model.LinksAccountDetails;
+import de.adorsys.psd2.model.LinksAccountReport;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -29,7 +30,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -40,7 +40,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 @AllArgsConstructor
 public class AccountAspect extends AbstractLinkAspect<AccountController> {
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.readAccountDetails(..)) && args(consentId, accountId, withBalance, ..)", returning = "result")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.AccountController.readAccountDetails(..)) && args(consentId, accountId, withBalance, ..)", returning = "result")
     public ResponseEntity<AccountDetails> invokeReadAccountDetailsAspect(ResponseEntity<AccountDetails> result, String consentId, String accountId, boolean withBalance) {
         if (!hasError(result)) {
             AccountDetails body = result.getBody();
@@ -49,7 +49,7 @@ public class AccountAspect extends AbstractLinkAspect<AccountController> {
         return new ResponseEntity<>(result.getBody(), result.getHeaders(), result.getStatusCode());
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.getAccounts(..)) && args(consentId, withBalance, ..)", returning = "result")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.AccountController.getAccounts(..)) && args(consentId, withBalance, ..)", returning = "result")
     public ResponseEntity<Map<String, List<AccountDetails>>> invokeGetAccountsAspect(ResponseEntity<Map<String, List<AccountDetails>>> result, String consentId, boolean withBalance) {
         if (!hasError(result)) {
             Map<String, List<AccountDetails>> body = result.getBody();
@@ -58,7 +58,7 @@ public class AccountAspect extends AbstractLinkAspect<AccountController> {
         return new ResponseEntity<>(result.getBody(), result.getHeaders(), result.getStatusCode());
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.getTransactions(..)) && args(accountId,..)", returning = "result")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.AccountController.getTransactions(..)) && args(accountId,..)", returning = "result")
     public ResponseEntity<AccountReport> invokeGetTransactionsAspect(ResponseEntity<AccountReport> result, String accountId) {
         if (!hasError(result)) {
             AccountReport body = result.getBody();
@@ -67,31 +67,24 @@ public class AccountAspect extends AbstractLinkAspect<AccountController> {
         return new ResponseEntity<>(result.getBody(), result.getHeaders(), result.getStatusCode());
     }
 
-    private Links buildLinksForAccountDetails(AccountDetails accountDetails, boolean withBalance) {
+    private LinksAccountDetails buildLinksForAccountDetails(AccountDetails accountDetails, boolean withBalance) {
         Class controller = getController();
 
-        Links links = new Links();
+        LinksAccountDetails links = new LinksAccountDetails();
         if (withBalance) {
-            links.setViewBalances(linkTo(controller).slash(accountDetails.getId()).slash("balances").toString());
+            links.setBalances(linkTo(controller).slash(accountDetails.getResourceId()).slash("balances").toString());
         }
-        links.setViewTransactions(linkTo(controller).slash(accountDetails.getId()).slash("transactions").toString());
+        links.setTransactions(linkTo(controller).slash(accountDetails.getResourceId()).slash("transactions").toString());
 
         return links;
     }
 
-    private Links buildLinksForAccountReport(AccountReport accountReport, String accountId) {
+    private LinksAccountReport buildLinksForAccountReport(AccountReport accountReport, String accountId) {
         Class controller = getController();
 
-        Links links = new Links();
-        links.setViewAccount(linkTo(controller).slash(accountId).toString());
+        LinksAccountReport links = new LinksAccountReport();
+        links.setAccount(linkTo(controller).slash(accountId).toString());
 
-        Optional<String> optionalAccount = jsonConverter.toJson(accountReport);
-        String jsonReport = optionalAccount.orElse("");
-
-        if (jsonReport.length() > maxNumberOfCharInTransactionJson) {
-            // todo further we should implement real flow for downloading file
-            links.setDownload(linkTo(controller).slash(accountId).slash("transactions/download").toString());
-        }
         return links;
     }
 
@@ -102,8 +95,8 @@ public class AccountAspect extends AbstractLinkAspect<AccountController> {
 
     private List<AccountDetails> updateAccountLinks(List<AccountDetails> accountDetailsList, boolean withBalance) {
         return accountDetailsList.stream()
-                   .map(acc -> setLinksToAccount(acc, withBalance))
-                   .collect(Collectors.toList());
+            .map(acc -> setLinksToAccount(acc, withBalance))
+            .collect(Collectors.toList());
     }
 
     private AccountDetails setLinksToAccount(AccountDetails accountDetails, boolean withBalance) {

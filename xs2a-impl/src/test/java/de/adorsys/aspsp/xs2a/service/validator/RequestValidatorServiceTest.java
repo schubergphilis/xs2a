@@ -20,9 +20,9 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.service.AspspProfileService;
-import de.adorsys.aspsp.xs2a.web.ConsentInformationController;
 import de.adorsys.aspsp.xs2a.web.PaymentInitiationController;
 import de.adorsys.aspsp.xs2a.web.PeriodicPaymentsController;
+import de.adorsys.aspsp.xs2a.web12.ConsentController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,7 +52,7 @@ public class RequestValidatorServiceTest {
     @InjectMocks
     private RequestValidatorService requestValidatorService;
     @Mock
-    private ConsentInformationController consentInformationController;
+    private ConsentController consentInformationController;
     @Mock
     private PaymentInitiationController paymentInitiationController;
     @Mock

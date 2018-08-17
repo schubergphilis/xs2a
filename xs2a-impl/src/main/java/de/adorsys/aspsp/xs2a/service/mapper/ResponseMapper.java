@@ -17,11 +17,13 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -51,7 +53,7 @@ public class ResponseMapper {
             : new ResponseEntity<>(response.getBody(), status);
     }
 
-    private ResponseEntity enrichError(MessageError error){
+    private ResponseEntity enrichError(TppMessageGeneric error){
          return new ResponseEntity<>(error, valueOf(error.getTppMessage().getMessageErrorCode().getCode()));
     }
 }

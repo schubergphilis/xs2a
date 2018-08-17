@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.web.interceptor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.service.validator.RequestValidatorService;
-import de.adorsys.aspsp.xs2a.web.ConsentInformationController;
+import de.adorsys.aspsp.xs2a.web12.ConsentController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -52,7 +52,7 @@ public class HandlerInterceptorTest {
     private MessageSource messageSource;
 
     @InjectMocks
-    private ConsentInformationController consentInformationController;
+    private ConsentController consentInformationController;
 
     @Test
     public void preHandle() throws Exception {

@@ -33,5 +33,5 @@ public class SpiAccountReference {
     private String pan;
     private String maskedPan;
     private String msisdn;
-    private Currency currency;
+    private String currency;
 }

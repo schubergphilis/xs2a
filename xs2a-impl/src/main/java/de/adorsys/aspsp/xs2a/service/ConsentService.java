@@ -16,19 +16,14 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.consent.*;
-import de.adorsys.aspsp.xs2a.exception.MessageCategory;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.consent.ais.AisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ConsentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
+import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -49,6 +44,24 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     private final AccountSpi accountSpi;
     private final AccountMapper accountMapper;
 
+    public static Set<Object> getAccountReferences(AccountAccess accountAccess) {
+        return Optional.ofNullable(accountAccess)
+            .map(a -> getReferenceSet(accountAccess.getAccounts(), accountAccess.getBalances(), accountAccess.getTransactions()))
+            .orElse(Collections.emptySet());
+    }
+
+    private static final Set<Object> getReferenceSet(List<Object>... referencesList) {
+        return Arrays.stream(referencesList)
+            .map(ConsentService::getReferenceList)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toSet());
+    }
+
+    private static List<Object> getReferenceList(List<Object> reference) {
+        return Optional.ofNullable(reference)
+            .orElse(Collections.emptyList());
+    }
+
     /**
      * @param request body of create consent request carrying such parameters as AccountAccess, validity terms etc.
      * @param psuId   String representing PSU identification at ASPSP
@@ -57,7 +70,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
      * account details or by getting account details from ASPSP by psuId and filling the appropriate fields in
      * AccountAccess determined by availableAccounts or allPsd2 variables
      */
-    public ResponseObject<CreateConsentResponse> createAccountConsentsWithResponse(CreateConsentReq request, String psuId) {
+    public ResponseObject<ConsentsResponse201> createAccountConsentsWithResponse(CreateConsentReq request, String psuId) {
         String tppId = "This is a test TppId"; //TODO v1.1 add corresponding request header
         CreateConsentReq checkedRequest = new CreateConsentReq();
         if (isNotEmptyAccess(request.getAccess()) && request.getValidUntil().isAfter(LocalDate.now())) {
@@ -75,9 +88,17 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                                ? aisConsentService.createConsent(checkedRequest, psuId, tppId)
                                : null;
         //TODO v1.1 Add balances support
-        return !StringUtils.isBlank(consentId)
+        /*return !StringUtils.isBlank(consentId)
                    ? ResponseObject.<CreateConsentResponse>builder().body(new CreateConsentResponse(RECEIVED.getConsentStatus(), consentId, null, null, null)).build()
                    : ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.RESOURCE_UNKNOWN_400))).build();
+        */
+          return
+              ? ResponseObject.<ConsentsResponse201>builder().body(new ConsentsResponse201().consentStatus(ConsentStatus.RECEIVED).consentId(consentId)).build()
+            : ResponseObject.<ConsentsResponse201>builder()
+            .fail(Arrays.asList(new TppMessageGeneric()
+                .category(TppMessageCategory.ERROR)
+                .code(TppMessageGENERICCONSENTUNKNOWN403400.CodeEnum.UNKNOWN)))
+            .build();
     }
 
     /**
@@ -105,7 +126,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         }
 
         return ResponseObject.<Void>builder()
-                   .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build();
+                   .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, TppMessageGENERICCONSENTUNKNOWN403400.CodeEnum.UNKNOWN))).build();
     }
 
     /**
@@ -120,18 +141,18 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     }
 
     ResponseObject<AccountAccess> getValidatedConsent(String consentId) {
-        AccountConsent consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
+        ConsentInformationResponse200Json consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
         if (consent == null) {
             return ResponseObject.<AccountAccess>builder()
                        .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build();
         }
         if (!consent.isValidStatus()) {
             return ResponseObject.<AccountAccess>builder()
-                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_EXPIRED))).build();
+                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, TppMessageGENERICCONSENTUNKNOWN403400.CodeEnum.UNKNOWN))).build();
         }
         if (!consent.isValidFrequency()) {
             return ResponseObject.<AccountAccess>builder()
-                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.ACCESS_EXCEEDED))).build();
+                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR,TppMessageGENERICCONSENTEXPIRED401.CodeEnum.EXPIRED))).build();
         }
         return ResponseObject.<AccountAccess>builder().body(consent.getAccess()).build();
     }
@@ -162,10 +183,10 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         List<SpiAccountDetails> accountDetailsList = accountSpi.readAccountDetailsByIbans(
             ibansFromAccess,
             new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload();
-        List<AccountReference> aspspReferences = accountMapper.mapToAccountReferencesFromDetails(accountDetailsList); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
-        List<AccountReference> balances = getFilteredReferencesByAccessReferences(requestedAccess.getBalances(), aspspReferences);
-        List<AccountReference> transaction = getRequestedReferences(requestedAccess.getTransactions(), aspspReferences);
-        List<AccountReference> accounts = getRequestedReferences(requestedAccess.getAccounts(), aspspReferences);
+        List<Object> aspspReferences = accountMapper.mapToAccountReferencesFromDetails(accountDetailsList); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
+        List<Object> balances = getFilteredReferencesByAccessReferences(requestedAccess.getBalances(), aspspReferences);
+        List<Object> transaction = getRequestedReferences(requestedAccess.getTransactions(), aspspReferences);
+        List<Object> accounts = getRequestedReferences(requestedAccess.getAccounts(), aspspReferences);
         return new AccountAccess(getAccountsForAccess(balances, transaction, accounts), balances, transaction, null, null);
     }
 
@@ -175,7 +196,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                    .orElseGet(Collections::emptyList);
     }
 
-    private List<AccountReference> getAccountsForAccess(List<AccountReference> balances, List<AccountReference> transactions, List<AccountReference> accounts) {
+    private List<Object> getAccountsForAccess(List<Object> balances, List<Object> transactions, List<Object> accounts) {
         accounts.removeAll(balances);
         accounts.addAll(balances);
         accounts.removeAll(transactions);
@@ -183,14 +204,14 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         return accounts;
     }
 
-    private List<AccountReference> getRequestedReferences(List<AccountReference> requestedRefs, List<AccountReference> refs) {
+    private List<Object> getRequestedReferences(List<Object> requestedRefs, List<Object> refs) {
         return Optional.ofNullable(requestedRefs).map(rr -> rr.stream()
                                                                 .filter(r -> isContainedRefInRefsList(r, refs))
                                                                 .collect(Collectors.toList()))
                    .orElseGet(Collections::emptyList);
     }
 
-    private boolean isContainedRefInRefsList(AccountReference referenceMatched, List<AccountReference> references) {
+    private boolean isContainedRefInRefsList(Object referenceMatched, List<Object> references) {
         return references.stream()
                    .anyMatch(r -> r.matches(referenceMatched));
     }
@@ -208,8 +229,8 @@ public class ConsentService { //TODO change format of consentRequest to mandator
 
     private boolean isAllAccountsRequest(CreateConsentReq request) {
         return Optional.ofNullable(request.getAccess())
-                   .filter(a -> AccountAccessType.ALL_ACCOUNTS == a.getAllPsd2()
-                                    || AccountAccessType.ALL_ACCOUNTS == a.getAvailableAccounts()).isPresent();
+            .filter(a -> AccountAccess.AllPsd2Enum.ALLACCOUNTS == a.getAllPsd2()
+                || AccountAccess.AvailableAccountsEnum.ALLACCOUNTS == a.getAvailableAccounts()).isPresent();
     }
 
     private Set<String> getIbansFromAccess(AccountAccess access) {

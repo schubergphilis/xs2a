@@ -1,5 +1,8 @@
 package de.adorsys.aspsp.xs2a.domain.account;
 
+import de.adorsys.aspsp.xs2a.domain.SupportedAccountReferenceField;
+import de.adorsys.psd2.model.*;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -152,14 +155,19 @@ public class SupportedAccountReferenceFieldTest {
         assertThat(result.get()).isFalse();
     }
 
-    private AccountReference getReference(String iban, String bban, String pan, String masked, String msisdn) {
-        AccountReference reference = new AccountReference();
-        reference.setIban(iban);
-        reference.setBban(bban);
-        reference.setPan(pan);
-        reference.setMaskedPan(masked);
-        reference.setMsisdn(msisdn);
-        return reference;
+    private Object getReference(String iban, String bban, String pan, String masked, String msisdn) {
+        if (StringUtils.isNotEmpty(iban)) {
+            return new AccountReferenceIban().iban(iban);
+        } else if (StringUtils.isNotEmpty(bban)) {
+            return new AccountReferenceBban().bban(bban);
+        } else if (StringUtils.isNotEmpty(pan)) {
+            return new AccountReferencePan().pan(pan);
+        } else if (StringUtils.isNotEmpty(masked)) {
+            return new AccountReferenceMaskedPan().maskedPan(masked);
+        } else if (StringUtils.isNotEmpty(iban)) {
+            return new AccountReferenceMsisdn().msisdn(msisdn);
+        }
+        return null;
     }
 
     private List<String> getMsisdns() {
