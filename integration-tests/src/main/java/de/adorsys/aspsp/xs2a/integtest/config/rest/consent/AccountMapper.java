@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.service.mapper;
+package de.adorsys.aspsp.xs2a.integtest.config.rest.consent;
 
 import de.adorsys.aspsp.xs2a.domain.*;
 import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
@@ -65,7 +65,7 @@ public class AccountMapper {
 
     public Optional<AccountReport> mapToAccountReport(List<SpiTransaction> spiTransactions) {
 
-        if (spiTransactions.isEmpty()) {
+        if (CollectionUtils.isEmpty(spiTransactions)) {
             return Optional.empty();
         }
 
@@ -166,7 +166,7 @@ public class AccountMapper {
 
     private AccountReference mapToAccountReference(AccountDetails details) {
         return Optional.ofNullable(details)
-                   .map(det -> getAccountReference(det.getIban(), det.getBban(), det.getPan(), det.getMaskedPan(), det.getMsisdn(), det.getCurrency()))
+                   .map(det-> getAccountReference(det.getIban(), det.getBban(), det.getPan(), det.getMaskedPan(), det.getMsisdn(), det.getCurrency()))
                    .orElse(null);
 
     }

@@ -14,23 +14,20 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.ais;
+package de.adorsys.aspsp.xs2a.integtest.util;
 
-import de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus;
-import lombok.Value;
+import de.adorsys.aspsp.xs2a.integtest.model.Request;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
-import java.time.LocalDate;
+public class PaymentUtils {
 
-@Value
-public class AisAccountConsent {
-    private String id;
-    private AisAccountAccess access;
-    private boolean recurringIndicator;
-    private LocalDate validUntil;
-    private int frequencyPerDay;
-    private LocalDate lastActionDate;
-    private CmsConsentStatus consentStatus;
-    private boolean withBalance;
-    private boolean tppRedirectPreferred;
-    private byte[] aspspConsentData;
+    public static HttpEntity getPaymentsHttpEntity(Request request, String token) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAll(request.getHeader());
+        headers.add("Authorization", "Bearer " + token);
+        headers.add("Content-Type", "application/json");
+
+        return new HttpEntity<>(request.getBody(), headers);
+    }
 }

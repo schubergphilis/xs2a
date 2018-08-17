@@ -14,23 +14,16 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.ais;
+package de.adorsys.aspsp.cmsclient.cms.model.pis;
 
-import de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus;
-import lombok.Value;
+import de.adorsys.aspsp.cmsclient.cms.RestCmsRequestMethod;
+import de.adorsys.aspsp.cmsclient.core.HttpMethod;
+import de.adorsys.aspsp.cmsclient.core.util.HttpUriParams;
 
-import java.time.LocalDate;
+public class UpdatePaymentConsentStatusMethod extends RestCmsRequestMethod<Void, Void> {
+    private static final String UPDATE_PAYMENT_CONSENT_STATUS_URI = "api/v1/pis/consent/{consent-id}/status/{status}";
 
-@Value
-public class AisAccountConsent {
-    private String id;
-    private AisAccountAccess access;
-    private boolean recurringIndicator;
-    private LocalDate validUntil;
-    private int frequencyPerDay;
-    private LocalDate lastActionDate;
-    private CmsConsentStatus consentStatus;
-    private boolean withBalance;
-    private boolean tppRedirectPreferred;
-    private byte[] aspspConsentData;
+    public UpdatePaymentConsentStatusMethod(HttpUriParams uriParams) {
+        super(HttpMethod.PUT, UPDATE_PAYMENT_CONSENT_STATUS_URI, uriParams);
+    }
 }

@@ -16,7 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.consent.api;
 
-public enum ConsentStatus {
+public enum CmsConsentStatus {
     RECEIVED,
     REJECTED,
     VALID,

@@ -21,6 +21,6 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ConsentStatusResponse {
-    private ConsentStatus consentStatus;
+public class PisConsentStatusResponse {
+    private CmsConsentStatus consentStatus;
 }

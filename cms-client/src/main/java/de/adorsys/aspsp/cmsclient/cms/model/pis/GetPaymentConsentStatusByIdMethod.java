@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.cmsclient.cms.model.ais;
+package de.adorsys.aspsp.cmsclient.cms.model.pis;
 
 import de.adorsys.aspsp.cmsclient.cms.RestCmsRequestMethod;
 import de.adorsys.aspsp.cmsclient.core.HttpMethod;
 import de.adorsys.aspsp.cmsclient.core.util.HttpUriParams;
-import de.adorsys.aspsp.xs2a.consent.api.AisConsentStatusResponse;
+import de.adorsys.aspsp.xs2a.consent.api.PisConsentStatusResponse;
 
-public class GetConsentStatusByIdMethod extends RestCmsRequestMethod<Void, AisConsentStatusResponse> {
-    private static final String GET_CONSENT_STATUS_BY_ID_URI = "api/v1/ais/consent/{consent-id}/status";
+public class GetPaymentConsentStatusByIdMethod extends RestCmsRequestMethod<Void, PisConsentStatusResponse> {
+    private static final String GET_PAYMENT_CONSENT_STATUS_BY_ID_URI = "api/v1/pis/consent/{consent-id}/status";
 
-    public GetConsentStatusByIdMethod(HttpUriParams uriParams) {
-        super(HttpMethod.GET, GET_CONSENT_STATUS_BY_ID_URI, uriParams);
+    public GetPaymentConsentStatusByIdMethod(HttpUriParams uriParams) {
+        super(HttpMethod.GET, GET_PAYMENT_CONSENT_STATUS_BY_ID_URI, uriParams);
     }
 }

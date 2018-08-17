@@ -14,23 +14,24 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.ais;
+package de.adorsys.aspsp.xs2a.integtest.entities;
 
-import de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus;
-import lombok.Value;
+import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
+import lombok.Data;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.time.LocalDate;
 
-@Value
-public class AisAccountConsent {
-    private String id;
-    private AisAccountAccess access;
-    private boolean recurringIndicator;
-    private LocalDate validUntil;
-    private int frequencyPerDay;
-    private LocalDate lastActionDate;
-    private CmsConsentStatus consentStatus;
-    private boolean withBalance;
-    private boolean tppRedirectPreferred;
-    private byte[] aspspConsentData;
+@Data
+public class ITPeriodicPayments extends SinglePayment {
+
+    private LocalDate startDate;
+    private String executionRule;
+    private LocalDate endDate;
+    private String frequency;
+
+    @Max(31)
+    @Min(1)
+    private int dayOfExecution;
 }
