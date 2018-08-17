@@ -160,7 +160,7 @@ public class AspspProfileUpdateController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = String.class),
         @ApiResponse(code = 400, message = "Bad request")})
-    public ResponseEntity<Void> updateAccountReferenceFields(@RequestBody int consentLifetime) {
+    public ResponseEntity<Void> updateConsentLifetime(@RequestBody int consentLifetime) {
         aspspProfileService.updateConsentLifetime(consentLifetime);
         return new ResponseEntity<>(HttpStatus.OK);
     }
