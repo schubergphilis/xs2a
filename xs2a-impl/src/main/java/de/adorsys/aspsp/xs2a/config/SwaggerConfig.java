@@ -16,13 +16,10 @@
 
 package de.adorsys.aspsp.xs2a.config;
 
-import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import springfox.documentation.RequestHandler;
-import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger.web.InMemorySwaggerResourcesProvider;
@@ -39,9 +36,9 @@ public class SwaggerConfig {
     @Bean(name = "api")
     public Docket apiDocklet() {
         return new Docket(DocumentationType.SWAGGER_2)
-            .select()
-            .apis(Predicates.isNull())
-            .build();
+                   .select()
+                   .apis(Predicates.isNull())
+                   .build();
     }
 
     @Primary

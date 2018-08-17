@@ -3,6 +3,7 @@ package de.adorsys.psd2.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
@@ -15,6 +16,7 @@ import java.util.Objects;
  */
 @ApiModel(description = "Content of the body of a consent request. ")
 @Validated
+@Data
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class Consents {
 

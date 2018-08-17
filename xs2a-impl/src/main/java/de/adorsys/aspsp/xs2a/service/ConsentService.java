@@ -26,7 +26,7 @@ import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
 import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -34,7 +34,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static de.adorsys.aspsp.xs2a.domain.consent.ConsentStatus.RECEIVED;
 
 @Service
 @RequiredArgsConstructor
@@ -133,8 +132,11 @@ public class ConsentService { //TODO change format of consentRequest to mandator
      * @param consentId String representation of AccountConsent identification
      * @return AccountConsent requested by consentId
      */
-    public ResponseObject<AccountConsent> getAccountConsentById(String consentId) {
+    public ResponseObject<ConsentInformationResponse200Json> getAccountConsentById(String consentId) {
+
         AccountConsent consent = consentMapper.mapToAccountConsent(aisConsentService.getAccountConsentById(consentId));
+
+
         return consent == null
                    ? ResponseObject.<AccountConsent>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.CONSENT_UNKNOWN_400))).build()
                    : ResponseObject.<AccountConsent>builder().body(consent).build();
@@ -156,6 +158,14 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         }
         return ResponseObject.<AccountAccess>builder().body(consent.getAccess()).build();
     }
+
+
+
+
+
+
+
+
 
     boolean isValidAccountByAccess(String iban, Currency currency, List<AccountReference> allowedAccountData) {
         return CollectionUtils.isNotEmpty(allowedAccountData)

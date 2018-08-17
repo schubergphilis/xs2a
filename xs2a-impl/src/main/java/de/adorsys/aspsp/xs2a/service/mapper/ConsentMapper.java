@@ -27,6 +27,8 @@ import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.*;
+import de.adorsys.psd2.model.ConsentInformationResponse200Json;
+import de.adorsys.psd2.model.ConsentStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -67,18 +69,16 @@ public class ConsentMapper {
                    .orElse(null);
     }
 
-    public AccountConsent mapToAccountConsent(SpiAccountConsent spiAccountConsent) {
+    public ConsentInformationResponse200Json mapToAccountConsent(SpiAccountConsent spiAccountConsent) {
         return Optional.ofNullable(spiAccountConsent)
-                   .map(ac -> new AccountConsent(
+                   .map(ac -> new ConsentInformationResponse200Json(
                        ac.getId(),
                        mapToAccountAccess(ac.getAccess()),
                        ac.isRecurringIndicator(),
                        ac.getValidUntil(),
                        ac.getFrequencyPerDay(),
                        ac.getLastActionDate(),
-                       ConsentStatus.valueOf(ac.getConsentStatus().name()),
-                       ac.isWithBalance(),
-                       ac.isTppRedirectPreferred()))
+                       ConsentStatus.valueOf(ac.getConsentStatus().name()))
                    .orElse(null);
     }
 
