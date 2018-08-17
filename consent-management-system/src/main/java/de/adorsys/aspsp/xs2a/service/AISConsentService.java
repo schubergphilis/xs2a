@@ -18,8 +18,8 @@ package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.account.AccountHolder;
 import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
-import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus;
+import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccessInfo;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountConsent;
 import de.adorsys.aspsp.xs2a.consent.api.ais.CreateAisConsentRequest;
@@ -39,9 +39,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus.EXPIRED;
-import static de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus.RECEIVED;
-import static de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus.VALID;
+import static de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus.*;
 import static de.adorsys.aspsp.xs2a.consent.api.TypeAccess.*;
 
 @Service
@@ -100,7 +98,7 @@ public class AISConsentService {
     /**
      * Read status of consent by id
      *
-     * @param consentId
+     * @param consentId Primary consent identifier
      * @return ConsentStatus
      */
     public Optional<CmsConsentStatus> getConsentStatusById(String consentId) {
@@ -112,8 +110,8 @@ public class AISConsentService {
     /**
      * Update consent status by id
      *
-     * @param consentId
-     * @param status new consent status
+     * @param consentId Primary consent identifier
+     * @param status    new consent status
      * @return Boolean
      */
     public Optional<Boolean> updateConsentStatusById(String consentId, CmsConsentStatus status) {
@@ -125,7 +123,7 @@ public class AISConsentService {
     /**
      * Read full information of consent by id
      *
-     * @param consentId
+     * @param consentId Primary consent identifier
      * @return AisAccountConsent
      */
     public Optional<AisAccountConsent> getAisAccountConsentById(String consentId) {
@@ -161,7 +159,7 @@ public class AISConsentService {
     }
 
     private void updateAisConsentCounter(AisConsent consent) {
-        if(consent.hasUsagesAvailable()){
+        if (consent.hasUsagesAvailable()) {
             int usageCounter = consent.getUsageCounter();
             int newUsageCounter = --usageCounter;
             consent.setUsageCounter(newUsageCounter);
