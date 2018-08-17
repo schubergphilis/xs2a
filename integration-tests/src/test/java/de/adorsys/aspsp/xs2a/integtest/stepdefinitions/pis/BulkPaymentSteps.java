@@ -9,21 +9,20 @@ import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
-import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
 import de.adorsys.aspsp.xs2a.integtest.model.TestData;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.*;
-import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.IOUtils.resourceToString;
@@ -89,48 +88,6 @@ public class BulkPaymentSteps {
 
         assertThat(actualResponse.getBody().get(0).getLinks().getScaRedirect(), notNullValue());
         assertThat(actualResponse.getBody().get(1).getLinks().getScaRedirect(), notNullValue());
-    }
-
-    @When("^PSU sends the bulk payment initiating request with error$")
-    public void sendBulkInitiatingPaymentWithError() throws HttpClientErrorException, IOException{
-        HttpHeaders headers = new HttpHeaders();
-        headers.setAll(context.getTestData().getRequest().getHeader());
-        headers.add("Authorization", "Bearer " + context.getAccessToken());
-        headers.add("Content-Type", "application/json");
-
-        List<SinglePayment> bulkPayments = context.getTestData().getRequest().getBody();
-        try{
-            restTemplate.exchange(
-                context.getBaseUrl() + "/bulk-payments/" + context.getPaymentProduct(),
-                HttpMethod.POST, new HttpEntity<>(bulkPayments, headers), new ParameterizedTypeReference<List<PaymentInitialisationResponse>>() {
-                });
-        }catch (HttpClientErrorException rex){
-            ResponseEntity<List<PaymentInitialisationResponse>> response =new ResponseEntity<>(
-                rex.getStatusCode());
-            context.setActualResponse(response);
-
-            ITMessageError messageError = mapper.readValue(rex.getResponseBodyAsString(), ITMessageError.class);
-            context.setMessageError(messageError);
-        }
-    }
-
-    @Then("^error responses are displayed the appropriate error response")
-    public void displayedAppropriateErrorResponses(){
-        ITMessageError givenErrorObject = context.getMessageError();
-         List<HashMap> responses = context.getTestData().getResponse().getBody();
-
-        HttpStatus httpStatus = context.getTestData().getResponse().getHttpStatus();
-        assertThat(context.getActualResponse().getStatusCode(), equalTo(httpStatus));
-
-        LinkedHashMap tppMessageContent = (LinkedHashMap) responses.get(1);
-        LinkedHashMap transactionState = (LinkedHashMap) responses.get(0);
-
-        if (givenErrorObject.getTppMessage() != null) {
-            assertThat(givenErrorObject.getTransactionStatus().name(), equalTo(transactionState.get("transactionStatus")));
-
-            assertThat(givenErrorObject.getTppMessage().getCategory().name(), equalTo(tppMessageContent.get("category")));
-            assertThat(givenErrorObject.getTppMessage().getCode().name(), equalTo(tppMessageContent.get("code")));
-        }
     }
 }
 
