@@ -15,7 +15,6 @@ Feature: Account Information Service
             | consent-all-psd2-accounts-successful.json  |
             | consent-all-accounts-successful.json       |
 
-#    #TODO Errorful Request
 
     Scenario Outline: Failed consent request creation (redirect)
         Given PSU wants to create a consent <consent-resource>
@@ -52,13 +51,15 @@ Feature: Account Information Service
 #            | consent-successful.json |
 #
 #
-#    Scenario Outline: Successful deletion of consent (redirect)
-#        Given PSU wants to delete the consent <consent-resource>
-#        When PSU deletes consent
-#        Then a successful response code and the appropriate messages get returned
-#        Examples:
-#            | consent-resource                 |
-#            | consent-deletion-successful.json |
+    Scenario Outline: Successful deletion of consent (redirect)
+        Given PSU wants to delete the consent <consent-resource>
+        When PSU deletes consent
+        Then a successful response code and the appropriate messages get returned
+        Examples:
+            | consent-resource                 |
+            | consent-deletion-successful.json |
+            | consent-deletion-not-existing-id.json |
+            | consent-deletion-already-revoked.json |
 #
 #
 #
