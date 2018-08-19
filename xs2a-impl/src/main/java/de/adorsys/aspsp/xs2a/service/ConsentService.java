@@ -62,7 +62,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         CreateConsentReq checkedRequest = new CreateConsentReq();
         if (isNotEmptyAccess(request.getAccess())) {
             if (!isValidExpirationDate(request.getValidUntil())) {
-                   return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PERIOD_INVALID))).build();
+                return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PERIOD_INVALID))).build();
             }
             checkedRequest.setAccess(getNecessaryAccess(request, psuId));
             checkedRequest.setCombinedServiceIndicator(request.isCombinedServiceIndicator());
@@ -149,11 +149,9 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     }
 
     private AccountAccess getNecessaryAccess(CreateConsentReq request, String psuId) {
-        if (isAllAccountsRequest(request) && psuId != null) {
-            return getAccessByPsuId(AccountAccessType.ALL_ACCOUNTS == request.getAccess().getAllPsd2(), psuId);
-        } else {
-            return getAccessByRequestedAccess(request.getAccess());
-        }
+        return isAllAccountsRequest(request) && psuId != null
+                   ? getAccessByPsuId(AccountAccessType.ALL_ACCOUNTS == request.getAccess().getAllPsd2(), psuId)
+                   : getAccessByRequestedAccess(request.getAccess());
     }
 
     private Set<String> getIbansFromAccountReference(List<AccountReference> references) {
