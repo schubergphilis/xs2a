@@ -17,7 +17,6 @@
 package de.adorsys.aspsp.xs2a.web.aspect;
 
 import de.adorsys.aspsp.xs2a.domain.Links;
-import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentResponse;
 import de.adorsys.aspsp.xs2a.web.ConsentInformationController;
 import lombok.AllArgsConstructor;
@@ -27,16 +26,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
-
 @Slf4j
 @Aspect
 @Component
 @AllArgsConstructor
-public class СonsentAspect extends AbstractLinkAspect<ConsentInformationController> {
+public class ConsentAspect extends AbstractLinkAspect<ConsentInformationController> {
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentInformationController.createAccountConsent()) && args(psuId, createConsent, ..)", returning = "result")
-    public ResponseEntity<CreateConsentResponse> invokeReadAccountDetailsAspect(ResponseEntity<CreateConsentResponse> result, String psuId, CreateConsentReq createConsent) {
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentInformationController.createAccountConsent(..)) && args(psuId, ..)", returning = "result")
+    public ResponseEntity<CreateConsentResponse> invokeCreateAccountConsentAspect(ResponseEntity<CreateConsentResponse> result, String psuId) {
         if (!hasError(result)) {
             CreateConsentResponse body = result.getBody();
             body.setLinks(buildLinksForConsentResponse(body));
@@ -46,7 +43,7 @@ public class СonsentAspect extends AbstractLinkAspect<ConsentInformationControl
 
     private Links buildLinksForConsentResponse(CreateConsentResponse response) {
         Links links = new Links();
-        links.setScaRedirect(linkTo(aspspProfileService.getPisRedirectUrlToAspsp()).slash(response.getConsentId()).toString());
+        links.setScaRedirect(aspspProfileService.getAisRedirectUrlToAspsp() + response.getConsentId());
 
         return links;
     }
