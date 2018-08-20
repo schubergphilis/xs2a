@@ -145,7 +145,11 @@ public class ConsentService { //TODO change format of consentRequest to mandator
 
     private boolean isValidExpirationDate(LocalDate validUntil) {
         int consentLifetime = Math.abs(aspspProfileService.getConsentLifetime());
-        return validUntil.isAfter(LocalDate.now()) && (consentLifetime == 0 || validUntil.isBefore(LocalDate.now().plusDays(consentLifetime)));
+        return validUntil.isAfter(LocalDate.now()) && isValidConsentLifetime(consentLifetime, validUntil);
+    }
+
+    private boolean isValidConsentLifetime(int consentLifetime, LocalDate validUntil) {
+        return consentLifetime == 0 || validUntil.isBefore(LocalDate.now().plusDays(consentLifetime));
     }
 
     private AccountAccess getNecessaryAccess(CreateConsentReq request, String psuId) {
