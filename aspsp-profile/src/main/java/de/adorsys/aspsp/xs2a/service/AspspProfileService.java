@@ -233,4 +233,20 @@ public class AspspProfileService {
     public void updateConsentLifetime(int consentLifetime) {
         profileConfiguration.setConsentLifetime(consentLifetime);
     }
+
+    /**
+     * Read the limit of a maximum lifetime of transaction
+     */
+    public int getTransactionLifetime() {
+        return profileConfiguration.getTransactionLifetime();
+    }
+
+    /**
+     * Update the value of a maximum lifetime of transaction
+     *
+     * @param transactionLifetime the value of a maximum lifetime of consent to substitute existing one
+     */
+    public void updateTransactionLifetime(int transactionLifetime) {
+        profileConfiguration.setTransactionLifetime(transactionLifetime);
+    }
 }
