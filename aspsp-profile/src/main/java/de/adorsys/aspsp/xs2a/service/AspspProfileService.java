@@ -235,14 +235,14 @@ public class AspspProfileService {
     }
 
     /**
-     * Read the limit of a maximum lifetime of transaction
+     * Read the limit of a maximum lifetime of transaction set in days
      */
     public int getTransactionLifetime() {
         return profileConfiguration.getTransactionLifetime();
     }
 
     /**
-     * Update the value of a maximum lifetime of transaction
+     * Update the value of a maximum lifetime of transaction set in days
      *
      * @param transactionLifetime the value of a maximum lifetime of transaction to substitute existing one
      */

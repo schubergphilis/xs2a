@@ -97,7 +97,7 @@ public class ProfileConfiguration {
     private int consentLifetime;
 
     /**
-     * The limit of a maximum lifetime of transaction
+     * The limit of a maximum lifetime of transaction set in days
      */
     private int transactionLifetime;
 
