@@ -146,8 +146,7 @@ public class AspspProfileService {
      */
     public int getConsentLifetime() {
         return aspspProfileRestTemplate.exchange(
-            aspspProfileRemoteUrls.getConsentLifetime(), HttpMethod.GET, null, new ParameterizedTypeReference<Integer>() {
-            }).getBody();
+            aspspProfileRemoteUrls.getConsentLifetime(), HttpMethod.GET, null, Integer.class).getBody();
     }
 
     private List<String> readAvailablePaymentTypes() {
