@@ -244,7 +244,7 @@ public class AspspProfileService {
     /**
      * Update the value of a maximum lifetime of transaction
      *
-     * @param transactionLifetime the value of a maximum lifetime of consent to substitute existing one
+     * @param transactionLifetime the value of a maximum lifetime of transaction to substitute existing one
      */
     public void updateTransactionLifetime(int transactionLifetime) {
         profileConfiguration.setTransactionLifetime(transactionLifetime);
