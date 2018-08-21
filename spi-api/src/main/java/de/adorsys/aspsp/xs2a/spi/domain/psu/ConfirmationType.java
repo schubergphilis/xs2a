@@ -14,22 +14,9 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.aspspmockserver.domain;
+package de.adorsys.aspsp.xs2a.spi.domain.psu;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@NoArgsConstructor
-public class PaymentConfirmation {
-    private String iban;
-    private String consentId;
-    private String paymentId;
-    private String tanNumber;
-
-    public PaymentConfirmation(String iban, String consentId, String paymentId) {
-        this.iban = iban;
-        this.consentId = consentId;
-        this.paymentId = paymentId;
-    }
+public enum ConfirmationType {
+    PAYMENT,
+    CONSENT
 }
