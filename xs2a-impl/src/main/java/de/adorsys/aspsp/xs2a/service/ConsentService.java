@@ -60,21 +60,23 @@ public class ConsentService { //TODO change format of consentRequest to mandator
      * AccountAccess determined by availableAccounts or allPsd2 variables
      */
     public ResponseObject<CreateConsentResponse> createAccountConsentsWithResponse(CreateConsentReq request, String psuId) {
-        CreateConsentReq checkedRequest = new CreateConsentReq();
-        if (isNotEmptyAccess(request.getAccess())) {
-            if (!isValidExpirationDate(request.getValidUntil())) {
-                return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PERIOD_INVALID))).build();
-            }
-            checkedRequest.setAccess(getNecessaryAccess(request, psuId));
-            checkedRequest.setCombinedServiceIndicator(request.isCombinedServiceIndicator());
-            checkedRequest.setRecurringIndicator(request.isRecurringIndicator());
-            checkedRequest.setFrequencyPerDay(request.getFrequencyPerDay());
-            checkedRequest.setValidUntil(request.getValidUntil());
+        if (!isValidExpirationDate(request.getValidUntil())) {
+            return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PERIOD_INVALID))).build();
         }
+
+        if (isNotSupportedBankOfferedConsentModel(request)) {
+            return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PARAMETER_NOT_SUPPORTED))).build();
+        }
+
+        CreateConsentReq checkedRequest = new CreateConsentReq();
+        checkedRequest.setAccess(getNecessaryAccess(request, psuId));
+        checkedRequest.setCombinedServiceIndicator(request.isCombinedServiceIndicator());
+        checkedRequest.setRecurringIndicator(request.isRecurringIndicator());
+        checkedRequest.setFrequencyPerDay(request.getFrequencyPerDay());
+        checkedRequest.setValidUntil(request.getValidUntil());
+
         String tppId = "This is a test TppId"; //TODO v1.1 add corresponding request header
-        String consentId = isNotEmptyAccess(checkedRequest.getAccess())
-                               ? aisConsentService.createConsent(checkedRequest, psuId, tppId)
-                               : null;
+        String consentId = aisConsentService.createConsent(checkedRequest, psuId, tppId);
         //TODO v1.1 Add balances support
         return !StringUtils.isBlank(consentId)
                    ? ResponseObject.<CreateConsentResponse>builder().body(new CreateConsentResponse(RECEIVED.getConsentStatus(), consentId, null, null)).build()
@@ -154,7 +156,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     }
 
     private AccountAccess getNecessaryAccess(CreateConsentReq request, String psuId) {
-        return isAllAccountsRequest(request) && psuId != null
+        return (isAllAccountsRequest(request) || isBankOfferedConsentRequest(request)) && psuId != null
                    ? getAccessByPsuId(AccountAccessType.ALL_ACCOUNTS == request.getAccess().getAllPsd2(), psuId)
                    : getAccessByRequestedAccess(request.getAccess());
     }
@@ -167,11 +169,11 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                    .orElseGet(Collections::emptySet);
     }
 
-    private Boolean isNotEmptyAccess(AccountAccess access) {
+    /*private Boolean isNotEmptyAccess(AccountAccess access) {
         return Optional.ofNullable(access)
                    .map(AccountAccess::isNotEmpty)
                    .orElse(false);
-    }
+    }*/
 
     private AccountAccess getAccessByRequestedAccess(AccountAccess requestedAccess) {
         Set<String> ibansFromAccess = getIbansFromAccess(requestedAccess);
@@ -228,6 +230,10 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                                     || AccountAccessType.ALL_ACCOUNTS == a.getAvailableAccounts()).isPresent();
     }
 
+    private boolean isBankOfferedConsentRequest(CreateConsentReq request) {
+        return !request.getAccess().isNotEmpty();
+    }
+
     private Set<String> getIbansFromAccess(AccountAccess access) {
         return Stream.of(
             getIbansFromAccountReference(access.getAccounts()),
@@ -236,5 +242,9 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         )
                    .flatMap(Collection::stream)
                    .collect(Collectors.toSet());
+    }
+
+    private boolean isNotSupportedBankOfferedConsentModel(CreateConsentReq request) {
+        return isBankOfferedConsentRequest(request) && !aspspProfileService.isBankOfferedConsentSupport();
     }
 }

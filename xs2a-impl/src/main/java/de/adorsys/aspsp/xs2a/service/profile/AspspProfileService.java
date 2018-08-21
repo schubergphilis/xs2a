@@ -88,7 +88,7 @@ public class AspspProfileService {
     }
 
     /**
-     * Read sca approach from ASPSP profile service
+     * Reads sca approach from ASPSP profile service
      *
      * @return Available SCA approach for tpp
      */
@@ -109,7 +109,7 @@ public class AspspProfileService {
 
 
     /**
-     * Read get PIS redirect url to aspsp from ASPSP profile service
+     * Reads get PIS redirect url to aspsp from ASPSP profile service
      *
      * @return Url in order to redirect SCA approach
      */
@@ -119,7 +119,7 @@ public class AspspProfileService {
     }
 
     /**
-     * Read get AIS redirect url to aspsp from ASPSP profile service
+     * Reads get AIS redirect url to aspsp from ASPSP profile service
      *
      * @return Url in order to redirect SCA approach
      */
@@ -140,13 +140,23 @@ public class AspspProfileService {
     }
 
     /**
-     * Read value of maximum consent lifetime
+     * Reads value of maximum consent lifetime
      *
      * @return int value of maximum consent lifetime
      */
     public int getConsentLifetime() {
         return aspspProfileRestTemplate.exchange(
             aspspProfileRemoteUrls.getConsentLifetime(), HttpMethod.GET, null, Integer.class).getBody();
+    }
+
+    /**
+     * Checks if ASPSP profile service supports Bank Offered Consent model
+     *
+     * @return 'true' if it supports, 'false' if not
+     */
+    public boolean isBankOfferedConsentSupport() {
+        return aspspProfileRestTemplate.exchange(
+            aspspProfileRemoteUrls.getBankOfferedConsentSupport(), HttpMethod.GET, null,  boolean.class).getBody();
     }
 
     private List<String> readAvailablePaymentTypes() {

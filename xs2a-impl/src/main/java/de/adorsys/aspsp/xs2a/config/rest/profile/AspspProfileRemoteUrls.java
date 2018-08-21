@@ -114,4 +114,13 @@ public class AspspProfileRemoteUrls {
     public String getConsentLifetime() {
         return aspspProfileBaseUrl + "/aspsp-profile/consent-lifetime";
     }
+
+    /**
+     * Returns URL-string to ASPSP profile get if Bank Offered Consent model supported
+     *
+     * @return String
+     */
+    public String getBankOfferedConsentSupport() {
+        return aspspProfileBaseUrl + "/aspsp-profile/bank-offered-consent-support";
+    }
 }
