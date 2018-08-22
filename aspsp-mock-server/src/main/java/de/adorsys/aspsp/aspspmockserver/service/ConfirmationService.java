@@ -63,7 +63,7 @@ public class ConfirmationService {
      */
     public boolean generateAndSendTanForPsuByIban(String iban) {
         return accountService.getPsuIdByIban(iban)
-                   .map(psuId -> generateAndSendTanForPsu(psuId))
+                   .map(this::generateAndSendTanForPsu)
                    .orElse(false);
     }
 
