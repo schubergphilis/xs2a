@@ -121,27 +121,8 @@ public class SinglePaymentSteps {
         ResponseEntity<PaymentInitialisationResponse> actualResponse = new ResponseEntity<>(HttpStatus.valueOf(exceptionObject.getRawStatusCode()));
         context.setActualResponse(actualResponse);
         String responseBodyAsString = exceptionObject.getResponseBodyAsString();
-        ObjectMapper objectMapper = new ObjectMapper();
-        ITMessageError messageError = objectMapper.readValue(responseBodyAsString, ITMessageError.class);
+        ITMessageError messageError = mapper.readValue(responseBodyAsString, ITMessageError.class);
         context.setMessageError(messageError);
-    }
-
-    @Then("^an error response code is displayed the appropriate error response$")
-    public void anErrorResponseCodeIsDisplayedTheAppropriateErrorResponse() {
-        ITMessageError givenErrorObject = context.getMessageError();
-        Map givenResponseBody = context.getTestData().getResponse().getBody();
-
-        HttpStatus httpStatus = context.getTestData().getResponse().getHttpStatus();
-        assertThat(context.getActualResponse().getStatusCode(), equalTo(httpStatus));
-
-        LinkedHashMap tppMessageContent = (LinkedHashMap) givenResponseBody.get("tppMessage");
-
-        // for cases when transactionStatus and tppMessage created after request
-        if (givenErrorObject.getTppMessage() != null) {
-            assertThat(givenErrorObject.getTransactionStatus().name(), equalTo(givenResponseBody.get("transactionStatus")));
-            assertThat(givenErrorObject.getTppMessage().getCategory().name(), equalTo(tppMessageContent.get("category")));
-            assertThat(givenErrorObject.getTppMessage().getCode().name(), equalTo(tppMessageContent.get("code")));
-        }
     }
 
     private HttpEntity<SinglePayment> getSinglePaymentsHttpEntity() {

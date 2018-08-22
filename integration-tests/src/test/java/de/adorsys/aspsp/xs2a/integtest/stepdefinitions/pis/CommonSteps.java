@@ -1,8 +1,11 @@
 package de.adorsys.aspsp.xs2a.integtest.stepdefinitions.pis;
 
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import de.adorsys.aspsp.xs2a.integtest.config.AuthConfigProperty;
+import de.adorsys.aspsp.xs2a.integtest.entities.ITMessageError;
 import de.adorsys.aspsp.xs2a.integtest.util.Context;
+import de.adorsys.psd2.model.TppMessageGeneric;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
@@ -11,11 +14,13 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 
 @FeatureFileSteps
-public class GlobalSteps {
+public class CommonSteps {
     @Autowired
     private Context context;
 
@@ -49,5 +54,24 @@ public class GlobalSteps {
 
         context.setScaApproach("oauth");
         context.setAccessToken(Objects.requireNonNull(response).getBody().get("access_token").toString());
+    }
+
+    @Then("^an error response code is displayed the appropriate error response$")
+    public void anErrorResponseCodeIsDisplayedTheAppropriateErrorResponse() {
+        ITMessageError givenErrorObject = context.getMessageError();
+        Map givenResponseBody = (Map) context.getTestData().getResponse().getBody();
+
+        HttpStatus httpStatus = context.getTestData().getResponse().getHttpStatus();
+        assertThat(context.getActualResponse().getStatusCode(), equalTo(httpStatus));
+        assertThat(givenErrorObject.getTransactionStatus().getValue(), equalTo(givenResponseBody.get("transactionStatus")));
+
+        LinkedHashMap givenTppMessages = (LinkedHashMap) givenResponseBody.get("tppMessage");
+
+        Set<TppMessageGeneric> tppMessages = givenErrorObject.getTppMessages();
+
+        tppMessages.forEach ((msg) -> {
+            assertThat(msg.getCategory().getValue(), equalTo(givenTppMessages.get("category")));
+            assertThat(msg.getCode().toString(), equalTo(givenTppMessages.get("code")));
+        });
     }
 }
