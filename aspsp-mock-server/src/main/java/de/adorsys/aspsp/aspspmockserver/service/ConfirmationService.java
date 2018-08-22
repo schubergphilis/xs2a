@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REJECTED;
-import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.VALID;
 import static de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus.UNUSED;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
@@ -88,20 +87,13 @@ public class ConfirmationService {
                    .orElse(false);
     }
 
-    //TODO CODE STYLE
     private boolean isPsuTanNumberValid(String psuId, String tanNumber, String consentId, ConfirmationType confirmationType) {
         boolean tanNumberValid = tanRepository.findByPsuIdAndTanStatus(psuId, UNUSED).stream()
                                      .findFirst()
                                      .map(t -> validateTanAndUpdateTanStatus(t, tanNumber))
                                      .orElse(false);
 
-        if (!tanNumberValid) {
-            if (confirmationType == ConfirmationType.PAYMENT) {
-                paymentService.updatePaymentConsentStatus(consentId, REJECTED);
-            }
-            consentConfirmationService.updateConsentStatus(consentId, REJECTED);
-        }
-
+        updateConsentStatusIfTanInvalid(tanNumberValid, confirmationType, consentId);
         return tanNumberValid;
     }
 
@@ -170,5 +162,15 @@ public class ConfirmationService {
             return "Your TAN number is " + tanNumber;
         }
         return content.toString();
+    }
+
+    private void updateConsentStatusIfTanInvalid(boolean tanNumberValid, ConfirmationType confirmationType, String consentId) {
+        if (!tanNumberValid) {
+            if (confirmationType == ConfirmationType.PAYMENT) {
+                paymentService.updatePaymentConsentStatus(consentId, REJECTED);
+            } else {
+                consentConfirmationService.updateConsentStatus(consentId, REJECTED);
+            }
+        }
     }
 }
