@@ -16,13 +16,45 @@
 
 package de.adorsys.aspsp.xs2a.web12;
 
+import de.adorsys.aspsp.xs2a.domain.ResponseObject;
+import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
+import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
+import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
+import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
+import de.adorsys.aspsp.xs2a.service.mapper.FundsConfirmationMapper;
+import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.psd2.api.FundsConfirmationApi;
+import de.adorsys.psd2.model.ConfirmationOfFunds;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
+
+import static org.springframework.http.HttpStatus.OK;
 
 @RestController
 @AllArgsConstructor
 public class FundsConfirmationController12 implements FundsConfirmationApi {
 
+    private final AccountReferenceValidationService referenceValidationService;
+    private final ResponseMapper responseMapper;
+    private final FundsConfirmationService fundsConfirmationService;
+    private final FundsConfirmationMapper fundsConfirmationMapper;
 
+    @Override
+    public ResponseEntity<?> checkAvailabilityOfFunds(ConfirmationOfFunds body, UUID xRequestID, String digest, String signature, byte[] tpPSignatureCertificate) {
+
+        FundsConfirmationRequest fcr = fundsConfirmationMapper.mapToFundsConfirmationRequest(body);
+        ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(fcr.getAccountReferences());
+
+        if (!accountReferenceValidationResponse.hasError()) {
+            return new ResponseEntity<>(fundsConfirmationService.fundsConfirmation(fcr), OK);
+        } else {
+            return responseMapper.createErrorResponse(accountReferenceValidationResponse.getError());
+        }
+
+    }
 }
