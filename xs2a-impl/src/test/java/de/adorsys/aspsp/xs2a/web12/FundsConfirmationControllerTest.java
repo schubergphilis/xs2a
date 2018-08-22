@@ -77,7 +77,7 @@ public class FundsConfirmationControllerTest {
 
         //When:
         ResponseEntity<?> actualResult = fundsConfirmationController.checkAvailabilityOfFunds(confirmationOfFunds, null, null, null, null);
-        FundsConfirmationResponse fundsConfirmationResponse = ((ResponseObject<FundsConfirmationResponse>)actualResult.getBody()).getBody();
+        FundsConfirmationResponse fundsConfirmationResponse = (FundsConfirmationResponse) actualResult.getBody();
 
         //Then:
         assertThat(actualResult.getStatusCode()).isEqualTo(expectedStatusCode);

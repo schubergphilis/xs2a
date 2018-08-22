@@ -17,26 +17,31 @@
 package de.adorsys.aspsp.xs2a.web12;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
-import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
+import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
 import de.adorsys.aspsp.xs2a.service.mapper.FundsConfirmationMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.psd2.api.FundsConfirmationApi;
 import de.adorsys.psd2.model.ConfirmationOfFunds;
+import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.BeanUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
 import java.util.UUID;
 
-import static org.springframework.http.HttpStatus.OK;
+import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.FORMAT_ERROR;
+import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 
+@Slf4j
 @RestController
 @AllArgsConstructor
+@Api(tags = "PIISP, Funds confirmation 1.2", description = "Provides access to the funds confirmation")
 public class FundsConfirmationController12 implements FundsConfirmationApi {
 
     private final AccountReferenceValidationService referenceValidationService;
@@ -47,14 +52,17 @@ public class FundsConfirmationController12 implements FundsConfirmationApi {
     @Override
     public ResponseEntity<?> checkAvailabilityOfFunds(ConfirmationOfFunds body, UUID xRequestID, String digest, String signature, byte[] tpPSignatureCertificate) {
 
-        FundsConfirmationRequest fcr = fundsConfirmationMapper.mapToFundsConfirmationRequest(body);
-        ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(fcr.getAccountReferences());
+        FundsConfirmationRequest fundsConfirmationRequest = fundsConfirmationMapper.mapToFundsConfirmationRequest(body);
 
-        if (!accountReferenceValidationResponse.hasError()) {
-            return new ResponseEntity<>(fundsConfirmationService.fundsConfirmation(fcr), OK);
-        } else {
-            return responseMapper.createErrorResponse(accountReferenceValidationResponse.getError());
-        }
-
+        return Optional.ofNullable(fundsConfirmationRequest)
+                   .map(fcr -> {
+                       ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(fcr.getAccountReferences());
+                       return accountReferenceValidationResponse.hasError()
+                                  ? responseMapper.createErrorResponse(accountReferenceValidationResponse.getError())
+                                  : responseMapper.ok(fundsConfirmationService.fundsConfirmation(fcr));
+                   })
+                   .orElse(
+                       responseMapper.createErrorResponse(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                   );
     }
 }

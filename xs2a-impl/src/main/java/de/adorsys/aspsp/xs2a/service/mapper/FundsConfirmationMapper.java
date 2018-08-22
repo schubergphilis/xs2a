@@ -21,8 +21,6 @@ import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Currency;
@@ -34,17 +32,26 @@ public class FundsConfirmationMapper {
 
     private final ObjectMapper objectMapper;
 
-    public FundsConfirmationRequest mapToFundsConfirmationRequest(ConfirmationOfFunds fundsConfirmationRequest){
-        FundsConfirmationRequest fcr = new FundsConfirmationRequest();
-        BeanUtils.copyProperties(fundsConfirmationRequest, fcr);
-        fcr.setPsuAccount(mapToAccountReferenceInner(fundsConfirmationRequest.getAccount()));
-        Amount instructedAmount = fundsConfirmationRequest.getInstructedAmount();
-        de.adorsys.aspsp.xs2a.domain.Amount amount = new de.adorsys.aspsp.xs2a.domain.Amount();
-        amount.setContent(instructedAmount.getAmount());
-        amount.setCurrency(getCurrencyByCode(instructedAmount.getCurrency()));
-        fcr.setInstructedAmount(amount);
-        return fcr;
+    public FundsConfirmationRequest mapToFundsConfirmationRequest(ConfirmationOfFunds confirmationOfFunds) {
+        return Optional.ofNullable(confirmationOfFunds)
+                   .map(conf -> {
+                       FundsConfirmationRequest fundsConfirmationRequest = new FundsConfirmationRequest();
+                       fundsConfirmationRequest.setCardNumber(conf.getCardNumber());
+                       fundsConfirmationRequest.setPayee(conf.getPayee());
+                       fundsConfirmationRequest.setPsuAccount(mapToAccountReferenceInner(conf.getAccount()));
+                       fundsConfirmationRequest.setInstructedAmount(mapToAmount(conf.getInstructedAmount()));
+                       return fundsConfirmationRequest;
+                   })
+                   .orElse(null);
     }
+
+    public de.adorsys.aspsp.xs2a.domain.Amount mapToAmount(Amount amount) {
+        de.adorsys.aspsp.xs2a.domain.Amount amountXs2a = new de.adorsys.aspsp.xs2a.domain.Amount();
+        amountXs2a.setContent(amount.getAmount());
+        amountXs2a.setCurrency(getCurrencyByCode(amount.getCurrency()));
+        return amountXs2a;
+    }
+
 
     private AccountReference mapToAccountReferenceInner(Object reference) {
         return objectMapper.convertValue(reference, AccountReference.class);
@@ -52,7 +59,7 @@ public class FundsConfirmationMapper {
 
     private Currency getCurrencyByCode(String code) {
         return Optional.ofNullable(code)
-            .map(Currency::getInstance)
-            .orElseGet(null);
+                   .map(Currency::getInstance)
+                   .orElseGet(null);
     }
 }
