@@ -17,15 +17,8 @@
 package de.adorsys.aspsp.aspspmockserver.web.rest;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
@@ -33,16 +26,4 @@ import java.io.IOException;
 @Api(tags = "Consent confirmation for online banking", description = "Provides access to consent confirmation for online banking")
 public class ConsentConfirmationController {
 
-    @Value("${onlinebanking-mock-webapp.baseurl}")
-    private String onlineBankingMockWebappUrl;
-
-    @GetMapping(path = "/{consent-id}")
-    @ApiOperation(value = "Redirects to online banking consent confirmation page")
-    public void showConfirmationPage(@PathVariable("consent-id") String consentId,
-                                     HttpServletResponse response) throws IOException {
-        UriComponents uriComponents = UriComponentsBuilder.newInstance()
-                                          .path("/{consentId}").buildAndExpand(consentId);
-
-        response.sendRedirect(onlineBankingMockWebappUrl + uriComponents.toUriString());
-    }
 }
