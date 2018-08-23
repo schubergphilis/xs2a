@@ -16,16 +16,12 @@
 
 package de.adorsys.aspsp.xs2a.web12;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
 import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
-import de.adorsys.aspsp.xs2a.service.mapper.FundsConfirmationMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
-import de.adorsys.aspsp.xs2a.web.FundsConfirmationController;
 import de.adorsys.psd2.model.ConfirmationOfFunds;
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -33,7 +29,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,8 +53,6 @@ public class FundsConfirmationControllerTest {
     private ResponseMapper responseMapper;
     @Mock
     private AccountReferenceValidationService referenceValidationService;
-    @Spy
-    private FundsConfirmationMapper fundsConfirmationMapper = new FundsConfirmationMapper(new ObjectMapper());
 
     @Before
     public void setUp() {

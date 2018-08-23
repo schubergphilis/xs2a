@@ -19,47 +19,33 @@ package de.adorsys.aspsp.xs2a.service.mapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
-import de.adorsys.psd2.model.*;
+import de.adorsys.psd2.model.ConfirmationOfFunds;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Currency;
 import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class FundsConfirmationMapper {
+public class FundsConfirmationModelMapper {
 
-    private final ObjectMapper objectMapper;
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    public FundsConfirmationRequest mapToFundsConfirmationRequest(ConfirmationOfFunds confirmationOfFunds) {
+    public static FundsConfirmationRequest mapToFundsConfirmationRequest(ConfirmationOfFunds confirmationOfFunds) {
         return Optional.ofNullable(confirmationOfFunds)
                    .map(conf -> {
                        FundsConfirmationRequest fundsConfirmationRequest = new FundsConfirmationRequest();
                        fundsConfirmationRequest.setCardNumber(conf.getCardNumber());
                        fundsConfirmationRequest.setPayee(conf.getPayee());
-                       fundsConfirmationRequest.setPsuAccount(mapToAccountReferenceInner(conf.getAccount()));
-                       fundsConfirmationRequest.setInstructedAmount(mapToAmount(conf.getInstructedAmount()));
+                       fundsConfirmationRequest.setPsuAccount(mapToXs2aAccountReferenceInner(conf.getAccount()));
+                       fundsConfirmationRequest.setInstructedAmount(AmountModelMapper.mapToXs2aAmount(conf.getInstructedAmount()));
                        return fundsConfirmationRequest;
                    })
                    .orElse(null);
     }
 
-    public de.adorsys.aspsp.xs2a.domain.Amount mapToAmount(Amount amount) {
-        de.adorsys.aspsp.xs2a.domain.Amount amountTarget = new de.adorsys.aspsp.xs2a.domain.Amount();
-        amountTarget.setContent(amount.getAmount());
-        amountTarget.setCurrency(getCurrencyByCode(amount.getCurrency()));
-        return amountTarget;
+    private static AccountReference mapToXs2aAccountReferenceInner(Object reference) {
+        return OBJECT_MAPPER.convertValue(reference, AccountReference.class);
     }
 
-
-    private AccountReference mapToAccountReferenceInner(Object reference) {
-        return objectMapper.convertValue(reference, AccountReference.class);
-    }
-
-    private Currency getCurrencyByCode(String code) {
-        return Optional.ofNullable(code)
-                   .map(Currency::getInstance)
-                   .orElseGet(null);
-    }
 }

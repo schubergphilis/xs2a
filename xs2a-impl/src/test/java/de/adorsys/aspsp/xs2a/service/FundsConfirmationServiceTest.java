@@ -100,7 +100,7 @@ public class FundsConfirmationServiceTest {
         assertThat(actualResponse.getBody().isFundsAvailable()).isEqualTo(false);
     }
 
-    @Test
+    //@Test - excluded from testing because request validating in de.adorsys.psd2.api.FundsConfirmationApi
     public void fundsConfirmation_reqIsNull() {
         //Given:
         FundsConfirmationRequest request = null;
