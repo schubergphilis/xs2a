@@ -17,11 +17,10 @@
 package de.adorsys.aspsp.aspspmockserver.web.rest;
 
 import de.adorsys.aspsp.aspspmockserver.domain.Confirmation;
-import de.adorsys.aspsp.aspspmockserver.service.ConfirmationService;
+import de.adorsys.aspsp.aspspmockserver.service.TanConfirmationService;
 import de.adorsys.aspsp.aspspmockserver.service.PaymentService;
 import de.adorsys.aspsp.aspspmockserver.web.util.ApiError;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.AspspPayment;
-import de.adorsys.aspsp.xs2a.spi.domain.psu.ConfirmationType;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
+import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REJECTED;
 import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REVOKED_BY_PSU;
 import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.VALID;
 
@@ -47,7 +47,7 @@ public class PaymentConfirmationController {
     @Value("${onlinebanking-mock-webapp.baseurl}")
     private String onlineBankingMockWebappUrl;
 
-    private final ConfirmationService confirmationService;
+    private final TanConfirmationService tanConfirmationService;
     private final PaymentService paymentService;
 
     @GetMapping(path = "/{iban}/{consent-id}/{payment-id}")
@@ -57,7 +57,7 @@ public class PaymentConfirmationController {
                                      @PathVariable("payment-id") String paymentId,
                                      HttpServletResponse response) throws IOException {
 
-        confirmationService.generateAndSendTanForPsuByIban(iban);
+        tanConfirmationService.generateAndSendTanForPsuByIban(iban);
 
         UriComponents uriComponents = UriComponentsBuilder.newInstance()
                                           .path("/{iban}/{consentId}/{paymentId}").buildAndExpand(iban, consentId, paymentId);
@@ -74,9 +74,10 @@ public class PaymentConfirmationController {
     public ResponseEntity confirmTan(@RequestBody Confirmation confirmation) {
         Optional<AspspPayment> payment = paymentService.getPaymentById(confirmation.getPaymentId());
         if (payment.isPresent()) {
-            if (confirmationService.isTanNumberValidByIban(confirmation.getIban(), confirmation.getTanNumber(), confirmation.getConsentId(), ConfirmationType.PAYMENT)) {
+            if (tanConfirmationService.isTanNumberValidByIban(confirmation.getIban(), confirmation.getTanNumber())) {
                 return new ResponseEntity(HttpStatus.OK);
             }
+            paymentService.updatePaymentConsentStatus(confirmation.getConsentId(), REJECTED);
             ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "WRONG_TAN", "Bad request");
             return new ResponseEntity<>(error, error.getStatus());
         }

@@ -18,7 +18,6 @@ package de.adorsys.aspsp.aspspmockserver.service;
 
 import de.adorsys.aspsp.aspspmockserver.repository.PsuRepository;
 import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
-import de.adorsys.aspsp.xs2a.spi.domain.psu.ConfirmationType;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus;
 import freemarker.template.Configuration;
@@ -37,23 +36,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REJECTED;
 import static de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus.UNUSED;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ConfirmationService {
+public class TanConfirmationService {
     private final TanRepository tanRepository;
     private final PsuRepository psuRepository;
     private final static String EMAIL_TEMPLATE_PATH = "email/email-template.html";
     private final JavaMailSender emailSender;
     private final Configuration fmConfiguration;
-
     private final AccountService accountService;
-    private final ConsentConfirmationService consentConfirmationService;
-    private final PaymentService paymentService;
 
     /**
      * Generates new Tan and sends it to psu's email for payment confirmation
@@ -78,23 +73,19 @@ public class ConfirmationService {
      *
      * @param iban      Iban of Psu in order to get correct Psu
      * @param tanNumber TAN
-     * @param consentId Id of the consent in order to reject consent when tan is wrong
      * @return true if Tan has status UNUSED, otherwise return false
      */
-    public boolean isTanNumberValidByIban(String iban, String tanNumber, String consentId, ConfirmationType confirmationType) {
+    public boolean isTanNumberValidByIban(String iban, String tanNumber) {
         return accountService.getPsuIdByIban(iban)
-                   .map(psuId -> isPsuTanNumberValid(psuId, tanNumber, consentId, confirmationType))
+                   .map(psuId -> isPsuTanNumberValid(psuId, tanNumber))
                    .orElse(false);
     }
 
-    private boolean isPsuTanNumberValid(String psuId, String tanNumber, String consentId, ConfirmationType confirmationType) {
-        boolean tanNumberValid = tanRepository.findByPsuIdAndTanStatus(psuId, UNUSED).stream()
-                                     .findFirst()
-                                     .map(t -> validateTanAndUpdateTanStatus(t, tanNumber))
-                                     .orElse(false);
-
-        updateConsentStatusIfTanInvalid(tanNumberValid, confirmationType, consentId);
-        return tanNumberValid;
+    private boolean isPsuTanNumberValid(String psuId, String tanNumber) {
+        return tanRepository.findByPsuIdAndTanStatus(psuId, UNUSED).stream()
+                   .findFirst()
+                   .map(t -> validateTanAndUpdateTanStatus(t, tanNumber))
+                   .orElse(false);
     }
 
     private boolean createAndSendTan(String psuId, String email) {
@@ -162,15 +153,5 @@ public class ConfirmationService {
             return "Your TAN number is " + tanNumber;
         }
         return content.toString();
-    }
-
-    private void updateConsentStatusIfTanInvalid(boolean tanNumberValid, ConfirmationType confirmationType, String consentId) {
-        if (!tanNumberValid) {
-            if (confirmationType == ConfirmationType.PAYMENT) {
-                paymentService.updatePaymentConsentStatus(consentId, REJECTED);
-            } else {
-                consentConfirmationService.updateConsentStatus(consentId, REJECTED);
-            }
-        }
     }
 }

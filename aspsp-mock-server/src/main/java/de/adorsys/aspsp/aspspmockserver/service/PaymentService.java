@@ -127,6 +127,12 @@ public class PaymentService {
     }
 
     //TODO Create GlobalExceptionHandler for error 400 from consentManagement https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/158
+    /**
+     * Updates status of PIS consent
+     *
+     * @param consentId Consent primary identifier
+     * @param consentStatus New status of the PIS consent
+     */
     public void updatePaymentConsentStatus(@NotNull String consentId, SpiConsentStatus consentStatus) {
         consentRestTemplate.put(remotePisConsentUrls.updatePisConsentStatus(), null, consentId, consentStatus.name());
     }

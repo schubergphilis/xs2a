@@ -18,7 +18,6 @@ package de.adorsys.aspsp.aspspmockserver.service;
 
 import de.adorsys.aspsp.aspspmockserver.repository.PsuRepository;
 import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
-import de.adorsys.aspsp.xs2a.spi.domain.psu.ConfirmationType;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus;
@@ -47,10 +46,9 @@ public class ConfirmationServiceTest {
     private static final String TAN_ID = "2d4b403b-f5f5-41c0-847f-b6abf1edb102";
     private static final String TAN_NUMBER = "123456";
     private static final String WRONG_TAN_NUMBER = "wrong tan number";
-    private static final String CONSENT_ID = "2d4b403b-f5f5-41c0-847f-b6abf1edb102";
 
     @InjectMocks
-    ConfirmationService confirmationService;
+    TanConfirmationService tanConfirmationService;
 
     @Mock
     private TanRepository tanRepository;
@@ -58,8 +56,6 @@ public class ConfirmationServiceTest {
     private PsuRepository psuRepository;
     @Mock
     private AccountService accountService;
-    @Mock
-    private PaymentService paymentService;
 
     @Before
     public void setUp() {
@@ -86,7 +82,7 @@ public class ConfirmationServiceTest {
     @Test
     public void generateAndSendTanForPsuByIban_Failure() {
         //When
-        boolean actualResult = confirmationService.generateAndSendTanForPsuByIban(WRONG_IBAN);
+        boolean actualResult = tanConfirmationService.generateAndSendTanForPsuByIban(WRONG_IBAN);
 
         //Then
         assertThat(actualResult).isFalse();
@@ -95,7 +91,7 @@ public class ConfirmationServiceTest {
     @Test
     public void isTanNumberValidByIban_Success() {
         //When
-        boolean actualResult = confirmationService.isTanNumberValidByIban(IBAN_1, TAN_NUMBER, CONSENT_ID, ConfirmationType.PAYMENT);
+        boolean actualResult = tanConfirmationService.isTanNumberValidByIban(IBAN_1, TAN_NUMBER);
 
         //Then
         assertThat(actualResult).isTrue();
@@ -104,7 +100,7 @@ public class ConfirmationServiceTest {
     @Test
     public void isTanNumberValidByIban_Failure() {
         //When
-        boolean actualResult = confirmationService.isTanNumberValidByIban(IBAN_1, WRONG_TAN_NUMBER, CONSENT_ID, ConfirmationType.PAYMENT);
+        boolean actualResult = tanConfirmationService.isTanNumberValidByIban(IBAN_1, WRONG_TAN_NUMBER);
 
         //Then
         assertThat(actualResult).isFalse();
@@ -113,7 +109,7 @@ public class ConfirmationServiceTest {
     @Test
     public void isTanNumberValidByIban_TanStatusValid() {
         //When
-        boolean actualResult = confirmationService.isTanNumberValidByIban(IBAN_2, TAN_NUMBER, CONSENT_ID, ConfirmationType.PAYMENT);
+        boolean actualResult = tanConfirmationService.isTanNumberValidByIban(IBAN_2, TAN_NUMBER);
 
         //Then
         assertThat(actualResult).isFalse();
@@ -122,7 +118,7 @@ public class ConfirmationServiceTest {
     @Test
     public void isPsuTanNumberValid_TanStatusInvalid() {
         //When
-        boolean actualResult = confirmationService.isTanNumberValidByIban(IBAN_1, WRONG_TAN_NUMBER, CONSENT_ID, ConfirmationType.PAYMENT);
+        boolean actualResult = tanConfirmationService.isTanNumberValidByIban(IBAN_1, WRONG_TAN_NUMBER);
 
         //Then
         assertThat(actualResult).isFalse();

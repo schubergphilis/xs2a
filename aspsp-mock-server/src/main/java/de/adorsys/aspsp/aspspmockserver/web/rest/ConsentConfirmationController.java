@@ -17,10 +17,9 @@
 package de.adorsys.aspsp.aspspmockserver.web.rest;
 
 import de.adorsys.aspsp.aspspmockserver.domain.Confirmation;
-import de.adorsys.aspsp.aspspmockserver.service.ConfirmationService;
-import de.adorsys.aspsp.aspspmockserver.service.ConsentConfirmationService;
+import de.adorsys.aspsp.aspspmockserver.service.TanConfirmationService;
+import de.adorsys.aspsp.aspspmockserver.service.ConsentService;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
-import de.adorsys.aspsp.xs2a.spi.domain.psu.ConfirmationType;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,14 +31,16 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REJECTED;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/consent/confirmation")
 @Api(tags = "Consent confirmation for online banking", description = "Provides access to consent confirmation for online banking")
 public class ConsentConfirmationController {
 
-    private final ConfirmationService confirmationService;
-    private final ConsentConfirmationService consentConfirmationService;
+    private final TanConfirmationService tanConfirmationService;
+    private final ConsentService consentService;
 
     @Value("${onlinebanking-mock-webapp.baseurl}")
     private String onlineBankingMockWebappUrl;
@@ -58,7 +59,7 @@ public class ConsentConfirmationController {
     @ApiOperation(value = "Updates ais consent status", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     public ResponseEntity<Void> updateAisConsentStatus(@PathVariable("consent-id") String consentId,
                                                        @PathVariable("status") SpiConsentStatus status) throws IOException {
-        consentConfirmationService.updateConsentStatus(consentId, status);
+        consentService.updateAisConsentStatus(consentId, status);
         return ResponseEntity.ok().build();
     }
 
@@ -69,7 +70,7 @@ public class ConsentConfirmationController {
         @ApiResponse(code = 400, message = "Bad request")
     })
     public ResponseEntity generateAndSendTan(@PathVariable("iban") String iban) {
-        return confirmationService.generateAndSendTanForPsuByIban(iban)
+        return tanConfirmationService.generateAndSendTanForPsuByIban(iban)
                    ? ResponseEntity.ok().build()
                    : ResponseEntity.badRequest().build();
     }
@@ -81,8 +82,10 @@ public class ConsentConfirmationController {
         @ApiResponse(code = 400, message = "Bad request")
     })
     public ResponseEntity confirmTan(@RequestBody Confirmation confirmation) {
-        return confirmationService.isTanNumberValidByIban(confirmation.getIban(), confirmation.getTanNumber(), confirmation.getConsentId(), ConfirmationType.CONSENT)
-                   ? ResponseEntity.ok().build()
-                   : ResponseEntity.badRequest().build();
+        if (tanConfirmationService.isTanNumberValidByIban(confirmation.getIban(), confirmation.getTanNumber())) {
+            return ResponseEntity.ok().build();
+        }
+        consentService.updateAisConsentStatus(confirmation.getConsentId(), REJECTED);
+        return ResponseEntity.badRequest().build();
     }
 }

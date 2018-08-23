@@ -25,18 +25,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.constraints.NotNull;
-
 @Slf4j
 @Service
 @AllArgsConstructor
-public class ConsentConfirmationService {
+public class ConsentService {
 
     @Qualifier("consentRestTemplate")
     private final RestTemplate consentRestTemplate;
     private final AisConsentRemoteUrls aisConsentRemoteUrls;
 
     //TODO Create GlobalExceptionHandler for error 400 from consentManagement https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/158
-    public void updateConsentStatus(@NotNull String consentId, SpiConsentStatus consentStatus) {
+    /**
+     * Updates status of AIS consent
+     *
+     * @param consentId Consent primary identifier
+     * @param consentStatus New status of the AIS consent
+     */
+    public void updateAisConsentStatus(@NotNull String consentId, SpiConsentStatus consentStatus) {
         consentRestTemplate.put(aisConsentRemoteUrls.updateAisConsentStatus(), null, consentId, consentStatus.name());
     }
 }
