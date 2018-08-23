@@ -46,10 +46,10 @@ public class FundsConfirmationMapper {
     }
 
     public de.adorsys.aspsp.xs2a.domain.Amount mapToAmount(Amount amount) {
-        de.adorsys.aspsp.xs2a.domain.Amount amountXs2a = new de.adorsys.aspsp.xs2a.domain.Amount();
-        amountXs2a.setContent(amount.getAmount());
-        amountXs2a.setCurrency(getCurrencyByCode(amount.getCurrency()));
-        return amountXs2a;
+        de.adorsys.aspsp.xs2a.domain.Amount amountTarget = new de.adorsys.aspsp.xs2a.domain.Amount();
+        amountTarget.setContent(amount.getAmount());
+        amountTarget.setCurrency(getCurrencyByCode(amount.getCurrency()));
+        return amountTarget;
     }
 
 

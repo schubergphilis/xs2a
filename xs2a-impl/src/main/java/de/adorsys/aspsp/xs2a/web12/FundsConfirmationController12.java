@@ -19,6 +19,7 @@ package de.adorsys.aspsp.xs2a.web12;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
+import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
@@ -57,12 +58,13 @@ public class FundsConfirmationController12 implements FundsConfirmationApi {
         return Optional.ofNullable(fundsConfirmationRequest)
                    .map(fcr -> {
                        ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(fcr.getAccountReferences());
-                       return accountReferenceValidationResponse.hasError()
-                                  ? responseMapper.createErrorResponse(accountReferenceValidationResponse.getError())
-                                  : responseMapper.ok(fundsConfirmationService.fundsConfirmation(fcr));
+                       ResponseObject<FundsConfirmationResponse> fundsConfirmationResponse = accountReferenceValidationResponse.hasError()
+                                                                                                 ? ResponseObject.<FundsConfirmationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+                                                                                                 : fundsConfirmationService.fundsConfirmation(fcr);
+                       return responseMapper.ok(fundsConfirmationResponse);
                    })
                    .orElse(
-                       responseMapper.createErrorResponse(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
+                       responseMapper.ok(ResponseObject.<FundsConfirmationResponse>builder().fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR))).build())
                    );
     }
 }
