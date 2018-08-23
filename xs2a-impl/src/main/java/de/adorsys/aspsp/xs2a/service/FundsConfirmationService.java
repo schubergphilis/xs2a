@@ -16,14 +16,12 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.domain.Amount;
-import de.adorsys.aspsp.xs2a.domain.Balance;
-import de.adorsys.aspsp.xs2a.domain.BalanceType;
-import de.adorsys.aspsp.xs2a.domain.ResponseObject;
+import de.adorsys.aspsp.xs2a.domain.*;
 import de.adorsys.aspsp.xs2a.domain.account.AccountDetails;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
+import de.adorsys.aspsp.xs2a.exception.MessageError;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -32,10 +30,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.FORMAT_ERROR;
+import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
+
 @Service
 @AllArgsConstructor
 public class FundsConfirmationService {
     private final AccountService accountService;
+    private final AccountReferenceValidationService referenceValidationService;
 
     /**
      * Checks if the account balance is sufficient for requested operation
@@ -44,12 +46,16 @@ public class FundsConfirmationService {
      * @return Response with result 'true' if there are enough funds on the account, 'false' if not
      */
     public ResponseObject<FundsConfirmationResponse> fundsConfirmation(FundsConfirmationRequest request) {
-        Boolean fundsAvailable = Optional.ofNullable(request)
-                                     .map(req -> isFundsAvailable(req.getPsuAccount(), req.getInstructedAmount()))
-                                     .orElse(false);
+        return Optional.ofNullable(request).map(req -> {
+            ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(req.getAccountReferences());
+            return accountReferenceValidationResponse.hasError()
+                       ? ResponseObject.<FundsConfirmationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+                       : ResponseObject.<FundsConfirmationResponse>builder()
+                             .body(new FundsConfirmationResponse(isFundsAvailable(req.getPsuAccount(), req.getInstructedAmount()))).build();
+        })
+                   .orElse(
+                       ResponseObject.<FundsConfirmationResponse>builder().fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR))).build());
 
-        return ResponseObject.<FundsConfirmationResponse>builder()
-                   .body(new FundsConfirmationResponse(fundsAvailable)).build();
     }
 
     private boolean isFundsAvailable(AccountReference accountReference, Amount requiredAmount) {
