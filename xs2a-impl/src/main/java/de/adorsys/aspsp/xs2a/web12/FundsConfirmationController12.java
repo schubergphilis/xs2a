@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.web12;
 
 import de.adorsys.aspsp.xs2a.service.FundsConfirmationService;
+import de.adorsys.aspsp.xs2a.service.mapper.FundsConfirmationModelMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.psd2.api.FundsConfirmationApi;
 import de.adorsys.psd2.model.ConfirmationOfFunds;
@@ -26,8 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.UUID;
-
-import static de.adorsys.aspsp.xs2a.service.mapper.FundsConfirmationModelMapper.mapToFundsConfirmationRequest;
 
 @Slf4j
 @RestController
@@ -40,7 +39,7 @@ public class FundsConfirmationController12 implements FundsConfirmationApi {
 
     @Override
     public ResponseEntity<?> checkAvailabilityOfFunds(ConfirmationOfFunds body, UUID xRequestID, String digest, String signature, byte[] tpPSignatureCertificate) {
-        return responseMapper.ok(fundsConfirmationService.fundsConfirmation(mapToFundsConfirmationRequest(body)));
+        return responseMapper.ok(fundsConfirmationService.fundsConfirmation(FundsConfirmationModelMapper.mapToFundsConfirmationRequest(body)));
 
     }
 }
