@@ -36,7 +36,7 @@ public class AspspProfileController {
 
     private final AspspProfileService aspspProfileService;
 
-    @GetMapping(path = "/aspsp-settings")
+    @GetMapping
     @ApiOperation(value = "Reads aspsp specific settings")
     @ApiResponse(code = 200, message = "Ok", response = AspspSettings.class)
     public ResponseEntity<AspspSettings> getAspspSettings() {
