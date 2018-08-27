@@ -22,9 +22,10 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Profile({"mongo", "fongo"})
 public interface TanRepository extends MongoRepository<Tan, String> {
-
     List<Tan> findByPsuIdAndTanStatus(String psuId, TanStatus tanStatus);
+    Optional<Tan> findByPsuId(String psuId);
 }

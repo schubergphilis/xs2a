@@ -133,6 +133,6 @@ public class ConfirmationServiceTest {
     }
 
     private Tan getUnusedTan() {
-        return new Tan(TAN_ID, PSU_ID_1, TAN_NUMBER, TanStatus.UNUSED);
+        return new Tan(TAN_ID, PSU_ID_1, TAN_NUMBER, TanStatus.UNUSED, 0);
     }
 }

@@ -76,9 +76,12 @@ public class PaymentConfirmationController {
         if (payment.isPresent()) {
             if (tanConfirmationService.isTanNumberValidByIban(confirmation.getIban(), confirmation.getTanNumber())) {
                 return new ResponseEntity(HttpStatus.OK);
+            } else if (tanConfirmationService.getTanNumberOfAttemptsByIban(confirmation.getIban()) < 3) {
+                ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "WRONG_TAN", "Bad request");
+                return new ResponseEntity<>(error, error.getStatus());
             }
             paymentService.updatePaymentConsentStatus(confirmation.getConsentId(), REJECTED);
-            ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "WRONG_TAN", "Bad request");
+            ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "LIMIT_EXCEEDED", "Bad request");
             return new ResponseEntity<>(error, error.getStatus());
         }
         ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "PAYMENT_MISSING", "Bad request");

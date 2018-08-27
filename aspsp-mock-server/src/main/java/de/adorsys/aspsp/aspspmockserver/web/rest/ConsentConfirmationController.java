@@ -19,10 +19,12 @@ package de.adorsys.aspsp.aspspmockserver.web.rest;
 import de.adorsys.aspsp.aspspmockserver.domain.Confirmation;
 import de.adorsys.aspsp.aspspmockserver.service.TanConfirmationService;
 import de.adorsys.aspsp.aspspmockserver.service.ConsentService;
+import de.adorsys.aspsp.aspspmockserver.web.util.ApiError;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponents;
@@ -84,8 +86,12 @@ public class ConsentConfirmationController {
     public ResponseEntity confirmTan(@RequestBody Confirmation confirmation) {
         if (tanConfirmationService.isTanNumberValidByIban(confirmation.getIban(), confirmation.getTanNumber())) {
             return ResponseEntity.ok().build();
+        } else if (tanConfirmationService.getTanNumberOfAttemptsByIban(confirmation.getIban()) < 3) {
+            ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "WRONG_TAN", "Bad request");
+            return new ResponseEntity<>(error, error.getStatus());
         }
         consentService.updateAisConsentStatus(confirmation.getConsentId(), REJECTED);
-        return ResponseEntity.badRequest().build();
+        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "LIMIT_EXCEEDED", "Bad request");
+        return new ResponseEntity<>(error, error.getStatus());
     }
 }

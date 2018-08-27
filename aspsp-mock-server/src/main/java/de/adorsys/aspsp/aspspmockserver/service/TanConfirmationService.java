@@ -81,6 +81,19 @@ public class TanConfirmationService {
                    .orElse(false);
     }
 
+    /**
+     * Gets number of attempts
+     *
+     * @param iban Iban of Psu in order to get correct Psu
+     * @return number of attempts to validate tan
+     */
+    public int getTanNumberOfAttemptsByIban(String iban) {
+        return accountService.getPsuIdByIban(iban)
+                   .flatMap(psuId -> tanRepository.findByPsuId(psuId)
+                                         .map(Tan::getNumberOfAttempts))
+                   .orElse(0);
+    }
+
     private boolean isPsuTanNumberValid(String psuId, String tanNumber) {
         return tanRepository.findByPsuIdAndTanStatus(psuId, UNUSED).stream()
                    .findFirst()
@@ -107,14 +120,17 @@ public class TanConfirmationService {
     }
 
     private boolean validateTanAndUpdateTanStatus(Tan originalTan, String givenTanNumber) {
-        boolean isValid = originalTan.getTanNumber().equals(givenTanNumber);
-        if (isValid) {
+        boolean isTanValid = originalTan.getTanNumber().equals(givenTanNumber);
+        if (isTanValid) {
             originalTan.setTanStatus(TanStatus.VALID);
         } else {
-            originalTan.setTanStatus(TanStatus.INVALID);
+            if (originalTan.getNumberOfAttempts() == 2) {
+                originalTan.setTanStatus(TanStatus.INVALID);
+            }
+            originalTan.incrementNumberOfAttempts();
         }
         tanRepository.save(originalTan);
-        return isValid;
+        return isTanValid;
     }
 
     private String generateTanNumber() {
