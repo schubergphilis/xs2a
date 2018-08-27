@@ -16,8 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.domain.aspsp;
 
-import de.adorsys.aspsp.xs2a.config.rest.aspsp.MulticurrencyAccountLevel;
-import de.adorsys.aspsp.xs2a.domain.BookingStatus;
 import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
 import lombok.AllArgsConstructor;
 import lombok.Value;
@@ -34,9 +32,9 @@ public class AspspSettings {
     private boolean tppSignatureRequired;
     private String pisRedirectUrlToAspsp;
     private String aisRedirectUrlToAspsp;
-    private MulticurrencyAccountLevel multicurrencyAccountLevel;
+    private String multicurrencyAccountLevel;
     private boolean bankOfferedConsentSupport;
-    private List<BookingStatus> availableBookingStatuses;
+    private List<String> availableBookingStatuses;
     private List<SupportedAccountReferenceField> supportedAccountReferenceFields;
     private int consentLifetime;
     private int transactionLifetime;
