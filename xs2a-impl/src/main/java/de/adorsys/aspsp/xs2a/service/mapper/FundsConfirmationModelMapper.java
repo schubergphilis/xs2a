@@ -20,13 +20,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.psd2.model.ConfirmationOfFunds;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
-
 import java.util.Optional;
 
-@Component
-@RequiredArgsConstructor
 public class FundsConfirmationModelMapper {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
@@ -47,5 +42,4 @@ public class FundsConfirmationModelMapper {
     private static AccountReference mapToXs2aAccountReferenceInner(Object reference) {
         return OBJECT_MAPPER.convertValue(reference, AccountReference.class);
     }
-
 }

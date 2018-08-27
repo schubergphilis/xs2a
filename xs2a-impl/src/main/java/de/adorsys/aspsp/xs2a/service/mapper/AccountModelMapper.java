@@ -24,7 +24,6 @@ import de.adorsys.psd2.model.BalanceList;
 import de.adorsys.psd2.model.BalanceType;
 import de.adorsys.psd2.model.ReadBalanceResponse200;
 import org.springframework.beans.BeanUtils;
-
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +69,7 @@ public final class AccountModelMapper {
         de.adorsys.psd2.model.Balance target = new de.adorsys.psd2.model.Balance();
         BeanUtils.copyProperties(balance, target);
 
-        target.setBalanceAmount(AmountModelMapper.mapToPsd2Amount(balance.getBalanceAmount()));
+        target.setBalanceAmount(AmountModelMapper.mapToAmount(balance.getBalanceAmount()));
         if (balance.getBalanceType() != null) {
             target.setBalanceType(BalanceType.fromValue(balance.getBalanceType().toString()));
         }
