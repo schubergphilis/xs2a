@@ -19,21 +19,30 @@ package de.adorsys.aspsp.xs2a.service.mapper;
 import de.adorsys.psd2.model.Amount;
 import org.apache.commons.lang3.StringUtils;
 import java.util.Currency;
+import java.util.Optional;
 
 public class AmountModelMapper {
 
     public static de.adorsys.aspsp.xs2a.domain.Amount mapToXs2aAmount(Amount amount) {
-        de.adorsys.aspsp.xs2a.domain.Amount amountTarget = new de.adorsys.aspsp.xs2a.domain.Amount();
-        amountTarget.setContent(amount.getAmount());
-        amountTarget.setCurrency(getCurrencyByCode(amount.getCurrency()));
-        return amountTarget;
+        return Optional.ofNullable(amount)
+                   .map(a -> {
+                       de.adorsys.aspsp.xs2a.domain.Amount amountTarget = new de.adorsys.aspsp.xs2a.domain.Amount();
+                       amountTarget.setContent(a.getAmount());
+                       amountTarget.setCurrency(getCurrencyByCode(a.getCurrency()));
+                       return amountTarget;
+                   })
+                   .orElse(null);
     }
 
     public static Amount mapToAmount(de.adorsys.aspsp.xs2a.domain.Amount amount) {
-        Amount amountTarget = new Amount();
-        amountTarget.setAmount(amount.getContent());
-        amountTarget.setCurrency(amount.getCurrency().getCurrencyCode());
-        return amountTarget;
+        return Optional.ofNullable(amount)
+                   .map(a -> {
+                       Amount amountTarget = new Amount();
+                       amountTarget.setAmount(a.getContent());
+                       amountTarget.setCurrency(a.getCurrency().getCurrencyCode());
+                       return amountTarget;
+                   })
+                   .orElse(null);
     }
 
     private static Currency getCurrencyByCode(String code) {
