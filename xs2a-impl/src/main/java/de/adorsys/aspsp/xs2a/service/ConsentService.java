@@ -24,12 +24,9 @@ import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
-import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ConsentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
-import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
-import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
 import de.adorsys.aspsp.xs2a.spi.service.ConsentSpi;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -37,9 +34,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Currency;
+import java.util.List;
+import java.util.Optional;
 
 import static de.adorsys.aspsp.xs2a.domain.consent.ConsentStatus.RECEIVED;
 
@@ -48,8 +45,6 @@ import static de.adorsys.aspsp.xs2a.domain.consent.ConsentStatus.RECEIVED;
 public class ConsentService { //TODO change format of consentRequest to mandatory obtain PSU-Id and only return data which belongs to certain PSU tobe changed upon v1.1
     private final ConsentMapper consentMapper;
     private final ConsentSpi consentSpi;
-    private final AccountSpi accountSpi;
-    private final AccountMapper accountMapper;
     private final AspspProfileService aspspProfileService;
 
     /**
@@ -61,7 +56,6 @@ public class ConsentService { //TODO change format of consentRequest to mandator
      * AccountAccess determined by availableAccounts or allPsd2 variables
      */
     public ResponseObject<CreateConsentResponse> createAccountConsentsWithResponse(CreateConsentReq request, String psuId) {
-        CreateConsentReq checkedRequest = new CreateConsentReq();
         if (isNotEmptyAccess(request.getAccess())) {
             if (!isValidExpirationDate(request.getValidUntil())) {
                 return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PERIOD_INVALID))).build();
@@ -70,17 +64,11 @@ public class ConsentService { //TODO change format of consentRequest to mandator
             if (isNotSupportedGlobalConsentForAllPsd2(request)) {
                 return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PARAMETER_NOT_SUPPORTED))).build();
             }
-
-            checkedRequest.setAccess(getNecessaryAccess(request, psuId));
-            checkedRequest.setCombinedServiceIndicator(request.isCombinedServiceIndicator());
-            checkedRequest.setRecurringIndicator(request.isRecurringIndicator());
-            checkedRequest.setFrequencyPerDay(request.getFrequencyPerDay());
-            checkedRequest.setValidUntil(request.getValidUntil());
         }
         String tppId = "This is a test TppId"; //TODO v1.1 add corresponding request header
         CreateAisConsentRequest createAisConsentRequest = consentMapper.mapToCreateAisConsentRequest(request, psuId, tppId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes()));
 
-        String consentId = isNotEmptyAccess(checkedRequest.getAccess())
+        String consentId = isNotEmptyAccess(request.getAccess())
                                ? consentSpi.createConsent(createAisConsentRequest)
                                : null;
         //TODO v1.1 Add balances support
@@ -161,89 +149,10 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         return consentLifetime == 0 || validUntil.isBefore(LocalDate.now().plusDays(consentLifetime));
     }
 
-    private AccountAccess getNecessaryAccess(CreateConsentReq request, String psuId) {
-        return isAllAccountsRequest(request) && psuId != null
-                   ? getAccessByPsuId(AccountAccessType.ALL_ACCOUNTS == request.getAccess().getAllPsd2(), psuId)
-                   : getAccessByRequestedAccess(request.getAccess());
-    }
-
-    private Set<String> getIbansFromAccountReference(List<AccountReference> references) {
-        return Optional.ofNullable(references)
-                   .map(list -> list.stream()
-                                    .map(AccountReference::getIban)
-                                    .collect(Collectors.toSet()))
-                   .orElseGet(Collections::emptySet);
-    }
-
     private Boolean isNotEmptyAccess(AccountAccess access) {
         return Optional.ofNullable(access)
                    .map(AccountAccess::isNotEmpty)
                    .orElse(false);
-    }
-
-    private AccountAccess getAccessByRequestedAccess(AccountAccess requestedAccess) {
-        Set<String> ibansFromAccess = getIbansFromAccess(requestedAccess);
-        List<SpiAccountDetails> accountDetailsList = accountSpi.readAccountDetailsByIbans(
-            ibansFromAccess,
-            new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload();
-        List<AccountReference> aspspReferences = accountMapper.mapToAccountReferencesFromDetails(accountDetailsList); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
-        List<AccountReference> balances = getFilteredReferencesByAccessReferences(requestedAccess.getBalances(), aspspReferences);
-        List<AccountReference> transaction = getRequestedReferences(requestedAccess.getTransactions(), aspspReferences);
-        List<AccountReference> accounts = getRequestedReferences(requestedAccess.getAccounts(), aspspReferences);
-        return new AccountAccess(getAccountsForAccess(balances, transaction, accounts), balances, transaction, null, null);
-    }
-
-    private List<AccountReference> getFilteredReferencesByAccessReferences(List<AccountReference> requestedReferences, List<AccountReference> refs) {
-        return Optional.ofNullable(requestedReferences)
-                   .map(reqRefs -> getRequestedReferences(reqRefs, refs))
-                   .orElseGet(Collections::emptyList);
-    }
-
-    private List<AccountReference> getAccountsForAccess(List<AccountReference> balances, List<AccountReference> transactions, List<AccountReference> accounts) {
-        accounts.removeAll(balances);
-        accounts.addAll(balances);
-        accounts.removeAll(transactions);
-        accounts.addAll(transactions);
-        return accounts;
-    }
-
-    private List<AccountReference> getRequestedReferences(List<AccountReference> requestedRefs, List<AccountReference> refs) {
-        return Optional.ofNullable(requestedRefs).map(rr -> rr.stream()
-                                                                .filter(r -> isContainedRefInRefsList(r, refs))
-                                                                .collect(Collectors.toList()))
-                   .orElseGet(Collections::emptyList);
-    }
-
-    private boolean isContainedRefInRefsList(AccountReference referenceMatched, List<AccountReference> references) {
-        return references.stream()
-                   .anyMatch(r -> r.matches(referenceMatched));
-    }
-
-    private AccountAccess getAccessByPsuId(boolean isAllPSD2, String psuId) {
-        List<AccountReference> refs = accountMapper.mapToAccountReferencesFromDetails(accountSpi.readAccountsByPsuId(psuId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes())).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
-        if (CollectionUtils.isNotEmpty(refs)) {
-            return isAllPSD2
-                       ? new AccountAccess(refs, refs, refs, null, AccountAccessType.ALL_ACCOUNTS)
-                       : new AccountAccess(refs, Collections.emptyList(), Collections.emptyList(), AccountAccessType.ALL_ACCOUNTS, null);
-        } else {
-            return new AccountAccess(Collections.emptyList(), Collections.emptyList(), Collections.emptyList(), null, null);
-        }
-    }
-
-    private boolean isAllAccountsRequest(CreateConsentReq request) {
-        return Optional.ofNullable(request.getAccess())
-                   .filter(a -> AccountAccessType.ALL_ACCOUNTS == a.getAllPsd2()
-                                    || AccountAccessType.ALL_ACCOUNTS == a.getAvailableAccounts()).isPresent();
-    }
-
-    private Set<String> getIbansFromAccess(AccountAccess access) {
-        return Stream.of(
-            getIbansFromAccountReference(access.getAccounts()),
-            getIbansFromAccountReference(access.getBalances()),
-            getIbansFromAccountReference(access.getTransactions())
-        )
-                   .flatMap(Collection::stream)
-                   .collect(Collectors.toSet());
     }
 
     private boolean isNotSupportedGlobalConsentForAllPsd2(CreateConsentReq request) {

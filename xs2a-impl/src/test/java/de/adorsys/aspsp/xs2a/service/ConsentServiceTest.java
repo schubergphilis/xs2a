@@ -60,10 +60,8 @@ public class ConsentServiceTest {
     private final String CORRECT_ACCOUNT_ID = "123";
     private final String CORRECT_PSU_ID = "123456789";
     private final String CONSENT_ID = "c966f143-f6a2-41db-9036-8abaeeef3af7";
-    private final String WRONG_PSU_ID = "WRONG PSU ID";
     private final String CORRECT_IBAN = "DE123456789";
     private final String CORRECT_IBAN_1 = "DE987654321";
-    private final String WRONG_IBAN = "WRONG IBAN";
     private final Currency CURRENCY = Currency.getInstance("EUR");
     private final Currency CURRENCY_2 = Currency.getInstance("USD");
     private final LocalDate DATE = LocalDate.parse("2019-03-03");
@@ -73,11 +71,7 @@ public class ConsentServiceTest {
     private ConsentService consentService;
 
     @Mock
-    AccountSpi accountSpi;
-    @Mock
     ConsentSpi consentSpi;
-    @Mock
-    AccountMapper accountMapper;
     @Mock
     ConsentMapper consentMapper;
     @Mock
@@ -85,19 +79,12 @@ public class ConsentServiceTest {
 
     @Before
     public void setUp() {
-        //AccountMapping
-        when(accountMapper.mapToAccountReferencesFromDetails(getSpiDetailsList()))
-            .thenReturn(getReferenceList());
         //ConsentMapping
         when(consentMapper.mapToAccountConsent(getSpiConsent(CONSENT_ID, getSpiAccountAccess(Collections.singletonList(getSpiReference(CORRECT_IBAN, CURRENCY)), null, null, false, false), false)))
             .thenReturn(getConsent(CONSENT_ID, getAccess(Collections.singletonList(getReference(CORRECT_IBAN, CURRENCY)), null, null, false, false), false));
         when(consentMapper.mapToConsentStatus(SpiConsentStatus.RECEIVED)).thenReturn(Optional.of(ConsentStatus.RECEIVED));
         when(consentMapper.mapToConsentStatus(null)).thenReturn(Optional.empty());
 
-        //AisReportMock
-        doNothing().when(consentSpi).consentActionLog(anyString(), anyString(), any(ActionStatus.class));
-        when(accountSpi.readAccountsByPsuId(CORRECT_PSU_ID, ASPSP_CONSENT_DATA)).thenReturn(new SpiResponse<>(getSpiDetailsList(), ASPSP_CONSENT_DATA));
-        when(accountSpi.readAccountsByPsuId(WRONG_PSU_ID, ASPSP_CONSENT_DATA)).thenReturn(new SpiResponse<>(Collections.emptyList(), ASPSP_CONSENT_DATA));
         //ByPSU-ID
         when(consentSpi.createConsent(consentMapper.mapToCreateAisConsentRequest(getCreateConsentRequest(getAccess(Arrays.asList(getReference(CORRECT_IBAN, CURRENCY), getReference(CORRECT_IBAN_1, CURRENCY_2)), Collections.emptyList(), Collections.emptyList(), true, false)), CORRECT_PSU_ID, TPP_ID, ASPSP_CONSENT_DATA)))
             .thenReturn(CONSENT_ID);
@@ -121,10 +108,6 @@ public class ConsentServiceTest {
         when(consentSpi.createConsent(consentMapper.mapToCreateAisConsentRequest(getCreateConsentRequest(getAccess(
             Arrays.asList(getReference(CORRECT_IBAN, CURRENCY), getReference(CORRECT_IBAN_1, CURRENCY_2)), Collections.singletonList(getReference(CORRECT_IBAN_1, CURRENCY_2)), Collections.singletonList(getReference(CORRECT_IBAN, CURRENCY)), false, false)), null, TPP_ID, ASPSP_CONSENT_DATA)))
             .thenReturn(CONSENT_ID);
-
-        //GetAccDetails
-        when(accountSpi.readAccountDetailsByIbans(new HashSet<>(Arrays.asList(CORRECT_IBAN, CORRECT_IBAN_1)), ASPSP_CONSENT_DATA)).thenReturn(new SpiResponse<>(getSpiDetailsList(), ASPSP_CONSENT_DATA));
-        when(accountSpi.readAccountDetailsByIbans(new HashSet<>(Arrays.asList(WRONG_IBAN)), ASPSP_CONSENT_DATA)).thenReturn(new SpiResponse<>(Collections.emptyList(), ASPSP_CONSENT_DATA));
 
         //GetConsentById
         when(consentSpi.getAccountConsentById(CONSENT_ID)).thenReturn(getSpiConsent(CONSENT_ID, getSpiAccountAccess(Collections.singletonList(getSpiReference(CORRECT_IBAN, CURRENCY)), null, null, false, false), false));
@@ -243,20 +226,6 @@ public class ConsentServiceTest {
         CreateConsentResponse response = responseObj.getBody();
         //Then:
         assertThat(response.getConsentId()).isEqualTo(CONSENT_ID);
-    }
-
-    @Test
-    public void createAccountConsentsWithResponse_Failure() {
-        //Given:
-        CreateConsentReq req = getCreateConsentRequest(
-            getAccess(Collections.singletonList(getReference(WRONG_IBAN, CURRENCY)), Collections.emptyList(), Collections.emptyList(), false, false)
-        );
-
-        //When:
-        ResponseObject responseObj = consentService.createAccountConsentsWithResponse(
-            req, CORRECT_PSU_ID);
-        //Then:
-        assertThat(responseObj.getError().getTransactionStatus()).isEqualTo(TransactionStatus.RJCT);
     }
 
     @Test
