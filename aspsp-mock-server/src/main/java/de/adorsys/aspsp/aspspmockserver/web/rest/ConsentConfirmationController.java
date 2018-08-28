@@ -29,23 +29,15 @@ import java.io.IOException;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/consent/confirmation")
+@RequestMapping(path = "/consent/confirmation/ais")
 @Api(tags = "Consent confirmation for online banking", description = "Provides access to consent confirmation for online banking")
 public class ConsentConfirmationController {
 
     private final TanConfirmationService tanConfirmationService;
     private final ConsentService consentService;
 
-    @PutMapping(path = "/status/{consent-id}/{status}")
-    @ApiOperation(value = "Updates ais consent status", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
-    public ResponseEntity<Void> updateAisConsentStatus(@PathVariable("consent-id") String consentId,
-                                                       @PathVariable("status") SpiConsentStatus status) throws IOException {
-        consentService.updateAisConsentStatus(consentId, status);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping(path = "/tan/{iban}")
-    @ApiOperation(value = "Generates TAN for consent confirmation", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @PostMapping(path = "/{iban}")
+    @ApiOperation(value = "Generates TAN for ais consent confirmation", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Success"),
         @ApiResponse(code = 400, message = "Bad request")
@@ -56,7 +48,7 @@ public class ConsentConfirmationController {
                    : ResponseEntity.badRequest().build();
     }
 
-    @PostMapping(path = "/tan/validate")
+    @PostMapping
     @ApiOperation(value = "Validates TAN for consent confirmation", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Success"),
@@ -64,5 +56,13 @@ public class ConsentConfirmationController {
     })
     public ResponseEntity confirmTan(@RequestBody Confirmation confirmation) {
         return tanConfirmationService.confirmTan(confirmation.getIban(), confirmation.getTanNumber(), confirmation.getConsentId(), ConfirmationType.CONSENT);
+    }
+
+    @PutMapping(path = "/{consent-id}/{status}")
+    @ApiOperation(value = "Update ais consent status of the corresponding consent", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    public ResponseEntity<Void> updateAisConsentStatus(@PathVariable("consent-id") String consentId,
+                                                       @PathVariable("status") SpiConsentStatus status) {
+        consentService.updateAisConsentStatus(consentId, status);
+        return ResponseEntity.ok().build();
     }
 }

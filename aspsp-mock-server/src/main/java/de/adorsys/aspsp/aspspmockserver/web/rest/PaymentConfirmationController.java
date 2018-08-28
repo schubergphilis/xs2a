@@ -21,6 +21,7 @@ import de.adorsys.aspsp.aspspmockserver.domain.ConfirmationType;
 import de.adorsys.aspsp.aspspmockserver.service.TanConfirmationService;
 import de.adorsys.aspsp.aspspmockserver.service.PaymentService;
 import de.adorsys.aspsp.aspspmockserver.web.util.ApiError;
+import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,7 @@ import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.VALID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(path = "/payment/confirmation")
+@RequestMapping(path = "/consent/confirmation/pis")
 @Api(tags = "Payment confirmation for online banking", description = "Provides access to email TAN confirmation for payment execution")
 public class PaymentConfirmationController {
 
@@ -40,7 +41,7 @@ public class PaymentConfirmationController {
     private final PaymentService paymentService;
 
     @PostMapping(path = "/{iban}")
-    @ApiOperation(value = "Generates TAN for consent confirmation", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @ApiOperation(value = "Generates TAN for pis consent confirmation", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Success"),
         @ApiResponse(code = 400, message = "Bad request")
@@ -52,7 +53,7 @@ public class PaymentConfirmationController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Validates TAN", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @ApiOperation(value = "Confirm TAN", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Success"),
         @ApiResponse(code = 400, message = "Bad request")
@@ -63,17 +64,11 @@ public class PaymentConfirmationController {
                    : new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "PAYMENT_MISSING", "Bad request"), HttpStatus.BAD_REQUEST);
     }
 
-    @PostMapping(path = "/consent", params = "decision=confirmed")
-    @ApiOperation(value = "Proceeds payment and changes the status of the corresponding consent", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
-    public ResponseEntity proceedPayment(@RequestBody Confirmation confirmation) {
-        paymentService.updatePaymentConsentStatus(confirmation.getConsentId(), VALID);
+    @PutMapping(path = "/{consent-id}/{status}")
+    @ApiOperation(value = "Update pis consent status of the corresponding consent", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    public ResponseEntity validPaymentConsent(@PathVariable("consent-id") String consentId,
+                                              @PathVariable("status") SpiConsentStatus status) {
+        paymentService.updatePaymentConsentStatus(consentId, status);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping(path = "/consent", params = "decision=revoked")
-    @ApiOperation(value = "Sets consent status to revoked", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
-    public ResponseEntity revokePaymentConsent(@RequestBody Confirmation confirmation) {
-        paymentService.updatePaymentConsentStatus(confirmation.getConsentId(), REVOKED_BY_PSU);
-        return new ResponseEntity(HttpStatus.OK);
     }
 }
