@@ -28,9 +28,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REVOKED_BY_PSU;
-import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.VALID;
-
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/consent/confirmation/pis")
