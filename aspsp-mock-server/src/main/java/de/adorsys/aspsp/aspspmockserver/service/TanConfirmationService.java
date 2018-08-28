@@ -16,15 +16,20 @@
 
 package de.adorsys.aspsp.aspspmockserver.service;
 
+import de.adorsys.aspsp.aspspmockserver.domain.ConfirmationType;
 import de.adorsys.aspsp.aspspmockserver.repository.PsuRepository;
 import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
+import de.adorsys.aspsp.aspspmockserver.web.util.ApiError;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -36,19 +41,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REJECTED;
 import static de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus.UNUSED;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TanConfirmationService {
+
+    @Value("${maximum-number-of-tan-attempts}")
+    private int maximumNumberOfTanAttempts;
+
     private final TanRepository tanRepository;
     private final PsuRepository psuRepository;
     private final static String EMAIL_TEMPLATE_PATH = "email/email-template.html";
     private final JavaMailSender emailSender;
     private final Configuration fmConfiguration;
     private final AccountService accountService;
+    private final PaymentService paymentService;
+    private final ConsentService consentService;
 
     /**
      * Generates new Tan and sends it to psu's email for payment confirmation
@@ -75,23 +87,31 @@ public class TanConfirmationService {
      * @param tanNumber TAN
      * @return true if Tan has status UNUSED, otherwise return false
      */
-    public boolean isTanNumberValidByIban(String iban, String tanNumber) {
+    public ResponseEntity confirmTan(String iban, String tanNumber, String consentId, ConfirmationType confirmationType) {
+        if (isTanNumberValidByIban(iban, tanNumber)) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else if (getTanNumberOfAttemptsByIban(iban) < maximumNumberOfTanAttempts) {
+            ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "WRONG_TAN", "Bad request");
+            return new ResponseEntity<>(error, error.getStatus());
+        }
+        changeConsentStatusToRejected(consentId, confirmationType);
+        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "LIMIT_EXCEEDED", "Bad request");
+        return new ResponseEntity<>(error, error.getStatus());
+    }
+
+    private boolean isTanNumberValidByIban(String iban, String tanNumber) {
         return accountService.getPsuIdByIban(iban)
                    .map(psuId -> isPsuTanNumberValid(psuId, tanNumber))
                    .orElse(false);
     }
 
-    /**
-     * Gets number of attempts
-     *
-     * @param iban Iban of Psu in order to get correct Psu
-     * @return number of attempts to validate tan
-     */
-    public int getTanNumberOfAttemptsByIban(String iban) {
+    private int getTanNumberOfAttemptsByIban(String iban) {
+        tanRepository.findAll();
         return accountService.getPsuIdByIban(iban)
-                   .flatMap(psuId -> tanRepository.findByPsuId(psuId)
+                   .flatMap(psuId -> tanRepository.findByPsuIdAndTanStatus(psuId, UNUSED).stream()
+                                         .findFirst()
                                          .map(Tan::getNumberOfAttempts))
-                   .orElse(0);
+                   .orElse(maximumNumberOfTanAttempts);
     }
 
     private boolean isPsuTanNumberValid(String psuId, String tanNumber) {
@@ -114,6 +134,7 @@ public class TanConfirmationService {
         if (isNotEmpty(tans)) {
             for (Tan oldTan : tans) {
                 oldTan.setTanStatus(TanStatus.INVALID);
+                oldTan.setNumberOfAttempts(maximumNumberOfTanAttempts);
             }
             tanRepository.save(tans);
         }
@@ -124,7 +145,7 @@ public class TanConfirmationService {
         if (isTanValid) {
             originalTan.setTanStatus(TanStatus.VALID);
         } else {
-            if (originalTan.getNumberOfAttempts() == 2) {
+            if (originalTan.getNumberOfAttempts() == maximumNumberOfTanAttempts - 1) {
                 originalTan.setTanStatus(TanStatus.INVALID);
             }
             originalTan.incrementNumberOfAttempts();
@@ -169,5 +190,13 @@ public class TanConfirmationService {
             return "Your TAN number is " + tanNumber;
         }
         return content.toString();
+    }
+
+    private void changeConsentStatusToRejected(String consentId, ConfirmationType confirmationType) {
+        if (confirmationType == ConfirmationType.PAYMENT) {
+            paymentService.updatePaymentConsentStatus(consentId, REJECTED);
+        } else {
+            consentService.updateAisConsentStatus(consentId, REJECTED);
+        }
     }
 }

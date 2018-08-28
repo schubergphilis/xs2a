@@ -17,10 +17,10 @@
 package de.adorsys.aspsp.aspspmockserver.web.rest;
 
 import de.adorsys.aspsp.aspspmockserver.domain.Confirmation;
+import de.adorsys.aspsp.aspspmockserver.domain.ConfirmationType;
 import de.adorsys.aspsp.aspspmockserver.service.TanConfirmationService;
 import de.adorsys.aspsp.aspspmockserver.service.PaymentService;
 import de.adorsys.aspsp.aspspmockserver.web.util.ApiError;
-import de.adorsys.aspsp.xs2a.spi.domain.payment.AspspPayment;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,9 +32,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
-import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REJECTED;
 import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.REVOKED_BY_PSU;
 import static de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus.VALID;
 
@@ -72,20 +70,9 @@ public class PaymentConfirmationController {
         @ApiResponse(code = 400, message = "Bad request")
     })
     public ResponseEntity confirmTan(@RequestBody Confirmation confirmation) {
-        Optional<AspspPayment> payment = paymentService.getPaymentById(confirmation.getPaymentId());
-        if (payment.isPresent()) {
-            if (tanConfirmationService.isTanNumberValidByIban(confirmation.getIban(), confirmation.getTanNumber())) {
-                return new ResponseEntity(HttpStatus.OK);
-            } else if (tanConfirmationService.getTanNumberOfAttemptsByIban(confirmation.getIban()) < 3) {
-                ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "WRONG_TAN", "Bad request");
-                return new ResponseEntity<>(error, error.getStatus());
-            }
-            paymentService.updatePaymentConsentStatus(confirmation.getConsentId(), REJECTED);
-            ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "LIMIT_EXCEEDED", "Bad request");
-            return new ResponseEntity<>(error, error.getStatus());
-        }
-        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, "PAYMENT_MISSING", "Bad request");
-        return new ResponseEntity<>(error, error.getStatus());
+        return paymentService.getPaymentById(confirmation.getPaymentId()).isPresent()
+                   ? tanConfirmationService.confirmTan(confirmation.getIban(), confirmation.getTanNumber(), confirmation.getConsentId(), ConfirmationType.PAYMENT)
+                   : new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "PAYMENT_MISSING", "Bad request"), HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping(path = "/consent", params = "decision=confirmed")

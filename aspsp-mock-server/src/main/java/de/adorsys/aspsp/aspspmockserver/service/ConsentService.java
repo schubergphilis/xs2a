@@ -18,7 +18,7 @@ package de.adorsys.aspsp.aspspmockserver.service;
 
 import de.adorsys.aspsp.aspspmockserver.config.rest.consent.AisConsentRemoteUrls;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -27,7 +27,7 @@ import org.springframework.web.client.RestTemplate;
 import javax.validation.constraints.NotNull;
 @Slf4j
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class ConsentService {
 
     @Qualifier("consentRestTemplate")

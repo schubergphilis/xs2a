@@ -16,6 +16,7 @@
 
 package de.adorsys.aspsp.aspspmockserver.service;
 
+import de.adorsys.aspsp.aspspmockserver.domain.ConfirmationType;
 import de.adorsys.aspsp.aspspmockserver.repository.PsuRepository;
 import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
@@ -27,6 +28,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -34,6 +37,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
+
+import org.springframework.test.util.ReflectionTestUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConfirmationServiceTest {
@@ -46,9 +51,10 @@ public class ConfirmationServiceTest {
     private static final String TAN_ID = "2d4b403b-f5f5-41c0-847f-b6abf1edb102";
     private static final String TAN_NUMBER = "123456";
     private static final String WRONG_TAN_NUMBER = "wrong tan number";
+    private static final String CONSENT_ID = "6d4b403b-f5f5-41c0-847f-b6abf1edb102";
 
     @InjectMocks
-    TanConfirmationService tanConfirmationService;
+    private TanConfirmationService tanConfirmationService;
 
     @Mock
     private TanRepository tanRepository;
@@ -56,9 +62,14 @@ public class ConfirmationServiceTest {
     private PsuRepository psuRepository;
     @Mock
     private AccountService accountService;
+    @Mock
+    private PaymentService paymentService;
+    @Mock
+    private ConsentService consentService;
 
     @Before
     public void setUp() {
+        ReflectionTestUtils.setField(tanConfirmationService, "maximumNumberOfTanAttempts", 3);
         when(psuRepository.findOne(PSU_ID_1))
             .thenReturn(getPsu1());
         when(psuRepository.findOne(PSU_ID_2))
@@ -91,37 +102,37 @@ public class ConfirmationServiceTest {
     @Test
     public void isTanNumberValidByIban_Success() {
         //When
-        boolean actualResult = tanConfirmationService.isTanNumberValidByIban(IBAN_1, TAN_NUMBER);
+        ResponseEntity actualResult = tanConfirmationService.confirmTan(IBAN_1, TAN_NUMBER, CONSENT_ID, ConfirmationType.PAYMENT);
 
         //Then
-        assertThat(actualResult).isTrue();
+        assertThat(actualResult.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
     public void isTanNumberValidByIban_Failure() {
         //When
-        boolean actualResult = tanConfirmationService.isTanNumberValidByIban(IBAN_1, WRONG_TAN_NUMBER);
+        ResponseEntity actualResult = tanConfirmationService.confirmTan(IBAN_1, WRONG_TAN_NUMBER, CONSENT_ID, ConfirmationType.PAYMENT);
 
         //Then
-        assertThat(actualResult).isFalse();
+        assertThat(actualResult.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void isTanNumberValidByIban_TanStatusValid() {
         //When
-        boolean actualResult = tanConfirmationService.isTanNumberValidByIban(IBAN_2, TAN_NUMBER);
+        ResponseEntity actualResult = tanConfirmationService.confirmTan(IBAN_2, TAN_NUMBER, CONSENT_ID, ConfirmationType.PAYMENT);
 
         //Then
-        assertThat(actualResult).isFalse();
+        assertThat(actualResult.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     @Test
     public void isPsuTanNumberValid_TanStatusInvalid() {
         //When
-        boolean actualResult = tanConfirmationService.isTanNumberValidByIban(IBAN_1, WRONG_TAN_NUMBER);
+        ResponseEntity actualResult = tanConfirmationService.confirmTan(IBAN_1, WRONG_TAN_NUMBER, CONSENT_ID, ConfirmationType.PAYMENT);
 
         //Then
-        assertThat(actualResult).isFalse();
+        assertThat(actualResult.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
 
     private Psu getPsu1() {
