@@ -16,13 +16,11 @@
 
 package de.adorsys.aspsp.xs2a.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Value;
 
 import java.util.List;
 
 @Value
-@AllArgsConstructor
 public class AspspSettings {
     private int frequencyPerDay;
     private boolean combinedServiceIndicator;
