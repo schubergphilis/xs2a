@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.service;
 
 
 import de.adorsys.aspsp.xs2a.config.rest.ASPSPProfileRemoteUrls;
-import de.adorsys.aspsp.xs2a.consent.api.AspspSettings;
+import de.adorsys.aspsp.xs2a.domain.profile.AspspSettings;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -44,6 +44,6 @@ public class AspspProfileService {
 
     private AspspSettings readAspspSettings() {
         return aspspProfileRestTemplate.exchange(
-            aspspProfileRemoteUrls.getAspspSettings(), HttpMethod.GET, null, AspspSettings.class).getBody();
+            aspspProfileRemoteUrls.getAspspSettingsUrl(), HttpMethod.GET, null, AspspSettings.class).getBody();
     }
 }

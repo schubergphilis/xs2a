@@ -30,7 +30,7 @@ public class ASPSPProfileRemoteUrls {
      *
      * @return String
      */
-    public String getAspspSettings() {
+    public String getAspspSettingsUrl() {
         return aspspProfileBaseUrl + "/aspsp-profile";
     }
 }

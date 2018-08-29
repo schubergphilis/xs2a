@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api;
+package de.adorsys.aspsp.xs2a.domain.profile;
 
 import lombok.Value;
 
