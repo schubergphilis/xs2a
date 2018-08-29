@@ -63,7 +63,7 @@ public class PaymentConfirmationController {
 
     @PutMapping(path = "/{consent-id}/{status}")
     @ApiOperation(value = "Update pis consent status of the corresponding consent", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
-    public ResponseEntity validPaymentConsent(@PathVariable("consent-id") String consentId,
+    public ResponseEntity updatePisConsentStatus(@PathVariable("consent-id") String consentId,
                                               @PathVariable("status") SpiConsentStatus status) {
         paymentService.updatePaymentConsentStatus(consentId, status);
         return new ResponseEntity<>(HttpStatus.OK);
