@@ -16,17 +16,14 @@
 
 package de.adorsys.aspsp.xs2a.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-
 public enum OtpFormat {
     CHARACTERS("characters"),
     INTEGER("integer");
 
     private String value;
 
-    @JsonCreator
-    OtpFormat(String format) {
-        this.value = format;
+    OtpFormat(String value) {
+        this.value = value;
     }
 
     public String getValue() {
