@@ -20,11 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import de.adorsys.aspsp.xs2a.domain.Amount;
-import de.adorsys.aspsp.xs2a.domain.ChallengeData;
-import de.adorsys.aspsp.xs2a.domain.Links;
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
-import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
+import de.adorsys.aspsp.xs2a.domain.*;
 import de.adorsys.aspsp.xs2a.domain.consent.AuthenticationObject;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -55,7 +51,7 @@ public class PaymentInitialisationResponse {
     private AuthenticationObject chosenScaMethod;
 
     @ApiModelProperty(value = "It is contained in addition to the data element 'chosenScaMethod' if challenge data is needed for SCA.")
-    private ChallengeData challengeData;
+    private XS2AChallengeData challengeData;
 
     @ApiModelProperty(value = "Text to be displayed to the PSU")
     private String psuMessage;
