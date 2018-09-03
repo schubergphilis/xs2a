@@ -374,7 +374,7 @@ public class AccountServiceTest {
         Balance sb = new Balance();
         Amount amount = new Amount();
         amount.setCurrency(CURRENCY);
-        amount.setContent("1000");
+        amount.setAmount("1000");
         sb.setBalanceAmount(amount);
         return Collections.singletonList(sb);
     }
@@ -412,7 +412,7 @@ public class AccountServiceTest {
         transaction.setValueDate(DATE);
         transaction.setCreditorAccount(getAccountReference());
         Amount amount = new Amount();
-        amount.setContent("1000");
+        amount.setAmount("1000");
         amount.setCurrency(CURRENCY);
         transaction.setAmount(amount);
         return transaction;
@@ -421,7 +421,7 @@ public class AccountServiceTest {
     private SpiTransaction getSpiTransaction() {
         Transactions t = getTransaction();
         return new SpiTransaction(t.getTransactionId(), null, null, null, t.getBookingDate(),
-            t.getValueDate(), new SpiAmount(t.getAmount().getCurrency(), new BigDecimal(t.getAmount().getContent())), null,
+            t.getValueDate(), new SpiAmount(t.getAmount().getCurrency(), new BigDecimal(t.getAmount().getAmount())), null,
             mapToSpiAccountRef(t.getCreditorAccount()), null, null,
             mapToSpiAccountRef(t.getDebtorAccount()), null, null,
             null, null, null);

@@ -99,7 +99,7 @@ public final class AccountModelMapper {
 
     public static Amount mapToAmount(de.adorsys.aspsp.xs2a.domain.Amount amount) {
         return new Amount()
-                   .amount(amount.getContent())
+                   .amount(amount.getAmount())
                    .currency(amount.getCurrency().getCurrencyCode());
     }
 
@@ -196,7 +196,7 @@ public final class AccountModelMapper {
         return Optional.ofNullable(amount)
                    .map(a -> {
                        de.adorsys.aspsp.xs2a.domain.Amount targetAmount = new de.adorsys.aspsp.xs2a.domain.Amount();
-                       targetAmount.setContent(a.getAmount());
+                       targetAmount.setAmount(a.getAmount());
                        targetAmount.setCurrency(Currency.getInstance(a.getCurrency()));
                        return targetAmount;
                    })
