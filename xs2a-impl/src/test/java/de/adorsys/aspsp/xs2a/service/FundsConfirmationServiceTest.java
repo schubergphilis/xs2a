@@ -119,7 +119,7 @@ public class FundsConfirmationServiceTest {
 
     private Amount getAmount1600() {
         Amount amount = new Amount();
-        amount.setContent(AMOUNT_1600);
+        amount.setAmount(AMOUNT_1600);
         amount.setCurrency(EUR);
         return amount;
     }

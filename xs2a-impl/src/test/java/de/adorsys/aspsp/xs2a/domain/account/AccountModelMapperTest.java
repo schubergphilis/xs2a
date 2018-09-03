@@ -45,7 +45,7 @@ public class AccountModelMapperTest {
         de.adorsys.psd2.model.Amount actualBalanceAmount = result.getBalanceAmount();
         assertNotNull(expectedBalanceAmount);
 
-        assertEquals(expectedBalanceAmount.getContent(), actualBalanceAmount.getAmount());
+        assertEquals(expectedBalanceAmount.getAmount(), actualBalanceAmount.getAmount());
         assertEquals(expectedBalanceAmount.getCurrency().getCurrencyCode(), actualBalanceAmount.getCurrency());
         assertEquals(balance.getBalanceType().name(), result.getBalanceType().name());
 
@@ -128,7 +128,7 @@ public class AccountModelMapperTest {
         de.adorsys.psd2.model.Amount amountTarget = transactionDetails.getTransactionAmount();
         assertNotNull(amountTarget);
 
-        assertEquals(amount.getContent(), amountTarget.getAmount());
+        assertEquals(amount.getAmount(), amountTarget.getAmount());
         assertEquals(amount.getCurrency().getCurrencyCode(), amountTarget.getCurrency());
 
         BankTransactionCode bankTransactionCodeCode = transactions.getBankTransactionCodeCode();
@@ -214,7 +214,7 @@ public class AccountModelMapperTest {
     private Amount createAmount() {
         Amount amount = new Amount();
         amount.setCurrency(Currency.getInstance("EUR"));
-        amount.setContent("1000");
+        amount.setAmount("1000");
         return amount;
     }
 

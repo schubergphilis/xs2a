@@ -121,7 +121,7 @@ public class PisConsentMapper {
                        pisPayment.setUltimateDebtor(pmt.getUltimateDebtor());
 
                        pisPayment.setCurrency(pmt.getInstructedAmount().getCurrency());
-                       pisPayment.setAmount(new BigDecimal(pmt.getInstructedAmount().getContent())); // todo remake amount type from String to BigDecimal
+                       pisPayment.setAmount(new BigDecimal(pmt.getInstructedAmount().getAmount())); // todo remake amount type from String to BigDecimal
                        pisPayment.setCreditorAccount(mapToPisAccountReference(pmt.getCreditorAccount()));
                        pisPayment.setCreditorAgent(Optional.ofNullable(pmt.getCreditorAgent())
                                                        .map(BICFI::getCode).orElse(""));
@@ -150,7 +150,7 @@ public class PisConsentMapper {
                        pisPayment.setDebtorAccount(mapToPisAccountReference(pmt.getDebtorAccount()));
                        pisPayment.setUltimateDebtor(pmt.getUltimateDebtor());
                        pisPayment.setCurrency(pmt.getInstructedAmount().getCurrency());
-                       pisPayment.setAmount(new BigDecimal(pmt.getInstructedAmount().getContent())); // todo remake amount type from String to BigDecimal
+                       pisPayment.setAmount(new BigDecimal(pmt.getInstructedAmount().getAmount())); // todo remake amount type from String to BigDecimal
                        pisPayment.setCreditorAccount(mapToPisAccountReference(pmt.getCreditorAccount()));
                        pisPayment.setCreditorAgent(Optional.ofNullable(pmt.getCreditorAgent())
                                                        .map(BICFI::getCode).orElse(""));
