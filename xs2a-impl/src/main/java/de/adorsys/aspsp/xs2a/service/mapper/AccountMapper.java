@@ -46,6 +46,8 @@ public class AccountMapper {
                            ad.getAccountType(),
                            mapToAccountType(ad.getCashSpiAccountType()),
                            ad.getBic(),
+                           null,
+                           null,
                            mapToBalancesList(ad.getBalances())
                        )
                    )
@@ -211,6 +213,6 @@ public class AccountMapper {
     public AccountDetails mapToAccountDetailNoBalances(AccountDetails detail) {
         return new AccountDetails(detail.getId(), detail.getIban(), detail.getBban(), detail.getPan(),
             detail.getMaskedPan(), detail.getMsisdn(), detail.getCurrency(), detail.getName(),
-            detail.getAccountType(), detail.getCashAccountType(), detail.getBic(), null);
+            detail.getProduct(), detail.getCashAccountType(), detail.getBic(), null, null, null);
     }
 }

@@ -66,9 +66,9 @@ public class AccountModelMapperTest {
         List<AccountDetails> accountDetailsList = new ArrayList<>();
         Balance inputBalance = createBalance();
 
-        accountDetailsList.add(new AccountDetails("1", "2", "3", "4", "5", "6", Currency.getInstance("EUR"), "8", "9", CashAccountType.CURRENT_ACCOUNT, "11", new ArrayList<Balance>()));
-        accountDetailsList.add(new AccountDetails("x1", "x2", "x3", "x4", "x5", "x6", Currency.getInstance("EUR"), "x8", "x9", CashAccountType.CURRENT_ACCOUNT, "x11", Arrays.asList(inputBalance)));
-        AccountDetails accountDetails = new AccountDetails("y1", "y2", "y3", "y4", "y5", "y6", Currency.getInstance("EUR"), "y8", "y9", CashAccountType.CURRENT_ACCOUNT, "y11", new ArrayList<Balance>());
+        accountDetailsList.add(new AccountDetails("1", "2", "3", "4", "5", "6", Currency.getInstance("EUR"), "8", "9", CashAccountType.CURRENT_ACCOUNT, "11", null, null, new ArrayList<Balance>()));
+        accountDetailsList.add(new AccountDetails("x1", "x2", "x3", "x4", "x5", "x6", Currency.getInstance("EUR"), "x8", "x9", CashAccountType.CURRENT_ACCOUNT, "x11", null, null, Arrays.asList(inputBalance)));
+        AccountDetails accountDetails = new AccountDetails("y1", "y2", "y3", "y4", "y5", "y6", Currency.getInstance("EUR"), "y8", "y9", CashAccountType.CURRENT_ACCOUNT, "y11", null, null, new ArrayList<Balance>());
         accountDetails.setLinks(createLinks());
         accountDetailsList.add(accountDetails);
         Map<String, List<AccountDetails>> accountDetailsMap = Collections.singletonMap("TEST", accountDetailsList);

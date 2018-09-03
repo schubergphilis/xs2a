@@ -347,6 +347,8 @@ public class AccountServiceTest {
             null,
             null,
             null,
+            null,
+            null,
             getBalancesList());
     }
 
@@ -358,8 +360,10 @@ public class AccountServiceTest {
             null,
             null,
             null,
-            CURRENCY,
+             CURRENCY,
             "David Muller",
+            null,
+            null,
             null,
             null,
             null,

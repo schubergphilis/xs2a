@@ -46,6 +46,8 @@ public class AccountMapper {
                            ad.getAccountType(),
                            mapToAccountType(ad.getCashSpiAccountType()),
                            ad.getBic(),
+                           null,
+                           null,
                            mapToBalancesList(ad.getBalances())
                        )
                    )
