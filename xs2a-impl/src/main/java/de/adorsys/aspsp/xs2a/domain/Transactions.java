@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.domain;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.code.BankTransactionCode;
 import de.adorsys.aspsp.xs2a.domain.code.PurposeCode;
@@ -26,6 +27,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @ApiModel(description = "TransactionsCreditorResponse information", value = "TransactionsCreditorResponse")
@@ -36,6 +38,10 @@ public class Transactions {
     @Size(max = 35)
     private String transactionId;
 
+    @ApiModelProperty(value = "Is the identification of the transaction as used e.g. for reference for deltafunction on application level. The same identification as for example used within camt.05x messages.")
+    @Size(max = 35)
+    private String entryReference;
+
     @ApiModelProperty(value = "End to end id", required = false, example = "123456789")
     @Size(max = 35)
     private String endToEndId;
@@ -43,6 +49,10 @@ public class Transactions {
     @ApiModelProperty(value = "Identification of Mandates, e.g. a SEPA Mandate ID", required = false, example = "12345")
     @Size(max = 35)
     private String mandateId;
+
+    @ApiModelProperty(value = "Identification of a Cheque")
+    @Size(max = 35)
+    private String checkId;
 
     @ApiModelProperty(value = "Identification of Creditors, e.g. a SEPA Creditor ID", required = false, example = "12345")
     @Size(max = 35)
@@ -56,6 +66,9 @@ public class Transactions {
 
     @ApiModelProperty(value = "Amount", required = true)
     private Amount amount;
+
+    @ApiModelProperty(value = "Array of Exchange Rate")
+    private List<Xs2aExchangeRate> exchangeRate;
 
     @ApiModelProperty(value = "Name of the Creditor if a debited transaction", example = "John Miles")
     @Size(max = 70)
@@ -91,4 +104,12 @@ public class Transactions {
 
     @ApiModelProperty(value = "Bank transaction code as used by the ASPSP in ISO20022 related formats.")
     private BankTransactionCode bankTransactionCodeCode;
+
+    @ApiModelProperty(value = "Proprietary bank transaction code as used within a community or within an ASPSP e.g. for MT94x based transaction reports")
+    @Size(max = 35)
+    private String proprietaryBankTransactionCode;
+
+    @ApiModelProperty(value = "The following links could be used for retrieving details of a transaction")
+    @JsonProperty("_links")
+    private Links links = new Links();
 }
