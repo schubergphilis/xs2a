@@ -51,7 +51,7 @@ public class PaymentInitialisationResponse {
     private AuthenticationObject chosenScaMethod;
 
     @ApiModelProperty(value = "It is contained in addition to the data element 'chosenScaMethod' if challenge data is needed for SCA.")
-    private XS2AChallengeData challengeData;
+    private Xs2aChallengeData challengeData;
 
     @ApiModelProperty(value = "Text to be displayed to the PSU")
     private String psuMessage;

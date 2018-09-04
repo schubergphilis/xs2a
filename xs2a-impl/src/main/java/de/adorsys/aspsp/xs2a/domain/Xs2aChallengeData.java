@@ -22,7 +22,7 @@ import lombok.Value;
 
 @Value
 @ApiModel
-public class XS2AChallengeData {
+public class Xs2aChallengeData {
     @ApiModelProperty(value = "PNG data (max. 512 kilobyte) to be displayed to the PSU, Base64 encoding, cp. [RFC4648]. This attribute is used only, when PHOTO_OTP or CHIP_OTP is the selected SCA method.")
     private final byte[] image;
 
