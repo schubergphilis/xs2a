@@ -137,19 +137,19 @@ public class PaymentMapper {
                        initialisationResponse.setPsuMessage(pir.getPsuMessage());
                        initialisationResponse.setTppRedirectPreferred(pir.isTppRedirectPreferred());
                        initialisationResponse.setScaMethods(mapToAuthenticationObjects(pir.getScaMethods()));
-                       initialisationResponse.setTppMessages(mapToMessageCodes(pir.getTppMessages()));
+                       initialisationResponse.setTppMessages(mapToMessageErrorCodes(pir.getTppMessages()));
                        initialisationResponse.setLinks(new Links());
                        return initialisationResponse;
                    }).orElse(new PaymentInitialisationResponse());
     }
 
     public PaymentInitialisationResponse mapToPaymentInitResponseFailedPayment(SinglePayment payment, MessageErrorCode error) {
-                       log.warn("Bulk payment initiation has an error: {}. Payment : {}",error, payment);
-                       PaymentInitialisationResponse response = new PaymentInitialisationResponse();
-                       response.setTransactionStatus(TransactionStatus.RJCT);
-                       response.setPaymentId(payment.getEndToEndIdentification());
-                       response.setTppMessages(new MessageErrorCode[]{error});
-                       return response;
+        log.warn("Bulk payment initiation has an error: {}. Payment : {}", error, payment);
+        PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+        response.setTransactionStatus(TransactionStatus.RJCT);
+        response.setPaymentId(payment.getEndToEndIdentification());
+        response.setTppMessages(new MessageErrorCode[]{error});
+        return response;
     }
 
     public SpiPaymentType mapToSpiPaymentType(PaymentType paymentType) {
@@ -216,8 +216,12 @@ public class PaymentMapper {
         return new AuthenticationObject[]{};//TODO Fill in th Linx
     }
 
-    private MessageErrorCode[] mapToMessageCodes(String[] messageCodes) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115
-        return new MessageErrorCode[]{};//TODO Fill in th Linx
+    private MessageErrorCode[] mapToMessageErrorCodes(String[] messageCodes) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115
+        return Optional.ofNullable(messageCodes)
+                   .map(codes -> Arrays.stream(codes)
+                                     .map(MessageErrorCode::valueOf)
+                                     .toArray(MessageErrorCode[]::new))
+                   .orElse(new MessageErrorCode[]{});
     }
 
     private SpiAddress mapToSpiAddress(Address address) {

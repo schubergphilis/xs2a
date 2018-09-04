@@ -20,6 +20,7 @@ import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatus;
+import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
@@ -33,9 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
@@ -48,6 +48,7 @@ public class PaymentService {
     private final PaymentMapper paymentMapper;
     private final ScaPaymentService scaPaymentService;
     private final ReadPaymentFactory readPaymentFactory;
+    private final AccountReferenceValidationService referenceValidationService;
 
     /**
      * Retrieves payment status from ASPSP
@@ -72,6 +73,10 @@ public class PaymentService {
      * @return Response containing information about created periodic payment or corresponding error
      */
     public ResponseObject<PaymentInitialisationResponse> initiatePeriodicPayment(PeriodicPayment periodicPayment, String tppSignatureCertificate, String paymentProduct) {
+        ResponseObject validationResult = referenceValidationService.validateAccountReferences(periodicPayment.getAccountReferences());
+        if(validationResult.hasError()){
+            return ResponseObject.<PaymentInitialisationResponse>builder().fail(validationResult.getError()).build();
+        }
         return periodicPayment.areValidExecutionAndPeriodDates()
                    ? ResponseObject.<PaymentInitialisationResponse>builder().body(scaPaymentService.createPeriodicPayment(periodicPayment, paymentMapper.mapToTppInfo(tppSignatureCertificate), paymentProduct)).build()
                    : mapToFailResponse(periodicPayment, EXECUTION_DATE_INVALID);
@@ -90,13 +95,23 @@ public class PaymentService {
                        .fail(new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR)))
                        .build();
         }
+        Set<AccountReference> references = payments.stream()
+                                               .map(SinglePayment::getAccountReferences)
+                                               .flatMap(Collection::stream)
+                                               .collect(Collectors.toSet());
         List<SinglePayment> validPayments = new ArrayList<>();
         List<PaymentInitialisationResponse> invalidPayments = new ArrayList<>();
         for (SinglePayment payment : payments) {
-            if (payment.isValidExecutionDateAndTime()) {
+            boolean isValidDate = payment.isValidExecutionDateAndTime();
+            boolean referenceIsValid = referenceValidationService.validateAccountReferences(payment.getAccountReferences()).hasError();
+            if (isValidDate&&referenceIsValid){
                 validPayments.add(payment);
-            } else {
+            }
+            else if (!isValidDate) {
                 invalidPayments.add(paymentMapper.mapToPaymentInitResponseFailedPayment(payment, EXECUTION_DATE_INVALID));
+            }
+            else {
+                invalidPayments.add(paymentMapper.mapToPaymentInitResponseFailedPayment(payment, FORMAT_ERROR));
             }
         }
         if (CollectionUtils.isNotEmpty(validPayments)) {
@@ -120,6 +135,10 @@ public class PaymentService {
      * @return Response containing information about created single payment or corresponding error
      */
     public ResponseObject<PaymentInitialisationResponse> createPaymentInitiation(SinglePayment singlePayment, String tppSignatureCertificate, String paymentProduct) {
+        ResponseObject validationResult = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
+        if(validationResult.hasError()){
+            return ResponseObject.<PaymentInitialisationResponse>builder().fail(validationResult.getError()).build();
+        }
         return singlePayment.isValidExecutionDateAndTime()
                    ? ResponseObject.<PaymentInitialisationResponse>builder().body(scaPaymentService.createSinglePayment(singlePayment, paymentMapper.mapToTppInfo(tppSignatureCertificate), paymentProduct)).build()
                    : mapToFailResponse(singlePayment, EXECUTION_DATE_INVALID);

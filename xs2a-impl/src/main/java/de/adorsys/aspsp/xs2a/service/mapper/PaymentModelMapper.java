@@ -17,9 +17,12 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.code.BICFI;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
+import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
+import de.adorsys.aspsp.xs2a.service.message.MessageService;
 import de.adorsys.aspsp.xs2a.service.validator.ValueValidatorService;
 import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +30,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -40,7 +44,10 @@ import static de.adorsys.aspsp.xs2a.service.mapper.AccountModelMapper.*;
 public class PaymentModelMapper {
     private final ObjectMapper mapper;
     private final ValueValidatorService validationService;
+    private final AccountReferenceValidationService referenceValidationService;
+    private final MessageService messageService;
 
+    // Mappers into xs2a domain classes
     public <T> T mapToXs2aPayment(Object payment, PaymentType type, PaymentProduct product) {
         if (type == SINGLE) {
             PaymentInitiationSctJson single = mapper.convertValue(payment, PaymentInitiationSctJson.class);
@@ -74,7 +81,7 @@ public class PaymentModelMapper {
         payment.setRemittanceInformationUnstructured(paymentRequest.getRemittanceInformationUnstructured());
         payment.setRemittanceInformationStructured(new Remittance()); //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         payment.setRequestedExecutionDate(LocalDate.now()); //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-        payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1)); //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+        payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1)); //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/2
         return payment;
     }
 
@@ -141,6 +148,7 @@ public class PaymentModelMapper {
         return bicfi;
     }
 
+    //Mappers into PSD2 generated API model classes
     public <T, R> T mapToGetPaymentResponse12(R payment, PaymentType type, PaymentProduct product) {
         if (type == SINGLE) {
             SinglePayment xs2aPayment = (SinglePayment) payment;
@@ -188,6 +196,33 @@ public class PaymentModelMapper {
         }
     }
 
+    public static TransactionStatus mapToTransactionStatus12(de.adorsys.aspsp.xs2a.domain.TransactionStatus responseObject) {
+        return TransactionStatus.valueOf(responseObject.name());
+    }
+
+    public <T, R> R mapToPaymentInitiationResponse12(T response, PaymentType type, PaymentProduct product) {
+        PaymentInitationRequestResponse201 response201 = new PaymentInitationRequestResponse201();
+        if (type == SINGLE || type == PERIODIC) {
+            PaymentInitialisationResponse specificResponse = (PaymentInitialisationResponse) response;
+            response201.setTransactionStatus(mapToTransactionStatus12(specificResponse.getTransactionStatus()));
+            response201.setPaymentId(specificResponse.getPaymentId());
+            response201.setTransactionFees(mapToAmount(specificResponse.getTransactionFees()));
+            response201.setTransactionFeeIndicator(specificResponse.isTransactionFeeIndicator());
+            response201.setScaMethods(null); //TODO Fix Auth methods mapping
+            response201.setChosenScaMethod(null); //TODO add to xs2a domain obj https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+            response201.setChallengeData(null); //TODO add to xs2a domain obj https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+            response201.setLinks(null); //TODO add new mapper for Links https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/244
+            response201.setPsuMessage(specificResponse.getPsuMessage());
+            response201.setTppMessages(mapToTppMessages(specificResponse.getTppMessages())); //TODO add new Mapper https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/242
+            return (R) response201;
+        } else {
+            List<PaymentInitialisationResponse> specificResponse = (List<PaymentInitialisationResponse>) response;
+            return (R) specificResponse.stream()
+                           .map(r -> mapToPaymentInitiationResponse12(r, SINGLE, product))
+                           .collect(Collectors.toList());
+        }
+    }
+
     private List<PaymentInitiationTarget2Json> mapToBulkPartList12(List<SinglePayment> payments) {
         return payments.stream()
                    .map(PaymentModelMapper::mapToBulkPart12)
@@ -206,30 +241,25 @@ public class PaymentModelMapper {
         return bulkPart;
     }
 
-    public static TransactionStatus mapToTransactionStatus12(de.adorsys.aspsp.xs2a.domain.TransactionStatus responseObject) {
-        return TransactionStatus.valueOf(responseObject.name());
+    private TppMessages mapToTppMessages(MessageErrorCode[] tppMessages) {
+       return Optional.ofNullable(tppMessages)
+            .map(m->Arrays.stream(m)
+                     .map(this::mapToGenericError)
+                     .collect(Collectors.toList()))
+            .map(c-> {
+                TppMessages messages = new TppMessages();
+                messages.addAll(c);
+                return messages;
+            })
+            .orElse(null);
     }
 
-    public <T, R> R mapToPaymentInitiationResponse12(T response, PaymentType type, PaymentProduct product) {
-        PaymentInitationRequestResponse201 response201 = new PaymentInitationRequestResponse201();
-        if (type == SINGLE || type == PERIODIC) {
-            PaymentInitialisationResponse specificResponse = (PaymentInitialisationResponse) response;
-            response201.setTransactionStatus(mapToTransactionStatus12(specificResponse.getTransactionStatus()));
-            response201.setPaymentId(specificResponse.getPaymentId());
-            response201.setTransactionFees(mapToAmount(specificResponse.getTransactionFees()));
-            response201.setTransactionFeeIndicator(specificResponse.isTransactionFeeIndicator());
-            response201.setScaMethods(null); //TODO Fix Auth methods mapping
-            response201.setChosenScaMethod(null); //TODO add to xs2a domain obj https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-            response201.setChallengeData(null); //TODO add to xs2a domain obj https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-            response201.setLinks(null); //TODO add new mapper for Links https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/244
-            response201.setPsuMessage(specificResponse.getPsuMessage());
-            response201.setTppMessages(null); //TODO add new Mapper https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/242
-            return (R) response201;
-        } else {
-            List<PaymentInitialisationResponse> specificResponse = (List<PaymentInitialisationResponse>) response;
-            return (R) specificResponse.stream()
-                           .map(r -> mapToPaymentInitiationResponse12(r, SINGLE, product))
-                           .collect(Collectors.toList());
-        }
+    private TppMessageGeneric mapToGenericError(MessageErrorCode code) {
+        TppMessageGeneric tppMessage = new TppMessageGeneric();
+        tppMessage.setCategory(TppMessageCategory.ERROR);
+        tppMessage.setCode(code);
+        tppMessage.setPath("N/A"); //TODO set path
+        tppMessage.setText(messageService.getMessage(code.name()));
+        return tppMessage;
     }
 }
