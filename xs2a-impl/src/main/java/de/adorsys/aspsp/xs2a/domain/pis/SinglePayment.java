@@ -49,6 +49,7 @@ public class SinglePayment implements AccountReferenceCollector {
     @ApiModelProperty(value = "debtor account", required = true)
     private AccountReference debtorAccount;
 
+    @Deprecated
     @Size(max = 70)
     @ApiModelProperty(value = "ultimate debtor", example = "Mueller")
     private String ultimateDebtor;
@@ -74,10 +75,12 @@ public class SinglePayment implements AccountReferenceCollector {
     @ApiModelProperty(value = "creditor Address")
     private Address creditorAddress;
 
+    @Deprecated
     @Size(max = 70)
     @ApiModelProperty(value = "ultimate creditor", example = "Telekom")
     private String ultimateCreditor;
 
+    @Deprecated
     @ApiModelProperty(value = "purpose code")
     private PurposeCode purposeCode;
 
@@ -85,13 +88,16 @@ public class SinglePayment implements AccountReferenceCollector {
     @ApiModelProperty(value = "remittance information unstructured", example = "Ref. Number TELEKOM-1222")
     private String remittanceInformationUnstructured;
 
+    @Deprecated
     @Valid
     @ApiModelProperty(value = "remittance information structured")
     private Remittance remittanceInformationStructured;
 
+    @Deprecated
     @ApiModelProperty(value = "requested execution date", example = "2020-01-01")
     private LocalDate requestedExecutionDate;
 
+    @Deprecated
     @ApiModelProperty(value = "requested execution time", example = "2020-01-01T15:30:35.035Z")
     private LocalDateTime requestedExecutionTime;
 
