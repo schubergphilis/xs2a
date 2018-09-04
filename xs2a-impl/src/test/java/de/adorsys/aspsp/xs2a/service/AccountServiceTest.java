@@ -97,8 +97,8 @@ public class AccountServiceTest {
             .thenReturn(Arrays.asList(getAccountDetailsNoBalance(ACCOUNT_ID, IBAN), getAccountDetailsNoBalance(ACCOUNT_ID_1, IBAN_1)));
         when(accountMapper.mapToAccountDetails(null)).thenReturn(null);
         when(accountMapper.mapToAccountReport(Collections.singletonList(getSpiTransaction()))).thenReturn(Optional.of(getReport()));
-        when(accountMapper.mapToAccountDetailNoBalances(getAccountDetails(ACCOUNT_ID, IBAN))).thenReturn(getAccountDetailsNoBalances(ACCOUNT_ID, IBAN));
-        when(accountMapper.mapToAccountDetailNoBalances(getAccountDetails(ACCOUNT_ID_1, IBAN_1))).thenReturn(getAccountDetailsNoBalances(ACCOUNT_ID_1, IBAN_1));
+        when(accountMapper.mapToAccountDetailNoBalances(getAccountDetails(ACCOUNT_ID, IBAN))).thenReturn(getAccountDetailsNoBalance(ACCOUNT_ID, IBAN));
+        when(accountMapper.mapToAccountDetailNoBalances(getAccountDetails(ACCOUNT_ID_1, IBAN_1))).thenReturn(getAccountDetailsNoBalance(ACCOUNT_ID_1, IBAN_1));
         when(accountMapper.mapToAccountDetailNoBalances(null)).thenReturn(null);
         //AisReporting
         doNothing().when(consentSpi).consentActionLog(anyString(), anyString(), any(ActionStatus.class));
@@ -356,22 +356,6 @@ public class AccountServiceTest {
             null,
             null,
             getBalancesList());
-    }
-
-    private AccountDetails getAccountDetailsNoBalances(String accountId, String iban) {
-        return new AccountDetails(
-            accountId,
-            iban,
-            "zz22",
-            null,
-            null,
-            null,
-            CURRENCY,
-            "David Muller",
-            null,
-            null,
-            null,
-            null);
     }
 
     private AccountDetails getAccountDetailsNoBalance(String accountId, String iban) {
