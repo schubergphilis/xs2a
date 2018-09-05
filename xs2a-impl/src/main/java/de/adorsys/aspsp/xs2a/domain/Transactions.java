@@ -38,7 +38,7 @@ public class Transactions {
     @Size(max = 35)
     private String transactionId;
 
-    @ApiModelProperty(value = "Identification of the transaction as used e.g. for reference for deltafunction on application level. The same identification as for example used within camt.05x messages.")
+    @ApiModelProperty(value = "Identifier of the transaction as used e.g. for reference for deltafunction on application level. The same identification as for example used within camt.05x messages.")
     @Size(max = 35)
     private String entryReference;
 
@@ -46,15 +46,15 @@ public class Transactions {
     @Size(max = 35)
     private String endToEndId;
 
-    @ApiModelProperty(value = "Identification of Mandates, e.g. a SEPA Mandate ID", required = false, example = "12345")
+    @ApiModelProperty(value = "Identifier of Mandates, e.g. a SEPA Mandate ID", required = false, example = "12345")
     @Size(max = 35)
     private String mandateId;
 
-    @ApiModelProperty(value = "Identification of a Cheque")
+    @ApiModelProperty(value = "Identifier of a Cheque")
     @Size(max = 35)
     private String checkId;
 
-    @ApiModelProperty(value = "Identification of Creditors, e.g. a SEPA Creditor ID", required = false, example = "12345")
+    @ApiModelProperty(value = "Identifier of Creditors, e.g. a SEPA Creditor ID", required = false, example = "12345")
     @Size(max = 35)
     private String creditorId;
 
