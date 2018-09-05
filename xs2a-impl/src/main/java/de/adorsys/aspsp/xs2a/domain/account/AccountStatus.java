@@ -19,9 +19,6 @@ package de.adorsys.aspsp.xs2a.domain.account;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/**
- * Account status. The value is one of the following:   - \"enabled\": account is available   - \"deleted\": account is terminated   - \"blocked\": account is blocked e.g. for legal reasons If this field is not used, than the account is available in the sense of this specification.
- */
 public enum AccountStatus {
     ENABLED("enabled"),
     DELETED("deleted"),

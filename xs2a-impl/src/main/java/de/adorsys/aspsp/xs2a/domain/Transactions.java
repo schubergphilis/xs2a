@@ -38,7 +38,7 @@ public class Transactions {
     @Size(max = 35)
     private String transactionId;
 
-    @ApiModelProperty(value = "Is the identification of the transaction as used e.g. for reference for deltafunction on application level. The same identification as for example used within camt.05x messages.")
+    @ApiModelProperty(value = "Identification of the transaction as used e.g. for reference for deltafunction on application level. The same identification as for example used within camt.05x messages.")
     @Size(max = 35)
     private String entryReference;
 
