@@ -241,7 +241,7 @@ public class PaymentModelMapper {
         return bulkPart;
     }
 
-    private TppMessages mapToTppMessages(MessageErrorCode[] tppMessages) {
+    private TppMessages mapToTppMessages(MessageErrorCode... tppMessages) {
        return Optional.ofNullable(tppMessages)
             .map(m->Arrays.stream(m)
                      .map(this::mapToGenericError)
