@@ -144,11 +144,17 @@ public class PaymentMapper {
     }
 
     public PaymentInitialisationResponse mapToPaymentInitResponseFailedPayment(SinglePayment payment, MessageErrorCode error) {
-        log.warn("Bulk payment initiation has an error: {}. Payment : {}", error, payment);
+        log.warn("Payment initiation has an error: {}. Payment : {}", error, payment);
         PaymentInitialisationResponse response = new PaymentInitialisationResponse();
         response.setTransactionStatus(TransactionStatus.RJCT);
         response.setPaymentId(payment.getEndToEndIdentification());
         response.setTppMessages(new MessageErrorCode[]{error});
+        response.setTransactionFees(null); //Not Present in 1.1 payment entity
+        response.setTransactionFeeIndicator(false); //Not Present in 1.1 payment entity
+        response.setScaMethods(null); //Not Present in 1.1 payment entity
+        response.setPsuMessage(null);
+        response.setLinks(null); //Not Present in 1.1 payment entity
+        response.setTppRedirectPreferred(false); //Not Present in 1.1 payment entity
         return response;
     }
 
@@ -160,20 +166,20 @@ public class PaymentMapper {
         return Optional.ofNullable(spiSinglePayment)
                    .map(sp -> {
                        SinglePayment payments = new SinglePayment();
-                       payments.setEndToEndIdentification(spiSinglePayment.getEndToEndIdentification());
-                       payments.setDebtorAccount(accountMapper.mapToAccountReference(spiSinglePayment.getDebtorAccount()));
-                       payments.setUltimateDebtor(spiSinglePayment.getUltimateDebtor());
-                       payments.setInstructedAmount(accountMapper.mapToAmount(spiSinglePayment.getInstructedAmount()));
-                       payments.setCreditorAccount(accountMapper.mapToAccountReference(spiSinglePayment.getCreditorAccount()));
-                       payments.setCreditorAgent(mapToBICFI(spiSinglePayment.getCreditorAgent()));
-                       payments.setCreditorName(spiSinglePayment.getCreditorName());
-                       payments.setCreditorAddress(mapToAddress(spiSinglePayment.getCreditorAddress()));
-                       payments.setUltimateCreditor(spiSinglePayment.getUltimateCreditor());
-                       payments.setPurposeCode(mapToPurposeCode(spiSinglePayment.getPurposeCode()));
-                       payments.setRemittanceInformationUnstructured(spiSinglePayment.getRemittanceInformationUnstructured());
-                       payments.setRemittanceInformationStructured(mapToRemittance(spiSinglePayment.getRemittanceInformationStructured()));
-                       payments.setRequestedExecutionDate(spiSinglePayment.getRequestedExecutionDate());
-                       payments.setRequestedExecutionTime(spiSinglePayment.getRequestedExecutionTime());
+                       payments.setEndToEndIdentification(sp.getEndToEndIdentification());
+                       payments.setDebtorAccount(accountMapper.mapToAccountReference(sp.getDebtorAccount()));
+                       payments.setUltimateDebtor(sp.getUltimateDebtor());
+                       payments.setInstructedAmount(accountMapper.mapToAmount(sp.getInstructedAmount()));
+                       payments.setCreditorAccount(accountMapper.mapToAccountReference(sp.getCreditorAccount()));
+                       payments.setCreditorAgent(mapToBICFI(sp.getCreditorAgent()));
+                       payments.setCreditorName(sp.getCreditorName());
+                       payments.setCreditorAddress(mapToAddress(sp.getCreditorAddress()));
+                       payments.setUltimateCreditor(sp.getUltimateCreditor());
+                       payments.setPurposeCode(mapToPurposeCode(sp.getPurposeCode()));
+                       payments.setRemittanceInformationUnstructured(sp.getRemittanceInformationUnstructured());
+                       payments.setRemittanceInformationStructured(mapToRemittance(sp.getRemittanceInformationStructured()));
+                       payments.setRequestedExecutionDate(sp.getRequestedExecutionDate());
+                       payments.setRequestedExecutionTime(sp.getRequestedExecutionTime());
                        return payments;
                    })
                    .orElse(null);
