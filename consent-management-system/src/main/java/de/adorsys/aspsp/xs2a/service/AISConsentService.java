@@ -135,23 +135,14 @@ public class AISConsentService {
      */
     @Transactional
     public Optional<String> updateConsent(CreateAisConsentRequest request, String consentId) {
-        return aisConsentRepository.findByExternalId(consentId)
-                   .map(consent -> updateAisConsent(consent, request, consentId));
+        return getActualAisConsent(consentId)
+            .map(consent -> updateAisConsent(request, consent));
     }
 
-    private String updateAisConsent(AisConsent consent, CreateAisConsentRequest request, String consentId) {
-        aisConsentRepository.delete(consent);
-        return createConsentWithConsentId(request, consentId);
-    }
-
-    private String createConsentWithConsentId(CreateAisConsentRequest request, String consentId) {
-        AisConsent consent = createConsentFromRequest(request);
-        consent.setExternalId(consentId);
-
-        AisConsent saved = aisConsentRepository.save(consent);
-        return saved.getId() != null
-                   ? saved.getExternalId()
-                   : null;
+    private String updateAisConsent(CreateAisConsentRequest request, AisConsent consent) {
+        updateConsentFromRequest(request, consent);
+        aisConsentRepository.save(consent);
+        return consent.getExternalId();
     }
 
     private AisConsent createConsentFromRequest(CreateAisConsentRequest request) {
@@ -172,6 +163,19 @@ public class AISConsentService {
         consent.setAspspConsentData(request.getAspspConsentData());
 
         return consent;
+    }
+
+    private void updateConsentFromRequest(CreateAisConsentRequest request, AisConsent consent) {
+        consent.setLastActionDate(LocalDate.now());
+        consent.setTppFrequencyPerDay(request.getFrequencyPerDay());
+        consent.setExpireDate(request.getValidUntil());
+        consent.setPsuId(request.getPsuId());
+        consent.setTppId(request.getTppId());
+        consent.addAccountAccess(readAccountAccess(request.getAccess()));
+        consent.setRecurringIndicator(request.isRecurringIndicator());
+        consent.setTppRedirectPreferred(request.isTppRedirectPreferred());
+        consent.setCombinedServiceIndicator(request.isCombinedServiceIndicator());
+        consent.setAspspConsentData(request.getAspspConsentData());
     }
 
     private ActionStatus resolveConsentActionStatus(ConsentActionRequest request, AisConsent consent) {
