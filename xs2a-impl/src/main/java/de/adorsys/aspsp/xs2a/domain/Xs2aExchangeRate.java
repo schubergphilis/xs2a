@@ -34,7 +34,7 @@ public class Xs2aExchangeRate {
     @NotNull
     private Currency currencyFrom;
 
-    @ApiModelProperty(value = "rateFrom", required = true)
+    @ApiModelProperty(value = "Rate from", required = true)
     @NotNull
     private String rateFrom;
 
@@ -42,7 +42,7 @@ public class Xs2aExchangeRate {
     @NotNull
     private Currency currencyTo;
 
-    @ApiModelProperty(value = "rateTo", required = true)
+    @ApiModelProperty(value = "Rate to", required = true)
     @NotNull
     private String rateTo;
 

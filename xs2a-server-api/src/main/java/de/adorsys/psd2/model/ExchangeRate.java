@@ -18,22 +18,22 @@ import java.util.Objects;
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class ExchangeRate {
 
-    @JsonProperty("Currency from")
+    @JsonProperty("currencyFrom")
     private String currencyFrom = null;
 
-    @JsonProperty("Rate from")
+    @JsonProperty("rateFrom")
     private String rateFrom = null;
 
-    @JsonProperty("Currency to")
+    @JsonProperty("currencyTo")
     private String currencyTo = null;
 
-    @JsonProperty("Rate to")
+    @JsonProperty("rateTo")
     private String rateTo = null;
 
-    @JsonProperty("Rate date")
+    @JsonProperty("rateDate")
     private LocalDate rateDate = null;
 
-    @JsonProperty("Rate contract")
+    @JsonProperty("rateContract")
     private String rateContract = null;
 
     public ExchangeRate currencyFrom(String currencyFrom) {
