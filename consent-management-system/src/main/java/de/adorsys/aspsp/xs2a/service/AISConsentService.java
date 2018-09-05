@@ -194,6 +194,7 @@ public class AISConsentService {
         }
     }
 
+    //56
     private void logConsentAction(String requestedConsentId, ActionStatus actionStatus, String tppId) {
         AisConsentAction action = new AisConsentAction();
         action.setActionStatus(actionStatus);
