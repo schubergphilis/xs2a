@@ -16,13 +16,25 @@
 
 package de.adorsys.aspsp.xs2a.domain.account;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public enum AccountStatus {
     ENABLED("enabled"),
     DELETED("deleted"),
     BLOCKED("blocked");
+
+    private final static Map<String, AccountStatus> container = new HashMap<>();
+
+    static {
+        for (AccountStatus accountStatus : values()) {
+            container.put(accountStatus.getValue(), accountStatus);
+        }
+    }
 
     private String value;
 
@@ -30,14 +42,13 @@ public enum AccountStatus {
         this.value = value;
     }
 
-    @JsonCreator
-    public static AccountStatus fromValue(String text) {
-        for (AccountStatus b : AccountStatus.values()) {
-            if (String.valueOf(b.value).equals(text)) {
-                return b;
-            }
-        }
-        return null;
+    public String getValue() {
+        return value;
+    }
+
+    @JsonIgnore
+    public static Optional<AccountStatus> getByValue(String name) {
+        return Optional.ofNullable(container.get(name));
     }
 
     @Override

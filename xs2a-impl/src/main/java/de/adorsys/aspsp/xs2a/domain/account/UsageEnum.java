@@ -16,12 +16,23 @@
 
 package de.adorsys.aspsp.xs2a.domain.account;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonValue;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public enum UsageEnum {
     PRIV("PRIV"),
     ORGA("ORGA");
+
+    private final static Map<String, UsageEnum> container = new HashMap<>();
+
+    static {
+        for (UsageEnum usageEnum : values()) {
+            container.put(usageEnum.getValue(), usageEnum);
+        }
+    }
 
     private String value;
 
@@ -29,14 +40,13 @@ public enum UsageEnum {
         this.value = value;
     }
 
-    @JsonCreator
-    public static UsageEnum fromValue(String text) {
-        for (UsageEnum b : UsageEnum.values()) {
-            if (String.valueOf(b.value).equals(text)) {
-                return b;
-            }
-        }
-        return null;
+    public String getValue() {
+        return value;
+    }
+
+    @JsonIgnore
+    public static Optional<UsageEnum> getByValue(String name) {
+        return Optional.ofNullable(container.get(name));
     }
 
     @Override

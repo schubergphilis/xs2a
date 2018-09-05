@@ -84,7 +84,7 @@ public class AccountDetails {
     @ApiModelProperty(value = "Specifies the usage of the account")
     private UsageEnum usageEnum;
 
-    @ApiModelProperty(value = "Specifications that might be provided by the ASPSP")
+    @ApiModelProperty(value = "Specifications that might be provided by the ASPSP", example = "Details")
     private final String details;
 
     @ApiModelProperty(value = "Balances")

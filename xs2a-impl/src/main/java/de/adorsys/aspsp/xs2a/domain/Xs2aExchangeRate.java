@@ -16,25 +16,22 @@
 
 package de.adorsys.aspsp.xs2a.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Currency;
 
 @Data
 @ApiModel(description = "Exchange Rate ", value = "ExchangeRate")
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Xs2aExchangeRate {
 
     @ApiModelProperty(value = "ISO 4217 currency code", required = true, example = "EUR")
     @NotNull
     private Currency currencyFrom;
 
-    @ApiModelProperty(value = "Rate from", required = true)
+    @ApiModelProperty(value = "Rate from", required = true, example = "zzz")
     @NotNull
     private String rateFrom;
 
@@ -42,7 +39,7 @@ public class Xs2aExchangeRate {
     @NotNull
     private Currency currencyTo;
 
-    @ApiModelProperty(value = "Rate to", required = true)
+    @ApiModelProperty(value = "Rate to", required = true, example = "zzz")
     @NotNull
     private String rateTo;
 
@@ -50,7 +47,7 @@ public class Xs2aExchangeRate {
     @NotNull
     private LocalDate rateDate;
 
-    @ApiModelProperty(value = "Rate contract")
+    @ApiModelProperty(value = "Rate contract", example = "zzz")
     @NotNull
     private String rateContract;
 }

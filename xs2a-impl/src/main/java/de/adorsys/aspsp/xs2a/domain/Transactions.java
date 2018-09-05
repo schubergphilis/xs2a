@@ -38,7 +38,7 @@ public class Transactions {
     @Size(max = 35)
     private String transactionId;
 
-    @ApiModelProperty(value = "Identifier of the transaction as used e.g. for reference for deltafunction on application level. The same identification as for example used within camt.05x messages.")
+    @ApiModelProperty(value = "Identifier of the transaction as used e.g. for reference for deltafunction on application level. The same identification as for example used within camt.05x messages.", example = "12345")
     @Size(max = 35)
     private String entryReference;
 
@@ -50,7 +50,7 @@ public class Transactions {
     @Size(max = 35)
     private String mandateId;
 
-    @ApiModelProperty(value = "Identifier of a Cheque")
+    @ApiModelProperty(value = "Identifier of a Cheque", example = "1234567")
     @Size(max = 35)
     private String checkId;
 
@@ -105,7 +105,7 @@ public class Transactions {
     @ApiModelProperty(value = "Bank transaction code as used by the ASPSP in ISO20022 related formats.")
     private BankTransactionCode bankTransactionCodeCode;
 
-    @ApiModelProperty(value = "Proprietary bank transaction code as used within a community or within an ASPSP e.g. for MT94x based transaction reports")
+    @ApiModelProperty(value = "Proprietary bank transaction code as used within a community or within an ASPSP e.g. for MT94x based transaction reports", example = "12345")
     @Size(max = 35)
     private String proprietaryBankTransactionCode;
 

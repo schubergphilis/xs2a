@@ -16,9 +16,23 @@
 
 package de.adorsys.aspsp.xs2a.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 public enum OtpFormat {
     CHARACTERS("characters"),
     INTEGER("integer");
+
+    private final static Map<String, OtpFormat> container = new HashMap<>();
+
+    static {
+        for (OtpFormat otpFormat : values()) {
+            container.put(otpFormat.getValue(), otpFormat);
+        }
+    }
 
     private String value;
 
@@ -28,5 +42,10 @@ public enum OtpFormat {
 
     public String getValue() {
         return value;
+    }
+
+    @JsonIgnore
+    public static Optional<OtpFormat> getByValue(String name) {
+        return Optional.ofNullable(container.get(name));
     }
 }

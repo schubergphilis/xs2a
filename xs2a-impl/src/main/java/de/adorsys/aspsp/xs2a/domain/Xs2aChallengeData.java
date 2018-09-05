@@ -21,23 +21,23 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Value;
 
 @Value
-@ApiModel
+@ApiModel(description = "Challenge data needed for SCA", value = "ChallengeData")
 public class Xs2aChallengeData {
     @ApiModelProperty(value = "PNG data (max. 512 kilobyte) to be displayed to the PSU, Base64 encoding, cp. [RFC4648]. This attribute is used only, when PHOTO_OTP or CHIP_OTP is the selected SCA method.")
     private final byte[] image;
 
-    @ApiModelProperty(value = "String challenge data")
+    @ApiModelProperty(value = "String challenge data", example = "zzz")
     private final String data;
 
-    @ApiModelProperty(value = "A link where the ASPSP will provides the challenge image for the TPP")
+    @ApiModelProperty(value = "A link where the ASPSP will provides the challenge image for the TPP", example = "https://www.testbank.com/authentication/image.jpg")
     private final String imageLink;
 
-    @ApiModelProperty(value = "The maximal length for the OTP to be typed in by the PSU")
+    @ApiModelProperty(value = "The maximal length for the OTP to be typed in by the PSU", example = "6")
     private final int otpMaxLength;
 
-    @ApiModelProperty(value = "The format type of the OTP to be typed in. The admitted values are 'characters' or 'integer'.")
+    @ApiModelProperty(value = "The format type of the OTP to be typed in. The admitted values are 'characters' or 'integer'.", example = "integer")
     private final OtpFormat otpFormat;
 
-    @ApiModelProperty(value = "Additional explanation for the PSU to explain e.g. fallback mechanism for the chosen SCA method. The TPP is obliged to show this to the PSU.")
+    @ApiModelProperty(value = "Additional explanation for the PSU to explain e.g. fallback mechanism for the chosen SCA method. The TPP is obliged to show this to the PSU.", example = "Additional information")
     private final String additionalInformation;
 }
