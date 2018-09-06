@@ -72,9 +72,9 @@ public interface PaymentSpi {
     /**
      * Returns a single payment by its ASPSP identifier
      *
-     * @param paymentType    Type of payment
-     * @param paymentProduct The addressed payment product
-     * @param paymentId      ASPSP identifier of a payment
+     * @param paymentType      Type of payment
+     * @param paymentProduct   The addressed payment product
+     * @param paymentId        ASPSP identifier of a payment
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return single payment
@@ -84,9 +84,9 @@ public interface PaymentSpi {
     /**
      * Returns a periodic payment by its ASPSP identifier
      *
-     * @param paymentType    Type of payment
-     * @param paymentProduct The addressed payment product
-     * @param paymentId      ASPSP identifier of a payment
+     * @param paymentType      Type of payment
+     * @param paymentProduct   The addressed payment product
+     * @param paymentId        ASPSP identifier of a payment
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return periodic payment
@@ -96,9 +96,9 @@ public interface PaymentSpi {
     /**
      * Returns a bulk payment by its ASPSP identifier
      *
-     * @param paymentType    Type of payment
-     * @param paymentProduct The addressed payment product
-     * @param paymentId      ASPSP identifier of a payment
+     * @param paymentType      Type of payment
+     * @param paymentProduct   The addressed payment product
+     * @param paymentId        ASPSP identifier of a payment
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return bulk payment
@@ -106,6 +106,7 @@ public interface PaymentSpi {
     SpiResponse<List<SpiSinglePayment>> getBulkPaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId, AspspConsentData aspspConsentData);
 
     /**
+     * Returna a list of SCA methods for PSU by its login
      *
      * @param name PSU login
      * @return a list of SCA methods applicable for specified PSU
