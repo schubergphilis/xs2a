@@ -14,16 +14,12 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.domain.address;
+package de.adorsys.aspsp.xs2a.consent.api.ais;
 
 import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
 
-@Data
-@ApiModel(description = "Country code", value = "49")
-public class CountryCode {
-
-    @ApiModelProperty(value = "Country code", required = true, example = "49")
-    private String code;
+@ApiModel(description = "AccountAccess type", value = "AccountAccessType")
+public enum AccountAccessType {
+    ALL_ACCOUNTS,
+    ALL_ACCOUNTS_WITH_BALANCES;
 }

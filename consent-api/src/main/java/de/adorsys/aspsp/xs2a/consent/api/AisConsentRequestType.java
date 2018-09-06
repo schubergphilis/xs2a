@@ -14,8 +14,14 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.domain.code;
+package de.adorsys.aspsp.xs2a.consent.api;
 
-public enum FrequencyCode {
-    DAILY, WEEKLY, EVERYTWOWEEKS, MONTHLY, EVERYTWOMONTHS, QUARTERLY, SEMIANNUAL, ANNUAL
+import io.swagger.annotations.ApiModel;
+
+@ApiModel(description = "Type of the ais consent request", value = "AisConsentRequestType")
+public enum AisConsentRequestType {
+    GLOBAL,
+    ALL_AVAILABLE_ACCOUNTS,
+    BANK_OFFERED,
+    DEDICATED_ACCOUNTS
 }
