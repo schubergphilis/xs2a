@@ -23,6 +23,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentType;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPeriodicPayment;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
+import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 
 import java.util.List;
 
@@ -103,4 +104,11 @@ public interface PaymentSpi {
      * @return bulk payment
      */
     SpiResponse<List<SpiSinglePayment>> getBulkPaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId, AspspConsentData aspspConsentData);
+
+    /**
+     *
+     * @param name PSU login
+     * @return a list of SCA methods applicable for specified PSU
+     */
+    SpiResponse<List<SpiScaMethod>> getScaMethodsByName(String name);
 }

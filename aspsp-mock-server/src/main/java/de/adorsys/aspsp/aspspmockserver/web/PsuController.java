@@ -18,6 +18,7 @@ package de.adorsys.aspsp.aspspmockserver.web;
 
 import de.adorsys.aspsp.aspspmockserver.service.PsuService;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Psu;
+import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -98,5 +99,24 @@ public class PsuController {
         return psuService.deletePsuById(psuId)
                    ? ResponseEntity.noContent().build()
                    : ResponseEntity.notFound().build();
+    }
+
+    @ApiOperation(value = "Returns a list of SCA methods for PSU by its login", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = List.class),
+        @ApiResponse(code = 204, message = "Not Content")})
+    @GetMapping(path = "/sca-methods/{name}")
+    public ResponseEntity<List<SpiScaMethod>> readScaMethods(@PathVariable("name") String name) {
+        return Optional.ofNullable(psuService.getScaMethods(name))
+                   .map(ResponseEntity::ok)
+                   .orElse(ResponseEntity.noContent().build());
+    }
+
+    @ApiOperation(value = "Updates list of SCA methods for PSU specified by its login", authorizations = {@Authorization(value = "oauth2", scopes = {@AuthorizationScope(scope = "read", description = "Access read API")})})
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "OK", response = List.class)})
+    @PutMapping(path = "/sca-methods/{name}")
+    public void updateScaMethods(@RequestBody List<SpiScaMethod> scaMethods, @PathVariable("name") String name) {
+        psuService.updateScaMethods(name, scaMethods);
     }
 }
