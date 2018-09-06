@@ -64,7 +64,7 @@ public class SpiAccountDetails {
     private String msisdn;
     private Currency currency;
     private String name;
-    private String accountType;
+    private String product;
     private SpiAccountType cashSpiAccountType;
 
     /**

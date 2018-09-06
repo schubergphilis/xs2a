@@ -43,7 +43,7 @@ public class AccountMapper {
                            ad.getMsisdn(),
                            ad.getCurrency(),
                            ad.getName(),
-                           ad.getAccountType(),
+                           ad.getProduct(),
                            mapToAccountType(ad.getCashSpiAccountType()),
                            ad.getBic(),
                            null,
