@@ -31,6 +31,7 @@ import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ public class PaymentService {
     private final PaymentMapper paymentMapper;
     private final ScaPaymentService scaPaymentService;
     private final ReadPaymentFactory readPaymentFactory;
+    private ApplicationContext applicationContext;
 
     /**
      * Retrieves payment status from ASPSP
@@ -142,12 +144,13 @@ public class PaymentService {
 
     public <T, R> ResponseObject<R> createPayment(T payment, PaymentType paymentType, PaymentProduct paymentProduct, String tppSignatureCertificate) {
         ResponseObject<R> response;
+        PaymentService selfPaymentService = applicationContext.getBean(PaymentService.class);
         if (paymentType == PaymentType.SINGLE) {
-            response = (ResponseObject<R>) createPaymentInitiation((SinglePayment) payment, tppSignatureCertificate, paymentProduct.getCode());
+            response = (ResponseObject<R>) selfPaymentService.createPaymentInitiation((SinglePayment) payment, tppSignatureCertificate, paymentProduct.getCode());
         } else if (paymentType == PaymentType.PERIODIC) {
-            response = (ResponseObject<R>) initiatePeriodicPayment((PeriodicPayment) payment, tppSignatureCertificate, paymentProduct.getCode());
+            response = (ResponseObject<R>) selfPaymentService.initiatePeriodicPayment((PeriodicPayment) payment, tppSignatureCertificate, paymentProduct.getCode());
         } else {
-            response = (ResponseObject<R>) createBulkPayments((List<SinglePayment>) payment, tppSignatureCertificate, paymentProduct.getCode());
+            response = (ResponseObject<R>) selfPaymentService.createBulkPayments((List<SinglePayment>) payment, tppSignatureCertificate, paymentProduct.getCode());
         }
         return response;
     }
