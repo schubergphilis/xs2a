@@ -60,12 +60,12 @@ public enum CashAccountType {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
-
     @JsonIgnore
     public static Optional<CashAccountType> getByValue(String name) {
         return Optional.ofNullable(container.get(name));
+    }
+
+    public String getValue() {
+        return value;
     }
 }
