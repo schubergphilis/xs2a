@@ -18,7 +18,6 @@ package de.adorsys.aspsp.xs2a.service;
 
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
@@ -169,7 +168,7 @@ public class PaymentService {
         if (CollectionUtils.isNotEmpty(validPayments)) {
             List<PaymentInitialisationResponse> paymentResponses = scaPaymentService.createBulkPayment(validPayments, paymentMapper.mapToTppInfo(tppSignatureCertificate), paymentProduct);
             if (paymentResponses.stream()
-                    .anyMatch(pr -> pr.getTransactionStatus() != TransactionStatus.RJCT)) {
+                    .anyMatch(pr -> pr.getTransactionStatus() != Xs2aTransactionStatus.RJCT)) {
                 paymentResponses.addAll(invalidPayments);
                 return ResponseObject.<List<PaymentInitialisationResponse>>builder()
                            .body(paymentResponses)

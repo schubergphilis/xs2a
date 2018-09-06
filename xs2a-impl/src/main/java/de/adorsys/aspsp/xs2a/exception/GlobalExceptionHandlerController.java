@@ -55,8 +55,8 @@ public class GlobalExceptionHandlerController {
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
-    public ResponseEntity unrecognizedPropertyJsonParseException(IllegalArgumentException ex, HandlerMethod handlerMethod) {
-        log.warn("Unrecognized property in JSON request exception handled in service: {}, message: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
+    public ResponseEntity illegalArgumentException(IllegalArgumentException ex, HandlerMethod handlerMethod) {
+        log.warn("Illegal argument exception handled in: {}, message: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
         return new ResponseEntity<>(getMessageError(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
     }
 

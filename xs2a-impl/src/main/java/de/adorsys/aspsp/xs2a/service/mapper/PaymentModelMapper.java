@@ -20,11 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.code.BICFI;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aPurposeCode;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
-import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.message.MessageService;
 import de.adorsys.aspsp.xs2a.service.validator.ValueValidatorService;
 import de.adorsys.psd2.model.*;
@@ -48,7 +46,6 @@ import static de.adorsys.aspsp.xs2a.service.mapper.AmountModelMapper.mapToAmount
 public class PaymentModelMapper {
     private final ObjectMapper mapper;
     private final ValueValidatorService validationService;
-    private final AccountReferenceValidationService referenceValidationService;
     private final MessageService messageService;
 
     // Mappers into xs2a domain classes
@@ -77,7 +74,7 @@ public class PaymentModelMapper {
         payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         payment.setInstructedAmount(mapToXs2aAmount(paymentRequest.getInstructedAmount()));
         payment.setCreditorAccount(mapToXs2aAccountReference(paymentRequest.getCreditorAccount()));
-        payment.setCreditorAgent(mapToXs2aBICFI(paymentRequest.getCreditorAgent()));
+        payment.setCreditorAgent(paymentRequest.getCreditorAgent());
         payment.setCreditorName(paymentRequest.getCreditorName());
         payment.setCreditorAddress(mapToXs2aAddress(paymentRequest.getCreditorAddress()));
         payment.setUltimateCreditor(paymentRequest.getCreditorName());  //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
@@ -85,7 +82,7 @@ public class PaymentModelMapper {
         payment.setRemittanceInformationUnstructured(paymentRequest.getRemittanceInformationUnstructured());
         payment.setRemittanceInformationStructured(new Remittance()); //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         payment.setRequestedExecutionDate(LocalDate.now()); //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-        payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1)); //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/2
+        payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1)); //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         return payment;
     }
 
@@ -101,7 +98,7 @@ public class PaymentModelMapper {
         payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         payment.setInstructedAmount(mapToXs2aAmount(paymentRequest.getInstructedAmount()));
         payment.setCreditorAccount(mapToXs2aAccountReference(paymentRequest.getCreditorAccount()));
-        payment.setCreditorAgent(mapToXs2aBICFI(paymentRequest.getCreditorAgent()));
+        payment.setCreditorAgent(paymentRequest.getCreditorAgent());
         payment.setCreditorName(paymentRequest.getCreditorName());
         payment.setCreditorAddress(mapToXs2aAddress(paymentRequest.getCreditorAddress()));
         payment.setUltimateCreditor(paymentRequest.getCreditorName());  //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
@@ -133,7 +130,7 @@ public class PaymentModelMapper {
                        payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
                        payment.setInstructedAmount(mapToXs2aAmount(p.getInstructedAmount()));
                        payment.setCreditorAccount(mapToXs2aAccountReference(p.getCreditorAccount()));
-                       payment.setCreditorAgent(mapToXs2aBICFI(p.getCreditorAgent()));
+                       payment.setCreditorAgent(p.getCreditorAgent());
                        payment.setCreditorName(p.getCreditorName());
                        payment.setCreditorAddress(mapToXs2aAddress(p.getCreditorAddress()));
                        payment.setUltimateCreditor(null);
@@ -146,12 +143,6 @@ public class PaymentModelMapper {
 
     }
 
-    private BICFI mapToXs2aBICFI(String creditorAgent) {
-        BICFI bicfi = new BICFI();
-        bicfi.setCode(creditorAgent);
-        return bicfi;
-    }
-
     //Mappers into PSD2 generated API model classes
     public <T, R> T mapToGetPaymentResponse12(R payment, PaymentType type, PaymentProduct product) {
         if (type == SINGLE) {
@@ -161,7 +152,7 @@ public class PaymentModelMapper {
             paymentResponse.setDebtorAccount(mapToAccountReference12(xs2aPayment.getDebtorAccount()));
             paymentResponse.setInstructedAmount(mapToAmount(xs2aPayment.getInstructedAmount()));
             paymentResponse.setCreditorAccount(mapToAccountReference12(xs2aPayment.getCreditorAccount()));
-            paymentResponse.setCreditorAgent(xs2aPayment.getCreditorAgent().getCode());
+            paymentResponse.setCreditorAgent(xs2aPayment.getCreditorAgent());
             paymentResponse.setCreditorName(xs2aPayment.getCreditorName());
             paymentResponse.setCreditorAddress(mapToAddress12(xs2aPayment.getCreditorAddress()));
             paymentResponse.setRemittanceInformationUnstructured(xs2aPayment.getRemittanceInformationUnstructured());
@@ -175,7 +166,7 @@ public class PaymentModelMapper {
             paymentResponse.setDebtorAccount(mapToAccountReference12(xs2aPayment.getDebtorAccount()));
             paymentResponse.setInstructedAmount(mapToAmount(xs2aPayment.getInstructedAmount()));
             paymentResponse.setCreditorAccount(mapToAccountReference12(xs2aPayment.getCreditorAccount()));
-            paymentResponse.setCreditorAgent(xs2aPayment.getCreditorAgent().getCode());
+            paymentResponse.setCreditorAgent(xs2aPayment.getCreditorAgent());
             paymentResponse.setCreditorName(xs2aPayment.getCreditorName());
             paymentResponse.setCreditorAddress(mapToAddress12(xs2aPayment.getCreditorAddress()));
             paymentResponse.setRemittanceInformationUnstructured(xs2aPayment.getRemittanceInformationUnstructured());
@@ -238,7 +229,7 @@ public class PaymentModelMapper {
         bulkPart.setDebtorAccount(mapToAccountReference12(payment.getDebtorAccount()));
         bulkPart.setInstructedAmount(mapToAmount(payment.getInstructedAmount()));
         bulkPart.setCreditorAccount(mapToAccountReference12(payment.getCreditorAccount()));
-        bulkPart.setCreditorAgent(payment.getCreditorAgent().getCode());
+        bulkPart.setCreditorAgent(payment.getCreditorAgent());
         bulkPart.setCreditorName(payment.getCreditorName());
         bulkPart.setCreditorAddress(mapToAddress12(payment.getCreditorAddress()));
         bulkPart.setRemittanceInformationUnstructured(payment.getRemittanceInformationUnstructured());
@@ -246,16 +237,16 @@ public class PaymentModelMapper {
     }
 
     private TppMessages mapToTppMessages(MessageErrorCode... tppMessages) {
-       return Optional.ofNullable(tppMessages)
-            .map(m->Arrays.stream(m)
-                     .map(this::mapToGenericError)
-                     .collect(Collectors.toList()))
-            .map(c-> {
-                TppMessages messages = new TppMessages();
-                messages.addAll(c);
-                return messages;
-            })
-            .orElse(null);
+        return Optional.ofNullable(tppMessages)
+                   .map(m -> Arrays.stream(m)
+                                 .map(this::mapToGenericError)
+                                 .collect(Collectors.toList()))
+                   .map(c -> {
+                       TppMessages messages = new TppMessages();
+                       messages.addAll(c);
+                       return messages;
+                   })
+                   .orElse(null);
     }
 
     private TppMessageGeneric mapToGenericError(MessageErrorCode code) {
