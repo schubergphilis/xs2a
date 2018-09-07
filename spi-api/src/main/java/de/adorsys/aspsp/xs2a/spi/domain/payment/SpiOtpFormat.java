@@ -16,20 +16,17 @@
 
 package de.adorsys.aspsp.xs2a.spi.domain.payment;
 
-import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
-import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
-import lombok.Data;
+public enum SpiOtpFormat {
+    CHARACTERS("characters"),
+    INTEGER("integer");
 
-@Data
-public class SpiPaymentInitialisationResponse {
-    private SpiTransactionStatus transactionStatus;
-    private String paymentId;
-    private SpiAmount spiTransactionFees;
-    private boolean spiTransactionFeeIndicator;
-    private String[] scaMethods;
-    private String chosenScaMethod;
-    private SpiChallengeData challengeData;
-    private String psuMessage;
-    private String[] tppMessages;
-    private boolean tppRedirectPreferred;
+    private String value;
+
+    SpiOtpFormat(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }
