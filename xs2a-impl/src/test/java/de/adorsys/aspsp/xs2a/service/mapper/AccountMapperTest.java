@@ -68,7 +68,7 @@ public class AccountMapperTest {
         assertThat(actualAccountDetails.getBban()).isEqualTo("DE2310010010123452343");
         assertThat(actualAccountDetails.getProduct()).isEqualTo("Girokonto");
         assertThat(actualAccountDetails.getName()).isEqualTo("Main Account");
-        assertThat(actualAccountDetails.getCashAccountType()).isEqualTo(CashAccountType.CURRENT_ACCOUNT);
+        assertThat(actualAccountDetails.getCashAccountType()).isEqualTo(CashAccountType.CACC);
         assertThat(actualAccountDetails.getBic()).isEqualTo("EDEKDEHHXXX");
     }
 
@@ -104,7 +104,7 @@ public class AccountMapperTest {
         assertThat(actualAccountReport.getBooked()[0].getUltimateCreditor()).isEqualTo(expectedBooked[0].getUltimateCreditor());
         assertThat(actualAccountReport.getBooked()[0].getValueDate()).isEqualTo(expectedBooked[0].getValueDate());
         assertThat(actualAccountReport.getBooked()[0].getAmount().getAmount()).isEqualTo(expectedBooked[0].getSpiAmount()
-                                                                                              .getContent().toString());
+                                                                                              .getAmount().toString());
         assertThat(actualAccountReport.getBooked()[0].getAmount().getCurrency()).isEqualTo(expectedBooked[0].getSpiAmount()
                                                                                                .getCurrency());
         assertThat(actualAccountReport.getBooked()[0].getBankTransactionCodeCode()
