@@ -194,8 +194,13 @@ public class AccountMockServerData {
             name,
             accountType,
             null,
+            null,
             bic,
+            null,
+            null,
+            null,
             balance
+
         );
     }
 
@@ -226,7 +231,11 @@ public class AccountMockServerData {
             name,
             accountType,
             null,
+            null,
             bic,
+            null,
+            null,
+            null,
             balance
         );
     }

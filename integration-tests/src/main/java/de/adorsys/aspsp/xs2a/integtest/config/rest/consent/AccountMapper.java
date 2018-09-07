@@ -17,9 +17,7 @@
 package de.adorsys.aspsp.xs2a.integtest.config.rest.consent;
 
 import de.adorsys.aspsp.xs2a.domain.*;
-import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReport;
+import de.adorsys.aspsp.xs2a.domain.account.*;
 import de.adorsys.aspsp.xs2a.domain.code.BankTransactionCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aPurposeCode;
 import de.adorsys.aspsp.xs2a.spi.domain.account.*;
@@ -45,9 +43,11 @@ public class AccountMapper {
                            ad.getName(),
                            ad.getProduct(),
                            mapToAccountType(ad.getCashSpiAccountType()),
+                           mapToAccountStatus(ad.getSpiAccountStatus()),
                            ad.getBic(),
-                           null,
-                           null,
+                           ad.getLinkedAccounts(),
+                           mapToUsageEnum(ad.getUsageType()),
+                           ad.getDetails(),
                            mapToBalancesList(ad.getBalances())
                        )
                    )
@@ -58,7 +58,7 @@ public class AccountMapper {
         return Optional.ofNullable(spiAmount)
                    .map(a -> {
                        Xs2aAmount amount = new Xs2aAmount();
-                       amount.setAmount(a.getContent().toString());
+                       amount.setAmount(a.getAmount().toString());
                        amount.setCurrency(a.getCurrency());
                        return amount;
                    })
@@ -201,6 +201,18 @@ public class AccountMapper {
                        balance.setLastCommittedTransaction(spiAccountBalance.getLastCommittedTransaction());
                        return balance;
                    })
+                   .orElse(null);
+    }
+
+    private AccountStatus mapToAccountStatus(SpiAccountStatus spiAccountStatus) {
+        return Optional.ofNullable(spiAccountStatus)
+                   .map(status -> AccountStatus.valueOf(status.name()))
+                   .orElse(null);
+    }
+
+    private UsageEnum mapToUsageEnum(SpiUsageType spiUsageType) {
+        return Optional.ofNullable(spiUsageType)
+                   .map(usage -> UsageEnum.valueOf(usage.name()))
                    .orElse(null);
     }
 }
