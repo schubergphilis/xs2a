@@ -79,7 +79,7 @@ public class Links {
     @ApiModelProperty(value = "The link to the authorisation end-point, where the authorisation sub-resource has to be generated while uploading the PSU authentication data.")
     private String startAuthorisationWithPsuAuthentication;
     @ApiModelProperty(value = "The link to the authorisation end-point, where the authorisation sub-resource has to be generated while selecting the authentication method. This link is contained under exactly the same conditions as the data element \"scaMethods\"")
-    private String startAuthorisationWithAuthenticationMethodSelection;
+    private String startAuthorisationWithAuthenticationMethodSelection;//NOPMD naming according to spec!
     @ApiModelProperty(value = "The link to the authorisation end-point, where the authorisation sub-resource has to be generated while authorising the transaction e.g. by uploading an OTP received by SMS.")
     private String startAuthorisationWithTransactionAuthorisation;
     @ApiModelProperty(value = "The link to retrieve the scaStatus of the corresponding authorisation sub-resource. This link is only contained, if an authorisation sub-resource has been already created.")
