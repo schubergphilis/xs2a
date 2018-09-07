@@ -125,10 +125,10 @@ public class AccountMockServerData {
 
     private SpiTransaction getTransaction(String transactionId, Psu creditor, Psu debtor, BigDecimal amount, Currency currency, LocalDate bookingDate, LocalDate valueDate, String purposeCode) {
         return new SpiTransaction(
-            transactionId, "", "", creditor.getId(), bookingDate, valueDate,
-            new SpiAmount(currency, amount), getFirstElementName(creditor), getRef(creditor, currency), getFirstElementName(creditor),
+            transactionId, "", "", "", "", creditor.getId(), bookingDate, valueDate,
+            new SpiAmount(currency, amount), Collections.emptyList(), getFirstElementName(creditor), getRef(creditor, currency), getFirstElementName(creditor),
             getFirstElementName(debtor), getRef(debtor, currency), getFirstElementName(debtor), "",
-            "", purposeCode, "");
+            "", purposeCode, "", "");
     }
 
     private String getFirstElementName(Psu creditor) {
