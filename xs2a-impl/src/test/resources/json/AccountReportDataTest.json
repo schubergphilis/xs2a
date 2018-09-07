@@ -8,7 +8,7 @@
   "spiAmount":
   {
     "currency": "EUR",
-    "content": "1000.0"
+    "amount": "1000.0"
   },
   "creditorName": "John Miles",
   "creditorAccount": {},

@@ -92,7 +92,7 @@ public class SpiPisConsentMapper {
                     pisPayment.setUltimateDebtor(pmt.getUltimateDebtor());
 
                     pisPayment.setCurrency(pmt.getInstructedAmount().getCurrency());
-                    pisPayment.setAmount(pmt.getInstructedAmount().getContent());
+                    pisPayment.setAmount(pmt.getInstructedAmount().getAmount());
                     pisPayment.setCreditorAccount(mapToPisAccountReference(pmt.getCreditorAccount()));
                     pisPayment.setCreditorAgent(Optional.ofNullable(pmt.getCreditorAgent())
                                                     .orElse(""));
@@ -120,7 +120,7 @@ public class SpiPisConsentMapper {
                     pisPayment.setDebtorAccount(mapToPisAccountReference(pmt.getDebtorAccount()));
                     pisPayment.setUltimateDebtor(pmt.getUltimateDebtor());
                     pisPayment.setCurrency(pmt.getInstructedAmount().getCurrency());
-                    pisPayment.setAmount(pmt.getInstructedAmount().getContent());
+                    pisPayment.setAmount(pmt.getInstructedAmount().getAmount());
                     pisPayment.setCreditorAccount(mapToPisAccountReference(pmt.getCreditorAccount()));
                     pisPayment.setCreditorAgent(Optional.ofNullable(pmt.getCreditorAgent())
                                                     .orElse(""));

@@ -61,7 +61,7 @@ public class PaymentService {
      * @return Optional of saved single payment
      */
     public Optional<SpiSinglePayment> addPayment(@NotNull SpiSinglePayment payment) {
-        if (areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getContent())) {
+        if (areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getAmount())) {
             AspspPayment saved = paymentRepository.save(paymentMapper.mapToAspspPayment(payment, SINGLE));
             return Optional.ofNullable(paymentMapper.mapToSpiSinglePayment(saved));
         }
@@ -110,7 +110,7 @@ public class PaymentService {
      */
     public List<SpiSinglePayment> addBulkPayments(List<SpiSinglePayment> payments) {
         List<AspspPayment> aspspPayments = payments.stream()
-                                               .filter(payment -> areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getContent()))
+                                               .filter(payment -> areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getAmount()))
                                                .map(payment -> paymentMapper.mapToAspspPayment(payment, BULK))
                                                .collect(Collectors.toList());
         List<AspspPayment> saved = paymentRepository.save(aspspPayments);
@@ -141,7 +141,7 @@ public class PaymentService {
         Optional<SpiAccountBalance> balance = Optional.ofNullable(reference)
                                                   .flatMap(this::getInterimAvailableBalanceByReference);
         return balance
-                   .map(b -> b.getSpiBalanceAmount().getContent().compareTo(amount) >= 0)
+                   .map(b -> b.getSpiBalanceAmount().getAmount().compareTo(amount) >= 0)
                    .orElse(false);
     }
 
@@ -172,7 +172,7 @@ public class PaymentService {
 
     private BigDecimal getContentFromAmount(SpiAmount amount) {
         return Optional.ofNullable(amount)
-                   .map(SpiAmount::getContent)
+                   .map(SpiAmount::getAmount)
                    .orElse(BigDecimal.ZERO);
     }
 
