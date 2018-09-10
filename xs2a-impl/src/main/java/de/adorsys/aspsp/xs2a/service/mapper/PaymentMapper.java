@@ -17,10 +17,7 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.aspsp.xs2a.domain.Links;
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
-import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
-import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
+import de.adorsys.aspsp.xs2a.domain.*;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
@@ -134,6 +131,8 @@ public class PaymentMapper {
                        initialisationResponse.setPsuMessage(pir.getPsuMessage());
                        initialisationResponse.setTppRedirectPreferred(pir.isTppRedirectPreferred());
                        initialisationResponse.setScaMethods(mapToAuthenticationObjects(pir.getScaMethods()));
+                       initialisationResponse.setChosenScaMethod(mapToAuthenticationObject(pir.getChosenScaMethod()));
+                       initialisationResponse.setChallengeData(mapToChallengeData(pir.getChallengeData()));
                        initialisationResponse.setTppMessages(mapToMessageErrorCodes(pir.getTppMessages()));
                        initialisationResponse.setLinks(new Links());
                        return initialisationResponse;
@@ -219,6 +218,10 @@ public class PaymentMapper {
         return new AuthenticationObject[]{};//TODO Fill in th Linx
     }
 
+    private AuthenticationObject mapToAuthenticationObject(String authObject) {
+        return new AuthenticationObject();
+    }
+
     private MessageErrorCode[] mapToMessageErrorCodes(String[] messageCodes) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115
         return Optional.ofNullable(messageCodes)
                    .map(codes -> Arrays.stream(codes)
@@ -285,12 +288,23 @@ public class PaymentMapper {
                        return address;
                    })
                    .orElseGet(Xs2aAddress::new);
-
     }
 
     private SpiAmount mapToSpiAmount(Xs2aAmount amount) {
         return Optional.ofNullable(amount)
                    .map(am -> new SpiAmount(am.getCurrency(), new BigDecimal(am.getAmount())))
+                   .orElse(null);
+    }
+
+    private Xs2aChallengeData mapToChallengeData(SpiChallengeData challengeData) {
+        return Optional.ofNullable(challengeData)
+                   .map(c -> new Xs2aChallengeData(
+                       c.getImage(),
+                       c.getData(),
+                       c.getImageLink(),
+                       c.getOtpMaxLength(),
+                       OtpFormat.valueOf(c.getSpiOtpFormat().getValue()),
+                       c.getAdditionalInformation()))
                    .orElse(null);
     }
 

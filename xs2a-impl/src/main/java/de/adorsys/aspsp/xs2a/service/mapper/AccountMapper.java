@@ -125,23 +125,27 @@ public class AccountMapper {
         return Optional.ofNullable(spiTransaction)
                    .map(t -> {
                        Transactions transactions = new Transactions();
-                       transactions.setAmount(mapToAmount(t.getSpiAmount()));
-                       transactions.setBankTransactionCodeCode(new BankTransactionCode(t.getBankTransactionCodeCode()));
-                       transactions.setBookingDate(t.getBookingDate());
-                       transactions.setValueDate(t.getValueDate());
-                       transactions.setCreditorAccount(mapToAccountReference(t.getCreditorAccount()));
-                       transactions.setDebtorAccount(mapToAccountReference(t.getDebtorAccount()));
-                       transactions.setCreditorId(t.getCreditorId());
-                       transactions.setCreditorName(t.getCreditorName());
-                       transactions.setUltimateCreditor(t.getUltimateCreditor());
-                       transactions.setDebtorName(t.getDebtorName());
-                       transactions.setUltimateDebtor(t.getUltimateDebtor());
+                       transactions.setTransactionId(t.getTransactionId());
+                       transactions.setEntryReference(t.getEntryReference());
                        transactions.setEndToEndId(t.getEndToEndId());
                        transactions.setMandateId(t.getMandateId());
-                       transactions.setPurposeCode(new Xs2aPurposeCode(t.getPurposeCode()));
-                       transactions.setTransactionId(t.getTransactionId());
-                       transactions.setRemittanceInformationStructured(t.getRemittanceInformationStructured());
+                       transactions.setCheckId(t.getCheckId());
+                       transactions.setCreditorId(t.getCreditorId());
+                       transactions.setBookingDate(t.getBookingDate());
+                       transactions.setValueDate(t.getValueDate());
+                       transactions.setAmount(mapToAmount(t.getSpiAmount()));
+                       transactions.setExchangeRate(mapToExchangeRateList(t.getExchangeRate()));
+                       transactions.setCreditorName(t.getCreditorName());
+                       transactions.setCreditorAccount(mapToAccountReference(t.getCreditorAccount()));
+                       transactions.setUltimateCreditor(t.getUltimateCreditor());
+                       transactions.setDebtorName(t.getDebtorName());
+                       transactions.setDebtorAccount(mapToAccountReference(t.getDebtorAccount()));
+                       transactions.setUltimateDebtor(t.getUltimateDebtor());
                        transactions.setRemittanceInformationUnstructured(t.getRemittanceInformationUnstructured());
+                       transactions.setRemittanceInformationStructured(t.getRemittanceInformationStructured());
+                       transactions.setPurposeCode(new Xs2aPurposeCode(t.getPurposeCode()));
+                       transactions.setBankTransactionCodeCode(new BankTransactionCode(t.getBankTransactionCodeCode()));
+                       transactions.setProprietaryBankTransactionCode(t.getProprietaryBankTransactionCode());
                        return transactions;
                    })
                    .orElse(null);
@@ -185,11 +189,35 @@ public class AccountMapper {
         return Optional.ofNullable(details)
                    .map(det -> getAccountReference(det.getIban(), det.getBban(), det.getPan(), det.getMaskedPan(), det.getMsisdn(), det.getCurrency()))
                    .orElse(null);
-
     }
 
-    private AccountReference getAccountReference(String iban, String bban, String pan, String maskedPan, String msisdn, Currency currency) {
-        AccountReference reference = new AccountReference();
+    private List<Xs2aExchangeRate> mapToExchangeRateList(List<SpiExchangeRate> spiExchangeRates) {
+        if (CollectionUtils.isEmpty(spiExchangeRates)) {
+            return new ArrayList<>();
+        }
+
+        return spiExchangeRates.stream()
+                   .map(this::mapToExchangeRate)
+                   .collect(Collectors.toList());
+    }
+
+    private Xs2aExchangeRate mapToExchangeRate(SpiExchangeRate spiExchangeRate) {
+        return Optional.ofNullable(spiExchangeRate)
+                   .map(e -> {
+                       Xs2aExchangeRate exchangeRate = new Xs2aExchangeRate();
+                       exchangeRate.setCurrencyFrom(e.getCurrencyFrom());
+                       exchangeRate.setRateFrom(e.getRateFrom());
+                       exchangeRate.setCurrencyTo(e.getCurrencyTo());
+                       exchangeRate.setRateTo(e.getRateTo());
+                       exchangeRate.setRateDate(e.getRateDate());
+                       exchangeRate.setRateContract(e.getRateContract());
+                       return exchangeRate;
+                   })
+                   .orElse(null);
+    }
+
+    private Xs2aAccountReference getAccountReference(String iban, String bban, String pan, String maskedPan, String msisdn, Currency currency) {
+        Xs2aAccountReference reference = new Xs2aAccountReference();
         reference.setIban(iban);
         reference.setBban(bban);
         reference.setPan(pan);

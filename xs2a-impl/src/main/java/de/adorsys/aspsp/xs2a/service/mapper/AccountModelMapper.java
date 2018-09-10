@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.Transactions;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
 import de.adorsys.aspsp.xs2a.domain.Xs2aBalance;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountDetails;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReport;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
@@ -58,7 +58,13 @@ public final class AccountModelMapper {
             .currency(accountDetails.getCurrency().getCurrencyCode())
             .cashAccountType(Optional.ofNullable(accountDetails.getCashAccountType())
                                  .map(Enum::name)
-                                 .orElse(null));
+                                 .orElse(null))
+            .usage(Optional.ofNullable(accountDetails.getUsageEnum())
+                       .map(usage -> AccountDetails.UsageEnum.fromValue(usage.getValue()))
+                       .orElse(null))
+            .status(Optional.ofNullable(accountDetails.getAccountStatus())
+                        .map(status -> AccountStatus.fromValue(status.getValue()))
+                        .orElse(null));
         return target
                    .balances(mapToBalanceList(accountDetails.getBalances()))
                    ._links(OBJECT_MAPPER.convertValue(accountDetails.getLinks(), Map.class));
@@ -145,7 +151,7 @@ public final class AccountModelMapper {
         return target;
     }
 
-    public static <T> T mapToAccountReference12(AccountReference reference) {
+    public static <T> T mapToAccountReference12(Xs2aAccountReference reference) {
         T accountReference = null;
 
         if (StringUtils.isNotBlank(reference.getIban())) {
@@ -205,7 +211,7 @@ public final class AccountModelMapper {
 
     }
 
-    private static Object createAccountObject(AccountReference accountReference) {
+    private static Object createAccountObject(Xs2aAccountReference accountReference) {
         return Optional.ofNullable(accountReference)
                    .map(account -> {
                        if (account.getIban() != null) {
@@ -235,7 +241,7 @@ public final class AccountModelMapper {
                    .orElse(null);
     }
 
-    private static String getCurrencyFromAccountReference(AccountReference accountReference) {
+    private static String getCurrencyFromAccountReference(Xs2aAccountReference accountReference) {
         return Optional.ofNullable(accountReference.getCurrency())
                    .map(Currency::getCurrencyCode)
                    .orElse(null);

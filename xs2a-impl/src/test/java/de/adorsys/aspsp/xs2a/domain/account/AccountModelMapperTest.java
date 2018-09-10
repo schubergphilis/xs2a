@@ -65,9 +65,15 @@ public class AccountModelMapperTest {
         List<Xs2aAccountDetails> accountDetailsList = new ArrayList<>();
         Xs2aBalance inputBalance = createBalance();
 
-        accountDetailsList.add(new Xs2aAccountDetails("1", "2", "3", "4", "5", "6", Currency.getInstance("EUR"), "8", "9", CashAccountType.CACC, null, "11", null, null, null, new ArrayList<>()));
-        accountDetailsList.add(new Xs2aAccountDetails("x1", "x2", "x3", "x4", "x5", "x6", Currency.getInstance("EUR"), "x8", "x9", CashAccountType.CACC, null, "x11", null, null, null, Arrays.asList(inputBalance)));
-        Xs2aAccountDetails accountDetails = new Xs2aAccountDetails("y1", "y2", "y3", "y4", "y5", "y6", Currency.getInstance("EUR"), "y8", "y9", CashAccountType.CACC, null, null, null, null, null, new ArrayList<>());
+        accountDetailsList.add(new Xs2aAccountDetails("1", "2", "3", "4",
+            "5", "6", Currency.getInstance("EUR"), "8", "9", CashAccountType.CACC,
+            AccountStatus.ENABLED, "11", "linked", UsageEnum.PRIV, "details", new ArrayList<>()));
+        accountDetailsList.add(new Xs2aAccountDetails("x1", "x2", "x3", "x4",
+            "x5", "x6", Currency.getInstance("EUR"), "x8", "x9", CashAccountType.CACC,
+            AccountStatus.ENABLED, "x11", "linked2", UsageEnum.ORGA, "details2", Arrays.asList(inputBalance)));
+        Xs2aAccountDetails accountDetails = new Xs2aAccountDetails("y1", "y2", "y3", "y4",
+            "y5", "y6", Currency.getInstance("EUR"), "y8", "y9", CashAccountType.CACC,
+            AccountStatus.ENABLED, "y11", "linked3", UsageEnum.PRIV, "details3", new ArrayList<>());
         accountDetails.setLinks(createLinks());
         accountDetailsList.add(accountDetails);
         Map<String, List<Xs2aAccountDetails>> accountDetailsMap = Collections.singletonMap("TEST", accountDetailsList);
@@ -115,6 +121,15 @@ public class AccountModelMapperTest {
         assertEquals("http://scaOAuth.xx", links.get("scaOAuth"));
         assertEquals("http://linkToStatus.xx", links.get("status"));
         assertEquals("http://linkToSelf.xx", links.get("self"));
+
+        assertEquals("CACC", secondAccount.getCashAccountType());
+        assertEquals("details2", secondAccount.getDetails());
+        assertEquals("linked2", secondAccount.getLinkedAccounts());
+        assertEquals("x6", secondAccount.getMsisdn());
+        assertEquals("x8", secondAccount.getName());
+        assertEquals("x9", secondAccount.getProduct());
+        assertEquals(de.adorsys.psd2.model.AccountStatus.ENABLED, secondAccount.getStatus());
+        assertEquals(AccountDetails.UsageEnum.ORGA, secondAccount.getUsage());
     }
 
     @Test
@@ -135,6 +150,8 @@ public class AccountModelMapperTest {
 
         assertEquals(bankTransactionCodeCode.getCode(), transactionDetails.getBankTransactionCode());
         assertEquals(transactions.getBookingDate(), transactionDetails.getBookingDate());
+
+        assertEquals(transactions.getCheckId(), transactionDetails.getCheckId());
 
         Xs2aAccountReference expectedCreditorAccount = transactions.getCreditorAccount();
         assertNotNull(expectedCreditorAccount);
@@ -169,6 +186,12 @@ public class AccountModelMapperTest {
         assertEquals(transactions.getUltimateCreditor(), transactionDetails.getUltimateCreditor());
         assertEquals(transactions.getUltimateDebtor(), transactionDetails.getUltimateDebtor());
         assertEquals(transactions.getValueDate(), transactionDetails.getValueDate());
+
+        assertEquals(transactions.getProprietaryBankTransactionCode(),
+            transactionDetails.getProprietaryBankTransactionCode());
+        assertEquals(transactions.getMandateId(), transactionDetails.getMandateId());
+        assertEquals(transactions.getEntryReference(), transactionDetails.getEntryReference());
+        assertEquals(transactions.getEndToEndId(), transactionDetails.getEndToEndId());
     }
 
     @Test
@@ -234,13 +257,16 @@ public class AccountModelMapperTest {
         transactions.setAmount(amount);
         transactions.setBankTransactionCodeCode(new BankTransactionCode("code"));
         transactions.setBookingDate(LocalDate.now());
+        transactions.setCheckId("Check id");
         transactions.setCreditorAccount(createAccountReference());
         transactions.setCreditorId("creditorId");
         transactions.setCreditorName("Creditor Name");
         transactions.setDebtorAccount(createAccountReference());
         transactions.setDebtorName("Debtor Name");
         transactions.setEndToEndId("endToEndId");
+        transactions.setEntryReference("Entry reference");
         transactions.setMandateId("mandateId");
+        transactions.setProprietaryBankTransactionCode("Proprietary code");
         transactions.setPurposeCode(new Xs2aPurposeCode("BKDF"));
         transactions.setRemittanceInformationStructured("setRemittanceInformationStructured");
         transactions.setRemittanceInformationUnstructured("setRemittanceInformationUnstructured");
@@ -248,6 +274,10 @@ public class AccountModelMapperTest {
         transactions.setUltimateCreditor("ultimateCreditor");
         transactions.setUltimateDebtor("ultimateDebtor");
         transactions.setValueDate(LocalDate.now());
+
+        Xs2aExchangeRate exchangeRate = createExchangeRate();
+        transactions.setExchangeRate(Collections.singletonList(exchangeRate));
+
         return transactions;
     }
 
@@ -257,5 +287,16 @@ public class AccountModelMapperTest {
         links.setStatus("http://linkToStatus.xx");
         links.setSelf("http://linkToSelf.xx");
         return links;
+    }
+
+    private Xs2aExchangeRate createExchangeRate() {
+        Xs2aExchangeRate exchangeRate = new Xs2aExchangeRate();
+        exchangeRate.setCurrencyFrom(Currency.getInstance("EUR"));
+        exchangeRate.setRateFrom("Rate from");
+        exchangeRate.setCurrencyTo(Currency.getInstance("USD"));
+        exchangeRate.setRateTo("Rate to");
+        exchangeRate.setRateDate(LocalDate.of(2017, 1, 1));
+        exchangeRate.setRateContract("Rate contract");
+        return exchangeRate;
     }
 }
