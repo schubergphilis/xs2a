@@ -8,6 +8,10 @@
   "name": "Main Account",
   "product": "Girokonto",
   "cashSpiAccountType": "CACC",
+  "spiAccountStatus": "ENABLED",
   "bic": "EDEKDEHHXXX",
+  "linkedAccounts": "b78cc286-23e6-4926-9ed7-b9972d0ae01a",
+  "usageType": "PRIV",
+  "details": "Some details",
   "balances": []
 }
