@@ -223,8 +223,8 @@ public class PaymentMapper {
         return new AuthenticationObject[]{};//TODO Fill in th Linx
     }
 
-    private AuthenticationObject mapToAuthenticationObject(String authObject) {
-        return new AuthenticationObject();
+    private AuthenticationObject mapToAuthenticationObject(String authObject) {  //NOPMD
+        return new AuthenticationObject(); // TODO Actually map string to AuthenticationObject
     }
 
     private MessageErrorCode[] mapToMessageErrorCodes(String[] messageCodes) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115

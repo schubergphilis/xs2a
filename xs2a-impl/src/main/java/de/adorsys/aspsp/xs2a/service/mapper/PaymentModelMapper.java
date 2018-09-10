@@ -282,7 +282,7 @@ public class PaymentModelMapper {
                    .orElse(null);
     }
 
-    private ChosenScaMethod mapToChosenScaMethod(AuthenticationObject authenticationObject) {
+    private ChosenScaMethod mapToChosenScaMethod(AuthenticationObject authenticationObject) { //NOPMD
         return null; // TODO Properly map AuthenticationObject to ChosenScaMethod
     }
 
