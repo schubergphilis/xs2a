@@ -124,34 +124,31 @@ public class PaymentModelMapper {
         bulkPayment.setBatchBookingPreferred(paymentRequest.getBatchBookingPreferred());
         bulkPayment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
         bulkPayment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
-
-        List<SinglePayment> payments = paymentRequest.getPayments().stream()
-                                           .map(p -> {
-                                               SinglePayment payment = new SinglePayment();
-                                               payment.setDebtorAccount(
-                                                   mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
-                                               payment.setRequestedExecutionDate(
-                                                   paymentRequest.getRequestedExecutionDate());
-                                               payment.setEndToEndIdentification(p.getEndToEndIdentification());
-                                               payment.setUltimateDebtor("NOT SUPPORTED");
-                                               payment.setInstructedAmount(mapToXs2aAmount(p.getInstructedAmount()));
-                                               payment.setCreditorAccount(
-                                                   mapToXs2aAccountReference(p.getCreditorAccount()));
-                                               payment.setCreditorAgent(p.getCreditorAgent());
-                                               payment.setCreditorName(p.getCreditorName());
-                                               payment.setCreditorAddress(mapToXs2aAddress(p.getCreditorAddress()));
-                                               payment.setUltimateCreditor(null);
-                                               payment.setPurposeCode(new Xs2aPurposeCode(null));
-                                               payment.setRemittanceInformationUnstructured(
-                                                   p.getRemittanceInformationUnstructured());
-                                               payment.setRemittanceInformationStructured(new Remittance());
-                                               payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1));
-                                               return payment;
-                                           })
-                                           .collect(Collectors.toList());
-        bulkPayment.setPayments(payments);
-
+        bulkPayment.setPayments(mapBulkPaymentToSinglePayments(paymentRequest));
         return bulkPayment;
+    }
+
+    private List<SinglePayment> mapBulkPaymentToSinglePayments(BulkPaymentInitiationSctJson paymentRequest) {
+        return paymentRequest.getPayments().stream()
+                   .map(p -> {
+                       SinglePayment payment = new SinglePayment();
+                       payment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
+                       payment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
+                       payment.setEndToEndIdentification(p.getEndToEndIdentification());
+                       payment.setUltimateDebtor("NOT SUPPORTED");
+                       payment.setInstructedAmount(mapToXs2aAmount(p.getInstructedAmount()));
+                       payment.setCreditorAccount(mapToXs2aAccountReference(p.getCreditorAccount()));
+                       payment.setCreditorAgent(p.getCreditorAgent());
+                       payment.setCreditorName(p.getCreditorName());
+                       payment.setCreditorAddress(mapToXs2aAddress(p.getCreditorAddress()));
+                       payment.setUltimateCreditor(null);
+                       payment.setPurposeCode(new Xs2aPurposeCode(null));
+                       payment.setRemittanceInformationUnstructured(p.getRemittanceInformationUnstructured());
+                       payment.setRemittanceInformationStructured(new Remittance());
+                       payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1));
+                       return payment;
+                   })
+                   .collect(Collectors.toList());
     }
 
     //Mappers into PSD2 generated API model classes
@@ -219,7 +216,7 @@ public class PaymentModelMapper {
             response201.setTransactionFees(mapToAmount(specificResponse.getTransactionFees()));
             response201.setTransactionFeeIndicator(specificResponse.isTransactionFeeIndicator());
             response201.setScaMethods(mapToScaMethods(specificResponse.getScaMethods()));
-            response201.setChosenScaMethod(mapToChosenScaMethod(specificResponse.getChosenScaMethod()));
+            response201.setChosenScaMethod(null); // TODO add proper mapping
             response201.setChallengeData(mapToChallengeData(specificResponse.getChallengeData()));
             response201.setLinks(mapper.convertValue(((PaymentInitialisationResponse) response).getLinks(), Map.class)); //TODO add new mapper for Links https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/244
             response201.setPsuMessage(specificResponse.getPsuMessage());
@@ -279,10 +276,6 @@ public class PaymentModelMapper {
                                        .map(this::mapToAuthenticationObject)
                                        .collect(Collectors.toCollection(ArrayList::new)))
                    .orElse(null);
-    }
-
-    private ChosenScaMethod mapToChosenScaMethod(AuthenticationObject authenticationObject) { //NOPMD
-        return null; // TODO Properly map AuthenticationObject to ChosenScaMethod
     }
 
     private de.adorsys.psd2.model.AuthenticationObject mapToAuthenticationObject(AuthenticationObject xs2aAuthenticationObject) {

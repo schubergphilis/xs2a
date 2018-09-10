@@ -136,7 +136,7 @@ public class PaymentMapper {
                        initialisationResponse.setPsuMessage(pir.getPsuMessage());
                        initialisationResponse.setTppRedirectPreferred(pir.isTppRedirectPreferred());
                        initialisationResponse.setScaMethods(mapToAuthenticationObjects(pir.getScaMethods()));
-                       initialisationResponse.setChosenScaMethod(mapToAuthenticationObject(pir.getChosenScaMethod()));
+                       initialisationResponse.setChosenScaMethod(null); // TODO add proper mapping
                        initialisationResponse.setChallengeData(mapToChallengeData(pir.getChallengeData()));
                        initialisationResponse.setTppMessages(mapToMessageErrorCodes(pir.getTppMessages()));
                        initialisationResponse.setLinks(new Links());
@@ -221,10 +221,6 @@ public class PaymentMapper {
 
     private AuthenticationObject[] mapToAuthenticationObjects(String[] authObjects) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115
         return new AuthenticationObject[]{};//TODO Fill in th Linx
-    }
-
-    private AuthenticationObject mapToAuthenticationObject(String authObject) {  //NOPMD
-        return new AuthenticationObject(); // TODO Actually map string to AuthenticationObject
     }
 
     private MessageErrorCode[] mapToMessageErrorCodes(String[] messageCodes) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115

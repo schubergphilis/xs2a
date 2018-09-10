@@ -179,7 +179,7 @@ public class PaymentModelMapperTest {
         assertThat(result.getDebtorAccount()).isNotNull();
         assertThat(result.getRequestedExecutionDate()).isNotNull();
         assertThat(result.getPayments()).isNotEmpty();
-        assertThat(result.getPayments().get(1).getEndToEndIdentification()).isEqualTo(PAYMENT_ID);
+        assertThat(result.getPayments().get(0).getEndToEndIdentification()).isEqualTo(PAYMENT_ID);
     }
 
     //Static test data
@@ -215,9 +215,18 @@ public class PaymentModelMapperTest {
         payment.setBatchBookingPreferred(batchBooking ? BATCH_BOOKING_PREFERRED : null);
         payment.setRequestedExecutionDate(executionDate ? LocalDate.of(2017, 1, 1) : null);
         payment.setDebtorAccount(debtorAcc ? getAccountReference12Map(true, true) : null);
-        payment.setPayments(payments ?
-                                getBulkPaymentElements(true, true, true, true, true, true, true)
-                                : null);
+
+        PaymentInitiationSctBulkElementJson element = new PaymentInitiationSctBulkElementJson();
+        element.setEndToEndIdentification(PAYMENT_ID);
+        element.setInstructedAmount(getAmount12(true, true));
+        element.setCreditorAccount(getAccountReference12Map(true, true));
+        element.setCreditorAgent("Agent");
+        element.setCreditorName("CreditorName");
+        element.setCreditorAddress(getAddress12(true, true, true, true, true));
+        element.setRemittanceInformationUnstructured("some info");
+        List<PaymentInitiationSctBulkElementJson> elements = Collections.singletonList(element);
+
+        payment.setPayments(payments ? elements : null);
         return payment;
     }
 
@@ -242,7 +251,6 @@ public class PaymentModelMapperTest {
         payment.setDayOfExecution(dayOfExecution ? DayOfExecution.fromValue(DAY_OF_EXECUTION) : null);
         return payment;
     }
-
 
     private LinkedHashMap<String, Object> getAddress12Map(boolean code, boolean str, boolean bld, boolean city, boolean country) {
         LinkedHashMap<String, Object> address = new LinkedHashMap<>();
@@ -335,7 +343,11 @@ public class PaymentModelMapperTest {
         response.setTransactionFeeIndicator(true);
         response.setScaMethods(null);
         response.setChosenScaMethod(null);
-        response.setChallengeData(getXs2aChallengeData());
+
+        OtpFormat format = OtpFormat.getByValue(OTP_FORMAT).orElse(null);
+        Xs2aChallengeData challenge =  new Xs2aChallengeData(IMAGE, DATA, IMAGE_LINK, OTP_MAX_LENGTH, format,
+            ADDITIONAL_INFORMATION);
+        response.setChallengeData(challenge);
 
         response.setPsuMessage(PSU_MSG);
         response.setTppMessages(null); //TODO fix this along with creating TppMessage mapper
@@ -349,37 +361,5 @@ public class PaymentModelMapperTest {
         amount.setAmount(AMOUNT);
         amount.setCurrency(EUR);
         return amount;
-    }
-
-    private Xs2aChallengeData getXs2aChallengeData() {
-        OtpFormat format = OtpFormat.getByValue(OTP_FORMAT).orElse(null);
-        return new Xs2aChallengeData(IMAGE, DATA, IMAGE_LINK, OTP_MAX_LENGTH, format, ADDITIONAL_INFORMATION);
-    }
-
-    private PaymentInitiationSctBulkElementJson getBulkPaymentElement(boolean id, boolean acc, boolean amount,
-                                                                          boolean agent, boolean creditorName,
-                                                                          boolean credAddres, boolean remitance) {
-        PaymentInitiationSctBulkElementJson element = new PaymentInitiationSctBulkElementJson();
-        element.setEndToEndIdentification(id ? PAYMENT_ID : null);
-        element.setInstructedAmount(amount ? getAmount12(true, true) : null);
-        element.setCreditorAccount(getAccountReference12Map(true, true));
-        element.setCreditorAgent(agent ? "Agent" : null);
-        element.setCreditorName(creditorName ? "CreditorName" : null);
-        element.setCreditorAddress(credAddres ?
-                                       getAddress12(true, true, true, true, true)
-                                       : null);
-        element.setRemittanceInformationUnstructured(remitance ? "some pmnt info" : null);
-        return element;
-    }
-
-    private List<PaymentInitiationSctBulkElementJson> getBulkPaymentElements(boolean id, boolean acc,
-                                                                                 boolean amount, boolean agent,
-                                                                                 boolean creditorName,
-                                                                                 boolean credAddres,
-                                                                                 boolean remitance) {
-        List<PaymentInitiationSctBulkElementJson> list = Arrays.asList(
-            getBulkPaymentElement(id, acc, amount, agent, creditorName, credAddres, remitance),
-            getBulkPaymentElement(id, acc, amount, agent, creditorName, credAddres, remitance));
-        return list;
     }
 }
