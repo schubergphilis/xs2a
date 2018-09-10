@@ -20,11 +20,10 @@ import com.google.common.collect.Lists;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.consent.CreatePisConsentData;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
-import de.adorsys.aspsp.xs2a.domain.pis.TppInfo;
+import de.adorsys.aspsp.xs2a.domain.pis.*;
+import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorizationService;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
+import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiPisConsentRequest;
 import de.adorsys.aspsp.xs2a.spi.service.ConsentSpi;
@@ -43,6 +42,8 @@ import java.util.stream.Collectors;
 public class EmbeddedScaPaymentService implements ScaPaymentService {
     private final ConsentSpi consentSpi;
     private final Xs2aPisConsentMapper pisConsentMapper;
+    private final AspspProfileService profileService;
+    private final PisAuthorizationService pisAuthorizationService;
 
     @Override
     public PaymentInitialisationResponse createPeriodicPayment(PeriodicPayment payment, TppInfo tppInfo, String paymentProduct) {
@@ -73,13 +74,13 @@ public class EmbeddedScaPaymentService implements ScaPaymentService {
         SpiPisConsentRequest request = pisConsentMapper.mapToSpiPisConsentRequestForSinglePayment(createPisConsentData, response.getPaymentId());
         CreatePisConsentResponse cmsResponse = consentSpi.createPisConsentForSinglePaymentAndGetId(request);
 
-        return extendPaymentResponseFields(response, cmsResponse);
+        return extendPaymentResponseFields(response, cmsResponse, PaymentType.SINGLE);
     }
 
     private PaymentInitialisationResponse createConsentForPeriodicPaymentAndExtendPaymentResponse(CreatePisConsentData createPisConsentData, PaymentInitialisationResponse response) {
         SpiPisConsentRequest request = pisConsentMapper.mapToSpiPisConsentRequestForPeriodicPayment(createPisConsentData, response.getPaymentId());
         CreatePisConsentResponse cmsResponse = consentSpi.createPisConsentForPeriodicPaymentAndGetId(request);
-        return extendPaymentResponseFields(response, cmsResponse);
+        return extendPaymentResponseFields(response, cmsResponse, PaymentType.PERIODIC);
     }
 
     private List<PaymentInitialisationResponse> createConsentForBulkPaymentAndExtendPaymentResponses(CreatePisConsentData createPisConsentData) {
@@ -88,19 +89,31 @@ public class EmbeddedScaPaymentService implements ScaPaymentService {
 
         List<PaymentInitialisationResponse> responses = Lists.newArrayList(createPisConsentData.getPaymentIdentifierMap().values());
         return responses.stream()
-                   .map(resp -> extendPaymentResponseFields(resp, cmsResponse))
+                   .map(resp -> extendPaymentResponseFields(resp, cmsResponse, PaymentType.BULK))
                    .collect(Collectors.toList());
     }
 
-    private PaymentInitialisationResponse extendPaymentResponseFields(PaymentInitialisationResponse response, CreatePisConsentResponse cmsResponse) {
-        return Optional.ofNullable(cmsResponse)
-                   .filter(c -> StringUtils.isNotBlank(c.getConsentId()) && StringUtils.isNotBlank(c.getPaymentId()))
-                   .map(c -> {
-                       response.setPaymentId(c.getPaymentId());
-                       response.setTransactionStatus(Xs2aTransactionStatus.RCVD);
-                       response.setPisConsentId(c.getConsentId());
-                       return response;
-                   })
-                   .orElse(response);
+    private PaymentInitialisationResponse extendPaymentResponseFields(PaymentInitialisationResponse response, CreatePisConsentResponse cmsResponse, PaymentType paymentType) {
+        Optional.ofNullable(cmsResponse)
+            .filter(c -> StringUtils.isNotBlank(c.getConsentId()) && StringUtils.isNotBlank(c.getPaymentId()))
+            .ifPresent(c -> {
+                response.setPaymentId(c.getPaymentId());
+                response.setTransactionStatus(Xs2aTransactionStatus.RCVD);
+                response.setPisConsentId(c.getConsentId());
+                response.setPaymentType(paymentType.name());
+            });
+        return "IMPLICIT".equals(profileService.getAuthorisationStartType())
+                   ? createPisAuthorisationIfImplicit(response, paymentType)
+                   : response;
+    }
+
+    private PaymentInitialisationResponse createPisAuthorisationIfImplicit(PaymentInitialisationResponse response, PaymentType paymentType) {
+        pisAuthorizationService.createConsentAuthorization(response.getPaymentId(), paymentType)
+            .ifPresent(a -> {
+                response.setAuthorizationId(a.getAuthorizationId());
+                response.setScaStatus(a.getScaStatus());
+                response.setLinks(a.getLinks());
+            });
+        return response;
     }
 }

@@ -18,6 +18,7 @@ package de.adorsys.aspsp.xs2a.web.aspect;
 
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
+import de.adorsys.aspsp.xs2a.domain.aspsp.ScaApproach;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 
@@ -53,6 +54,20 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         links.setScaRedirect(aspspProfileService.getPisRedirectUrlToAspsp() + body.getPisConsentId() + "/" + encodedPaymentId);
         links.setSelf(buildPath("/v1/{paymentService}/{paymentId}", paymentService, encodedPaymentId));
         links.setStatus(buildPath("/v1/{paymentService}/{paymentId}/status", paymentService, encodedPaymentId));
+        if (ScaApproach.EMBEDDED == aspspProfileService.getScaApproach()) {
+            return addEmbeddedRelatedLinks(links, paymentService, encodedPaymentId, body.getAuthorizationId());
+        }
+        return links;
+    }
+
+    private Links addEmbeddedRelatedLinks(Links links, String paymentService, String paymentId, String authorizationId) {
+        if ("EXPLICIT".equals(aspspProfileService.getAuthorisationStartType())) {
+            links.setStartAuthorisation(buildPath("/v1/{payment-service}/{paymentId}/authorisations", paymentService, paymentId));
+        } else {
+            links.setStartAuthorisationWithPsuAuthentication(
+                buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorizationId));
+        }
+
         return links;
     }
 }
