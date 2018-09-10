@@ -60,9 +60,11 @@ public class PaymentModelMapperTest {
     private static final String DAY_OF_EXECUTION = "02";
     private static final boolean BATCH_BOOKING_PREFERRED = true;
 
+    @InjectMocks
+    PaymentModelMapperPsd2 paymentModelMapperPsd2;
 
     @InjectMocks
-    PaymentModelMapper paymentModelMapper;
+    PaymentModelMapperXs2a paymentModelMapperXs2a;
 
     @Mock
     ValueValidatorService validatorService;
@@ -84,7 +86,7 @@ public class PaymentModelMapperTest {
 
     private void testTransactionStatus12(Xs2aTransactionStatus status, TransactionStatus expected) {
         //When
-        TransactionStatus result = PaymentModelMapper.mapToTransactionStatus12(status);
+        TransactionStatus result = PaymentModelMapperPsd2.mapToTransactionStatus12(status);
         //Then
         assertThat(result).isEqualTo(expected);
     }
@@ -95,7 +97,7 @@ public class PaymentModelMapperTest {
         PaymentInitialisationResponse givenResponse = getXs2aPaymentResponse();
         PaymentInitationRequestResponse201 expectedResponse = getPaymentResponse12();
         //When
-        PaymentInitationRequestResponse201 result = (PaymentInitationRequestResponse201) paymentModelMapper.mapToPaymentInitiationResponse12(givenResponse, PaymentType.SINGLE, PaymentProduct.SCT);
+        PaymentInitationRequestResponse201 result = (PaymentInitationRequestResponse201) paymentModelMapperPsd2.mapToPaymentInitiationResponse12(givenResponse, PaymentType.SINGLE, PaymentProduct.SCT);
         //Then
         assertThat(result).isEqualTo(expectedResponse);
     }
@@ -107,7 +109,7 @@ public class PaymentModelMapperTest {
         //Given
         Object payment = getSinglePayment(true, true, true, true, true, true, true);
         //When
-        SinglePayment result = (SinglePayment) paymentModelMapper.mapToXs2aPayment(payment, PaymentType.SINGLE, PaymentProduct.SCT);
+        SinglePayment result = (SinglePayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, PaymentType.SINGLE, PaymentProduct.SCT);
         //Then
         assertThat(result.getEndToEndIdentification()).isEqualTo(((LinkedHashMap) payment).get("endToEndIdentification"));
         assertThat(result.getDebtorAccount()).isNotNull();
@@ -143,7 +145,7 @@ public class PaymentModelMapperTest {
             true, true, true, true, true, true,
             true);
         //When
-        PeriodicPayment result = (PeriodicPayment) paymentModelMapper.mapToXs2aPayment(payment, PaymentType.PERIODIC, PaymentProduct.SCT);
+        PeriodicPayment result = (PeriodicPayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, PaymentType.PERIODIC, PaymentProduct.SCT);
         //Then
         assertThat(result.getEndToEndIdentification()).isEqualTo(PAYMENT_ID);
         assertThat(result.getDebtorAccount()).isNotNull();
@@ -173,7 +175,7 @@ public class PaymentModelMapperTest {
         //Given
         Object payment = getBulkPayment(true, true, true, true);
         //When
-        BulkPayment result = (BulkPayment) paymentModelMapper.mapToXs2aPayment(payment, PaymentType.BULK, PaymentProduct.SCT);
+        BulkPayment result = (BulkPayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, PaymentType.BULK, PaymentProduct.SCT);
         //Then
         assertThat(result.getBatchBookingPreferred()).isEqualTo(BATCH_BOOKING_PREFERRED);
         assertThat(result.getDebtorAccount()).isNotNull();
