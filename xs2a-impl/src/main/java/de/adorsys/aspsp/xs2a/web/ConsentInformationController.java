@@ -17,7 +17,7 @@
 package de.adorsys.aspsp.xs2a.web;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
@@ -61,7 +61,7 @@ public class ConsentInformationController {
     public ResponseEntity<CreateConsentResponse> createAccountConsent(
         @RequestHeader(name = "psu-id", required = false) String psuId,
         @Valid @RequestBody CreateConsentReq createConsent) {
-        Set<AccountReference> references = createConsent.getAccountReferences();
+        Set<Xs2aAccountReference> references = createConsent.getAccountReferences();
         ResponseObject accountReferenceValidationResponse = references.isEmpty()
                                                                 ? ResponseObject.builder().build()
                                                                 : referenceValidationService.validateAccountReferences(createConsent.getAccountReferences());

@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
@@ -409,20 +409,20 @@ public class ConsentServiceTest {
         return req;
     }
 
-    private Xs2aAccountAccess getAccess(List<AccountReference> accounts, List<AccountReference> balances, List<AccountReference> transactions, boolean allAccounts, boolean allPsd2) {
+    private Xs2aAccountAccess getAccess(List<Xs2aAccountReference> accounts, List<Xs2aAccountReference> balances, List<Xs2aAccountReference> transactions, boolean allAccounts, boolean allPsd2) {
         return new Xs2aAccountAccess(accounts, balances, transactions, allAccounts ? Xs2aAccountAccessType.ALL_ACCOUNTS : null, allPsd2 ? Xs2aAccountAccessType.ALL_ACCOUNTS : null);
     }
 
-    private List<AccountReference> getReferenceList() {
-        List<AccountReference> list = new ArrayList<>();
+    private List<Xs2aAccountReference> getReferenceList() {
+        List<Xs2aAccountReference> list = new ArrayList<>();
         list.add(getReference(CORRECT_IBAN, CURRENCY));
         list.add(getReference(CORRECT_IBAN_1, CURRENCY_2));
 
         return list;
     }
 
-    private AccountReference getReference(String iban, Currency currency) {
-        AccountReference ref = new AccountReference();
+    private Xs2aAccountReference getReference(String iban, Currency currency) {
+        Xs2aAccountReference ref = new Xs2aAccountReference();
         ref.setIban(iban);
         ref.setCurrency(currency);
         return ref;

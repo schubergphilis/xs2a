@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.service;
 import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.domain.*;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReport;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAccountAccess;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAccountAccessType;
@@ -320,17 +320,17 @@ public class AccountServiceTest {
     }
 
     //Test Stuff
-    private ResponseObject<Xs2aAccountAccess> getAccessResponse(List<AccountReference> accounts, List<AccountReference> balances, List<AccountReference> transactions, boolean allAccounts, boolean allPsd2) {
+    private ResponseObject<Xs2aAccountAccess> getAccessResponse(List<Xs2aAccountReference> accounts, List<Xs2aAccountReference> balances, List<Xs2aAccountReference> transactions, boolean allAccounts, boolean allPsd2) {
         return ResponseObject.<Xs2aAccountAccess>builder().body(getAccessForMock(accounts, balances, transactions, allAccounts, allPsd2)).build();
     }
 
-    private Xs2aAccountAccess getAccessForMock(List<AccountReference> accounts, List<AccountReference> balances, List<AccountReference> transactions, boolean allAccounts, boolean allPsd2) {
+    private Xs2aAccountAccess getAccessForMock(List<Xs2aAccountReference> accounts, List<Xs2aAccountReference> balances, List<Xs2aAccountReference> transactions, boolean allAccounts, boolean allPsd2) {
         return new Xs2aAccountAccess(accounts, balances, transactions, allAccounts ? Xs2aAccountAccessType.ALL_ACCOUNTS : null, allPsd2 ? Xs2aAccountAccessType.ALL_ACCOUNTS : null);
     }
 
-    private AccountReference getAccountReference() {
+    private Xs2aAccountReference getAccountReference() {
         Xs2aAccountDetails details = getAccountDetails(ACCOUNT_ID, IBAN);
-        AccountReference rf = new AccountReference();
+        Xs2aAccountReference rf = new Xs2aAccountReference();
         rf.setCurrency(details.getCurrency());
         rf.setIban(details.getIban());
         rf.setPan(details.getPan());
@@ -441,17 +441,17 @@ public class AccountServiceTest {
             null, null, null, null);
     }
 
-    private SpiAccountReference mapToSpiAccountRef(AccountReference reference) {
+    private SpiAccountReference mapToSpiAccountRef(Xs2aAccountReference reference) {
         return Optional.ofNullable(reference).map(r -> new SpiAccountReference(r.getIban(), r.getBban(), r.getPan(),
             r.getMaskedPan(), r.getMsisdn(), r.getCurrency())).orElse(null);
     }
 
-    private List<AccountReference> getReferences(String iban, String iban1) {
+    private List<Xs2aAccountReference> getReferences(String iban, String iban1) {
         return Arrays.asList(getReference(iban), getReference(iban1));
     }
 
-    private AccountReference getReference(String iban) {
-        AccountReference reference = new AccountReference();
+    private Xs2aAccountReference getReference(String iban) {
+        Xs2aAccountReference reference = new Xs2aAccountReference();
         reference.setIban(iban);
         reference.setCurrency(iban.equals(IBAN) ? CURRENCY : CURRENCY_1);
         return reference;

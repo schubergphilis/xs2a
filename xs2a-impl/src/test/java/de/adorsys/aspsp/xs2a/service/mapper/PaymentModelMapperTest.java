@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.service.mapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
@@ -186,8 +186,8 @@ public class PaymentModelMapperTest {
         return ref;
     }
 
-    private AccountReference getAccountReference(boolean iban, boolean currency) {
-        AccountReference ref = new AccountReference();
+    private Xs2aAccountReference getAccountReference(boolean iban, boolean currency) {
+        Xs2aAccountReference ref = new Xs2aAccountReference();
         ref.setIban(iban ? IBAN : null);
         ref.setCurrency(currency ? Currency.getInstance(CURRENCY) : null);
         return ref;

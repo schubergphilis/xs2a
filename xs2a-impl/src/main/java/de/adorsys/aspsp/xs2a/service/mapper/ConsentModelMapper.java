@@ -17,7 +17,7 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.psd2.api.ConsentApi;
 import de.adorsys.psd2.model.*;
@@ -169,7 +169,7 @@ public class ConsentModelMapper {
                    .orElse(null);
     }
 
-    private static List<AccountReference> mapToXs2aAccountReferences(List<Object> references) {
+    private static List<Xs2aAccountReference> mapToXs2aAccountReferences(List<Object> references) {
         return Optional.ofNullable(references)
                    .map(ref -> ref.stream()
                                    .map(ConsentModelMapper::mapToXs2aAccountReference)
@@ -177,8 +177,8 @@ public class ConsentModelMapper {
                    .orElseGet(Collections::emptyList);
     }
 
-    private static AccountReference mapToXs2aAccountReference(Object reference) {
-        return OBJECT_MAPPER.convertValue(reference, AccountReference.class);
+    private static Xs2aAccountReference mapToXs2aAccountReference(Object reference) {
+        return OBJECT_MAPPER.convertValue(reference, Xs2aAccountReference.class);
     }
 
     public static UpdateConsentPsuDataReq mapToUpdatePsuData(String psuId, String consentId, String authorizationId, Map body) {

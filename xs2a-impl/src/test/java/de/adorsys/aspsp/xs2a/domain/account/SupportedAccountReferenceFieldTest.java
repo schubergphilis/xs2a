@@ -152,8 +152,8 @@ public class SupportedAccountReferenceFieldTest {
         assertThat(result.get()).isFalse();
     }
 
-    private AccountReference getReference(String iban, String bban, String pan, String masked, String msisdn) {
-        AccountReference reference = new AccountReference();
+    private Xs2aAccountReference getReference(String iban, String bban, String pan, String masked, String msisdn) {
+        Xs2aAccountReference reference = new Xs2aAccountReference();
         reference.setIban(iban);
         reference.setBban(bban);
         reference.setPan(pan);

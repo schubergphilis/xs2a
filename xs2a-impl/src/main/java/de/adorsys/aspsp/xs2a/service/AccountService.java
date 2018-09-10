@@ -20,7 +20,7 @@ import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.domain.*;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReport;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAccountAccess;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
@@ -268,7 +268,7 @@ public class AccountService {
     }
 
     private List<Xs2aAccountDetails> getAccountDetailsFromReferences(boolean withBalance, Xs2aAccountAccess accountAccess) {
-        List<AccountReference> references = withBalance
+        List<Xs2aAccountReference> references = withBalance
                                                 ? accountAccess.getBalances()
                                                 : accountAccess.getAccounts();
         List<Xs2aAccountDetails> details = getAccountDetailsFromReferences(references);
@@ -277,7 +277,7 @@ public class AccountService {
                    : accountMapper.mapToAccountDetailsListNoBalances(details);
     }
 
-    private List<Xs2aAccountDetails> getAccountDetailsFromReferences(List<AccountReference> references) {
+    private List<Xs2aAccountDetails> getAccountDetailsFromReferences(List<Xs2aAccountReference> references) {
         return CollectionUtils.isEmpty(references)
                    ? Collections.emptyList()
                    : references.stream()
@@ -311,7 +311,7 @@ public class AccountService {
         return accountMapper.mapToAccountReport(accountSpi.readTransactionsByPeriod(accountId, dateFrom, dateTo, new AspspConsentData()).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
     }
 
-    public Optional<Xs2aAccountDetails> getAccountDetailsByAccountReference(AccountReference reference) {
+    public Optional<Xs2aAccountDetails> getAccountDetailsByAccountReference(Xs2aAccountReference reference) {
         return Optional.ofNullable(reference) // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Refactor to procedure style - we read data inside the stream here
                    .map(ref -> accountSpi.readAccountDetailsByIban(ref.getIban(), new AspspConsentData()).getPayload()) // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
                    .map(Collection::stream)

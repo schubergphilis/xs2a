@@ -20,7 +20,7 @@ import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.psd2.model.ConfirmationOfFunds;
 
@@ -41,7 +41,7 @@ public class FundsConfirmationModelMapper {
                    .orElse(null);
     }
 
-    private static AccountReference mapToXs2aAccountReferenceInner(Object reference) {
-        return OBJECT_MAPPER.convertValue(reference, AccountReference.class);
+    private static Xs2aAccountReference mapToXs2aAccountReferenceInner(Object reference) {
+        return OBJECT_MAPPER.convertValue(reference, Xs2aAccountReference.class);
     }
 }
