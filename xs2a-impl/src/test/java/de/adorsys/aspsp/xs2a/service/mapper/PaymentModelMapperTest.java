@@ -143,7 +143,7 @@ public class PaymentModelMapperTest {
             true, true, true, true, true, true,
             true);
         //When
-        PeriodicPayment result = paymentModelMapper.mapToXs2aPayment(payment, PaymentType.PERIODIC, PaymentProduct.SCT);
+        PeriodicPayment result = (PeriodicPayment) paymentModelMapper.mapToXs2aPayment(payment, PaymentType.PERIODIC, PaymentProduct.SCT);
         //Then
         assertThat(result.getEndToEndIdentification()).isEqualTo(PAYMENT_ID);
         assertThat(result.getDebtorAccount()).isNotNull();
@@ -173,7 +173,7 @@ public class PaymentModelMapperTest {
         //Given
         Object payment = getBulkPayment(true, true, true, true);
         //When
-        BulkPayment result = paymentModelMapper.mapToXs2aPayment(payment, PaymentType.BULK, PaymentProduct.SCT);
+        BulkPayment result = (BulkPayment) paymentModelMapper.mapToXs2aPayment(payment, PaymentType.BULK, PaymentProduct.SCT);
         //Then
         assertThat(result.getBatchBookingPreferred()).isEqualTo(BATCH_BOOKING_PREFERRED);
         assertThat(result.getDebtorAccount()).isNotNull();
