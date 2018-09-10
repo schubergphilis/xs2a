@@ -37,11 +37,11 @@ public class AccountModelMapperTest {
     public void testBalanceMapping() {
         Xs2aBalance balance = createBalance();
 
-        de.adorsys.psd2.model.Balance result = mapToBalance(balance);
+        Balance result = mapToBalance(balance);
         assertNotNull(result);
 
         Xs2aAmount expectedBalanceAmount = balance.getBalanceAmount();
-        de.adorsys.psd2.model.Amount actualBalanceAmount = result.getBalanceAmount();
+        Amount actualBalanceAmount = result.getBalanceAmount();
         assertNotNull(expectedBalanceAmount);
 
         assertEquals(expectedBalanceAmount.getAmount(), actualBalanceAmount.getAmount());
@@ -81,10 +81,10 @@ public class AccountModelMapperTest {
         AccountList result = mapToAccountList(accountDetailsMap);
         assertNotNull(result);
 
-        List<de.adorsys.psd2.model.AccountDetails> accounts = result.getAccounts();
+        List<AccountDetails> accounts = result.getAccounts();
         assertNotNull(accounts);
 
-        de.adorsys.psd2.model.AccountDetails secondAccount = accounts.get(1);
+        AccountDetails secondAccount = accounts.get(1);
         assertNotNull(secondAccount);
 
         assertEquals("x2", secondAccount.getIban());
@@ -92,12 +92,12 @@ public class AccountModelMapperTest {
         BalanceList balances = secondAccount.getBalances();
         assertNotNull(balances);
 
-        de.adorsys.psd2.model.Balance balance = balances.get(0);
+        Balance balance = balances.get(0);
         assertNotNull(balance);
 
         assertEquals("4711", balance.getLastCommittedTransaction());
 
-        de.adorsys.psd2.model.Amount balanceAmount = balance.getBalanceAmount();
+        Amount balanceAmount = balance.getBalanceAmount();
         assertNotNull(balanceAmount);
 
         assertEquals("EUR", balanceAmount.getCurrency());
@@ -112,7 +112,7 @@ public class AccountModelMapperTest {
         List<ZoneOffset> validOffsets = ZoneId.systemDefault().getRules().getValidOffsets(expectedLastChangeDateTime); //TODO remove when OffsetDateTime is in xs2a
         assertEquals(expectedLastChangeDateTime, actualLastChangeDateTime.atZoneSameInstant(validOffsets.get(0)).toLocalDateTime());
 
-        de.adorsys.psd2.model.AccountDetails thirdAccount = accounts.get(2);
+        AccountDetails thirdAccount = accounts.get(2);
         assertNotNull(thirdAccount);
 
         Map links = thirdAccount.getLinks();
@@ -139,7 +139,7 @@ public class AccountModelMapperTest {
         assertNotNull(transactionDetails);
 
         Xs2aAmount amount = transactions.getAmount();
-        de.adorsys.psd2.model.Amount amountTarget = transactionDetails.getTransactionAmount();
+        Amount amountTarget = transactionDetails.getTransactionAmount();
         assertNotNull(amountTarget);
 
         assertEquals(amount.getAmount(), amountTarget.getAmount());
@@ -176,7 +176,7 @@ public class AccountModelMapperTest {
         Xs2aPurposeCode expectedPurposeCode = transactions.getPurposeCode();
         assertNotNull(expectedPurposeCode);
 
-        de.adorsys.psd2.model.PurposeCode actualPurposeCode = transactionDetails.getPurposeCode();
+        PurposeCode actualPurposeCode = transactionDetails.getPurposeCode();
         assertNotNull(actualPurposeCode);
 
         assertEquals(expectedPurposeCode.getCode(), actualPurposeCode.name());
@@ -201,7 +201,7 @@ public class AccountModelMapperTest {
         Xs2aAccountReport accountReport = new Xs2aAccountReport(bookedTransactions, pendingTransactions);
         accountReport.setLinks(createLinks());
 
-        de.adorsys.psd2.model.AccountReport result = mapToAccountReport(accountReport);
+        AccountReport result = mapToAccountReport(accountReport);
         assertNotNull(result);
 
         //transactions mapping tested in testMapToTransaction

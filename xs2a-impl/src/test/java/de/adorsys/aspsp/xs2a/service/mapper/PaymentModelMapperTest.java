@@ -74,7 +74,7 @@ public class PaymentModelMapperTest {
     public void mapToTransactionStatus12() {
         //Given
         Xs2aTransactionStatus[] xs2aStatuses = Xs2aTransactionStatus.values();
-        de.adorsys.psd2.model.TransactionStatus[] statuses12 = de.adorsys.psd2.model.TransactionStatus.values();
+        TransactionStatus[] statuses12 = TransactionStatus.values();
         //When
         assertThat(xs2aStatuses.length).isEqualTo(statuses12.length);
         for (int i = 0; i < xs2aStatuses.length; i++) {
@@ -82,9 +82,9 @@ public class PaymentModelMapperTest {
         }
     }
 
-    private void testTransactionStatus12(Xs2aTransactionStatus status, de.adorsys.psd2.model.TransactionStatus expected) {
+    private void testTransactionStatus12(Xs2aTransactionStatus status, TransactionStatus expected) {
         //When
-        de.adorsys.psd2.model.TransactionStatus result = PaymentModelMapper.mapToTransactionStatus12(status);
+        TransactionStatus result = PaymentModelMapper.mapToTransactionStatus12(status);
         //Then
         assertThat(result).isEqualTo(expected);
     }
@@ -271,7 +271,7 @@ public class PaymentModelMapperTest {
         return instructedAmount;
     }
 
-    private de.adorsys.psd2.model.Amount getAmount12(boolean currency, boolean toPay) {
+    private Amount getAmount12(boolean currency, boolean toPay) {
         de.adorsys.psd2.model.Amount instructedAmount = new de.adorsys.psd2.model.Amount();
         instructedAmount.setCurrency(currency ? "EUR" : null);
         instructedAmount.setAmount(toPay ? "123456" : null);
@@ -297,7 +297,7 @@ public class PaymentModelMapperTest {
 
         response.setTransactionStatus(de.adorsys.psd2.model.TransactionStatus.ACCP);
         response.setPaymentId(PAYMENT_ID);
-        de.adorsys.psd2.model.Amount amount = new de.adorsys.psd2.model.Amount();
+        Amount amount = new Amount();
         amount.setAmount(AMOUNT);
         amount.setCurrency(EUR.getCurrencyCode());
         response.setTransactionFees(amount);
