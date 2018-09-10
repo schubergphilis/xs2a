@@ -274,7 +274,7 @@ public class PaymentModelMapper {
         return tppMessage;
     }
 
-    private ScaMethods mapToScaMethods(AuthenticationObject[] authenticationObjects) {
+    private ScaMethods mapToScaMethods(AuthenticationObject... authenticationObjects) {
         return Optional.ofNullable(authenticationObjects)
                    .map(objects -> (ScaMethods) Arrays.stream(objects)
                                        .map(this::mapToAuthenticationObject)
