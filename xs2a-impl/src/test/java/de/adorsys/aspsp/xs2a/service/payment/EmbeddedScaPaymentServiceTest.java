@@ -43,6 +43,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus.RCVD;
+import static de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthorisationStartType.EXPLICIT;
+import static de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthorisationStartType.IMPLICIT;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.*;
 import static de.adorsys.psd2.model.ScaStatus.STARTED;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -89,18 +91,18 @@ public class EmbeddedScaPaymentServiceTest {
     @Test
     public void createPeriodicPayment_Explicit() {
         when(profileService.getAuthorisationStartType())
-            .thenReturn("EXPLICIT");
-        createPeriodicPayment("EXPLICIT");
+            .thenReturn(EXPLICIT);
+        createPeriodicPayment(false);
     }
 
     @Test
     public void createPeriodicPayment_Implicit() {
         when(profileService.getAuthorisationStartType())
-            .thenReturn("IMPLICIT");
-        createPeriodicPayment("IMPLICIT");
+            .thenReturn(IMPLICIT);
+        createPeriodicPayment(true);
     }
 
-    private void createPeriodicPayment(String flow) {
+    private void createPeriodicPayment(boolean isImplicit) {
         when(pisAuthorizationService.createConsentAuthorization(anyString(), any()))
             .thenReturn(getCreateAuth(PERIODIC));
         //When
@@ -109,26 +111,26 @@ public class EmbeddedScaPaymentServiceTest {
         assertThat(response.getTransactionStatus()).isEqualTo(RCVD);
         assertThat(response.getPaymentId()).isEqualTo(PAYMENT_ID);
         assertThat(response.getPisConsentId()).isEqualTo(CONSENT_ID);
-        assertThat(response.getAuthorizationId()).isEqualTo(flow.equals("IMPLICIT") ? AUTH_ID : null);
-        assertThat(response.getScaStatus()).isEqualTo(flow.equals("IMPLICIT") ? STARTED.name() : null);
+        assertThat(response.getAuthorizationId()).isEqualTo(isImplicit ? AUTH_ID : null);
+        assertThat(response.getScaStatus()).isEqualTo(isImplicit ? STARTED.name() : null);
         assertThat(response.getPaymentType()).isEqualTo(PERIODIC.name());
     }
 
     @Test
     public void createSinglePayment_Explicit() {
         when(profileService.getAuthorisationStartType())
-            .thenReturn("EXPLICIT");
-        createSinglePayment("EXPLICIT");
+            .thenReturn(EXPLICIT);
+        createSinglePayment(false);
     }
 
     @Test
     public void createSinglePayment_Implicit() {
         when(profileService.getAuthorisationStartType())
-            .thenReturn("IMPLICIT");
-        createSinglePayment("IMPLICIT");
+            .thenReturn(IMPLICIT);
+        createSinglePayment(true);
     }
 
-    private void createSinglePayment(String flow) {
+    private void createSinglePayment(boolean isImplicit) {
         when(pisAuthorizationService.createConsentAuthorization(anyString(), any()))
             .thenReturn(getCreateAuth(SINGLE));
         //When
@@ -137,26 +139,26 @@ public class EmbeddedScaPaymentServiceTest {
         assertThat(response.getTransactionStatus()).isEqualTo(RCVD);
         assertThat(response.getPaymentId()).isEqualTo(PAYMENT_ID);
         assertThat(response.getPisConsentId()).isEqualTo(CONSENT_ID);
-        assertThat(response.getAuthorizationId()).isEqualTo(flow.equals("IMPLICIT") ? AUTH_ID : null);
-        assertThat(response.getScaStatus()).isEqualTo(flow.equals("IMPLICIT") ? STARTED.name() : null);
+        assertThat(response.getAuthorizationId()).isEqualTo(isImplicit ? AUTH_ID : null);
+        assertThat(response.getScaStatus()).isEqualTo(isImplicit ? STARTED.name() : null);
         assertThat(response.getPaymentType()).isEqualTo(SINGLE.name());
     }
 
     @Test
     public void createBulkPayment_Explicit() {
         when(profileService.getAuthorisationStartType())
-            .thenReturn("EXPLICIT");
-        createBulkPayment("EXPLICIT");
+            .thenReturn(EXPLICIT);
+        createBulkPayment(false);
     }
 
     @Test
     public void createBulkPayment_Implicit() {
         when(profileService.getAuthorisationStartType())
-            .thenReturn("IMPLICIT");
-        createBulkPayment("IMPLICIT");
+            .thenReturn(IMPLICIT);
+        createBulkPayment(true);
     }
 
-    private void createBulkPayment(String flow) {
+    private void createBulkPayment(boolean isImplicit) {
         when(pisAuthorizationService.createConsentAuthorization(anyString(), any()))
             .thenReturn(getCreateAuth(BULK));
         //When
@@ -167,8 +169,8 @@ public class EmbeddedScaPaymentServiceTest {
         assertThat(response.getTransactionStatus()).isEqualTo(RCVD);
         assertThat(response.getPaymentId()).isEqualTo(PAYMENT_ID);
         assertThat(response.getPisConsentId()).isEqualTo(CONSENT_ID);
-        assertThat(response.getAuthorizationId()).isEqualTo(flow.equals("IMPLICIT") ? AUTH_ID : null);
-        assertThat(response.getScaStatus()).isEqualTo(flow.equals("IMPLICIT") ? STARTED.name() : null);
+        assertThat(response.getAuthorizationId()).isEqualTo(isImplicit ? AUTH_ID : null);
+        assertThat(response.getScaStatus()).isEqualTo(isImplicit ? STARTED.name() : null);
         assertThat(response.getPaymentType()).isEqualTo(BULK.name());
     }
 

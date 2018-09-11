@@ -25,6 +25,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import java.util.Base64;
 import java.util.List;
 
+import static de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthorisationStartType.EXPLICIT;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.PERIODIC;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
 import static java.util.EnumSet.of;
@@ -61,7 +62,7 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
     }
 
     private Links addEmbeddedRelatedLinks(Links links, String paymentService, String paymentId, String authorizationId) {
-        if ("EXPLICIT".equals(aspspProfileService.getAuthorisationStartType())) {
+        if (EXPLICIT == aspspProfileService.getAuthorisationStartType()) {
             links.setStartAuthorisation(buildPath("/v1/{payment-service}/{paymentId}/authorisations", paymentService, paymentId));
         } else {
             links.setScaStatus(

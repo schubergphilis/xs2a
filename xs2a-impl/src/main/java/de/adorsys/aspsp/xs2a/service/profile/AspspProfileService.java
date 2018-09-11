@@ -22,6 +22,7 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.account.SupportedAccountReferenceField;
 import de.adorsys.aspsp.xs2a.domain.aspsp.AspspSettings;
 import de.adorsys.aspsp.xs2a.domain.aspsp.ScaApproach;
+import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthorisationStartType;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -164,8 +165,8 @@ public class AspspProfileService {
      *
      * @return String value of authorisation start type
      */
-    public String getAuthorisationStartType() {
-        return readAspspSettings().getAuthorisationStartType();
+    public Xs2aAuthorisationStartType getAuthorisationStartType() {
+        return Xs2aAuthorisationStartType.valueOf(readAspspSettings().getAuthorisationStartType());
     }
 
     /**

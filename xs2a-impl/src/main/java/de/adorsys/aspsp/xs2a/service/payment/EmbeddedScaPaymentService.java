@@ -37,6 +37,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthorisationStartType.IMPLICIT;
+
 @Service
 @RequiredArgsConstructor
 public class EmbeddedScaPaymentService implements ScaPaymentService {
@@ -102,7 +104,7 @@ public class EmbeddedScaPaymentService implements ScaPaymentService {
                 response.setPisConsentId(c.getConsentId());
                 response.setPaymentType(paymentType.name());
             });
-        return "IMPLICIT".equals(profileService.getAuthorisationStartType())
+        return IMPLICIT == profileService.getAuthorisationStartType()
                    ? createPisAuthorisationIfImplicit(response, paymentType)
                    : response;
     }
