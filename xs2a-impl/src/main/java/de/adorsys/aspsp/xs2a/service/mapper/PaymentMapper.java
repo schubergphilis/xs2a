@@ -181,6 +181,7 @@ public class PaymentMapper {
                        payments.setRemittanceInformationStructured(mapToRemittance(sp.getRemittanceInformationStructured()));
                        payments.setRequestedExecutionDate(sp.getRequestedExecutionDate());
                        payments.setRequestedExecutionTime(sp.getRequestedExecutionTime());
+                       payments.setTransactionStatus(mapToTransactionStatus(spiSinglePayment.getPaymentStatus()));
                        return payments;
                    })
                    .orElse(null);
@@ -208,6 +209,7 @@ public class PaymentMapper {
             payment.setDayOfExecution(sp.getDayOfExecution());
             payment.setEndDate(sp.getEndDate());
             payment.setStartDate(sp.getStartDate());
+            payment.setTransactionStatus(mapToTransactionStatus(spiPeriodicPayment.getPaymentStatus()));
             return payment;
         })
                    .orElse(null);
