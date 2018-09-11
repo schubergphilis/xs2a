@@ -14,20 +14,16 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.domain.consent;
+package de.adorsys.aspsp.xs2a.spi.domain.consent;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class UpdateConsentPsuDataReq {
-
+@AllArgsConstructor
+public class SpiUpdatePisAuthorizationRequest {
     private String psuId;
-    private String consentId;
+    private String paymentId;
     private String authorizationId;
-
-    private boolean updatePsuIdentification;
-    private String authenticationMethodId;
-    private String scaAuthenticationData;
     private String password;
-
 }

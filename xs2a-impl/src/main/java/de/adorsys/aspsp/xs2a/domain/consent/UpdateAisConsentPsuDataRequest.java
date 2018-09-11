@@ -14,19 +14,20 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.config.rest.keycloak;
+package de.adorsys.aspsp.xs2a.domain.consent;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
+import lombok.Data;
 
-import java.io.IOException;
+@Data
+public class UpdateAisConsentPsuDataRequest {
 
-@Slf4j
-public class KeycloakRestErrorHandler extends DefaultResponseErrorHandler {
+    private String psuId;
+    private String consentId;
+    private String authorizationId;
 
-    @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
-        log.error("Keycloak rest call exception: httpStatus {}, reason: {}", response.getStatusCode(), response.getStatusCode().getReasonPhrase());
-    }
+    private boolean updatePsuIdentification;
+    private String authenticationMethodId;
+    private String scaAuthenticationData;
+    private String password;
+
 }

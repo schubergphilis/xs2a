@@ -69,4 +69,11 @@ public class SpiPisConsentRemoteUrls {
         return consentServiceBaseUrl + "/pis/consent/{payment-id}/authorizations";
     }
 
+    public String updatePisConsentAuthorization() {
+        return consentServiceBaseUrl + "/pis/consent/authorizations/{authorization-id}";
+    }
+
+    public String getPisConsentAuthorizationById() {
+        return consentServiceBaseUrl + "/pis/consent/authorizations/{authorization-id}";
+    }
 }

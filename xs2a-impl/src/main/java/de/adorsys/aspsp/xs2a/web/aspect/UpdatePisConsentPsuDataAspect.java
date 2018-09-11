@@ -16,10 +16,10 @@
 
 package de.adorsys.aspsp.xs2a.web.aspect;
 
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorizationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
+import de.adorsys.aspsp.xs2a.domain.consent.Xs2aUpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.web12.PaymentController12;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,21 +27,21 @@ import org.springframework.stereotype.Component;
 
 @Aspect
 @Component
-public class CreatePisAuthorizationAspect extends AbstractLinkAspect<PaymentController12> {
-
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.service.ConsentService.createPisConsentAuthorization(..)) && args(paymentId, paymentType)", returning = "result", argNames = "result,paymentId,paymentType")
-    public ResponseObject<Xsa2CreatePisConsentAuthorizationResponse> createPisConsentAuthorizationAspect(ResponseObject<Xsa2CreatePisConsentAuthorizationResponse> result, String paymentId, PaymentType paymentType) {
+public class UpdatePisConsentPsuDataAspect extends AbstractLinkAspect<PaymentController12> {
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.service.ConsentService.updatePisConsentPsuData(..)) && args(request)", returning = "result", argNames = "result,request")
+    public ResponseObject<Xs2aUpdatePisConsentPsuDataResponse> createPisConsentAuthorizationAspect(ResponseObject<Xs2aUpdatePisConsentPsuDataResponse> result, UpdatePisConsentPsuDataRequest request) {
         if (!result.hasError()) {
-            Xsa2CreatePisConsentAuthorizationResponse body = result.getBody();
-            body.setLinks(buildLink(paymentType.getValue(), paymentId, body.getAuthorizationId()));
+            Xs2aUpdatePisConsentPsuDataResponse body = result.getBody();
+            body.setLinks(buildLink(request));
             return result;
         }
         return enrichErrorTextMessage(result);
     }
 
-    private Links buildLink(String paymentService, String paymentId, String authorizationId) {
+    private Links buildLink(UpdatePisConsentPsuDataRequest request) {
         Links links = new Links();
-        links.setStartAuthorisationWithPsuAuthentication(buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorizationId));
+        links.setAuthoriseTransaction(buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
         return links;
     }
 }
+

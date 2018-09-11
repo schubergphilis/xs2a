@@ -68,9 +68,9 @@ public class EmbeddedAisAuthorizationService implements AisAuthorizationService 
     }
 
     @Override
-    public UpdateConsentPsuDataResponse updateConsentPsuData(UpdateConsentPsuDataReq updatePsuData, AccountConsentAuthorization consentAuthorization) {
+    public UpdateAisConsentPsuDataResponse updateConsentPsuData(UpdateAisConsentPsuDataRequest updatePsuData, AccountConsentAuthorization consentAuthorization) {
 
-        UpdateConsentPsuDataResponse response = new UpdateConsentPsuDataResponse();
+        UpdateAisConsentPsuDataResponse response = new UpdateAisConsentPsuDataResponse();
 
         if (checkPsuIdentification(updatePsuData, response)) {
             return response;
@@ -93,7 +93,7 @@ public class EmbeddedAisAuthorizationService implements AisAuthorizationService 
         return response;
     }
 
-    private boolean checkPsuIdentification(UpdateConsentPsuDataReq updatePsuData, UpdateConsentPsuDataResponse response) {
+    private boolean checkPsuIdentification(UpdateAisConsentPsuDataRequest updatePsuData, UpdateAisConsentPsuDataResponse response) {
         if (updatePsuData.isUpdatePsuIdentification()) {
             response.setPsuId(updatePsuData.getPsuId());
             response.setScaStatus(ScaStatus.PSUIDENTIFIED);
@@ -103,7 +103,7 @@ public class EmbeddedAisAuthorizationService implements AisAuthorizationService 
         return false;
     }
 
-    private boolean checkPsuAuthentication(UpdateConsentPsuDataReq updatePsuData, UpdateConsentPsuDataResponse response, AccountConsentAuthorization spiAuthorization) {
+    private boolean checkPsuAuthentication(UpdateAisConsentPsuDataRequest updatePsuData, UpdateAisConsentPsuDataResponse response, AccountConsentAuthorization spiAuthorization) {
         if (spiAuthorization.getPassword() == null && updatePsuData.getPassword() != null) {
             response.setPassword(updatePsuData.getPassword());
 
@@ -122,7 +122,7 @@ public class EmbeddedAisAuthorizationService implements AisAuthorizationService 
         return false;
     }
 
-    private boolean checkScaMethod(UpdateConsentPsuDataReq updatePsuData, UpdateConsentPsuDataResponse response, AccountConsentAuthorization spiAuthorization) {
+    private boolean checkScaMethod(UpdateAisConsentPsuDataRequest updatePsuData, UpdateAisConsentPsuDataResponse response, AccountConsentAuthorization spiAuthorization) {
         if (spiAuthorization.getAuthenticationMethodId() == null && updatePsuData.getAuthenticationMethodId() != null) {
             response.setAuthenticationMethodId(updatePsuData.getAuthenticationMethodId());
             response.setScaStatus(ScaStatus.SCAMETHODSELECTED);
@@ -132,7 +132,7 @@ public class EmbeddedAisAuthorizationService implements AisAuthorizationService 
         return false;
     }
 
-    private boolean checkScaAuthenticationData(UpdateConsentPsuDataReq updatePsuData, UpdateConsentPsuDataResponse response) {
+    private boolean checkScaAuthenticationData(UpdateAisConsentPsuDataRequest updatePsuData, UpdateAisConsentPsuDataResponse response) {
         if (updatePsuData.getScaAuthenticationData() != null) {
             response.setScaAuthenticationData(updatePsuData.getScaAuthenticationData());
             response.setScaStatus(ScaStatus.STARTED);

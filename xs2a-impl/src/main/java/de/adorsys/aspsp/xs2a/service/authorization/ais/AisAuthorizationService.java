@@ -18,15 +18,15 @@ package de.adorsys.aspsp.xs2a.service.authorization.ais;
 
 import de.adorsys.aspsp.xs2a.domain.consent.AccountConsentAuthorization;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentAuthorizationResponse;
-import de.adorsys.aspsp.xs2a.domain.consent.UpdateConsentPsuDataReq;
-import de.adorsys.aspsp.xs2a.domain.consent.UpdateConsentPsuDataResponse;
+import de.adorsys.aspsp.xs2a.domain.consent.UpdateAisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.domain.consent.UpdateAisConsentPsuDataResponse;
 
 import java.util.Optional;
 
 public interface AisAuthorizationService {
     Optional<CreateConsentAuthorizationResponse> createConsentAuthorization(String psuId, String consentId);
 
-    UpdateConsentPsuDataResponse updateConsentPsuData(UpdateConsentPsuDataReq updatePsuData, AccountConsentAuthorization consentAuthorization);
+    UpdateAisConsentPsuDataResponse updateConsentPsuData(UpdateAisConsentPsuDataRequest updatePsuData, AccountConsentAuthorization consentAuthorization);
 
     AccountConsentAuthorization getAccountConsentAuthorizationById(String authorizationId, String consentId);
 }

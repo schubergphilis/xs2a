@@ -17,6 +17,8 @@
 package de.adorsys.aspsp.xs2a.spi.service;
 
 import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsentAuthorization;
@@ -121,4 +123,11 @@ public interface ConsentSpi {
      * @param updatePsuData Consent psu data
      */
     void updateConsentAuthorization(SpiUpdateConsentPsuDataReq updatePsuData);
+
+    /**
+     * Sends a PUT request to CMS to update created PIS consent authorization
+     *
+     * @param request Pis authorization request
+     */
+    UpdatePisConsentPsuDataResponse updatePisConsentAuthorization(UpdatePisConsentPsuDataRequest request);
 }

@@ -91,7 +91,7 @@ public class Xs2aAisConsentMapper {
         return actionStatus;
     }
 
-    public SpiUpdateConsentPsuDataReq mapToSpiUpdateConsentPsuDataReq(UpdateConsentPsuDataResponse updatePsuData) {
+    public SpiUpdateConsentPsuDataReq mapToSpiUpdateConsentPsuDataReq(UpdateAisConsentPsuDataResponse updatePsuData) {
         return Optional.ofNullable(updatePsuData)
                    .map(data -> {
                        SpiUpdateConsentPsuDataReq request = new SpiUpdateConsentPsuDataReq();

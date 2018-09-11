@@ -16,6 +16,8 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
@@ -54,6 +56,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     private final AisAuthorizationService aisAuthorizationService;
     private final PisAuthorizationService pisAuthorizationService;
     private final AspspProfileService aspspProfileService;
+    private final ObjectMapper objectMapper;
 
     /**
      * @param request body of create consent request carrying such parameters as AccountAccess, validity terms etc.
@@ -65,25 +68,24 @@ public class ConsentService { //TODO change format of consentRequest to mandator
      */
     public ResponseObject<CreateConsentResponse> createAccountConsentsWithResponse(CreateConsentReq request, String psuId) {
         if (isNotSupportedGlobalConsentForAllPsd2(request)) {
-            return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PARAMETER_NOT_SUPPORTED))).build();
+            return ResponseObject.<CreateConsentResponse>builder()
+                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PARAMETER_NOT_SUPPORTED)))
+                       .build();
         }
         if (isNotSupportedBankOfferedConsent(request)) {
-            return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PARAMETER_NOT_SUPPORTED))).build();
+            return ResponseObject.<CreateConsentResponse>builder()
+                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PARAMETER_NOT_SUPPORTED)))
+                       .build();
         }
         if (!isValidExpirationDate(request.getValidUntil())) {
-            return ResponseObject.<CreateConsentResponse>builder().fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PERIOD_INVALID))).build();
+            return ResponseObject.<CreateConsentResponse>builder()
+                       .fail(new MessageError(new TppMessageInformation(MessageCategory.ERROR, MessageErrorCode.PERIOD_INVALID)))
+                       .build();
         }
 
         if (isConsentGlobal(request) || isConsentForAllAvailableAccounts(request)) {
             request.setAccess(getAccessForGlobalOrAllAvailableAccountsConsent(request));
         }
-
-        CreateConsentReq checkedRequest = new CreateConsentReq();
-        checkedRequest.setAccess(request.getAccess());
-        checkedRequest.setCombinedServiceIndicator(request.isCombinedServiceIndicator());
-        checkedRequest.setRecurringIndicator(request.isRecurringIndicator());
-        checkedRequest.setFrequencyPerDay(request.getFrequencyPerDay());
-        checkedRequest.setValidUntil(request.getValidUntil());
 
         String tppId = "This is a test TppId"; //TODO v1.1 add corresponding request header
         SpiCreateAisConsentRequest createAisConsentRequest = aisConsentMapper.mapToSpiCreateAisConsentRequest(request, psuId, tppId, new AspspConsentData("zzzzzzzzzzzzzz".getBytes()));
@@ -211,20 +213,20 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                    .orElseGet(() -> ResponseObject.<CreateConsentAuthorizationResponse>builder().fail(new MessageError(MessageErrorCode.CONSENT_UNKNOWN_400)).build());
     }
 
-    public ResponseObject<UpdateConsentPsuDataResponse> updateConsentPsuData(UpdateConsentPsuDataReq updatePsuData) {
+    public ResponseObject<UpdateAisConsentPsuDataResponse> updateAisConsentPsuData(UpdateAisConsentPsuDataRequest updatePsuData) {
         return Optional.ofNullable(aisAuthorizationService.getAccountConsentAuthorizationById(updatePsuData.getAuthorizationId(), updatePsuData.getConsentId()))
                    .map(conAuth -> getUpdateConsentPsuDataResponse(updatePsuData, conAuth))
-                   .orElseGet(() -> ResponseObject.<UpdateConsentPsuDataResponse>builder()
+                   .orElseGet(() -> ResponseObject.<UpdateAisConsentPsuDataResponse>builder()
                                         .fail(new MessageError(MessageErrorCode.RESOURCE_UNKNOWN_404))
                                         .build());
     }
 
-    private ResponseObject<UpdateConsentPsuDataResponse> getUpdateConsentPsuDataResponse(UpdateConsentPsuDataReq updatePsuData, AccountConsentAuthorization consentAuthorization) {
-        UpdateConsentPsuDataResponse response = aisAuthorizationService.updateConsentPsuData(updatePsuData, consentAuthorization);
+    private ResponseObject<UpdateAisConsentPsuDataResponse> getUpdateConsentPsuDataResponse(UpdateAisConsentPsuDataRequest updatePsuData, AccountConsentAuthorization consentAuthorization) {
+        UpdateAisConsentPsuDataResponse response = aisAuthorizationService.updateConsentPsuData(updatePsuData, consentAuthorization);
 
         return Optional.ofNullable(response)
-                   .map(s -> ResponseObject.<UpdateConsentPsuDataResponse>builder().body(response).build())
-                   .orElseGet(() -> ResponseObject.<UpdateConsentPsuDataResponse>builder()
+                   .map(s -> ResponseObject.<UpdateAisConsentPsuDataResponse>builder().body(response).build())
+                   .orElseGet(() -> ResponseObject.<UpdateAisConsentPsuDataResponse>builder()
                                         .fail(new MessageError(MessageErrorCode.FORMAT_ERROR))
                                         .build());
     }
@@ -237,5 +239,15 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                    .orElseGet(() -> ResponseObject.<Xsa2CreatePisConsentAuthorizationResponse>builder()
                                         .fail(new MessageError(MessageErrorCode.PAYMENT_FAILED))
                                         .build());
+    }
+
+    public ResponseObject<Xs2aUpdatePisConsentPsuDataResponse> updatePisConsentPsuData(UpdatePisConsentPsuDataRequest request) {
+        return pisAuthorizationService.updateConsentPsuData(request)
+                   .map(r -> ResponseObject.<Xs2aUpdatePisConsentPsuDataResponse>builder()
+                                 .body(r).build())
+                   .orElseGet(() -> ResponseObject.<Xs2aUpdatePisConsentPsuDataResponse>builder()
+                                        .fail(new MessageError(MessageErrorCode.FORMAT_ERROR))
+                                        .build());
+
     }
 }

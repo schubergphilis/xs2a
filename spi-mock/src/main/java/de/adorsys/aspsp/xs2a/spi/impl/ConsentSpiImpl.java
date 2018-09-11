@@ -18,8 +18,12 @@ package de.adorsys.aspsp.xs2a.spi.impl;
 
 import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.consent.api.AisConsentStatusResponse;
+import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
 import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.ais.*;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.GetPisConsentAuthorizationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.spi.config.rest.consent.SpiAisConsentRemoteUrls;
@@ -29,13 +33,17 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsentAuthorization;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.*;
+import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 import de.adorsys.aspsp.xs2a.spi.impl.mapper.SpiAisConsentMapper;
 import de.adorsys.aspsp.xs2a.spi.impl.mapper.SpiPisConsentMapper;
+import de.adorsys.aspsp.xs2a.spi.impl.service.AspspService;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
 import de.adorsys.aspsp.xs2a.spi.service.ConsentSpi;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -54,6 +62,7 @@ public class ConsentSpiImpl implements ConsentSpi {
     private final SpiAisConsentMapper aisConsentMapper;
     private final SpiPisConsentMapper pisConsentMapper;
     private final AccountSpi accountSpi;
+    private final AspspService aspspService;
 
     /**
      * For detailed description see {@link ConsentSpi#createConsent(SpiCreateAisConsentRequest)}
@@ -200,6 +209,37 @@ public class ConsentSpiImpl implements ConsentSpi {
                    .orElse(null);
     }
 
+
+    @Override
+    public UpdatePisConsentPsuDataResponse updatePisConsentAuthorization(UpdatePisConsentPsuDataRequest request) {
+        GetPisConsentAuthorizationResponse authorizationResponse = consentRestTemplate.exchange(remotePisConsentUrls.getPisConsentAuthorizationById(), HttpMethod.GET, new HttpEntity<>(request), GetPisConsentAuthorizationResponse.class, request.getAuthorizationId())
+                                                                       .getBody();
+        if (CmsScaStatus.STARTED == authorizationResponse.getScaStatus()) {
+            List<SpiScaMethod> spiScaMethods = aspspService.readAvailableScaMethod(request.getPsuId(), request.getPassword());
+
+            if (CollectionUtils.isEmpty(spiScaMethods)) {
+                String executionPaymentId = aspspService.createPayment(authorizationResponse.getPaymentType(), authorizationResponse.getPayments());
+                request.setExecutionPaymentId(executionPaymentId);
+                request.setScaStatus(CmsScaStatus.FINALISED);
+
+                UpdatePisConsentPsuDataResponse updatePisConsentPsuDataResponse = consentRestTemplate.exchange(remotePisConsentUrls.updatePisConsentAuthorization(), HttpMethod.PUT, new HttpEntity<>(request),
+                    UpdatePisConsentPsuDataResponse.class, request.getAuthorizationId()).getBody();
+                return new UpdatePisConsentPsuDataResponse(updatePisConsentPsuDataResponse.getScaStatus());
+            } else if (hasSingleValue(spiScaMethods)) {
+                // TODO generate TAN
+                request.setScaStatus(CmsScaStatus.SCAMETHODSELECTED);
+
+                UpdatePisConsentPsuDataResponse updatePisConsentPsuDataResponse = consentRestTemplate.exchange(remotePisConsentUrls.updatePisConsentAuthorization(), HttpMethod.PUT, new HttpEntity<>(request),
+                    UpdatePisConsentPsuDataResponse.class, request.getAuthorizationId()).getBody();
+                return new UpdatePisConsentPsuDataResponse(updatePisConsentPsuDataResponse.getScaStatus());
+            }
+        }
+        return new UpdatePisConsentPsuDataResponse();
+    }
+
+    private boolean hasSingleValue(List<SpiScaMethod> spiScaMethods) {
+        return spiScaMethods.size() == 1;
+    }
 
     private boolean isDirectAccessRequest(SpiCreateAisConsentRequest spiCreateAisConsentRequest) {
         SpiAccountAccess spiAccountAccess = spiCreateAisConsentRequest.getAccess();

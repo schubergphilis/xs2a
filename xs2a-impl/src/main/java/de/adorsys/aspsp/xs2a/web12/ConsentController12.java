@@ -20,7 +20,7 @@ import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentResponse;
-import de.adorsys.aspsp.xs2a.domain.consent.UpdateConsentPsuDataReq;
+import de.adorsys.aspsp.xs2a.domain.consent.UpdateAisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ConsentModelMapper;
@@ -74,8 +74,8 @@ public class ConsentController12 implements ConsentApi {
 
     @Override
     public ResponseEntity<?> updateConsentsPsuData(String consentId, String authorisationId, UUID xRequestID, Object body, String digest, String signature, byte[] tpPSignatureCertificate, String PSU_ID, String psUIDType, String psUCorporateID, String psUCorporateIDType, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
-        UpdateConsentPsuDataReq updatePsuDataRequest = ConsentModelMapper.mapToUpdatePsuData(PSU_ID, consentId, authorisationId, (HashMap) body);
-        return responseMapper.ok(consentService.updateConsentPsuData(updatePsuDataRequest), ConsentModelMapper::mapToUpdatePsuAuthenticationResponse);
+        UpdateAisConsentPsuDataRequest updatePsuDataRequest = ConsentModelMapper.mapToAisUpdatePsuData(PSU_ID, consentId, authorisationId, (HashMap) body);
+        return responseMapper.ok(consentService.updateAisConsentPsuData(updatePsuDataRequest), ConsentModelMapper::mapToUpdatePsuAuthenticationResponse);
     }
 
     @Override

@@ -20,7 +20,7 @@ import de.adorsys.psd2.model.ScaStatus;
 import lombok.Data;
 
 @Data
-public class UpdateConsentPsuDataResponse {
+public class UpdateAisConsentPsuDataResponse {
 
     private String psuId;
     private String consentId;
