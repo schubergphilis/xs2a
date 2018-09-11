@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service.payment;
 
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
@@ -25,10 +26,17 @@ import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
 import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorizationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorizationService;
+import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
+import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
-import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiPisConsentRequest;
-import de.adorsys.aspsp.xs2a.spi.service.ConsentSpi;
+import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
+import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPeriodicPayment;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
+import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,28 +72,53 @@ public class EmbeddedScaPaymentServiceTest {
     @InjectMocks
     private EmbeddedScaPaymentService paymentService;
     @Mock
-    private ConsentSpi consentSpi;
+    private PisConsentService consentService;
     @Mock
     private Xs2aPisConsentMapper pisConsentMapper;
     @Mock
     private AspspProfileService profileService;
     @Mock
     private PisAuthorizationService pisAuthorizationService;
+    @Mock
+    private PaymentSpi paymentSpi;
+    @Mock
+    private PaymentMapper paymentMapper;
 
     @Before
     public void setUp() {
-        when(pisConsentMapper.mapToSpiPisConsentRequestForPeriodicPayment(any(), any()))
-            .thenReturn(getSpiConsentRequest());
-        when(pisConsentMapper.mapToSpiPisConsentRequestForSinglePayment(any(), any()))
-            .thenReturn(getSpiConsentRequest());
-        when(pisConsentMapper.mapToSpiPisConsentRequestForBulkPayment(any()))
-            .thenReturn(getSpiConsentRequest());
-        when(consentSpi.createPisConsentForPeriodicPaymentAndGetId(any()))
+        when(paymentMapper.mapToSpiSinglePayment(any())).thenReturn(new SpiSinglePayment());
+        when(paymentMapper.mapToSpiPeriodicPayment(any())).thenReturn(new SpiPeriodicPayment());
+        when(paymentMapper.mapToSpiSinglePaymentList(any())).thenReturn(Collections.singletonList(new SpiSinglePayment()));
+        when(paymentMapper.mapToPaymentInitializationResponse(any())).thenReturn(getPaymentInitResponse());
+        when(pisConsentMapper.mapToCmsPisConsentRequestForPeriodicPayment(any(), any()))
+            .thenReturn(getPisConsentRequest());
+        when(pisConsentMapper.mapToCmsPisConsentRequestForSinglePayment(any(), any()))
+            .thenReturn(getPisConsentRequest());
+        when(pisConsentMapper.mapToCmsPisConsentRequestForBulkPayment(any()))
+            .thenReturn(getPisConsentRequest());
+        when(consentService.createPisConsentForPeriodicPayment(any(), any()))
             .thenReturn(getCreateConsentResponse());
-        when(consentSpi.createPisConsentForSinglePaymentAndGetId(any()))
+        when(consentService.createPisConsentForSinglePayment(any(), any()))
             .thenReturn(getCreateConsentResponse());
-        when(consentSpi.createPisConsentForBulkPaymentAndGetId(any()))
+        when(consentService.createPisConsentForBulkPayment(any()))
             .thenReturn(getCreateConsentResponse());
+        when(paymentSpi.createPaymentInitiation(any(), any())).thenReturn(getSpiPaymentInitResponse());
+        when(paymentSpi.initiatePeriodicPayment(any(), any())).thenReturn(getSpiPaymentInitResponse());
+        when(paymentSpi.createBulkPayments(any(), any())).thenReturn(new SpiResponse<>(Collections.singletonList(getSpiPaymentInitResponse().getPayload()),new AspspConsentData()));
+    }
+
+    private SpiResponse<SpiPaymentInitialisationResponse> getSpiPaymentInitResponse() {
+        SpiPaymentInitialisationResponse response = new SpiPaymentInitialisationResponse();
+        response.setPaymentId(PAYMENT_ID);
+        response.setTransactionStatus(SpiTransactionStatus.RCVD);
+        return new SpiResponse<>(response, new AspspConsentData());
+    }
+
+    private PaymentInitialisationResponse getPaymentInitResponse() {
+        PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+        response.setPaymentId(PAYMENT_ID);
+        response.setTransactionStatus(RCVD);
+        return response;
     }
 
     @Test
@@ -235,7 +268,7 @@ public class EmbeddedScaPaymentServiceTest {
         return info;
     }
 
-    private SpiPisConsentRequest getSpiConsentRequest() {
-        return new SpiPisConsentRequest();
+    private PisConsentRequest getPisConsentRequest() {
+        return new PisConsentRequest();
     }
 }

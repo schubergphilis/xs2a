@@ -42,6 +42,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType.*;
+import static de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus.RJCT;
 
 @Slf4j
 @Service
@@ -109,14 +110,16 @@ public class PaymentService {
      * @return list of single payments forming bulk payment
      */
     public List<SpiSinglePayment> addBulkPayments(List<SpiSinglePayment> payments) {
-        List<AspspPayment> aspspPayments = payments.stream()
-                                               .filter(payment -> areFundsSufficient(payment.getDebtorAccount(), payment.getInstructedAmount().getContent()))
-                                               .map(payment -> paymentMapper.mapToAspspPayment(payment, BULK))
-                                               .collect(Collectors.toList());
-        List<AspspPayment> saved = paymentRepository.save(aspspPayments);
-        return saved.stream()
-                   .map(paymentMapper::mapToSpiPeriodicPayment)
-                   .collect(Collectors.toList());
+        return payments.stream()
+                   .map(p -> {
+                       if (areFundsSufficient(p.getDebtorAccount(), p.getInstructedAmount().getContent())) {
+                           AspspPayment saved = paymentRepository.save(paymentMapper.mapToAspspPayment(p, BULK));
+                           p = paymentMapper.mapToSpiSinglePayment(saved);
+                       }else {
+                           p.setPaymentStatus(RJCT);
+                       }
+                       return p;
+                   }).collect(Collectors.toList());
     }
 
     BigDecimal calculateAmountToBeCharged(String accountId) {
@@ -127,10 +130,11 @@ public class PaymentService {
     }
 
     //TODO Create GlobalExceptionHandler for error 400 from consentManagement https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/158
+
     /**
      * Updates status of PIS consent
      *
-     * @param consentId Consent primary identifier
+     * @param consentId     Consent primary identifier
      * @param consentStatus New status of the PIS consent
      */
     public void updatePaymentConsentStatus(@NotNull String consentId, SpiConsentStatus consentStatus) {
