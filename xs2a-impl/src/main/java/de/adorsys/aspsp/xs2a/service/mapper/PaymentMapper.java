@@ -304,7 +304,7 @@ public class PaymentMapper {
                        c.getData(),
                        c.getImageLink(),
                        c.getOtpMaxLength(),
-                       OtpFormat.valueOf(c.getSpiOtpFormat().getValue()),
+                       OtpFormat.getByValue(c.getSpiOtpFormat().getValue()).orElse(null),
                        c.getAdditionalInformation()))
                    .orElse(null);
     }
