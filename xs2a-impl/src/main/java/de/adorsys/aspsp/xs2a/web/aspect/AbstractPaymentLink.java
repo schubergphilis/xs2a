@@ -64,6 +64,8 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         if ("EXPLICIT".equals(aspspProfileService.getAuthorisationStartType())) {
             links.setStartAuthorisation(buildPath("/v1/{payment-service}/{paymentId}/authorisations", paymentService, paymentId));
         } else {
+            links.setScaStatus(
+                buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorisationId}", paymentService, paymentId, authorizationId));
             links.setStartAuthorisationWithPsuAuthentication(
                 buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorizationId));
         }
