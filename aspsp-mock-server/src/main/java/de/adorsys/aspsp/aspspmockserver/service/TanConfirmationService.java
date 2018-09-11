@@ -173,6 +173,7 @@ public class TanConfirmationService {
             mail.setText(getEmailContentFromTemplate(tanNumber), true);
 
             emailSender.send(mail.getMimeMessage());
+            log.info("Generated tan number: {}", tanNumber);
             return true;
         } catch (MessagingException e) {
             log.warn("Problem with creating or sanding email: {}", e);

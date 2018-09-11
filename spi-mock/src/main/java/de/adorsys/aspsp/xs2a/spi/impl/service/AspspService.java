@@ -73,4 +73,8 @@ public class AspspService {
         }
         return executionPaymentId;
     }
+
+    public void generateConfirmationCode() {
+        aspspRestTemplate.exchange(aspspRemoteUrls.getGenerateTanConfirmation(), HttpMethod.POST, null, Void.class);
+    }
 }

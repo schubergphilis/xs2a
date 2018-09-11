@@ -226,7 +226,7 @@ public class ConsentSpiImpl implements ConsentSpi {
                     UpdatePisConsentPsuDataResponse.class, request.getAuthorizationId()).getBody();
                 return new UpdatePisConsentPsuDataResponse(updatePisConsentPsuDataResponse.getScaStatus());
             } else if (hasSingleValue(spiScaMethods)) {
-                // TODO generate TAN
+                aspspService.generateConfirmationCode();
                 request.setScaStatus(CmsScaStatus.SCAMETHODSELECTED);
 
                 UpdatePisConsentPsuDataResponse updatePisConsentPsuDataResponse = consentRestTemplate.exchange(remotePisConsentUrls.updatePisConsentAuthorization(), HttpMethod.PUT, new HttpEntity<>(request),

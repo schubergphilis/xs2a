@@ -136,15 +136,14 @@ public class PisConsentService {
     public Optional<UpdatePisConsentPsuDataResponse> updateConsentAuthorization(String authorizationId, UpdatePisConsentPsuDataRequest request) {
         return pisConsentAuthorizationRepository.findByExternalId(authorizationId)
                    .map(p -> {
-                       p.setScaStatus(request.getScaStatus());
-                       if(CmsScaStatus.STARTED == p.getScaStatus()){
+                       if (CmsScaStatus.STARTED == p.getScaStatus()) {
                            p.setPassword(request.getPassword());
                            p.setPsuId(request.getPsuId());
-                       }
-                       if(CmsScaStatus.FINALISED == request.getScaStatus()){
+                       } else if (CmsScaStatus.FINALISED == p.getScaStatus()) {
                            p.getConsent().getPayments()
                                .forEach(pd -> pd.setExecutionId(request.getExecutionPaymentId()));
                        }
+                       p.setScaStatus(request.getScaStatus());
                        return pisConsentAuthorizationRepository.save(p);
                    }).map(pisConsentMapper::mapToUpdatePisConsentPsuDataResponse);
     }
