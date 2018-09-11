@@ -23,7 +23,7 @@ import java.util.Optional;
 
 public class RedirectPisAuthorizationService implements PisAuthorizationService {
     @Override
-    public Optional<Xsa2CreatePisConsentAuthorizationResponse> createConsentAuthorization(String paymentId, PaymentType paymentType) {
+    public Optional<Xsa2CreatePisConsentAuthorizationResponse> createConsentAuthorisation(String paymentId, PaymentType paymentType) {
         return null;
     }
 }

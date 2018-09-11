@@ -105,12 +105,12 @@ public class EmbeddedScaPaymentService implements ScaPaymentService {
                 response.setPaymentType(paymentType.name());
             });
         return IMPLICIT == profileService.getAuthorisationStartType()
-                   ? createPisAuthorisationIfImplicit(response, paymentType)
+                   ? createPisAuthorisationForImplicitApproach(response, paymentType)
                    : response;
     }
 
-    private PaymentInitialisationResponse createPisAuthorisationIfImplicit(PaymentInitialisationResponse response, PaymentType paymentType) {
-        pisAuthorizationService.createConsentAuthorization(response.getPaymentId(), paymentType)
+    private PaymentInitialisationResponse createPisAuthorisationForImplicitApproach(PaymentInitialisationResponse response, PaymentType paymentType) {
+        pisAuthorizationService.createConsentAuthorisation(response.getPaymentId(), paymentType)
             .ifPresent(a -> {
                 response.setAuthorizationId(a.getAuthorizationId());
                 response.setScaStatus(a.getScaStatus());

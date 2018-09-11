@@ -22,5 +22,5 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import java.util.Optional;
 
 public interface PisAuthorizationService {
-    Optional<Xsa2CreatePisConsentAuthorizationResponse> createConsentAuthorization(String paymentId, PaymentType paymentType);
+    Optional<Xsa2CreatePisConsentAuthorizationResponse> createConsentAuthorisation(String paymentId, PaymentType paymentType);
 }

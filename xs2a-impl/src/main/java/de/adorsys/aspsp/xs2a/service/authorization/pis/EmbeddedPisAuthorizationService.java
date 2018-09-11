@@ -30,7 +30,7 @@ public class EmbeddedPisAuthorizationService implements PisAuthorizationService 
     private final Xs2aPisConsentMapper pisConsentMapper;
 
     @Override
-    public Optional<Xsa2CreatePisConsentAuthorizationResponse> createConsentAuthorization(String paymentId, PaymentType paymentType) {
+    public Optional<Xsa2CreatePisConsentAuthorizationResponse> createConsentAuthorisation(String paymentId, PaymentType paymentType) {
         return pisConsentMapper.mapToXsa2CreatePisConsentAuthorizationResponse(consentSpi.createPisConsentAuthorization(paymentId), paymentType);
     }
 }

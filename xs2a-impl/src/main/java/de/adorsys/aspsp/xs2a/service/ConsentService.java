@@ -230,7 +230,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     }
 
     public ResponseObject<Xsa2CreatePisConsentAuthorizationResponse> createPisConsentAuthorization(String paymentId, PaymentType paymentType) {
-        return pisAuthorizationService.createConsentAuthorization(paymentId, paymentType)
+        return pisAuthorizationService.createConsentAuthorisation(paymentId, paymentType)
                    .map(resp -> ResponseObject.<Xsa2CreatePisConsentAuthorizationResponse>builder()
                                     .body(resp)
                                     .build())

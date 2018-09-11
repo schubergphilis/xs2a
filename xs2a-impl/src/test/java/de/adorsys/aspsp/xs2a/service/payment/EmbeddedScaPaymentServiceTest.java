@@ -103,7 +103,7 @@ public class EmbeddedScaPaymentServiceTest {
     }
 
     private void createPeriodicPayment(boolean isImplicit) {
-        when(pisAuthorizationService.createConsentAuthorization(anyString(), any()))
+        when(pisAuthorizationService.createConsentAuthorisation(anyString(), any()))
             .thenReturn(getCreateAuth(PERIODIC));
         //When
         PaymentInitialisationResponse response = paymentService.createPeriodicPayment(getPeriodic(), getTppInfo(), PAYMENT_PRODUCT);
@@ -131,7 +131,7 @@ public class EmbeddedScaPaymentServiceTest {
     }
 
     private void createSinglePayment(boolean isImplicit) {
-        when(pisAuthorizationService.createConsentAuthorization(anyString(), any()))
+        when(pisAuthorizationService.createConsentAuthorisation(anyString(), any()))
             .thenReturn(getCreateAuth(SINGLE));
         //When
         PaymentInitialisationResponse response = paymentService.createSinglePayment(getSinglePayment(), getTppInfo(), PAYMENT_PRODUCT);
@@ -159,7 +159,7 @@ public class EmbeddedScaPaymentServiceTest {
     }
 
     private void createBulkPayment(boolean isImplicit) {
-        when(pisAuthorizationService.createConsentAuthorization(anyString(), any()))
+        when(pisAuthorizationService.createConsentAuthorisation(anyString(), any()))
             .thenReturn(getCreateAuth(BULK));
         //When
         List<PaymentInitialisationResponse> serviceResponse = paymentService.createBulkPayment(Collections.singletonList(getSinglePayment()), getTppInfo(), PAYMENT_PRODUCT);
