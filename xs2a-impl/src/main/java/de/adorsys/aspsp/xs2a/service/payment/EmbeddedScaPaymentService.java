@@ -95,7 +95,7 @@ public class EmbeddedScaPaymentService implements ScaPaymentService {
 
     private PaymentInitialisationResponse extendPaymentResponseFields(PaymentInitialisationResponse response, CreatePisConsentResponse cmsResponse, PaymentType paymentType) {
         Optional.ofNullable(cmsResponse)
-            .filter(c -> StringUtils.isNotBlank(c.getConsentId()) && StringUtils.isNotBlank(c.getPaymentId()))
+            .filter(c -> StringUtils.isNoneBlank(c.getConsentId(), c.getPaymentId()))
             .ifPresent(c -> {
                 response.setPaymentId(c.getPaymentId());
                 response.setTransactionStatus(Xs2aTransactionStatus.RCVD);
