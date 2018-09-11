@@ -49,19 +49,18 @@ import java.util.List;
 @Component
 @Profile("data_test")
 public class AccountMockServerData {
+    private final List<String> ALLOWED_PAYMENTS = Collections.singletonList("sepa-credit-transfers");
+    private final Currency EUR = Currency.getInstance("EUR");
+    private final Currency USD = Currency.getInstance("USD");
+    private final SpiBalanceType BALANCE_TYPE = SpiBalanceType.INTERIM_AVAILABLE;
+    // Allowed Payments for Cucumber Test User
+    private final List<String> ALLOWED_PAYMENTS_CUCUMBER_TESTUSER = Arrays.asList("sepa-credit-transfers");
     private PsuRepository psuRepository;
     private TransactionRepository transactionRepository;
     private TanRepository tanRepository;
     private PaymentRepository paymentRepository;
     private List<SpiAccountDetails> accountDetails;
     private List<Psu> psus;
-    private final List<String> ALLOWED_PAYMENTS = Collections.singletonList("sepa-credit-transfers");
-    private final Currency EUR = Currency.getInstance("EUR");
-    private final Currency USD = Currency.getInstance("USD");
-    private final SpiBalanceType BALANCE_TYPE = SpiBalanceType.INTERIM_AVAILABLE;
-
-    // Allowed Payments for Cucumber Test User
-    private final List<String> ALLOWED_PAYMENTS_CUCUMBER_TESTUSER = Arrays.asList("sepa-credit-transfers");
 
     public AccountMockServerData(PsuRepository psuRepository, TransactionRepository transactionRepository, TanRepository tanRepository, PaymentRepository paymentRepository) {
         this.psuRepository = psuRepository;
@@ -201,7 +200,6 @@ public class AccountMockServerData {
             null,
             null,
             balance
-
         );
     }
 
