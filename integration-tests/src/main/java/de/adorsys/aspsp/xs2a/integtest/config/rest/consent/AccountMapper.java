@@ -210,9 +210,9 @@ public class AccountMapper {
                    .orElse(null);
     }
 
-    private UsageEnum mapToUsageEnum(SpiUsageType spiUsageType) {
+    private Xs2aUsageType mapToUsageEnum(SpiUsageType spiUsageType) {
         return Optional.ofNullable(spiUsageType)
-                   .map(usage -> UsageEnum.valueOf(usage.name()))
+                   .map(usage -> Xs2aUsageType.valueOf(usage.name()))
                    .orElse(null);
     }
 }

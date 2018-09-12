@@ -82,7 +82,7 @@ public class Xs2aAccountDetails {
     private final String linkedAccounts;
 
     @ApiModelProperty(value = "Specifies the usage of the account")
-    private final UsageEnum usageEnum;
+    private final Xs2aUsageType usageType;
 
     @ApiModelProperty(value = "Specifications that might be provided by the ASPSP", example = "Details")
     private final String details;

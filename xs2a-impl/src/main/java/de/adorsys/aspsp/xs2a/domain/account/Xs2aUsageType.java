@@ -22,21 +22,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public enum UsageEnum {
+public enum Xs2aUsageType {
     PRIV("PRIV"),
     ORGA("ORGA");
 
-    private final static Map<String, UsageEnum> container = new HashMap<>();
+    private final static Map<String, Xs2aUsageType> container = new HashMap<>();
 
     static {
-        for (UsageEnum usageEnum : values()) {
-            container.put(usageEnum.getValue(), usageEnum);
+        for (Xs2aUsageType usageType : values()) {
+            container.put(usageType.getValue(), usageType);
         }
     }
 
     private String value;
 
-    UsageEnum(String value) {
+    Xs2aUsageType(String value) {
         this.value = value;
     }
 
@@ -45,7 +45,7 @@ public enum UsageEnum {
     }
 
     @JsonIgnore
-    public static Optional<UsageEnum> getByValue(String name) {
+    public static Optional<Xs2aUsageType> getByValue(String name) {
         return Optional.ofNullable(container.get(name));
     }
 

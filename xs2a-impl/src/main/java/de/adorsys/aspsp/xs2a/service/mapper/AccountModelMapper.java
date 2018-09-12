@@ -59,7 +59,7 @@ public final class AccountModelMapper {
             .cashAccountType(Optional.ofNullable(accountDetails.getCashAccountType())
                                  .map(Enum::name)
                                  .orElse(null))
-            .usage(Optional.ofNullable(accountDetails.getUsageEnum())
+            .usage(Optional.ofNullable(accountDetails.getUsageType())
                        .map(usage -> AccountDetails.UsageEnum.fromValue(usage.getValue()))
                        .orElse(null))
             .status(Optional.ofNullable(accountDetails.getAccountStatus())

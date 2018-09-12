@@ -67,13 +67,13 @@ public class AccountModelMapperTest {
 
         accountDetailsList.add(new Xs2aAccountDetails("1", "2", "3", "4",
             "5", "6", Currency.getInstance("EUR"), "8", "9", CashAccountType.CACC,
-            AccountStatus.ENABLED, "11", "linked", UsageEnum.PRIV, "details", new ArrayList<>()));
+            AccountStatus.ENABLED, "11", "linked", Xs2aUsageType.PRIV, "details", new ArrayList<>()));
         accountDetailsList.add(new Xs2aAccountDetails("x1", "x2", "x3", "x4",
             "x5", "x6", Currency.getInstance("EUR"), "x8", "x9", CashAccountType.CACC,
-            AccountStatus.ENABLED, "x11", "linked2", UsageEnum.ORGA, "details2", Arrays.asList(inputBalance)));
+            AccountStatus.ENABLED, "x11", "linked2", Xs2aUsageType.ORGA, "details2", Arrays.asList(inputBalance)));
         Xs2aAccountDetails accountDetails = new Xs2aAccountDetails("y1", "y2", "y3", "y4",
             "y5", "y6", Currency.getInstance("EUR"), "y8", "y9", CashAccountType.CACC,
-            AccountStatus.ENABLED, "y11", "linked3", UsageEnum.PRIV, "details3", new ArrayList<>());
+            AccountStatus.ENABLED, "y11", "linked3", Xs2aUsageType.PRIV, "details3", new ArrayList<>());
         accountDetails.setLinks(createLinks());
         accountDetailsList.add(accountDetails);
         Map<String, List<Xs2aAccountDetails>> accountDetailsMap = Collections.singletonMap("TEST", accountDetailsList);

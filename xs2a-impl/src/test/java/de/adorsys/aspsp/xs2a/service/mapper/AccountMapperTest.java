@@ -75,7 +75,7 @@ public class AccountMapperTest {
         assertThat(actualAccountDetails.getCashAccountType()).isEqualTo(CashAccountType.CACC);
         assertThat(actualAccountDetails.getAccountStatus()).isEqualTo(AccountStatus.ENABLED);
         assertThat(actualAccountDetails.getBic()).isEqualTo("EDEKDEHHXXX");
-        assertThat(actualAccountDetails.getUsageEnum()).isEqualTo(UsageEnum.PRIV);
+        assertThat(actualAccountDetails.getUsageType()).isEqualTo(Xs2aUsageType.PRIV);
         assertThat(actualAccountDetails.getDetails()).isEqualTo("Some details");
         assertThat(actualAccountDetails.getBalances()).isEqualTo(Collections.emptyList());
     }

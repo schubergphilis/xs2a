@@ -239,9 +239,9 @@ public class AccountMapper {
                    .orElse(null);
     }
 
-    private UsageEnum mapToUsageEnum(SpiUsageType spiUsageType) {
+    private Xs2aUsageType mapToUsageEnum(SpiUsageType spiUsageType) {
         return Optional.ofNullable(spiUsageType)
-                   .map(usage -> UsageEnum.valueOf(usage.name()))
+                   .map(usage -> Xs2aUsageType.valueOf(usage.name()))
                    .orElse(null);
     }
 
@@ -268,6 +268,6 @@ public class AccountMapper {
     public Xs2aAccountDetails mapToAccountDetailNoBalances(Xs2aAccountDetails detail) {
         return new Xs2aAccountDetails(detail.getId(), detail.getIban(), detail.getBban(), detail.getPan(),
             detail.getMaskedPan(), detail.getMsisdn(), detail.getCurrency(), detail.getName(),
-            detail.getProduct(), detail.getCashAccountType(), detail.getAccountStatus(), detail.getBic(), detail.getLinkedAccounts(), detail.getUsageEnum(), detail.getDetails(), null);
+            detail.getProduct(), detail.getCashAccountType(), detail.getAccountStatus(), detail.getBic(), detail.getLinkedAccounts(), detail.getUsageType(), detail.getDetails(), null);
     }
 }
