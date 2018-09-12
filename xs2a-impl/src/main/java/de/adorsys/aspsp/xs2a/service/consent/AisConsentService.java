@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.consent.api.AisConsentStatusResponse;
 import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.ais.*;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAccountAccess;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aAisConsentMapper;
@@ -193,10 +193,10 @@ public class AisConsentService {
                    .collect(Collectors.toSet());
     }
 
-    private Set<String> getIbansFromAccountReference(List<AccountReference> references) {
+    private Set<String> getIbansFromAccountReference(List<Xs2aAccountReference> references) {
         return Optional.ofNullable(references)
                    .map(list -> list.stream()
-                                    .map(AccountReference::getIban)
+                                    .map(Xs2aAccountReference::getIban)
                                     .collect(Collectors.toSet()))
                    .orElseGet(Collections::emptySet);
     }

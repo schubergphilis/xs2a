@@ -24,7 +24,7 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.PisPayment;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentProduct;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aPurposeCode;
 import de.adorsys.aspsp.xs2a.domain.consent.CreatePisConsentData;
@@ -175,7 +175,7 @@ public class Xs2aPisConsentMapper {
                    }).orElse(null);
     }
 
-    private CmsAccountReference mapToPisAccountReference(AccountReference accountReference) {
+    private CmsAccountReference mapToPisAccountReference(Xs2aAccountReference accountReference) {
         return Optional.ofNullable(accountReference)
                    .map(ref -> new CmsAccountReference(
                        ref.getIban(),
