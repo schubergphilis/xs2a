@@ -21,7 +21,6 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 public class SpiTransaction {
@@ -46,9 +45,4 @@ public class SpiTransaction {
     private final String remittanceInformationStructured;
     private final String purposeCode;
     private final String bankTransactionCodeCode;
-    private final String proprietaryBankTransactionCode;
-
-    public boolean isPendingTransaction() {
-        return bookingDate == null;
-    }
 }

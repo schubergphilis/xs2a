@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -55,9 +56,9 @@ public class PaymentController12 implements PaymentApi {
                                                         String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
 
         ResponseObject<Xs2aTransactionStatus> response = PaymentType.getByValue(paymentService)
-                                                         .map(pt -> xs2aPaymentService.getPaymentStatusById(paymentId, pt))
-                                                         .orElseGet(() -> ResponseObject.<Xs2aTransactionStatus>builder()
-                                                                              .fail(new MessageError(FORMAT_ERROR)).build());
+                                                             .map(pt -> xs2aPaymentService.getPaymentStatusById(paymentId, pt))
+                                                             .orElseGet(() -> ResponseObject.<Xs2aTransactionStatus>builder()
+                                                                                  .fail(new MessageError(FORMAT_ERROR)).build());
 
         return responseMapper.ok(response, PaymentModelMapperPsd2::mapToStatusResponse12);
     }
@@ -140,6 +141,6 @@ public class PaymentController12 implements PaymentApi {
 
     @Override
     public ResponseEntity<?> updatePaymentPsuData(String paymentService, String paymentId, String authorisationId, UUID xRequestID, Object body, String digest, String signature, byte[] tpPSignatureCertificate, String PSU_ID, String psUIDType, String psUCorporateID, String psUCorporateIDType, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
-        return null; //TODO implement
+        return responseMapper.ok(consentService.updatePisConsentPsuData(ConsentModelMapper.mapToPisUpdatePsuData(PSU_ID, paymentId, authorisationId, paymentService, (HashMap) body)), ConsentModelMapper::mapToUpdatePsuAuthenticationResponse);
     }
 }
