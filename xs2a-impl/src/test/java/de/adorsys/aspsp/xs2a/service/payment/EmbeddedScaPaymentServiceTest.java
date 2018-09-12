@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.service.payment;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
@@ -243,8 +243,8 @@ public class EmbeddedScaPaymentServiceTest {
         return amount;
     }
 
-    private AccountReference getReference() {
-        AccountReference reference = new AccountReference();
+    private Xs2aAccountReference getReference() {
+        Xs2aAccountReference reference = new Xs2aAccountReference();
         reference.setIban(IBAN);
         reference.setCurrency(CURRENCY);
         return reference;
