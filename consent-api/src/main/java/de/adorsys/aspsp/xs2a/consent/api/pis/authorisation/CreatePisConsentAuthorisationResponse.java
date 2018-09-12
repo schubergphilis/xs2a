@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain.fund;
+package de.adorsys.aspsp.xs2a.consent.api.pis.authorisation;
 
-import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
-import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 
-@Getter
+@Data
 @AllArgsConstructor
-public class SpiFundsConfirmationRequest {
-    private final String cardNumber;
-    private final SpiAccountReference psuAccount;
-    private final String payee;
-    private final SpiAmount instructedAmount;
+@ApiModel(description = "PIS consent authorisation", value = "PisConsentAuthorisation")
+public class CreatePisConsentAuthorisationResponse {
+    @ApiModelProperty(value = "ID of the Authorisation", required = true, example = "6dc3d5b3-5023-7848-3853-f7200a64e80d")
+    private String authorizationId;
 }

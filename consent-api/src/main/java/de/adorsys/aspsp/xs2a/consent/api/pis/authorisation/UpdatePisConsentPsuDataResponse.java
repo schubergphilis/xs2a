@@ -14,23 +14,14 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.domain.consent;
+package de.adorsys.aspsp.xs2a.consent.api.pis.authorisation;
 
-import de.adorsys.aspsp.xs2a.domain.Links;
+import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class Xsa2CreatePisConsentAuthorizationResponse {
-    private String authorizationId;
-    private String scaStatus;
-    private String paymentType;
-    private Links links = new Links();
-
-    public Xsa2CreatePisConsentAuthorizationResponse(String authorizationId, String scaStatus, String paymentType) {
-        this.authorizationId = authorizationId;
-        this.scaStatus = scaStatus;
-        this.paymentType = paymentType;
-    }
+public class UpdatePisConsentPsuDataResponse {
+    private CmsScaStatus scaStatus;
 }
