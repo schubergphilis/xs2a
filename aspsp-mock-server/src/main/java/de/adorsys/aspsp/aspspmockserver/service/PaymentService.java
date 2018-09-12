@@ -39,10 +39,9 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType.*;
-import static de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus.RJCT;
+import static de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType.PERIODIC;
+import static de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType.SINGLE;
 
 @Slf4j
 @Service
@@ -110,16 +109,8 @@ public class PaymentService {
      * @return list of single payments forming bulk payment
      */
     public List<SpiSinglePayment> addBulkPayments(List<SpiSinglePayment> payments) {
-        return payments.stream()
-                   .map(p -> {
-                       if (areFundsSufficient(p.getDebtorAccount(), p.getInstructedAmount().getContent())) {
-                           AspspPayment saved = paymentRepository.save(paymentMapper.mapToAspspPayment(p, BULK));
-                           p = paymentMapper.mapToSpiSinglePayment(saved);
-                       }else {
-                           p.setPaymentStatus(RJCT);
-                       }
-                       return p;
-                   }).collect(Collectors.toList());
+        List<AspspPayment> savedPayments = paymentRepository.save(paymentMapper.mapToAspspPaymentList(payments));
+        return paymentMapper.mapToSpiSinglePaymentList(savedPayments);
     }
 
     BigDecimal calculateAmountToBeCharged(String accountId) {
