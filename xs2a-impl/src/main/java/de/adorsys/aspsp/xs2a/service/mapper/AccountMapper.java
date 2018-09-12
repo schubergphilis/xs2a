@@ -33,22 +33,22 @@ public class AccountMapper {
     public Xs2aAccountDetails mapToAccountDetails(SpiAccountDetails accountDetails) {
         return Optional.ofNullable(accountDetails)
                    .map(ad -> new Xs2aAccountDetails(
-                           ad.getId(),
-                           ad.getIban(),
-                           ad.getBban(),
-                           ad.getPan(),
-                           ad.getMaskedPan(),
-                           ad.getMsisdn(),
-                           ad.getCurrency(),
-                           ad.getName(),
-                           ad.getProduct(),
-                           mapToAccountType(ad.getCashSpiAccountType()),
-                           mapToAccountStatus(ad.getSpiAccountStatus()),
-                           ad.getBic(),
-                           ad.getLinkedAccounts(),
-                           mapToUsageEnum(ad.getUsageType()),
-                           ad.getDetails(),
-                           mapToBalancesList(ad.getBalances())
+                       ad.getId(),
+                       ad.getIban(),
+                       ad.getBban(),
+                       ad.getPan(),
+                       ad.getMaskedPan(),
+                       ad.getMsisdn(),
+                       ad.getCurrency(),
+                       ad.getName(),
+                       ad.getProduct(),
+                       mapToAccountType(ad.getCashSpiAccountType()),
+                       mapToAccountStatus(ad.getSpiAccountStatus()),
+                       ad.getBic(),
+                       ad.getLinkedAccounts(),
+                       mapToXs2aUsageType(ad.getUsageType()),
+                       ad.getDetails(),
+                       mapToBalancesList(ad.getBalances())
                        )
                    )
                    .orElse(null);
@@ -239,7 +239,7 @@ public class AccountMapper {
                    .orElse(null);
     }
 
-    private Xs2aUsageType mapToUsageEnum(SpiUsageType spiUsageType) {
+    private Xs2aUsageType mapToXs2aUsageType(SpiUsageType spiUsageType) {
         return Optional.ofNullable(spiUsageType)
                    .map(usage -> Xs2aUsageType.valueOf(usage.name()))
                    .orElse(null);

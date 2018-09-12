@@ -46,7 +46,7 @@ public class AccountMapper {
                            mapToAccountStatus(ad.getSpiAccountStatus()),
                            ad.getBic(),
                            ad.getLinkedAccounts(),
-                           mapToUsageEnum(ad.getUsageType()),
+                           mapToUsageType(ad.getUsageType()),
                            ad.getDetails(),
                            mapToBalancesList(ad.getBalances())
                        )
@@ -210,7 +210,7 @@ public class AccountMapper {
                    .orElse(null);
     }
 
-    private Xs2aUsageType mapToUsageEnum(SpiUsageType spiUsageType) {
+    private Xs2aUsageType mapToUsageType(SpiUsageType spiUsageType) {
         return Optional.ofNullable(spiUsageType)
                    .map(usage -> Xs2aUsageType.valueOf(usage.name()))
                    .orElse(null);
