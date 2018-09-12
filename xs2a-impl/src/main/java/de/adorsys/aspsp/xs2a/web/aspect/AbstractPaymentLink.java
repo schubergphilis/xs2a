@@ -65,14 +65,14 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         return links;
     }
 
-    private Links addEmbeddedRelatedLinks(Links links, String paymentService, String paymentId, String authorizationId) {
+    private Links addEmbeddedRelatedLinks(Links links, String paymentService, String paymentId, String authorisationId) {
         if (EXPLICIT == aspspProfileService.getAuthorisationStartType()) {
             links.setStartAuthorisation(buildPath("/v1/{payment-service}/{paymentId}/authorisations", paymentService, paymentId));
         } else {
             links.setScaStatus(
-                buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorisationId}", paymentService, paymentId, authorizationId));
+                buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorisationId}", paymentService, paymentId, authorisationId));
             links.setStartAuthorisationWithPsuAuthentication(
-                buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorizationId));
+                buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorisationId));
         }
 
         return links;
