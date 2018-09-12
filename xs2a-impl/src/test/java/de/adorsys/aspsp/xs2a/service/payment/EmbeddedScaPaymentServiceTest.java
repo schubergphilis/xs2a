@@ -23,9 +23,9 @@ import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
-import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorizationResponse;
+import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
-import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorizationService;
+import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorisationService;
 import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
@@ -78,7 +78,7 @@ public class EmbeddedScaPaymentServiceTest {
     @Mock
     private AspspProfileService profileService;
     @Mock
-    private PisAuthorizationService pisAuthorizationService;
+    private PisAuthorisationService pisAuthorizationService;
     @Mock
     private PaymentSpi paymentSpi;
     @Mock
@@ -207,8 +207,8 @@ public class EmbeddedScaPaymentServiceTest {
         assertThat(response.getPaymentType()).isEqualTo(BULK.name());
     }
 
-    private Optional<Xsa2CreatePisConsentAuthorizationResponse> getCreateAuth(PaymentType paymentType) {
-        return Optional.of(new Xsa2CreatePisConsentAuthorizationResponse(AUTH_ID, STARTED.name(), paymentType.name()));
+    private Optional<Xsa2CreatePisConsentAuthorisationResponse> getCreateAuth(PaymentType paymentType) {
+        return Optional.of(new Xsa2CreatePisConsentAuthorisationResponse(AUTH_ID, STARTED.name(), paymentType.name()));
     }
 
     private CreatePisConsentResponse getCreateConsentResponse() {

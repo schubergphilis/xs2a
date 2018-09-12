@@ -20,7 +20,7 @@ import com.google.common.collect.Lists;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.domain.consent.CreatePisConsentData;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
-import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorizationService;
+import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorisationService;
 import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
@@ -47,7 +47,7 @@ import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.*;
 @RequiredArgsConstructor
 public class EmbeddedScaPaymentService implements ScaPaymentService {
     private final AspspProfileService profileService;
-    private final PisAuthorizationService pisAuthorizationService;
+    private final PisAuthorisationService pisAuthorizationService;
     private final PaymentSpi paymentSpi;
     private final PaymentMapper paymentMapper;
     private final PisConsentService pisConsentService;

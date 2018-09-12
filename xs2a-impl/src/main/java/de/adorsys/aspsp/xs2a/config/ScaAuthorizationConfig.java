@@ -73,7 +73,7 @@ public class ScaAuthorizationConfig {
     }
 
     @Bean
-    public ScaPaymentService scaPaymentService(Xs2aPisConsentMapper xs2aPisConsentMapper, AspspProfileService aspspProfileService, PisAuthorizationService pisAuthorizationService, PisConsentService pisConsentService, PaymentMapper paymentMapper, PaymentSpi paymentSpi) {
+    public ScaPaymentService scaPaymentService(Xs2aPisConsentMapper xs2aPisConsentMapper, AspspProfileService aspspProfileService, PisAuthorisationService pisAuthorisationService, PisConsentService pisConsentService, PaymentMapper paymentMapper, PaymentSpi paymentSpi) {
         ScaApproach scaApproach = getScaApproach();
         if (OAUTH == scaApproach) {
             return new OauthScaPaymentService(paymentMapper, paymentSpi);
@@ -82,7 +82,7 @@ public class ScaAuthorizationConfig {
             return new DecoupedScaPaymentService();
         }
         if (EMBEDDED == scaApproach) {
-            return new EmbeddedScaPaymentService(aspspProfileService, pisAuthorizationService, paymentSpi, paymentMapper, pisConsentService);
+            return new EmbeddedScaPaymentService(aspspProfileService, pisAuthorisationService, paymentSpi, paymentMapper, pisConsentService);
         }
         return new RedirectScaPaymentService(pisConsentService, paymentMapper, paymentSpi);
     }
