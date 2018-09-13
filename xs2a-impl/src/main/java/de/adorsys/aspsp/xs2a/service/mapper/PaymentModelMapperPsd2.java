@@ -184,13 +184,17 @@ public class PaymentModelMapperPsd2 {
     }
 
     private ChallengeData mapToChallengeData(Xs2aChallengeData xs2aChallengeData) {
-        ChallengeData challengeData = new ChallengeData();
-        challengeData.setImage(xs2aChallengeData.getImage());
-        challengeData.setData(xs2aChallengeData.getData());
-        challengeData.setImageLink(xs2aChallengeData.getImageLink());
-        challengeData.setOtpMaxLength(xs2aChallengeData.getOtpMaxLength());
-        challengeData.setOtpFormat(ChallengeData.OtpFormatEnum.fromValue(xs2aChallengeData.getOtpFormat().getValue()));
-        challengeData.setAdditionalInformation(xs2aChallengeData.getAdditionalInformation());
-        return challengeData;
+        return Optional.ofNullable(xs2aChallengeData)
+                   .map(xs2aChallenge -> {
+                       ChallengeData psd2Challenge = new ChallengeData();
+                       psd2Challenge.setImage(xs2aChallengeData.getImage());
+                       psd2Challenge.setData(xs2aChallengeData.getData());
+                       psd2Challenge.setImageLink(xs2aChallengeData.getImageLink());
+                       psd2Challenge.setOtpMaxLength(xs2aChallengeData.getOtpMaxLength());
+                       psd2Challenge.setOtpFormat(ChallengeData.OtpFormatEnum.fromValue(xs2aChallengeData.getOtpFormat().getValue()));
+                       psd2Challenge.setAdditionalInformation(xs2aChallengeData.getAdditionalInformation());
+                       return psd2Challenge;
+                   })
+                   .orElse(null);
     }
 }
