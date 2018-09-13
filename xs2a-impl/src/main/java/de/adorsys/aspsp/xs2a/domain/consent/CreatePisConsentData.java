@@ -16,7 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.domain.consent;
 
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.domain.pis.TppInfo;
@@ -28,7 +28,7 @@ import java.util.Map;
 @Value
 public class CreatePisConsentData {
     private SinglePayment singlePayment;
-    private Map<SinglePayment, PaymentInitialisationResponse> paymentIdentifierMap;
+    private Map<SinglePayment, PaymentInitiationResponse> paymentIdentifierMap;
     private PeriodicPayment periodicPayment;
     private TppInfo tppInfo;
     private String paymentProduct;
@@ -43,7 +43,7 @@ public class CreatePisConsentData {
         this.periodicPayment = null;
     }
 
-    public CreatePisConsentData(Map<SinglePayment, PaymentInitialisationResponse> paymentIdentifierMap, TppInfo tppInfo, String paymentProduct, AspspConsentData aspspConsentData) {
+    public CreatePisConsentData(Map<SinglePayment, PaymentInitiationResponse> paymentIdentifierMap, TppInfo tppInfo, String paymentProduct, AspspConsentData aspspConsentData) {
         this.paymentIdentifierMap = paymentIdentifierMap;
         this.tppInfo = tppInfo;
         this.paymentProduct = paymentProduct;

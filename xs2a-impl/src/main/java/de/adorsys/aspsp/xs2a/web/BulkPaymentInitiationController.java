@@ -18,7 +18,7 @@
 package de.adorsys.aspsp.xs2a.web;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
@@ -55,7 +55,7 @@ public class BulkPaymentInitiationController {
         @ApiImplicitParam(name = "signature", value = "98c0", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "tpp-signature-certificate", value = "some certificate", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "tpp-qwac-certificate", value = "qwac certificate", required = true, dataType = "String", paramType = "header")})
-    public ResponseEntity<List<PaymentInitialisationResponse>> createBulkPaymentInitiation(
+    public ResponseEntity<List<PaymentInitiationResponse>> createBulkPaymentInitiation(
         @ApiParam(name = "payment-product", value = "The addressed payment product endpoint for bulk payments e.g. for a bulk SEPA Credit Transfers", allowableValues = "sepa-credit-transfers, target-2-payments,instant-sepa-credit-transfers, cross-border-credit-transfers")
         @PathVariable("payment-product") String paymentProduct,
         @RequestHeader(name = "tpp-signature-certificate", required = false) String tppSignatureCertificate,
@@ -64,7 +64,7 @@ public class BulkPaymentInitiationController {
         for (SinglePayment payment : payments) {
             ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(payment.getAccountReferences());
             if (accountReferenceValidationResponse.hasError()) {
-                return responseMapper.created(ResponseObject.<List<PaymentInitialisationResponse>>builder().fail(accountReferenceValidationResponse.getError()).build());
+                return responseMapper.created(ResponseObject.<List<PaymentInitiationResponse>>builder().fail(accountReferenceValidationResponse.getError()).build());
             }
         }
         return responseMapper.created(paymentService.createBulkPayments(payments, tppSignatureCertificate, paymentProduct));

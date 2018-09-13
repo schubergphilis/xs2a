@@ -18,14 +18,14 @@ package de.adorsys.aspsp.xs2a.service.payment;
 
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.domain.pis.TppInfo;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
-import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import org.junit.Before;
@@ -84,7 +84,7 @@ public class OauthScaPaymentServiceTest {
         //Given
         List<SinglePayment> payments = getBulk(true, true);
         //When
-        List<PaymentInitialisationResponse> actualResponse = oauthScaPaymentService.createBulkPayment(payments, TPP_INFO, ALLOWED_PAYMENT_PRODUCT);
+        List<PaymentInitiationResponse> actualResponse = oauthScaPaymentService.createBulkPayment(payments, TPP_INFO, ALLOWED_PAYMENT_PRODUCT);
         assertNotNull(actualResponse);
         assertTrue(actualResponse.get(0).getPaymentId().equals(PAYMENT_ID) && actualResponse.get(1).getPaymentId().equals(PAYMENT_ID));
         assertTrue(actualResponse.get(0).getTransactionStatus().equals(Xs2aTransactionStatus.RCVD) && actualResponse.get(1).getTransactionStatus().equals(Xs2aTransactionStatus.RCVD));
@@ -96,7 +96,7 @@ public class OauthScaPaymentServiceTest {
         //Given
         List<SinglePayment> payments = getBulk(true, false);
         //When
-        List<PaymentInitialisationResponse> actualResponse = oauthScaPaymentService.createBulkPayment(payments, TPP_INFO, ALLOWED_PAYMENT_PRODUCT);
+        List<PaymentInitiationResponse> actualResponse = oauthScaPaymentService.createBulkPayment(payments, TPP_INFO, ALLOWED_PAYMENT_PRODUCT);
         assertNotNull(actualResponse);
         assertTrue(actualResponse.get(0).getPaymentId().equals(PAYMENT_ID) && actualResponse.get(1).getPaymentId() == null);
         assertTrue(actualResponse.get(0).getTransactionStatus().equals(Xs2aTransactionStatus.RCVD) && actualResponse.get(1).getTransactionStatus().equals(Xs2aTransactionStatus.RJCT));
@@ -108,7 +108,7 @@ public class OauthScaPaymentServiceTest {
         //Given
         List<SinglePayment> payments = getBulk(false, false);
         //When
-        List<PaymentInitialisationResponse> actualResponse = oauthScaPaymentService.createBulkPayment(payments, TPP_INFO, ALLOWED_PAYMENT_PRODUCT);
+        List<PaymentInitiationResponse> actualResponse = oauthScaPaymentService.createBulkPayment(payments, TPP_INFO, ALLOWED_PAYMENT_PRODUCT);
         assertNotNull(actualResponse);
         assertTrue(actualResponse.get(0).getPaymentId() == null && actualResponse.get(1).getPaymentId() == null);
         assertTrue(actualResponse.get(0).getTransactionStatus().equals(Xs2aTransactionStatus.RJCT) && actualResponse.get(1).getTransactionStatus().equals(Xs2aTransactionStatus.RJCT));
@@ -124,8 +124,8 @@ public class OauthScaPaymentServiceTest {
         return Arrays.asList(getPayment(firstOk), getPayment(secondOk));
     }
 
-    private PaymentInitialisationResponse getResp(boolean paymentPassed) {
-        PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+    private PaymentInitiationResponse getResp(boolean paymentPassed) {
+        PaymentInitiationResponse response = new PaymentInitiationResponse();
         if (paymentPassed) {
             response.setPaymentId(PAYMENT_ID);
             response.setTransactionStatus(Xs2aTransactionStatus.RCVD);
@@ -136,12 +136,12 @@ public class OauthScaPaymentServiceTest {
         return response;
     }
 
-    private List<SpiPaymentInitialisationResponse> getSpiRespList(boolean firstOk, boolean secondOk) {
+    private List<SpiPaymentInitiationResponse> getSpiRespList(boolean firstOk, boolean secondOk) {
         return Arrays.asList(getSpiResp(firstOk), getSpiResp(secondOk));
     }
 
-    private SpiPaymentInitialisationResponse getSpiResp(boolean paymentOk) {
-        SpiPaymentInitialisationResponse response = new SpiPaymentInitialisationResponse();
+    private SpiPaymentInitiationResponse getSpiResp(boolean paymentOk) {
+        SpiPaymentInitiationResponse response = new SpiPaymentInitiationResponse();
         if (paymentOk) {
             response.setPaymentId(PAYMENT_ID);
             response.setTransactionStatus(SpiTransactionStatus.RCVD);

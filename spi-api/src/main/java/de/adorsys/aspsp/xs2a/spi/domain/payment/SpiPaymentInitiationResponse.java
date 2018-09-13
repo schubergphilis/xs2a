@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import lombok.Data;
 
 @Data
-public class SpiPaymentInitialisationResponse {
+public class SpiPaymentInitiationResponse {
     private SpiTransactionStatus transactionStatus;
     private String paymentId;
     private SpiAmount spiTransactionFees;

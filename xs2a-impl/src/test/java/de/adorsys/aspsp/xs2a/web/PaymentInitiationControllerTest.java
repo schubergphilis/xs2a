@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.*;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
@@ -116,15 +116,15 @@ public class PaymentInitiationControllerTest {
 
     @Test
     public void createPaymentInitiation() throws IOException {
-        when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(readPaymentInitialisationResponse(), HttpStatus.CREATED));
+        when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(readPaymentInitiationResponse(), HttpStatus.CREATED));
         when(referenceValidationService.validateAccountReferences(readSinglePayment().getAccountReferences())).thenReturn(ResponseObject.builder().build());
         //Given
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         SinglePayment payment = readSinglePayment();
-        ResponseEntity<PaymentInitialisationResponse> expectedResult = new ResponseEntity<>(readPaymentInitialisationResponse(), HttpStatus.CREATED);
+        ResponseEntity<PaymentInitiationResponse> expectedResult = new ResponseEntity<>(readPaymentInitiationResponse(), HttpStatus.CREATED);
 
         //When:
-        ResponseEntity<PaymentInitialisationResponse> actualResult = paymentInitiationController
+        ResponseEntity<PaymentInitiationResponse> actualResult = paymentInitiationController
                                                                          .createPaymentInitiation(paymentProduct.getCode(), "", payment);
 
         //Then:
@@ -132,13 +132,13 @@ public class PaymentInitiationControllerTest {
         assertThat(actualResult.getBody()).isEqualTo(expectedResult.getBody());
     }
 
-    private ResponseObject<PaymentInitialisationResponse> readResponseObject() throws IOException {
-        PaymentInitialisationResponse resp = readPaymentInitialisationResponse();
-        return ResponseObject.<PaymentInitialisationResponse>builder().body(resp).build();
+    private ResponseObject<PaymentInitiationResponse> readResponseObject() throws IOException {
+        PaymentInitiationResponse resp = readPaymentInitiationResponse();
+        return ResponseObject.<PaymentInitiationResponse>builder().body(resp).build();
     }
 
-    private PaymentInitialisationResponse readPaymentInitialisationResponse() throws IOException {
-        PaymentInitialisationResponse resp = jsonConverter.toObject(IOUtils.resourceToString(CREATE_PAYMENT_INITIATION_RESPONSE_JSON_PATH, UTF_8), PaymentInitialisationResponse.class).get();
+    private PaymentInitiationResponse readPaymentInitiationResponse() throws IOException {
+        PaymentInitiationResponse resp = jsonConverter.toObject(IOUtils.resourceToString(CREATE_PAYMENT_INITIATION_RESPONSE_JSON_PATH, UTF_8), PaymentInitiationResponse.class).get();
         resp.setPisConsentId("932f8184-59dc-4fdb-848e-58b887b3ba02");
         Links links = new Links();
         String encodedPaymentId = Base64.getEncoder().encodeToString(resp.getPaymentId().getBytes());

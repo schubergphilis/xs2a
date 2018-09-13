@@ -36,7 +36,7 @@ public interface PaymentSpi {
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return Response from ASPSP containing information about carried payment initiation operation
      */
-    SpiResponse<SpiPaymentInitialisationResponse> createPaymentInitiation(SpiSinglePayment spiSinglePayment, AspspConsentData aspspConsentData);
+    SpiResponse<SpiPaymentInitiationResponse> createPaymentInitiation(SpiSinglePayment spiSinglePayment, AspspConsentData aspspConsentData);
 
     /**
      * Initiates a periodic payment at ASPSP
@@ -46,7 +46,7 @@ public interface PaymentSpi {
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return Response from ASPSP containing information about carried payment initiation operation
      */
-    SpiResponse<SpiPaymentInitialisationResponse> initiatePeriodicPayment(SpiPeriodicPayment periodicPayment, AspspConsentData aspspConsentData);
+    SpiResponse<SpiPaymentInitiationResponse> initiatePeriodicPayment(SpiPeriodicPayment periodicPayment, AspspConsentData aspspConsentData);
 
     /**
      * Initiates a bulk payment at ASPSP
@@ -56,7 +56,7 @@ public interface PaymentSpi {
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return Response from ASPSP containing information about carried payment initiation operation
      */
-    SpiResponse<List<SpiPaymentInitialisationResponse>> createBulkPayments(List<SpiSinglePayment> payments, AspspConsentData aspspConsentData);
+    SpiResponse<List<SpiPaymentInitiationResponse>> createBulkPayments(List<SpiSinglePayment> payments, AspspConsentData aspspConsentData);
 
     /**
      * Returns a payment status by its ASPSP identifier

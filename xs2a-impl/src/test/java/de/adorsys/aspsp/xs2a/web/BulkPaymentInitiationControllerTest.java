@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
@@ -76,7 +76,7 @@ public class BulkPaymentInitiationControllerTest {
     public void setUp() throws IOException {
         when(paymentService.createBulkPayments(any(), anyString(), any())).thenReturn(readResponseObject());
         when(aspspProfileService.getPisRedirectUrlToAspsp()).thenReturn(REDIRECT_LINK);
-        when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(readPaymentInitialisationResponse(), HttpStatus.CREATED));
+        when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(readPaymentInitiationResponse(), HttpStatus.CREATED));
         when(referenceValidationService.validateAccountReferences(any())).thenReturn(ResponseObject.builder().build());
     }
 
@@ -84,10 +84,10 @@ public class BulkPaymentInitiationControllerTest {
     public void createBulkPaymentInitiation() throws IOException {
         //Given
         List<SinglePayment> payments = readBulkPayments();
-        ResponseEntity<List<PaymentInitialisationResponse>> expectedResult = new ResponseEntity<>(readPaymentInitialisationResponse(), HttpStatus.CREATED);
+        ResponseEntity<List<PaymentInitiationResponse>> expectedResult = new ResponseEntity<>(readPaymentInitiationResponse(), HttpStatus.CREATED);
 
         //When:
-        ResponseEntity<List<PaymentInitialisationResponse>> actualResult = bulkPaymentInitiationController
+        ResponseEntity<List<PaymentInitiationResponse>> actualResult = bulkPaymentInitiationController
                                                                                .createBulkPaymentInitiation(PAYMENT_PRODUCT.getCode(), TPP_INFO, payments);
 
         //Then:
@@ -95,14 +95,14 @@ public class BulkPaymentInitiationControllerTest {
         assertThat(actualResult.getBody()).isEqualTo(expectedResult.getBody());
     }
 
-    private ResponseObject<List<PaymentInitialisationResponse>> readResponseObject() throws IOException {
-        return ResponseObject.<List<PaymentInitialisationResponse>>builder()
-                   .body(readPaymentInitialisationResponse()).build();
+    private ResponseObject<List<PaymentInitiationResponse>> readResponseObject() throws IOException {
+        return ResponseObject.<List<PaymentInitiationResponse>>builder()
+                   .body(readPaymentInitiationResponse()).build();
     }
 
-    private List<PaymentInitialisationResponse> readPaymentInitialisationResponse() throws IOException {
-        PaymentInitialisationResponse response = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitialisationResponse.class).get();
-        List<PaymentInitialisationResponse> responseList = new ArrayList<>();
+    private List<PaymentInitiationResponse> readPaymentInitiationResponse() throws IOException {
+        PaymentInitiationResponse response = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitiationResponse.class).get();
+        List<PaymentInitiationResponse> responseList = new ArrayList<>();
         responseList.add(response);
 
         return responseList;

@@ -202,7 +202,7 @@ public class PaymentModelMapper {
     public Object mapToPaymentInitiationResponse12(Object response, PaymentType type, PaymentProduct product) {
         PaymentInitationRequestResponse201 response201 = new PaymentInitationRequestResponse201();
         if (type == SINGLE || type == PERIODIC) {
-            PaymentInitialisationResponse specificResponse = (PaymentInitialisationResponse) response;
+            PaymentInitiationResponse specificResponse = (PaymentInitiationResponse) response;
             response201.setTransactionStatus(mapToTransactionStatus12(specificResponse.getTransactionStatus()));
             response201.setPaymentId(specificResponse.getPaymentId());
             response201.setTransactionFees(mapToAmount(specificResponse.getTransactionFees()));
@@ -210,12 +210,12 @@ public class PaymentModelMapper {
             response201.setScaMethods(null); //TODO Fix Auth methods mapping
             response201.setChosenScaMethod(null); //TODO add to xs2a domain obj https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
             response201.setChallengeData(null); //TODO add to xs2a domain obj https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-            response201.setLinks(mapper.convertValue(((PaymentInitialisationResponse) response).getLinks(), Map.class));
+            response201.setLinks(mapper.convertValue(((PaymentInitiationResponse) response).getLinks(), Map.class));
             response201.setPsuMessage(specificResponse.getPsuMessage());
             response201.setTppMessages(mapToTppMessages(specificResponse.getTppMessages())); //TODO add new Mapper https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/242
             return response201;
         } else {
-            List<PaymentInitialisationResponse> specificResponse = (List<PaymentInitialisationResponse>) response;
+            List<PaymentInitiationResponse> specificResponse = (List<PaymentInitiationResponse>) response;
             return specificResponse.stream()
                        .map(r -> mapToPaymentInitiationResponse12(r, SINGLE, product))
                        .collect(Collectors.toList());

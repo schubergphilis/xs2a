@@ -33,7 +33,7 @@ import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
-import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPeriodicPayment;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
@@ -107,15 +107,15 @@ public class EmbeddedScaPaymentServiceTest {
         when(paymentSpi.createBulkPayments(any(), any())).thenReturn(new SpiResponse<>(Collections.singletonList(getSpiPaymentInitResponse().getPayload()),new AspspConsentData()));
     }
 
-    private SpiResponse<SpiPaymentInitialisationResponse> getSpiPaymentInitResponse() {
-        SpiPaymentInitialisationResponse response = new SpiPaymentInitialisationResponse();
+    private SpiResponse<SpiPaymentInitiationResponse> getSpiPaymentInitResponse() {
+        SpiPaymentInitiationResponse response = new SpiPaymentInitiationResponse();
         response.setPaymentId(PAYMENT_ID);
         response.setTransactionStatus(SpiTransactionStatus.RCVD);
         return new SpiResponse<>(response, new AspspConsentData());
     }
 
-    private PaymentInitialisationResponse getPaymentInitResponse() {
-        PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+    private PaymentInitiationResponse getPaymentInitResponse() {
+        PaymentInitiationResponse response = new PaymentInitiationResponse();
         response.setPaymentId(PAYMENT_ID);
         response.setTransactionStatus(RCVD);
         return response;
@@ -139,7 +139,7 @@ public class EmbeddedScaPaymentServiceTest {
         when(pisAuthorizationService.createConsentAuthorisation(anyString(), any()))
             .thenReturn(getCreateAuth(PERIODIC));
         //When
-        PaymentInitialisationResponse response = paymentService.createPeriodicPayment(getPeriodic(), getTppInfo(), PAYMENT_PRODUCT);
+        PaymentInitiationResponse response = paymentService.createPeriodicPayment(getPeriodic(), getTppInfo(), PAYMENT_PRODUCT);
         //Then
         assertThat(response.getTransactionStatus()).isEqualTo(RCVD);
         assertThat(response.getPaymentId()).isEqualTo(PAYMENT_ID);
@@ -167,7 +167,7 @@ public class EmbeddedScaPaymentServiceTest {
         when(pisAuthorizationService.createConsentAuthorisation(anyString(), any()))
             .thenReturn(getCreateAuth(SINGLE));
         //When
-        PaymentInitialisationResponse response = paymentService.createSinglePayment(getSinglePayment(), getTppInfo(), PAYMENT_PRODUCT);
+        PaymentInitiationResponse response = paymentService.createSinglePayment(getSinglePayment(), getTppInfo(), PAYMENT_PRODUCT);
         //Then
         assertThat(response.getTransactionStatus()).isEqualTo(RCVD);
         assertThat(response.getPaymentId()).isEqualTo(PAYMENT_ID);
@@ -195,10 +195,10 @@ public class EmbeddedScaPaymentServiceTest {
         when(pisAuthorizationService.createConsentAuthorisation(anyString(), any()))
             .thenReturn(getCreateAuth(BULK));
         //When
-        List<PaymentInitialisationResponse> serviceResponse = paymentService.createBulkPayment(Collections.singletonList(getSinglePayment()), getTppInfo(), PAYMENT_PRODUCT);
+        List<PaymentInitiationResponse> serviceResponse = paymentService.createBulkPayment(Collections.singletonList(getSinglePayment()), getTppInfo(), PAYMENT_PRODUCT);
 
         //Then
-        PaymentInitialisationResponse response = serviceResponse.iterator().next();
+        PaymentInitiationResponse response = serviceResponse.iterator().next();
         assertThat(response.getTransactionStatus()).isEqualTo(RCVD);
         assertThat(response.getPaymentId()).isEqualTo(PAYMENT_ID);
         assertThat(response.getPisConsentId()).isEqualTo(CONSENT_ID);

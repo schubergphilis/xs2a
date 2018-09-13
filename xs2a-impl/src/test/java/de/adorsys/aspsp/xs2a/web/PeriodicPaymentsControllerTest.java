@@ -22,7 +22,7 @@ import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
@@ -82,19 +82,19 @@ public class PeriodicPaymentsControllerTest {
         //Given
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         PeriodicPayment periodicPayment = readPeriodicPayment();
-        ResponseEntity<PaymentInitialisationResponse> expectedResult = new ResponseEntity<>(getPaymentInitializationResponse(), HttpStatus.CREATED);
+        ResponseEntity<PaymentInitiationResponse> expectedResult = new ResponseEntity<>(getPaymentInitializationResponse(), HttpStatus.CREATED);
 
         //When:
-        ResponseEntity<PaymentInitialisationResponse> result = periodicPaymentsController.createPeriodicPayment(paymentProduct.getCode(),"", periodicPayment);
+        ResponseEntity<PaymentInitiationResponse> result = periodicPaymentsController.createPeriodicPayment(paymentProduct.getCode(),"", periodicPayment);
 
         //Then:
         assertThat(result.getStatusCode()).isEqualTo(expectedResult.getStatusCode());
         assertThat(result.getBody().getTransactionStatus().name()).isEqualTo(expectedResult.getBody().getTransactionStatus().name());
     }
 
-    private ResponseObject<PaymentInitialisationResponse> readResponseObject() {
+    private ResponseObject<PaymentInitiationResponse> readResponseObject() {
 
-        return ResponseObject.<PaymentInitialisationResponse>builder()
+        return ResponseObject.<PaymentInitiationResponse>builder()
                    .body(getPaymentInitializationResponse()).build();
     }
 
@@ -102,8 +102,8 @@ public class PeriodicPaymentsControllerTest {
         return jsonConverter.toObject(IOUtils.resourceToString(PERIODIC_PAYMENT_DATA, UTF_8), PeriodicPayment.class).get();
     }
 
-    private PaymentInitialisationResponse getPaymentInitializationResponse() {
-        PaymentInitialisationResponse resp = new PaymentInitialisationResponse();
+    private PaymentInitiationResponse getPaymentInitializationResponse() {
+        PaymentInitiationResponse resp = new PaymentInitiationResponse();
         resp.setTransactionStatus(Xs2aTransactionStatus.ACCP);
         resp.setPaymentId("352397d6-a9f2-4914-8549-d127c02660ba");
         resp.setPisConsentId("f33e9b14-56b8-4f3b-b2fd-87884a4a24b9");

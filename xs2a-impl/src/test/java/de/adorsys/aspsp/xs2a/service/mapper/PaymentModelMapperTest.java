@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
@@ -82,7 +82,7 @@ public class PaymentModelMapperTest {
     @Test
     public void mapToPaymentInitiationResponse12() {
         //Given
-        PaymentInitialisationResponse givenResponse = getXs2aPaymentResponse();
+        PaymentInitiationResponse givenResponse = getXs2aPaymentResponse();
         PaymentInitationRequestResponse201 expectedResponse = getPaymentResponse12();
         //When
         PaymentInitationRequestResponse201 result = (PaymentInitationRequestResponse201) paymentModelMapper.mapToPaymentInitiationResponse12(givenResponse, PaymentType.SINGLE, PaymentProduct.SCT);
@@ -221,8 +221,8 @@ public class PaymentModelMapperTest {
         return response;
     }
 
-    private PaymentInitialisationResponse getXs2aPaymentResponse() {
-        PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+    private PaymentInitiationResponse getXs2aPaymentResponse() {
+        PaymentInitiationResponse response = new PaymentInitiationResponse();
         response.setTransactionStatus(Xs2aTransactionStatus.ACCP);
         response.setPaymentId(PAYMENT_ID);
 

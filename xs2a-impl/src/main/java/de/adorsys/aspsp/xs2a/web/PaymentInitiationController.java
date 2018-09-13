@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.TransactionStatusResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
@@ -66,15 +66,15 @@ public class PaymentInitiationController {
         @ApiImplicitParam(name = "signature", value = "A signature of the request by TPP", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "tpp-signature-certificate", value = "some certificate", dataType = "String", paramType = "header"),
         @ApiImplicitParam(name = "tpp-qwac-certificate", value = "qwac certificate", required = true, dataType = "String", paramType = "header")})
-    public ResponseEntity<PaymentInitialisationResponse> createPaymentInitiation(
+    public ResponseEntity<PaymentInitiationResponse> createPaymentInitiation(
         @ApiParam(name = "payment-product", value = "The addressed payment product endpoint for payments e.g. for a SEPA Credit Transfers", allowableValues = "sepa-credit-transfers, target-2-payments,instant-sepa-credit-transfers, cross-border-credit-transfers")
         @PathVariable("payment-product") String paymentProduct,
         @RequestHeader(name = "tpp-signature-certificate", required = false) String tppSignatureCertificate,
         @ApiParam(name = "singlePayment", required = true)
         @RequestBody @Valid SinglePayment singlePayment) {
         ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(singlePayment.getAccountReferences());
-        ResponseObject<PaymentInitialisationResponse> response = accountReferenceValidationResponse.hasError()
-                                                                     ? ResponseObject.<PaymentInitialisationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
+        ResponseObject<PaymentInitiationResponse> response = accountReferenceValidationResponse.hasError()
+                                                                     ? ResponseObject.<PaymentInitiationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
                                                                      : paymentService.createPaymentInitiation(singlePayment, tppSignatureCertificate, paymentProduct);
         return responseMapper.created(response);
     }

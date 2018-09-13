@@ -123,10 +123,10 @@ public class PaymentMapper {
                    }).orElse(null);
     }
 
-    public PaymentInitialisationResponse mapToPaymentInitializationResponse(SpiPaymentInitialisationResponse response) {
+    public PaymentInitiationResponse mapToPaymentInitializationResponse(SpiPaymentInitiationResponse response) {
         return Optional.ofNullable(response)
                    .map(pir -> {
-                       PaymentInitialisationResponse initialisationResponse = new PaymentInitialisationResponse();
+                       PaymentInitiationResponse initialisationResponse = new PaymentInitiationResponse();
                        initialisationResponse.setTransactionStatus(mapToTransactionStatus(pir.getTransactionStatus()));
                        initialisationResponse.setPaymentId(pir.getPaymentId());
                        initialisationResponse.setTransactionFees(accountMapper.mapToAmount(pir.getSpiTransactionFees()));
@@ -137,12 +137,12 @@ public class PaymentMapper {
                        initialisationResponse.setTppMessages(mapToMessageErrorCodes(pir.getTppMessages()));
                        initialisationResponse.setLinks(new Links());
                        return initialisationResponse;
-                   }).orElse(new PaymentInitialisationResponse());
+                   }).orElse(new PaymentInitiationResponse());
     }
 
-    public PaymentInitialisationResponse mapToPaymentInitResponseFailedPayment(SinglePayment payment, MessageErrorCode error) {
+    public PaymentInitiationResponse mapToPaymentInitResponseFailedPayment(SinglePayment payment, MessageErrorCode error) {
         log.warn("Payment initiation has an error: {}. Payment : {}", error, payment);
-        PaymentInitialisationResponse response = new PaymentInitialisationResponse();
+        PaymentInitiationResponse response = new PaymentInitiationResponse();
         response.setTransactionStatus(Xs2aTransactionStatus.RJCT);
         response.setPaymentId(payment.getEndToEndIdentification());
         response.setTppMessages(new MessageErrorCode[]{error});

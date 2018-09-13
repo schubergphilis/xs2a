@@ -59,13 +59,13 @@ public class PaymentSpiImpl implements PaymentSpi {
      * For detailed description see {@link PaymentSpi#createPaymentInitiation(SpiSinglePayment, AspspConsentData)}
      */
     @Override
-    public SpiResponse<SpiPaymentInitialisationResponse> createPaymentInitiation(SpiSinglePayment spiSinglePayment, AspspConsentData aspspConsentData) {
+    public SpiResponse<SpiPaymentInitiationResponse> createPaymentInitiation(SpiSinglePayment spiSinglePayment, AspspConsentData aspspConsentData) {
         ResponseEntity<SpiSinglePayment> responseEntity = aspspRestTemplate.postForEntity(aspspRemoteUrls.createPayment(), spiSinglePayment, SpiSinglePayment.class);
-        return getSpiPaymentInitialisationResponseSpiResponse(spiSinglePayment, responseEntity, aspspConsentData);
+        return getSpiPaymentInitiationResponseSpiResponse(spiSinglePayment, responseEntity, aspspConsentData);
     }
 
-    private SpiResponse<SpiPaymentInitialisationResponse> getSpiPaymentInitialisationResponseSpiResponse(SpiSinglePayment spiSinglePayment, ResponseEntity<SpiSinglePayment> responseEntity, AspspConsentData aspspConsentData) {
-        SpiPaymentInitialisationResponse response =
+    private SpiResponse<SpiPaymentInitiationResponse> getSpiPaymentInitiationResponseSpiResponse(SpiSinglePayment spiSinglePayment, ResponseEntity<SpiSinglePayment> responseEntity, AspspConsentData aspspConsentData) {
+        SpiPaymentInitiationResponse response =
             responseEntity.getStatusCode() == CREATED
                 ? mapToSpiPaymentResponse(responseEntity.getBody())
                 : mapToSpiPaymentResponse(spiSinglePayment);
@@ -76,10 +76,10 @@ public class PaymentSpiImpl implements PaymentSpi {
      * For detailed description see {@link PaymentSpi#createBulkPayments(List, AspspConsentData)}
      */
     @Override
-    public SpiResponse<List<SpiPaymentInitialisationResponse>> createBulkPayments(List<SpiSinglePayment> payments, AspspConsentData aspspConsentData) {
+    public SpiResponse<List<SpiPaymentInitiationResponse>> createBulkPayments(List<SpiSinglePayment> payments, AspspConsentData aspspConsentData) {
         ResponseEntity<List<SpiSinglePayment>> responseEntity = aspspRestTemplate.exchange(aspspRemoteUrls.createBulkPayment(), HttpMethod.POST, new HttpEntity<>(payments, null), new ParameterizedTypeReference<List<SpiSinglePayment>>() {
         });
-        List<SpiPaymentInitialisationResponse> response =
+        List<SpiPaymentInitiationResponse> response =
             (responseEntity.getStatusCode() == CREATED)
                 ? responseEntity.getBody().stream()
                       .map(this::mapToSpiPaymentResponse)
@@ -92,9 +92,9 @@ public class PaymentSpiImpl implements PaymentSpi {
      * For detailed description see {@link PaymentSpi#initiatePeriodicPayment(SpiPeriodicPayment, AspspConsentData)}
      */
     @Override
-    public SpiResponse<SpiPaymentInitialisationResponse> initiatePeriodicPayment(SpiPeriodicPayment periodicPayment, AspspConsentData aspspConsentData) {
+    public SpiResponse<SpiPaymentInitiationResponse> initiatePeriodicPayment(SpiPeriodicPayment periodicPayment, AspspConsentData aspspConsentData) {
         ResponseEntity<SpiPeriodicPayment> responseEntity = aspspRestTemplate.postForEntity(aspspRemoteUrls.createPeriodicPayment(), periodicPayment, SpiPeriodicPayment.class);
-        SpiPaymentInitialisationResponse response =
+        SpiPaymentInitiationResponse response =
             responseEntity.getStatusCode() == CREATED
                 ? mapToSpiPaymentResponse(responseEntity.getBody())
                 : mapToSpiPaymentResponse(periodicPayment);
@@ -172,7 +172,7 @@ public class PaymentSpiImpl implements PaymentSpi {
     public SpiResponse<String> executePayment(PisPaymentType paymentType, List<PisPayment> payments, AspspConsentData aspspConsentData) {
         String paymentId = null;
         if (PisPaymentType.SINGLE == paymentType) {
-            SpiPaymentInitialisationResponse paymentInitiation = createPaymentInitiation(xs2aPisConsentMapper.mapToSpiSinglePayment(payments.get(0)), new AspspConsentData())
+            SpiPaymentInitiationResponse paymentInitiation = createPaymentInitiation(xs2aPisConsentMapper.mapToSpiSinglePayment(payments.get(0)), new AspspConsentData())
                                                                      .getPayload();
             paymentId = paymentInitiation.getPaymentId();
         }
@@ -192,8 +192,8 @@ public class PaymentSpiImpl implements PaymentSpi {
         aspspRestTemplate.exchange(aspspRemoteUrls.applyStrongUserAuthorisation(), HttpMethod.PUT, new HttpEntity<>(confirmation), ResponseEntity.class);
     }
 
-    private SpiPaymentInitialisationResponse mapToSpiPaymentResponse(SpiSinglePayment spiSinglePayment) {
-        SpiPaymentInitialisationResponse paymentResponse = new SpiPaymentInitialisationResponse();
+    private SpiPaymentInitiationResponse mapToSpiPaymentResponse(SpiSinglePayment spiSinglePayment) {
+        SpiPaymentInitiationResponse paymentResponse = new SpiPaymentInitiationResponse();
         paymentResponse.setSpiTransactionFees(null);
         paymentResponse.setSpiTransactionFeeIndicator(false);
         paymentResponse.setScaMethods(null);

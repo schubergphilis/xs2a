@@ -16,7 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.service.payment;
 
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.domain.pis.TppInfo;
@@ -28,17 +28,17 @@ import java.util.List;
 @Service
 public class DecoupedScaPaymentService implements ScaPaymentService {
     @Override
-    public PaymentInitialisationResponse createPeriodicPayment(PeriodicPayment periodicPayment, TppInfo tppInfo, String paymentProduct) {
-        return new PaymentInitialisationResponse();
+    public PaymentInitiationResponse createPeriodicPayment(PeriodicPayment periodicPayment, TppInfo tppInfo, String paymentProduct) {
+        return new PaymentInitiationResponse();
     }
 
     @Override
-    public List<PaymentInitialisationResponse> createBulkPayment(List<SinglePayment> payments, TppInfo tppInfo, String paymentProduct) {
+    public List<PaymentInitiationResponse> createBulkPayment(List<SinglePayment> payments, TppInfo tppInfo, String paymentProduct) {
         return Collections.emptyList();
     }
 
     @Override
-    public PaymentInitialisationResponse createSinglePayment(SinglePayment singlePayment, TppInfo tppInfo, String paymentProduct) {
-        return new PaymentInitialisationResponse();
+    public PaymentInitiationResponse createSinglePayment(SinglePayment singlePayment, TppInfo tppInfo, String paymentProduct) {
+        return new PaymentInitiationResponse();
     }
 }

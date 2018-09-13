@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.web.aspect;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.aspsp.ScaApproach;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitiationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 
 import java.util.Base64;
@@ -37,19 +37,19 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
     protected ResponseObject<?> enrichLink(ResponseObject<?> result, PaymentType paymentType) {
         Object body = result.getBody();
         if (EnumSet.of(SINGLE, PERIODIC).contains(paymentType)) {
-            doEnrichLink(paymentType, (PaymentInitialisationResponse) body);
+            doEnrichLink(paymentType, (PaymentInitiationResponse) body);
         } else {
-            ((List<PaymentInitialisationResponse>) body)
+            ((List<PaymentInitiationResponse>) body)
                 .forEach(r -> doEnrichLink(paymentType, r));
         }
         return result;
     }
 
-    private void doEnrichLink(PaymentType paymentType, PaymentInitialisationResponse body) {
+    private void doEnrichLink(PaymentType paymentType, PaymentInitiationResponse body) {
         body.setLinks(buildPaymentLinks(body, paymentType.getValue()));
     }
 
-    private Links buildPaymentLinks(PaymentInitialisationResponse body, String paymentService) {
+    private Links buildPaymentLinks(PaymentInitiationResponse body, String paymentService) {
         if (RJCT == body.getTransactionStatus()) {
             return null;
         }

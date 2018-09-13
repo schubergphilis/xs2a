@@ -160,7 +160,7 @@ public class Xs2aPisConsentMapper {
                    }).orElse(null);
     }
 
-    private List<PisPayment> mapToPisPaymentForBulkPayment(Map<SinglePayment, PaymentInitialisationResponse> paymentIdentifierMap) {
+    private List<PisPayment> mapToPisPaymentForBulkPayment(Map<SinglePayment, PaymentInitiationResponse> paymentIdentifierMap) {
         return paymentIdentifierMap.entrySet().stream()
                    .map(etr -> mapToPisPaymentForSinglePayment(etr.getKey(), etr.getValue().getPaymentId()))
                    .collect(Collectors.toList());
