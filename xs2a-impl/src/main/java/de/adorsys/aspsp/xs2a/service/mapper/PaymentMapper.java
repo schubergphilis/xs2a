@@ -137,7 +137,7 @@ public class PaymentMapper {
                        initialisationResponse.setTppMessages(mapToMessageErrorCodes(pir.getTppMessages()));
                        initialisationResponse.setLinks(new Links());
                        return initialisationResponse;
-                   }).orElse(new PaymentInitiationResponse());
+                   }).orElseGet(PaymentInitiationResponse::new);
     }
 
     public PaymentInitiationResponse mapToPaymentInitResponseFailedPayment(SinglePayment payment, MessageErrorCode error) {
