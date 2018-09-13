@@ -165,6 +165,7 @@ public class PaymentModelMapperPsd2 {
                        ScaMethods scaMethods = new ScaMethods();
                        Arrays.stream(objects)
                            .map(this::mapToAuthenticationObject)
+                           .filter(Objects::nonNull)
                            .forEach(scaMethods::add);
                        return scaMethods;
                    })
@@ -172,13 +173,17 @@ public class PaymentModelMapperPsd2 {
     }
 
     private AuthenticationObject mapToAuthenticationObject(Xs2aAuthenticationObject xs2aAuthenticationObject) {
-        AuthenticationObject authenticationObject = new AuthenticationObject();
-        authenticationObject.setAuthenticationType(AuthenticationType.fromValue(xs2aAuthenticationObject.getAuthenticationType().name()));
-        authenticationObject.setAuthenticationVersion(xs2aAuthenticationObject.getAuthenticationVersion());
-        authenticationObject.setAuthenticationMethodId(xs2aAuthenticationObject.getAuthenticationMethodId());
-        authenticationObject.setName(xs2aAuthenticationObject.getName());
-        authenticationObject.setExplanation(xs2aAuthenticationObject.getExplanation());
-        return authenticationObject;
+        return Optional.ofNullable(xs2aAuthenticationObject)
+                   .map(a -> {
+                       AuthenticationObject psd2Authentication = new AuthenticationObject();
+                       psd2Authentication.setAuthenticationType(AuthenticationType.fromValue(a.getAuthenticationType().name()));
+                       psd2Authentication.setAuthenticationVersion(a.getAuthenticationVersion());
+                       psd2Authentication.setAuthenticationMethodId(a.getAuthenticationMethodId());
+                       psd2Authentication.setName(a.getName());
+                       psd2Authentication.setExplanation(a.getExplanation());
+                       return psd2Authentication;
+                   })
+                   .orElse(null);
     }
 
     private ChallengeData mapToChallengeData(Xs2aChallengeData xs2aChallengeData) {
