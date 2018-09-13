@@ -161,16 +161,15 @@ public class PaymentModelMapperPsd2 {
     }
 
     private ScaMethods mapToScaMethods(AuthenticationObject... authenticationObjects) {
-        ScaMethods methods = new ScaMethods();
-        Optional.ofNullable(authenticationObjects)
-            .ifPresent(objects -> Arrays.stream(objects)
-                                      .map(this::mapToAuthenticationObject)
-                                      .forEach(methods::add));
-        if (methods.isEmpty()) {
-            return null;
-        }
-
-        return methods;
+        return Optional.ofNullable(authenticationObjects)
+                   .map(objects -> {
+                       ScaMethods scaMethods = new ScaMethods();
+                       Arrays.stream(objects)
+                           .map(this::mapToAuthenticationObject)
+                           .forEach(scaMethods::add);
+                       return scaMethods;
+                   })
+                   .orElse(null);
     }
 
     private de.adorsys.psd2.model.AuthenticationObject mapToAuthenticationObject(AuthenticationObject xs2aAuthenticationObject) {
