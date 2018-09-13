@@ -51,7 +51,6 @@ public class PaymentModelMapperXs2a {
     private final ObjectMapper mapper;
     private final ValueValidatorService validationService;
 
-    // Mappers into xs2a domain classes
     public Object mapToXs2aPayment(Object payment, PaymentType type, PaymentProduct product) {
         if (type == SINGLE) {
             return mapToXs2aSinglePayment(validatePayment(payment, PaymentInitiationSctJson.class));

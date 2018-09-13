@@ -41,7 +41,6 @@ public class PaymentModelMapperPsd2 {
     private final ObjectMapper mapper;
     private final MessageService messageService;
 
-    //Mappers into PSD2 generated API model classes
     public Object mapToGetPaymentResponse12(Object payment, PaymentType type, PaymentProduct product) {
         if (type == SINGLE) {
             SinglePayment xs2aPayment = (SinglePayment) payment;
