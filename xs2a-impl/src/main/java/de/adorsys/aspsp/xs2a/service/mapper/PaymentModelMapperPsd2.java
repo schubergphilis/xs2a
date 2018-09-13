@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.service.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
-import de.adorsys.aspsp.xs2a.domain.consent.AuthenticationObject;
+import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthenticationObject;
 import de.adorsys.aspsp.xs2a.domain.Xs2aChallengeData;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
@@ -160,7 +160,7 @@ public class PaymentModelMapperPsd2 {
         return tppMessage;
     }
 
-    private ScaMethods mapToScaMethods(AuthenticationObject... authenticationObjects) {
+    private ScaMethods mapToScaMethods(Xs2aAuthenticationObject... authenticationObjects) {
         return Optional.ofNullable(authenticationObjects)
                    .map(objects -> {
                        ScaMethods scaMethods = new ScaMethods();
@@ -172,8 +172,8 @@ public class PaymentModelMapperPsd2 {
                    .orElse(null);
     }
 
-    private de.adorsys.psd2.model.AuthenticationObject mapToAuthenticationObject(AuthenticationObject xs2aAuthenticationObject) {
-        de.adorsys.psd2.model.AuthenticationObject authenticationObject = new de.adorsys.psd2.model.AuthenticationObject();
+    private AuthenticationObject mapToAuthenticationObject(Xs2aAuthenticationObject xs2aAuthenticationObject) {
+        AuthenticationObject authenticationObject = new AuthenticationObject();
         authenticationObject.setAuthenticationType(AuthenticationType.fromValue(xs2aAuthenticationObject.getAuthenticationType().name()));
         authenticationObject.setAuthenticationVersion(xs2aAuthenticationObject.getAuthenticationVersion());
         authenticationObject.setAuthenticationMethodId(xs2aAuthenticationObject.getAuthenticationMethodId());
