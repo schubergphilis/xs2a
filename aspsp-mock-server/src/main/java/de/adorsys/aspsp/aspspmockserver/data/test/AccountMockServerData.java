@@ -53,8 +53,10 @@ public class AccountMockServerData {
     private final Currency EUR = Currency.getInstance("EUR");
     private final Currency USD = Currency.getInstance("USD");
     private final SpiBalanceType BALANCE_TYPE = SpiBalanceType.INTERIM_AVAILABLE;
+
     // Allowed Payments for Cucumber Test User
     private final List<String> ALLOWED_PAYMENTS_CUCUMBER_TESTUSER = Arrays.asList("sepa-credit-transfers");
+
     private PsuRepository psuRepository;
     private TransactionRepository transactionRepository;
     private TanRepository tanRepository;
