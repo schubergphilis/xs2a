@@ -17,12 +17,10 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthenticationObject;
 import de.adorsys.aspsp.xs2a.domain.Xs2aChallengeData;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
-import de.adorsys.aspsp.xs2a.service.message.MessageService;
 import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -39,7 +37,7 @@ import static de.adorsys.aspsp.xs2a.service.mapper.AmountModelMapper.mapToAmount
 @RequiredArgsConstructor
 public class PaymentModelMapperPsd2 {
     private final ObjectMapper mapper;
-    private final MessageService messageService;
+    private final MessageErrorMapper messageErrorMapper;
 
     public Object mapToGetPaymentResponse12(Object payment, PaymentType type, PaymentProduct product) {
         if (type == SINGLE) {
@@ -107,9 +105,9 @@ public class PaymentModelMapperPsd2 {
             response201.setScaMethods(mapToScaMethods(specificResponse.getScaMethods()));
             response201.setChosenScaMethod(null); // TODO add proper mapping
             response201.setChallengeData(mapToChallengeData(specificResponse.getChallengeData()));
-            response201.setLinks(mapper.convertValue(((PaymentInitialisationResponse) response).getLinks(), Map.class)); //TODO add new mapper for Links https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/244
+            response201.setLinks(mapper.convertValue(((PaymentInitialisationResponse) response).getLinks(), Map.class));
             response201.setPsuMessage(specificResponse.getPsuMessage());
-            response201.setTppMessages(mapToTppMessages(specificResponse.getTppMessages())); //TODO add new Mapper https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/242
+            response201.setTppMessages(messageErrorMapper.mapToTppMessages(specificResponse.getTppMessages()));
             return response201;
         } else {
             List<PaymentInitialisationResponse> specificResponse = (List<PaymentInitialisationResponse>) response;
@@ -135,28 +133,6 @@ public class PaymentModelMapperPsd2 {
         bulkPart.setCreditorAddress(mapToAddress12(payment.getCreditorAddress()));
         bulkPart.setRemittanceInformationUnstructured(payment.getRemittanceInformationUnstructured());
         return bulkPart;
-    }
-
-    private TppMessages mapToTppMessages(MessageErrorCode... tppMessages) {
-        return Optional.ofNullable(tppMessages)
-                   .map(m -> Arrays.stream(m)
-                                 .map(this::mapToGenericError)
-                                 .collect(Collectors.toList()))
-                   .map(c -> {
-                       TppMessages messages = new TppMessages();
-                       messages.addAll(c);
-                       return messages;
-                   })
-                   .orElse(null);
-    }
-
-    private TppMessageGeneric mapToGenericError(MessageErrorCode code) {
-        TppMessageGeneric tppMessage = new TppMessageGeneric();
-        tppMessage.setCategory(TppMessageCategory.ERROR);
-        tppMessage.setCode(code);
-        tppMessage.setPath("N/A"); //TODO set path
-        tppMessage.setText(messageService.getMessage(code.name()));
-        return tppMessage;
     }
 
     private ScaMethods mapToScaMethods(Xs2aAuthenticationObject... authenticationObjects) {
