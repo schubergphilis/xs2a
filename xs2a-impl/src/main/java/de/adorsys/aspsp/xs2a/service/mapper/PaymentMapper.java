@@ -50,6 +50,21 @@ public class PaymentMapper {
     private final ObjectMapper objectMapper;
     private final AccountMapper accountMapper;
 
+    public SpiBulkPayment mapToSpiBulkPayment(BulkPayment bulkPayment) {
+        return Optional.ofNullable(bulkPayment)
+                   .map(bulk -> {
+                       SpiBulkPayment spiBulkPayment = new SpiBulkPayment();
+                       spiBulkPayment.setBatchBookingPreferred(bulk.getBatchBookingPreferred());
+                       spiBulkPayment.setDebtorAccount(accountMapper.mapToSpiAccountReference(bulk.getDebtorAccount()));
+                       spiBulkPayment.setRequestedExecutionDate(bulk.getRequestedExecutionDate());
+                       spiBulkPayment.setPayments(bulk.getPayments().stream()
+                                                      .map(this::mapToSpiSinglePayment)
+                                                      .collect(Collectors.toList()));
+                       return spiBulkPayment;
+                   })
+            .orElse(null);
+    }
+
     public Xs2aTransactionStatus mapToTransactionStatus(SpiTransactionStatus spiTransactionStatus) {
         return Optional.ofNullable(spiTransactionStatus)
                    .map(ts -> Xs2aTransactionStatus.valueOf(ts.name()))

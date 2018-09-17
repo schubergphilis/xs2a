@@ -73,12 +73,12 @@ public class PaymentSpiImpl implements PaymentSpi {
     }
 
     /**
-     * For detailed description see {@link PaymentSpi#createBulkPayments(List, AspspConsentData)}
+     * For detailed description see {@link PaymentSpi#createBulkPayments(SpiBulkPayment, AspspConsentData)}
      */
     @Override
-    public SpiResponse<List<SpiPaymentInitialisationResponse>> createBulkPayments(List<SpiSinglePayment> payments, AspspConsentData aspspConsentData) {
-        ResponseEntity<List<SpiSinglePayment>> responseEntity = aspspRestTemplate.exchange(aspspRemoteUrls.createBulkPayment(), HttpMethod.POST, new HttpEntity<>(payments, null), new ParameterizedTypeReference<List<SpiSinglePayment>>() {
-        });
+    public SpiResponse<List<SpiPaymentInitialisationResponse>> createBulkPayments(SpiBulkPayment spiBulkPayment, AspspConsentData aspspConsentData) {
+        ResponseEntity<List<SpiSinglePayment>> responseEntity = aspspRestTemplate.exchange(aspspRemoteUrls.createBulkPayment(), HttpMethod.POST,
+            new HttpEntity<>(spiBulkPayment, null), new ParameterizedTypeReference<List<SpiSinglePayment>>() {});
         List<SpiPaymentInitialisationResponse> response =
             (responseEntity.getStatusCode() == CREATED)
                 ? responseEntity.getBody().stream()

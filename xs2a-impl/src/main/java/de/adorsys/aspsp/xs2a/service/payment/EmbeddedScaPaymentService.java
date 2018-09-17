@@ -63,14 +63,13 @@ public class EmbeddedScaPaymentService implements ScaPaymentService {
     }
 
     @Override
-    public List<PaymentInitialisationResponse> createBulkPayment(List<SinglePayment> payments, TppInfo tppInfo, String paymentProduct) {
+    public List<PaymentInitialisationResponse> createBulkPayment(BulkPayment bulkPayment, TppInfo tppInfo, String paymentProduct) {
         AspspConsentData aspspConsentData = new AspspConsentData(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
-        List<SpiSinglePayment> singlePayments = paymentMapper.mapToSpiSinglePaymentList(payments);
-        List<PaymentInitialisationResponse> aspspResponse = paymentSpi.createBulkPayments(singlePayments, aspspConsentData).getPayload()
+        List<PaymentInitialisationResponse> aspspResponse = paymentSpi.createBulkPayments(paymentMapper.mapToSpiBulkPayment(bulkPayment), aspspConsentData).getPayload()
                                                                 .stream()
                                                                 .map(paymentMapper::mapToPaymentInitializationResponse)
                                                                 .collect(Collectors.toList());
-
+        List<SinglePayment> payments = bulkPayment.getPayments();
         Map<SinglePayment, PaymentInitialisationResponse> paymentMap = IntStream.range(0, payments.size())
                                                                            .boxed()
                                                                            .collect(Collectors.toMap(payments::get, aspspResponse::get));

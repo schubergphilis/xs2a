@@ -20,10 +20,7 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.consent.CreatePisConsentData;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
-import de.adorsys.aspsp.xs2a.domain.pis.TppInfo;
+import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
@@ -38,6 +35,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.PAYMENT_FAILED;
 
@@ -79,50 +77,19 @@ public class RedirectScaPaymentService implements ScaPaymentService {
     }
 
     @Override
-    public List<PaymentInitialisationResponse> createBulkPayment(List<SinglePayment> payments, TppInfo tppInfo, String paymentProduct) {
+    public List<PaymentInitialisationResponse> createBulkPayment(BulkPayment bulkPayment, TppInfo tppInfo, String paymentProduct) {
         AspspConsentData aspspConsentData = new AspspConsentData(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
-        Map<SinglePayment, PaymentInitialisationResponse> paymentIdentifierMap = createBulkPaymentAndGetResponseMap(payments, aspspConsentData);
+        List<PaymentInitialisationResponse> aspspResponse = paymentSpi.createBulkPayments(paymentMapper.mapToSpiBulkPayment(bulkPayment), aspspConsentData).getPayload()
+                                                                .stream()
+                                                                .map(paymentMapper::mapToPaymentInitializationResponse)
+                                                                .collect(Collectors.toList());
+        List<SinglePayment> payments = bulkPayment.getPayments();
+        Map<SinglePayment, PaymentInitialisationResponse> paymentMap = IntStream.range(0, payments.size())
+                                                                           .boxed()
+                                                                           .collect(Collectors.toMap(payments::get, aspspResponse::get));
 
-        return MapUtils.isNotEmpty(paymentIdentifierMap)
-                   ? createConsentForBulkPaymentAndExtendPaymentResponses(new CreatePisConsentData(paymentIdentifierMap, tppInfo, paymentProduct, aspspConsentData))
-                   : Collections.emptyList();
-    }
-
-    private Map<SinglePayment, PaymentInitialisationResponse> createBulkPaymentAndGetResponseMap(List<SinglePayment> payments, AspspConsentData aspspConsentData) {
-        HashMap<SinglePayment, PaymentInitialisationResponse> paymentIdentifierMap = new HashMap<>();
-
-        for (SinglePayment payment : payments) {
-            PaymentInitialisationResponse paymentInitialisationResponse = createSinglePaymentAndGetResponse(payment, aspspConsentData);
-            paymentIdentifierMap.put(payment, paymentInitialisationResponse);
-        }
-
-        paymentIdentifierMap.forEach((sp, resp) -> {
-            if (StringUtils.isBlank(resp.getPaymentId())
-                    || resp.getTransactionStatus() == Xs2aTransactionStatus.RJCT) {
-                resp.setTppMessages(new MessageErrorCode[]{PAYMENT_FAILED});
-                resp.setTransactionStatus(Xs2aTransactionStatus.RJCT);
-            }
-        });
-        return paymentIdentifierMap;
-    }
-
-    private List<PaymentInitialisationResponse> createBulkPaymentAndGetResponse(List<SinglePayment> payments) {  // NOPMD return when we make storing payment info with payment ID
-        List<SpiSinglePayment> spiPayments = paymentMapper.mapToSpiSinglePaymentList(payments);
-        List<SpiPaymentInitialisationResponse> spiPaymentInitiations = paymentSpi.createBulkPayments(spiPayments, new AspspConsentData()).getPayload(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
-
-        List<PaymentInitialisationResponse> paymentResponses = spiPaymentInitiations.stream()
-                                                                   .map(paymentMapper::mapToPaymentInitializationResponse)
-                                                                   .collect(Collectors.toList());
-
-        for (PaymentInitialisationResponse resp : paymentResponses) {
-            if (StringUtils.isBlank(resp.getPaymentId())
-                    || resp.getTransactionStatus() == Xs2aTransactionStatus.RJCT) {
-                resp.setTppMessages(new MessageErrorCode[]{PAYMENT_FAILED});
-                resp.setTransactionStatus(Xs2aTransactionStatus.RJCT);
-            }
-        }
-
-        return paymentResponses;
+        CreatePisConsentData pisConsentData = new CreatePisConsentData(paymentMap, tppInfo, paymentProduct, aspspConsentData);
+        return createConsentForBulkPaymentAndExtendPaymentResponses(pisConsentData);
     }
 
     private List<PaymentInitialisationResponse> createConsentForBulkPaymentAndExtendPaymentResponses(CreatePisConsentData createPisConsentData) {
