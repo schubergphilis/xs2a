@@ -24,6 +24,7 @@ import de.adorsys.aspsp.aspspmockserver.service.PaymentService;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -58,7 +59,7 @@ public class PaymentConfirmationController {
         @ApiResponse(code = 400, message = "Bad request")
     })
     public ResponseEntity confirmTan(@RequestBody Confirmation confirmation, Principal principal) {
-        return paymentService.getPaymentById(confirmation.getPaymentId()).isPresent()
+        return CollectionUtils.isNotEmpty(paymentService.getPaymentById(confirmation.getPaymentId()))
                    ? tanConfirmationService.confirmTan(principal.getName(), confirmation.getTanNumber(), confirmation.getConsentId(), ConfirmationType.PAYMENT)
                    : new ResponseEntity<>(new ApiError(HttpStatus.BAD_REQUEST, "PAYMENT_MISSING", "Bad request"), HttpStatus.BAD_REQUEST);
     }

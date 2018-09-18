@@ -57,7 +57,6 @@ public class RequestValidatorService {
 
     static {
         classMap.put(PaymentInitiationController.class, PisPaymentType.FUTURE_DATED);
-        classMap.put(BulkPaymentInitiationController.class, PisPaymentType.BULK);
         classMap.put(PeriodicPaymentsController.class, PisPaymentType.PERIODIC);
     }
 

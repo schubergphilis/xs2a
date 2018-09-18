@@ -21,6 +21,7 @@ import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
+import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
@@ -32,11 +33,12 @@ import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -46,7 +48,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class PaymentMapper {
+public class PaymentMapper { //NOPMD TODO fix high amount of different objects as members denotes a high coupling https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/322
     private final ObjectMapper objectMapper;
     private final AccountMapper accountMapper;
 
@@ -62,7 +64,7 @@ public class PaymentMapper {
                                                       .collect(Collectors.toList()));
                        return spiBulkPayment;
                    })
-            .orElse(null);
+                   .orElse(null);
     }
 
     public Xs2aTransactionStatus mapToTransactionStatus(SpiTransactionStatus spiTransactionStatus) {
@@ -226,10 +228,21 @@ public class PaymentMapper {
                    .orElse(null);
     }
 
-    public List<SinglePayment> mapToBulkPayment(List<SpiSinglePayment> spiSinglePayment) {
-        return CollectionUtils.isNotEmpty(spiSinglePayment)
-                   ? spiSinglePayment.stream().map(this::mapToSinglePayment).collect(Collectors.toList())
-                   : null;
+    public BulkPayment mapToBulkPayment(List<SpiSinglePayment> spiSinglePayments) {
+        if (CollectionUtils.isNotEmpty(spiSinglePayments)) {
+            BulkPayment bulkPayment = new BulkPayment();
+            bulkPayment.setBatchBookingPreferred(false);
+            bulkPayment.setDebtorAccount(getDebtorAccountForBulkPayment(spiSinglePayments));
+            bulkPayment.setPayments(spiSinglePayments.stream()
+                                        .map(this::mapToSinglePayment)
+                                        .collect(Collectors.toList()));
+            return bulkPayment;
+        }
+        return null;
+    }
+
+    private AccountReference getDebtorAccountForBulkPayment(List<SpiSinglePayment> spiSinglePayments) {
+        return accountMapper.mapToAccountReference(spiSinglePayments.get(0).getDebtorAccount());
     }
 
     private AuthenticationObject[] mapToAuthenticationObjects(String[] authObjects) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115

@@ -120,7 +120,7 @@ public class PaymentModelMapper {
     private BulkPayment mapToXs2aBulkPayment(BulkPaymentInitiationSctJson paymentRequest) {
         BulkPayment bulkPayment = new BulkPayment();
         bulkPayment.setBatchBookingPreferred(paymentRequest.getBatchBookingPreferred());
-        bulkPayment.setDebtorAccount((AccountReference) paymentRequest.getDebtorAccount());
+        bulkPayment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
         bulkPayment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
         bulkPayment.setPayments(paymentRequest.getPayments().stream()
                                     .map(p -> {

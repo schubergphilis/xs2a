@@ -78,7 +78,8 @@ public class PaymentSpiImpl implements PaymentSpi {
     @Override
     public SpiResponse<List<SpiPaymentInitialisationResponse>> createBulkPayments(SpiBulkPayment spiBulkPayment, AspspConsentData aspspConsentData) {
         ResponseEntity<List<SpiSinglePayment>> responseEntity = aspspRestTemplate.exchange(aspspRemoteUrls.createBulkPayment(), HttpMethod.POST,
-            new HttpEntity<>(spiBulkPayment, null), new ParameterizedTypeReference<List<SpiSinglePayment>>() {});
+            new HttpEntity<>(spiBulkPayment, null), new ParameterizedTypeReference<List<SpiSinglePayment>>() {
+            });
         List<SpiPaymentInitialisationResponse> response =
             (responseEntity.getStatusCode() == CREATED)
                 ? responseEntity.getBody().stream()
@@ -115,7 +116,12 @@ public class PaymentSpiImpl implements PaymentSpi {
      */
     @Override
     public SpiResponse<SpiSinglePayment> getSinglePaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId, AspspConsentData aspspConsentData) {
-        SpiSinglePayment response = aspspRestTemplate.getForObject(aspspRemoteUrls.getPaymentById(), SpiSinglePayment.class, paymentType, paymentProduct, paymentId);
+        List<SpiSinglePayment> aspspResponse = aspspRestTemplate.exchange(aspspRemoteUrls.getPaymentById(),
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<SpiSinglePayment>>() {},
+            paymentType, paymentProduct, paymentId).getBody();
+        SpiSinglePayment response = aspspResponse.get(0);
         return new SpiResponse<>(response, aspspConsentData);
     }
 
@@ -124,7 +130,13 @@ public class PaymentSpiImpl implements PaymentSpi {
      */
     @Override
     public SpiResponse<SpiPeriodicPayment> getPeriodicPaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId, AspspConsentData aspspConsentData) {
-        SpiPeriodicPayment response = aspspRestTemplate.getForObject(aspspRemoteUrls.getPaymentById(), SpiPeriodicPayment.class, paymentType, paymentProduct, paymentId);
+        List<SpiPeriodicPayment> aspspResponse = aspspRestTemplate.exchange(aspspRemoteUrls.getPaymentById(),
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<SpiPeriodicPayment>>() {},
+            paymentType, paymentProduct, paymentId).getBody();
+
+        SpiPeriodicPayment response = aspspResponse.get(0);
         return new SpiResponse<>(response, aspspConsentData);
     }
 
@@ -133,12 +145,12 @@ public class PaymentSpiImpl implements PaymentSpi {
      */
     @Override
     public SpiResponse<List<SpiSinglePayment>> getBulkPaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId, AspspConsentData aspspConsentData) {
-        SpiSinglePayment aspspResponse = aspspRestTemplate.getForObject(aspspRemoteUrls.getPaymentById(), SpiSinglePayment.class, paymentType, paymentProduct, paymentId);
-        List<SpiSinglePayment> response =
-            Optional.ofNullable(aspspResponse)
-                .map(Collections::singletonList)
-                .orElse(null);
-        return new SpiResponse<>(response, aspspConsentData);
+        List<SpiSinglePayment> aspspResponse = aspspRestTemplate.exchange(aspspRemoteUrls.getPaymentById(),
+            HttpMethod.GET,
+            null,
+            new ParameterizedTypeReference<List<SpiSinglePayment>>() {},
+            paymentType, paymentProduct, paymentId).getBody();
+        return new SpiResponse<>(aspspResponse, aspspConsentData);
     }
 
     /**

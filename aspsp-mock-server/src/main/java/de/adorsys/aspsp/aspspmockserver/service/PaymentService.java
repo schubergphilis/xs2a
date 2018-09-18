@@ -19,6 +19,7 @@ package de.adorsys.aspsp.aspspmockserver.service;
 import de.adorsys.aspsp.aspspmockserver.config.rest.consent.PisConsentRemoteUrls;
 import de.adorsys.aspsp.aspspmockserver.repository.PaymentRepository;
 import de.adorsys.aspsp.aspspmockserver.service.mapper.PaymentMapper;
+import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountBalance;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
@@ -39,6 +40,8 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType.PERIODIC;
 import static de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType.SINGLE;
@@ -113,13 +116,6 @@ public class PaymentService {
         return paymentMapper.mapToSpiSinglePaymentList(savedPayments);
     }
 
-    BigDecimal calculateAmountToBeCharged(String accountId) {
-        return paymentRepository.findAll().stream()
-                   .filter(paym -> getDebtorAccountIdFromPayment(paym).equals(accountId))
-                   .map(this::getAmountFromPayment)
-                   .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
     //TODO Create GlobalExceptionHandler for error 400 from consentManagement https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/158
 
     /**
@@ -130,6 +126,21 @@ public class PaymentService {
      */
     public void updatePaymentConsentStatus(@NotNull String consentId, SpiConsentStatus consentStatus) {
         consentRestTemplate.put(remotePisConsentUrls.updatePisConsentStatus(), null, consentId, consentStatus.name());
+    }
+
+    public List<AspspPayment> getPaymentById(String paymentId) {
+        return paymentRepository.findByPaymentIdOrBulkId(paymentId, paymentId);
+    }
+
+    public List<AspspPayment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
+
+    BigDecimal calculateAmountToBeCharged(String accountId) {
+        return paymentRepository.findAll().stream()
+                   .filter(paym -> getDebtorAccountIdFromPayment(paym).equals(accountId))
+                   .map(this::getAmountFromPayment)
+                   .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private boolean areFundsSufficient(SpiAccountReference reference, BigDecimal amount) {
@@ -169,13 +180,5 @@ public class PaymentService {
         return Optional.ofNullable(amount)
                    .map(SpiAmount::getContent)
                    .orElse(BigDecimal.ZERO);
-    }
-
-    public Optional<AspspPayment> getPaymentById(String paymentId) {
-        return Optional.ofNullable(paymentRepository.findOne(paymentId));
-    }
-
-    public List<AspspPayment> getAllPayments() {
-        return paymentRepository.findAll();
     }
 }

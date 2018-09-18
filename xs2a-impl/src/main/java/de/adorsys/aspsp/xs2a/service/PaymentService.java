@@ -110,7 +110,7 @@ public class PaymentService {
      * @return List of payment initiation responses containing information about created payments or an error if non of the payments could pass the validation
      */
     public ResponseObject<List<PaymentInitialisationResponse>> createBulkPayments(BulkPayment bulkPayment, String tppSignatureCertificate, String paymentProduct) {
-        if (CollectionUtils.isEmpty(bulkPayment.getPayments())) {
+        if (bulkPayment == null || CollectionUtils.isEmpty(bulkPayment.getPayments())) {
             return ResponseObject.<List<PaymentInitialisationResponse>>builder()
                        .fail(new MessageError(FORMAT_ERROR))
                        .build();
@@ -118,7 +118,7 @@ public class PaymentService {
         List<SinglePayment> validPayments = new ArrayList<>();
         List<PaymentInitialisationResponse> invalidPayments = new ArrayList<>();
         for (SinglePayment payment : bulkPayment.getPayments()) {
-            payment.setDebtorAccount(bulkPayment.getDebtorAccount()); //TODO FIX THIS SHIT (too many checks for 1 debtor iban)
+            payment.setDebtorAccount(bulkPayment.getDebtorAccount());
             validatePayment(payment, payment.isValidExecutionDateAndTime())
                 .map(e -> invalidPayments.add(paymentMapper.mapToPaymentInitResponseFailedPayment(payment, e)))
                 .orElseGet(() -> validPayments.add(payment));

@@ -56,11 +56,17 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         String encodedPaymentId = Base64.getEncoder()
                                       .encodeToString(body.getPaymentId().getBytes());
         Links links = new Links();
-        links.setScaRedirect(aspspProfileService.getPisRedirectUrlToAspsp() + body.getPisConsentId() + "/" + encodedPaymentId);
+
         links.setSelf(buildPath("/v1/{paymentService}/{paymentId}", paymentService, encodedPaymentId));
         links.setStatus(buildPath("/v1/{paymentService}/{paymentId}/status", paymentService, encodedPaymentId));
         if (ScaApproach.EMBEDDED == aspspProfileService.getScaApproach()) {
             return addEmbeddedRelatedLinks(links, paymentService, encodedPaymentId, body.getAuthorizationId());
+        }
+        else if (ScaApproach.REDIRECT == aspspProfileService.getScaApproach()) {
+            links.setScaRedirect(aspspProfileService.getPisRedirectUrlToAspsp() + body.getPisConsentId() + "/" + encodedPaymentId);
+        }
+        else if (ScaApproach.OAUTH == aspspProfileService.getScaApproach()) {
+            links.setScaOAuth("scaOuth"); //TODO generate link for oauth
         }
         return links;
     }
@@ -78,5 +84,3 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         return links;
     }
 }
-
-
