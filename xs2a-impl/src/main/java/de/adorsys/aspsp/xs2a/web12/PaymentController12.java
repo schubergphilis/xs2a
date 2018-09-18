@@ -23,6 +23,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
+import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ConsentModelMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentModelMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
@@ -46,6 +47,7 @@ public class PaymentController12 implements PaymentApi {
     private final PaymentModelMapper paymentModelMapper;
     private final ConsentService consentService;
     private final ConsentModelMapper consentModelMapper;
+    private final PisConsentService pisConsentService;
 
     @Override
     public ResponseEntity<?> getPaymentInitiationStatus(String paymentService, String paymentId, UUID xRequestID, String digest,
@@ -87,15 +89,16 @@ public class PaymentController12 implements PaymentApi {
                                              Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding,
                                              String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID,
                                              String psUGeoLocation) {
-        Optional<PaymentProduct> product = PaymentProduct.getByCode(paymentProduct);
-        Optional<PaymentType> paymentType = PaymentType.getByValue(paymentService);
+        PaymentProduct product = PaymentProduct.getByCode(paymentProduct).get();
+        PaymentType paymentType = PaymentType.getByValue(paymentService).get();
         String cert = new String(Optional.ofNullable(tpPSignatureCertificate).orElse(new byte[]{}), StandardCharsets.UTF_8);
         ResponseObject serviceResponse =
-            xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, paymentType.get(), product.get()), paymentType.get(), product.get(), cert);
-
-        return serviceResponse.hasError()
-                   ? responseMapper.created(serviceResponse)
-                   : responseMapper.created(ResponseObject.builder().body(paymentModelMapper.mapToPaymentInitiationResponse12(serviceResponse.getBody(), paymentType.get(), product.get())).build());
+            xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, paymentType, product), paymentType, product, cert, tpPRedirectURI);
+        if (serviceResponse.hasError()) {
+            return responseMapper.created(serviceResponse);
+        }
+        ResponseObject cmsResponse = pisConsentService.createPisConsent(paymentModelMapper.mapToXs2aPayment(body, paymentType, product), serviceResponse.getBody(), cert, paymentProduct, paymentType);
+        return responseMapper.created(ResponseObject.builder().body(paymentModelMapper.mapToPaymentInitiationResponse12(cmsResponse.getBody(), paymentType, product)).build());
     }
 
     @Override

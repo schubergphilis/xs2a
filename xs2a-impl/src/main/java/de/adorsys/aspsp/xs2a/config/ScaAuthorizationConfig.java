@@ -74,7 +74,7 @@ public class ScaAuthorizationConfig {
     }
 
     @Bean
-    public ScaPaymentService scaPaymentService(Xs2aPisConsentMapper xs2aPisConsentMapper, AspspProfileService aspspProfileService, PisAuthorisationService pisAuthorisationService, PisConsentService pisConsentService, PaymentMapper paymentMapper, PaymentSpi paymentSpi) {
+    public ScaPaymentService scaPaymentService(Xs2aPisConsentMapper xs2aPisConsentMapper, AspspProfileService aspspProfileService, PisScaAuthorisationService pisScaAuthorisationService, PisConsentService pisConsentService, PaymentMapper paymentMapper, PaymentSpi paymentSpi) {
         ScaApproach scaApproach = getScaApproach();
         if (OAUTH == scaApproach) {
             return new OauthScaPaymentService(paymentMapper, paymentSpi);
@@ -83,9 +83,9 @@ public class ScaAuthorizationConfig {
             return new DecoupedScaPaymentService();
         }
         if (EMBEDDED == scaApproach) {
-            return new EmbeddedScaPaymentService(aspspProfileService, pisAuthorisationService, paymentSpi, paymentMapper, pisConsentService);
+            return new EmbeddedScaPaymentService(aspspProfileService, pisScaAuthorisationService, paymentSpi, paymentMapper, pisConsentService);
         }
-        return new RedirectScaPaymentService(aspspProfileService, pisAuthorisationService, paymentSpi, paymentMapper, pisConsentService);
+        return new RedirectScaPaymentService(aspspProfileService, pisScaAuthorisationService, paymentSpi, paymentMapper, pisConsentService);
     }
 
     @Bean
@@ -103,18 +103,18 @@ public class ScaAuthorizationConfig {
     }
 
     @Bean
-    public PisAuthorisationService pisAuthorizationService(PisConsentService pisConsentService, Xs2aPisConsentMapper pisConsentMapper) {
+    public PisScaAuthorisationService pisAuthorizationService(PisAuthorisationService authorisationService, Xs2aPisConsentMapper pisConsentMapper) {
         ScaApproach scaApproach = getScaApproach();
         if (OAUTH == scaApproach) {
-            return new OauthPisAuthorisationService();
+            return new OauthPisScaAuthorisationService();
         }
         if (DECOUPLED == scaApproach) {
-            return new DecoupledPisAuthorisationService();
+            return new DecoupledPisScaAuthorisationService();
         }
         if (EMBEDDED == scaApproach) {
-            return new EmbeddedPisAuthorisationService(pisConsentService, pisConsentMapper);
+            return new EmbeddedPisScaAuthorisationService(authorisationService, pisConsentMapper);
         }
-        return new RedirectPisAuthorisationService();
+        return new RedirectPisScaAuthorisationService();
     }
 
     private ScaApproach getScaApproach() {

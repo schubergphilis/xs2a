@@ -16,7 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.service.payment;
 
-import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorisationService;
+import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorisationService;
 import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class RedirectScaPaymentService extends RedirectAndEmbeddedPaymentService {
 
-    public RedirectScaPaymentService(AspspProfileService profileService, PisAuthorisationService pisAuthorizationService, PaymentSpi paymentSpi, PaymentMapper paymentMapper, PisConsentService pisConsentService) {
+    public RedirectScaPaymentService(AspspProfileService profileService, PisScaAuthorisationService pisAuthorizationService, PaymentSpi paymentSpi, PaymentMapper paymentMapper, PisConsentService pisConsentService) {
         super(profileService, pisAuthorizationService, paymentSpi, paymentMapper, pisConsentService);
     }
 }

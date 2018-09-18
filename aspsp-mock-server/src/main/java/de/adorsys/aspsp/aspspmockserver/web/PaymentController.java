@@ -58,7 +58,7 @@ public class PaymentController {
         @RequestBody List<SpiSinglePayment> payments) {
         List<SpiSinglePayment> saved = paymentService.addBulkPayments(payments);
         return saved.stream()
-                   .noneMatch(p -> p.getPaymentStatus() == RJCT)
+                   .anyMatch(p -> p.getPaymentStatus() != RJCT)
                    ? new ResponseEntity<>(saved, CREATED)
                    : ResponseEntity.noContent().build();
     }

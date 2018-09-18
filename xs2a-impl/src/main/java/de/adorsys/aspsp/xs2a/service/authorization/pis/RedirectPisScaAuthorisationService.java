@@ -23,7 +23,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 
 import java.util.Optional;
 
-public class OauthPisAuthorisationService implements PisAuthorisationService {
+public class RedirectPisScaAuthorisationService implements PisScaAuthorisationService {
     @Override
     public Optional<Xsa2CreatePisConsentAuthorisationResponse> createConsentAuthorisation(String paymentId, PaymentType paymentType) {
         return null;
