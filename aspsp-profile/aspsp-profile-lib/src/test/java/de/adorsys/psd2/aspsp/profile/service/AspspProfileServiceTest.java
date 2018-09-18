@@ -22,9 +22,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
@@ -53,7 +53,6 @@ public class AspspProfileServiceTest {
     private static final boolean BANK_OFFERED_CONSENT_SUPPORT = false;
     private static final AuthorisationStartType AUTHORIZATION_START_TYPE = AuthorisationStartType.IMPLICIT;
 
-    @InjectMocks
     private AspspProfileService aspspProfileService;
 
     @Mock
@@ -93,6 +92,9 @@ public class AspspProfileServiceTest {
             .thenReturn(BANK_OFFERED_CONSENT_SUPPORT);
         Mockito.when(profileConfiguration.getAuthorisationStartType())
             .thenReturn(AUTHORIZATION_START_TYPE);
+
+        aspspProfileService = new AspspProfileServiceImpl(profileConfiguration);
+        MockitoAnnotations.initMocks(aspspProfileService);
     }
 
     @Test

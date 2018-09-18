@@ -17,7 +17,6 @@
 package de.adorsys.aspsp.xs2a.config;
 
 import de.adorsys.aspsp.xs2a.config.rest.BearerToken;
-import de.adorsys.aspsp.xs2a.domain.aspsp.ScaApproach;
 import de.adorsys.aspsp.xs2a.service.authorization.ais.*;
 import de.adorsys.aspsp.xs2a.service.authorization.pis.*;
 import de.adorsys.aspsp.xs2a.service.consent.AisConsentService;
@@ -27,9 +26,10 @@ import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aAisConsentMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
 import de.adorsys.aspsp.xs2a.service.payment.*;
-import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
+import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
+import de.adorsys.psd2.aspsp.profile.domain.ScaApproach;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,14 +41,14 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.EnumSet;
 import java.util.Optional;
 
-import static de.adorsys.aspsp.xs2a.domain.aspsp.ScaApproach.*;
 import static de.adorsys.aspsp.xs2a.spi.domain.constant.AuthorizationConstant.AUTHORIZATION_HEADER;
+import static de.adorsys.psd2.aspsp.profile.domain.ScaApproach.*;
 
 // TODO refactor to AbstractFactory https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/298
 @Configuration
 @RequiredArgsConstructor
 public class ScaAuthorizationConfig {
-    private final AspspProfileService aspspProfileService;
+    private final AspspProfileServiceWrapper aspspProfileService;
     private final KeycloakInvokerService keycloakInvokerService;
 
     @Bean
@@ -74,7 +74,7 @@ public class ScaAuthorizationConfig {
     }
 
     @Bean
-    public ScaPaymentService scaPaymentService(Xs2aPisConsentMapper xs2aPisConsentMapper, AspspProfileService aspspProfileService, PisAuthorisationService pisAuthorisationService, PisConsentService pisConsentService, PaymentMapper paymentMapper, PaymentSpi paymentSpi) {
+    public ScaPaymentService scaPaymentService(Xs2aPisConsentMapper xs2aPisConsentMapper, AspspProfileServiceWrapper aspspProfileService, PisAuthorisationService pisAuthorisationService, PisConsentService pisConsentService, PaymentMapper paymentMapper, PaymentSpi paymentSpi) {
         ScaApproach scaApproach = getScaApproach();
         if (OAUTH == scaApproach) {
             return new OauthScaPaymentService(paymentMapper, paymentSpi);
