@@ -20,10 +20,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
 import de.adorsys.aspsp.xs2a.domain.pis.TppInfo;
-import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorisationService;
-import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
-import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
@@ -37,11 +34,8 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RedirectAndEmbeddedPaymentService implements ScaPaymentService {
-    private final AspspProfileService profileService;
-    private final PisScaAuthorisationService pisAuthorizationService;
     private final PaymentSpi paymentSpi;
     private final PaymentMapper paymentMapper;
-    private final PisConsentService pisConsentService;
 
     @Override
     public PaymentInitialisationResponse createSinglePayment(SinglePayment payment, TppInfo tppInfo, String paymentProduct) {
@@ -62,8 +56,8 @@ public class RedirectAndEmbeddedPaymentService implements ScaPaymentService {
         AspspConsentData aspspConsentData = new AspspConsentData(); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         List<SpiSinglePayment> singlePayments = paymentMapper.mapToSpiSinglePaymentList(payments);
         return paymentSpi.createBulkPayments(singlePayments, aspspConsentData).getPayload()
-                                                                .stream()
-                                                                .map(paymentMapper::mapToPaymentInitializationResponse)
-                                                                .collect(Collectors.toList());
+                   .stream()
+                   .map(paymentMapper::mapToPaymentInitializationResponse)
+                   .collect(Collectors.toList());
     }
 }

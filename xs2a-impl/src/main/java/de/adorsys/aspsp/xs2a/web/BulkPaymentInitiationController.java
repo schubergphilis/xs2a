@@ -20,9 +20,10 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
+import de.adorsys.aspsp.xs2a.domain.pis.TppInfo;
+import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
-import de.adorsys.aspsp.xs2a.service.AccountReferenceValidationService;
 import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -67,6 +68,6 @@ public class BulkPaymentInitiationController {
                 return responseMapper.created(ResponseObject.<List<PaymentInitialisationResponse>>builder().fail(accountReferenceValidationResponse.getError()).build());
             }
         }
-        return responseMapper.created(paymentService.createBulkPayments(payments, tppSignatureCertificate, paymentProduct));
+        return responseMapper.created(paymentService.createBulkPayments(payments, new TppInfo(), paymentProduct));
     }
 }

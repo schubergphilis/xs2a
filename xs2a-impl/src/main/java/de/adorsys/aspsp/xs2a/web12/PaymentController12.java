@@ -93,11 +93,11 @@ public class PaymentController12 implements PaymentApi {
         PaymentType paymentType = PaymentType.getByValue(paymentService).get();
         String cert = new String(Optional.ofNullable(tpPSignatureCertificate).orElse(new byte[]{}), StandardCharsets.UTF_8);
         ResponseObject serviceResponse =
-            xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, paymentType, product), paymentType, product, cert, tpPRedirectURI);
+            xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, paymentType, product), paymentType, product, cert, tpPRedirectURI, tpPNokRedirectURI);
         if (serviceResponse.hasError()) {
             return responseMapper.created(serviceResponse);
         }
-        ResponseObject cmsResponse = pisConsentService.createPisConsent(paymentModelMapper.mapToXs2aPayment(body, paymentType, product), serviceResponse.getBody(), cert, paymentProduct, paymentType);
+        ResponseObject cmsResponse = pisConsentService.createPisConsent(paymentModelMapper.mapToXs2aPayment(body, paymentType, product), serviceResponse.getBody(), cert, paymentProduct, paymentType, tpPRedirectURI, tpPNokRedirectURI);
         return responseMapper.created(ResponseObject.builder().body(paymentModelMapper.mapToPaymentInitiationResponse12(cmsResponse.getBody(), paymentType, product)).build());
     }
 

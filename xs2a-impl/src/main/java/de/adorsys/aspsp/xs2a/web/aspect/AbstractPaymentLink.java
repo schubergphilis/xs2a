@@ -32,7 +32,6 @@ import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.PERIODIC;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
 
 public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
-
     @SuppressWarnings("unchecked")
     protected ResponseObject<?> enrichLink(ResponseObject<?> result, PaymentType paymentType) {
         Object body = result.getBody();
@@ -56,11 +55,13 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         String encodedPaymentId = Base64.getEncoder()
                                       .encodeToString(body.getPaymentId().getBytes());
         Links links = new Links();
-        links.setScaRedirect(aspspProfileService.getPisRedirectUrlToAspsp() + body.getPisConsentId() + "/" + encodedPaymentId);
         links.setSelf(buildPath("/v1/{paymentService}/{paymentId}", paymentService, encodedPaymentId));
         links.setStatus(buildPath("/v1/{paymentService}/{paymentId}/status", paymentService, encodedPaymentId));
         if (ScaApproach.EMBEDDED == aspspProfileService.getScaApproach()) {
             return addEmbeddedRelatedLinks(links, paymentService, encodedPaymentId, body.getAuthorizationId());
+        }
+        if (ScaApproach.REDIRECT == aspspProfileService.getScaApproach()) {
+            links.setScaRedirect(aspspProfileService.getPisRedirectUrlToAspsp() + body.getPisConsentId() + "/" + encodedPaymentId);
         }
         return links;
     }

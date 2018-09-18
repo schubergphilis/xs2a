@@ -296,16 +296,26 @@ public class PaymentMapper {
                    .orElse(null);
     }
 
-    public TppInfo mapToTppInfo(String tppSignatureCertificate) {
+    public TppInfo mapToTppInfo(String tppSignatureCertificate, String tppRedirectUri, String tppNokRedirectUri) {
         if (StringUtils.isBlank(tppSignatureCertificate)) {
-            return null;
+            //TODO test data should be removed upon deployment and usage of real certificates
+            TppInfo tppInfo = new TppInfo();
+            tppInfo.setRegistrationNumber("TEST1");
+            tppInfo.setTppName("TestName");
+            tppInfo.setTppRole("TestRole");
+            tppInfo.setNationalCompetentAuthority("Authority");
+            tppInfo.setRedirectUri(tppRedirectUri);
+            tppInfo.setNokRedirectUri(tppNokRedirectUri);
+            return tppInfo;
         }
 
         try {
             byte[] decodedBytes = Base64.getDecoder().decode(tppSignatureCertificate);
             String decodedJson = new String(decodedBytes);
-
-            return objectMapper.readValue(decodedJson, TppInfo.class);
+            TppInfo tppInfo = objectMapper.readValue(decodedJson, TppInfo.class);
+            tppInfo.setRedirectUri(tppRedirectUri);
+            tppInfo.setNokRedirectUri(tppNokRedirectUri);
+            return tppInfo;
         } catch (Exception e) {
             log.warn("Error with converting TppInfo from certificate {}", tppSignatureCertificate);
             return null;
