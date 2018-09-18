@@ -80,24 +80,13 @@ public class AspspProfileServiceWrapper {
     }
 
     /**
-     * Reads current sca approach mode from ASPSP profile service
-     *
-     * @return 'true' if current sca approach requires 'redirect', 'false' if not
-     */
-    public boolean isRedirectMode() {
-        ScaApproach scaApproach = getScaApproach();
-        return scaApproach == ScaApproach.REDIRECT
-                   || scaApproach == ScaApproach.DECOUPLED;
-    }
-
-    /**
      * Reads sca approach from ASPSP profile service
      *
      * @return Available SCA approach for tpp
      */
     @Cacheable(CacheConfig.ASPSP_PROFILE_CACHE)
     public ScaApproach getScaApproach() {
-        de.adorsys.psd2.aspsp.profile.domain.ScaApproach scaApproach = aspspProfileService.getScaApproach();
+        ScaApproach scaApproach = aspspProfileService.getScaApproach();
         return Optional.ofNullable(scaApproach)
             .map(approach -> ScaApproach.valueOf(approach.name()))
             .orElse(ScaApproach.REDIRECT); //default
@@ -108,7 +97,7 @@ public class AspspProfileServiceWrapper {
      *
      * @return 'true' if tpp signature is required, 'false' if not
      */
-    public Boolean getTppSignatureRequired() {
+    public boolean isTppSignatureRequired() {
         return readAspspSettings().isTppSignatureRequired();
     }
 

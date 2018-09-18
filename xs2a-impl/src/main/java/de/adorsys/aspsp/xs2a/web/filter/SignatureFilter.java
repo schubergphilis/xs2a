@@ -52,7 +52,7 @@ public class SignatureFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
         throws IOException, ServletException {
 
-        if (aspspProfileService.getTppSignatureRequired()) {
+        if (aspspProfileService.isTppSignatureRequired()) {
             if (!(request instanceof HttpServletRequest) || !(response instanceof HttpServletResponse)) {
                 throw new ServletException("OncePerRequestFilter just supports HTTP requests");
             }
