@@ -298,15 +298,7 @@ public class PaymentMapper {
 
     public TppInfo mapToTppInfo(String tppSignatureCertificate, String tppRedirectUri, String tppNokRedirectUri) {
         if (StringUtils.isBlank(tppSignatureCertificate)) {
-            //TODO test data should be removed upon deployment and usage of real certificates
-            TppInfo tppInfo = new TppInfo();
-            tppInfo.setRegistrationNumber("TEST1");
-            tppInfo.setTppName("TestName");
-            tppInfo.setTppRole("TestRole");
-            tppInfo.setNationalCompetentAuthority("Authority");
-            tppInfo.setRedirectUri(tppRedirectUri);
-            tppInfo.setNokRedirectUri(tppNokRedirectUri);
-            return tppInfo;
+            return null;
         }
 
         try {
