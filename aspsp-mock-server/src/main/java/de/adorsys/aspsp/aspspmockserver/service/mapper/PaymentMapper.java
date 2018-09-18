@@ -143,11 +143,6 @@ public class PaymentMapper {
                    .orElse(null);
     }
 
-    private AspspPayment setBulkIdToPayment(AspspPayment payment, String bulkid) {
-        payment.setBulkId(bulkid);
-        return payment;
-    }
-
     private String generateId() {
         return UUID.randomUUID().toString();
     }

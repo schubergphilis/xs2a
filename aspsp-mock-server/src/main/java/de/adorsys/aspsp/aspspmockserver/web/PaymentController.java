@@ -17,7 +17,6 @@
 package de.adorsys.aspsp.aspspmockserver.web;
 
 import de.adorsys.aspsp.aspspmockserver.service.PaymentService;
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.AspspPayment;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiBulkPayment;

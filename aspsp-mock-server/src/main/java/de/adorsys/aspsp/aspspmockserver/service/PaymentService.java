@@ -19,7 +19,6 @@ package de.adorsys.aspsp.aspspmockserver.service;
 import de.adorsys.aspsp.aspspmockserver.config.rest.consent.PisConsentRemoteUrls;
 import de.adorsys.aspsp.aspspmockserver.repository.PaymentRepository;
 import de.adorsys.aspsp.aspspmockserver.service.mapper.PaymentMapper;
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountBalance;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
@@ -40,8 +39,6 @@ import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType.PERIODIC;
 import static de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType.SINGLE;

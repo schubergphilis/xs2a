@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.service.mapper;
+package de.adorsys.aspsp.xs2a.service.mapper; //NOPMD
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.Links;
@@ -38,7 +38,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -48,7 +47,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class PaymentMapper { //NOPMD TODO fix high amount of different objects as members denotes a high coupling https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/322
+public class PaymentMapper {
+    // TODO fix high amount of different objects as members denotes a high coupling https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/322
     private final ObjectMapper objectMapper;
     private final AccountMapper accountMapper;
 
