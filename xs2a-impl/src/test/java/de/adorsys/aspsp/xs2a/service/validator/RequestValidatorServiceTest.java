@@ -19,10 +19,8 @@ package de.adorsys.aspsp.xs2a.service.validator;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
-import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
-import de.adorsys.aspsp.xs2a.service.validator.parameter.ParametersFactory;
 import de.adorsys.aspsp.xs2a.web.ConsentController;
 import de.adorsys.aspsp.xs2a.web.PaymentController;
 import org.junit.Before;
@@ -43,7 +41,6 @@ import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.PARAMETER_NOT_SUPPOR
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.PRODUCT_UNKNOWN;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -206,24 +203,24 @@ public class RequestValidatorServiceTest {
     }
 
     private HandlerMethod getHandler() throws NoSuchMethodException {
-        Class<?>[] params = new Class<?>[] { String.class, UUID.class, String.class, String.class, byte[].class,
+        Class<?>[] params = new Class<?>[]{String.class, UUID.class, String.class, String.class, byte[].class,
             String.class, Object.class, String.class, String.class, String.class, String.class, String.class,
-            String.class, UUID.class, String.class };
+            String.class, UUID.class, String.class};
         return new HandlerMethod(consentController, "getConsentInformation", params);
     }
 
     private HandlerMethod getPaymentInitiationControllerHandler() throws NoSuchMethodException {
-        Class<?>[] params = new Class<?>[] {String.class, String.class, UUID.class, String.class, String.class,
+        Class<?>[] params = new Class<?>[]{String.class, String.class, UUID.class, String.class, String.class,
             byte[].class, String.class, Object.class, String.class, String.class, String.class, String.class,
             String.class, String.class, UUID.class, String.class};
         return new HandlerMethod(paymentController, "getPaymentInitiationStatus", params);
     }
 
     private HandlerMethod getPeriodicPaymentsControllerHandler() throws NoSuchMethodException {
-        Class<?>[] params = new Class<?>[] {Object.class, String.class, String.class, UUID.class, String.class,
+        Class<?>[] params = new Class<?>[]{Object.class, String.class, String.class, UUID.class, String.class,
             String.class, String.class, byte[].class, String.class, String.class, String.class, String.class,
             String.class, Boolean.class, String.class, String.class, Boolean.class, Object.class, String.class,
-            String.class, String.class, String.class, String.class, String.class, UUID.class, String.class };
+            String.class, String.class, String.class, String.class, String.class, UUID.class, String.class};
         return new HandlerMethod(paymentController, "initiatePayment", params);
     }
 }
