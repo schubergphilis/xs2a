@@ -45,6 +45,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.CONSENT_INVALID;
+import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_403;
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_404;
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 
@@ -269,6 +270,9 @@ public class AccountService {
                                                          ? ResponseObject.<Xs2aAccountReport>builder().body(report.get()).build()
                                                          : ResponseObject.<Xs2aAccountReport>builder()
                                                                .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
+        if (!report.isPresent()) {
+            response = ResponseObject.<Xs2aAccountReport>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build();
+        }
 
         aisConsentService.consentActionLog(TPP_ID, consentId, createActionStatus(false, TypeAccess.TRANSACTION, response));
         return response;
@@ -292,7 +296,8 @@ public class AccountService {
         return filterAccountDetailsByWithBalance(withBalance, details);
     }
 
-    private List<Xs2aAccountDetails> getAccountDetailsByConsentId(boolean withBalance, String consentId) {
+    private List<Xs2aAccountDetails> getAccountDetailsByConsentId(
+        boolean withBalance, String consentId) {
         SpiAccountConsent spiAccountConsent = aisConsentService.getAccountConsentById(consentId);
         List<SpiAccountDetails> spiAccountDetails = accountSpi.readAccountsByPsuId(spiAccountConsent.getPsuId(), new AspspConsentData()).getPayload();
         List<Xs2aAccountDetails> details = spiAccountDetails.stream()
