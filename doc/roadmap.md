@@ -1,12 +1,13 @@
 # Roadmap
 
-## version 1.8 (planned date: 28.09.2018)
+## version 1.8 (Planned date: 28.09.2018)
 - Update bulk payments and consent requests according to specification 1.2
 - Support of Embedded SCA approach for bulk payment.
 - Support of Embedded SCA approach for periodic payment.
 - Support of Embedded SCA approach for consent request.
 - Validate Qwac certificate.
 - Support get transaction information for a given account. Embedded approach.
+- Migration to package and Maven GroupId "de.adorsys.psd2": aspsp-profile, aspsp-mockserver
 
 ## version 1.9 (planned date: 12.10.2018)
 - Add validation of TPP data
@@ -21,6 +22,7 @@
     - Account information service. Dedicated accounts.
 - Get list of reachable accounts. Embedded approach.
 - Get balances for a given account. Embedded approach.
+- Migration to package and Maven GroupId "de.adorsys.psd2": XS2A and Consent Management
 
 ## version 1.10 (Planned date: 26.10.2018)
 - Cancellation of (future/recurring) payments. Embedded approach.
