@@ -135,10 +135,13 @@ Example
 ```bash
 $ scripts/release-scripts/release.sh 1.0 1.1
 ```
+ ## Release notes
+  
+  * [Release notes](doc/releasenotes.md) 
  
  ## Roadmap
  
- * [roadmap](doc/roadmap.md) - The up-to-date project's roadmap
+ * [Roadmap](doc/roadmap.md) - The up-to-date project's roadmap
 
 ## Authors
 
