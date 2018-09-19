@@ -19,6 +19,7 @@ package de.adorsys.aspsp.xs2a.web12;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentRequestParameters;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
@@ -32,9 +33,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.UUID;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.FORMAT_ERROR;
@@ -89,16 +88,16 @@ public class PaymentController12 implements PaymentApi {
                                              Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding,
                                              String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID,
                                              String psUGeoLocation) {
-        PaymentProduct product = PaymentProduct.getByCode(paymentProduct).get();
-        PaymentType paymentType = PaymentType.getByValue(paymentService).get();
-        String cert = new String(Optional.ofNullable(tpPSignatureCertificate).orElse(new byte[]{}), StandardCharsets.UTF_8);
+        PaymentRequestParameters requestParams = paymentModelMapper.mapToPaymentRequestParameters(paymentProduct,paymentService,tpPSignatureCertificate,tpPRedirectURI,tpPNokRedirectURI);
         ResponseObject serviceResponse =
-            xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, paymentType, product), paymentType, product, cert, tpPRedirectURI, tpPNokRedirectURI);
-        if (serviceResponse.hasError()) {
-            return responseMapper.created(serviceResponse);
-        }
-        ResponseObject cmsResponse = pisConsentService.createPisConsent(paymentModelMapper.mapToXs2aPayment(body, paymentType, product), serviceResponse.getBody(), cert, paymentProduct, paymentType, tpPRedirectURI, tpPNokRedirectURI);
-        return responseMapper.created(ResponseObject.builder().body(paymentModelMapper.mapToPaymentInitiationResponse12(cmsResponse.getBody(), paymentType, product)).build());
+            xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, requestParams),requestParams);
+
+        return serviceResponse.hasError()
+                   ? responseMapper.created(serviceResponse)
+                   : responseMapper.created(ResponseObject
+                                                .builder()
+                                                .body(paymentModelMapper.mapToPaymentInitiationResponse12(serviceResponse.getBody(), requestParams))
+                                                .build());
     }
 
     @Override

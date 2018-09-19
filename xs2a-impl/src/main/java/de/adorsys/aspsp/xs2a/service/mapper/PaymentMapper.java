@@ -296,20 +296,20 @@ public class PaymentMapper {
                    .orElse(null);
     }
 
-    public TppInfo mapToTppInfo(String tppSignatureCertificate, String tppRedirectUri, String tppNokRedirectUri) {
-        if (StringUtils.isBlank(tppSignatureCertificate)) {
+    public TppInfo mapToTppInfo(PaymentRequestParameters requestParameters) {
+        if (StringUtils.isBlank(requestParameters.getQwacCertificate())) {
             return null;
         }
 
         try {
-            byte[] decodedBytes = Base64.getDecoder().decode(tppSignatureCertificate);
+            byte[] decodedBytes = Base64.getDecoder().decode(requestParameters.getQwacCertificate());
             String decodedJson = new String(decodedBytes);
             TppInfo tppInfo = objectMapper.readValue(decodedJson, TppInfo.class);
-            tppInfo.setRedirectUri(tppRedirectUri);
-            tppInfo.setNokRedirectUri(tppNokRedirectUri);
+            tppInfo.setRedirectUri(requestParameters.getTppRedirectUri());
+            tppInfo.setNokRedirectUri(requestParameters.getTppNokRedirectUri());
             return tppInfo;
         } catch (Exception e) {
-            log.warn("Error with converting TppInfo from certificate {}", tppSignatureCertificate);
+            log.warn("Error with converting TppInfo from certificate {}", requestParameters.getQwacCertificate());
             return null;
         }
     }

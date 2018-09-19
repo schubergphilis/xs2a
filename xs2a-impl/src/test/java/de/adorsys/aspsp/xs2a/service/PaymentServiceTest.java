@@ -79,13 +79,13 @@ public class PaymentServiceTest {
     @InjectMocks
     private PaymentService paymentService;
     @Mock
-    private PaymentMapper paymentMapper;//
+    private PaymentMapper paymentMapper;
     @Mock
-    private ScaPaymentService scaPaymentService;//
+    private ScaPaymentService scaPaymentService;
     @Mock
-    private PaymentSpi paymentSpi;//
+    private PaymentSpi paymentSpi;
     @Mock
-    private ReadPaymentFactory readPaymentFactory;//
+    private ReadPaymentFactory readPaymentFactory;
     @Mock
     private ReadSinglePayment readSinglePayment;
     @Mock
@@ -122,7 +122,7 @@ public class PaymentServiceTest {
             .thenReturn(getBulkResponses(getPaymentResponse(RCVD, null)));
         when(scaPaymentService.createBulkPayment(Arrays.asList(SINGLE_PAYMENT_OK, SINGLE_PAYMENT_NOK_AMOUNT), TPP_INFO, ALLOWED_PAYMENT_PRODUCT))
             .thenReturn(getBulkResponses(getPaymentResponse(RCVD, null), getPaymentResponse(RJCT, PAYMENT_FAILED)));
-        when(paymentMapper.mapToTppInfo(TPP_INFO_STR,null,null))
+        when(paymentMapper.mapToTppInfo(getRequestParameters()))
             .thenReturn(TPP_INFO);
 
         when(referenceValidationService.validateAccountReferences(any())).thenReturn(ResponseObject.builder().build());
@@ -364,5 +364,11 @@ public class PaymentServiceTest {
         tppInfo.setRedirectUri("redirectUri");
         tppInfo.setNokRedirectUri("nokRedirectUri");
         return tppInfo;
+    }
+
+    private PaymentRequestParameters getRequestParameters(){
+        PaymentRequestParameters requestParameters = new PaymentRequestParameters();
+
+        return requestParameters;
     }
 }

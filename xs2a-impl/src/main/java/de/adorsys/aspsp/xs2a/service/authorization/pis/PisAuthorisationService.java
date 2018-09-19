@@ -17,13 +17,13 @@
 package de.adorsys.aspsp.xs2a.service.authorization.pis;
 
 import de.adorsys.aspsp.xs2a.config.rest.consent.PisConsentRemoteUrls;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.CreatePisConsentAuthorisationResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.GetPisConsentAuthorisationResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.authorisation.SpiAuthorisationStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
-import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiCreatePisConsentAuthorizationResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentConfirmation;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
@@ -54,9 +54,9 @@ public class PisAuthorisationService {
      * @param paymentId String representation of identifier of stored consent
      * @return long representation of identifier of stored consent authorization
      */
-    public SpiCreatePisConsentAuthorizationResponse createPisConsentAuthorisation(String paymentId) {
+    public CreatePisConsentAuthorisationResponse createPisConsentAuthorisation(String paymentId) {
         return consentRestTemplate.postForEntity(remotePisConsentUrls.createPisConsentAuthorisation(),
-            null, SpiCreatePisConsentAuthorizationResponse.class, paymentId)
+            null, CreatePisConsentAuthorisationResponse.class, paymentId)
                    .getBody();
     }
 

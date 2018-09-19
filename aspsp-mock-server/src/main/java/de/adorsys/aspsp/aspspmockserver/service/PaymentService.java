@@ -112,12 +112,17 @@ public class PaymentService {
     public List<SpiSinglePayment> addBulkPayments(List<SpiSinglePayment> payments) {
         List<AspspPayment> aspspPayments = paymentMapper.mapToAspspPaymentList(payments).stream()
                                                .peek(p -> {
-                                                   if (!accountService.getPsuIdByIban(getDebtorAccountIdFromPayment(p)).isPresent()) {
+                                                   if (isNonExistingAccount(p)) {
                                                        p.setPaymentStatus(SpiTransactionStatus.RJCT);
                                                    }
                                                }).collect(Collectors.toList());
         List<AspspPayment> savedPayments = paymentRepository.save(aspspPayments);
         return paymentMapper.mapToSpiSinglePaymentList(savedPayments);
+    }
+
+    private boolean isNonExistingAccount(AspspPayment p) {
+        String debtorAccountIdFromPayment = getDebtorAccountIdFromPayment(p);
+        return !accountService.getPsuIdByIban(debtorAccountIdFromPayment).isPresent();
     }
 
     BigDecimal calculateAmountToBeCharged(String accountId) {

@@ -21,6 +21,7 @@ import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
+import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.payment.ReadPayment;
 import de.adorsys.aspsp.xs2a.service.payment.ReadPaymentFactory;
@@ -48,27 +49,27 @@ public class PaymentService {
     private final ScaPaymentService scaPaymentService;
     private final ReadPaymentFactory readPaymentFactory;
     private final AccountReferenceValidationService referenceValidationService;
+    private final PisConsentService pisConsentService;
 
     /**
      * Initiates a payment though "payment service" corresponding service method
      *
-     * @param payment                 Payment information
-     * @param paymentType             Type of payment (payments, bulk-payments, periodic-payments)
-     * @param paymentProduct          The addressed payment product
-     * @param tppSignatureCertificate Tpp signature certificate
+     * @param payment Payment information
      * @return Response containing information about created payment or corresponding error
      */
-    public ResponseObject createPayment(Object payment, PaymentType paymentType, PaymentProduct paymentProduct, String tppSignatureCertificate, String tppRedirectUri, String tppNokRedirectUri) {
+    public ResponseObject createPayment(Object payment, PaymentRequestParameters requestParameters) {
         ResponseObject response;
-        TppInfo tppInfo = paymentMapper.mapToTppInfo(tppSignatureCertificate, tppRedirectUri, tppNokRedirectUri);
-        if (paymentType == PaymentType.SINGLE) {
-            response = createPaymentInitiation((SinglePayment) payment, tppInfo, paymentProduct.getCode());
-        } else if (paymentType == PaymentType.PERIODIC) {
-            response = initiatePeriodicPayment((PeriodicPayment) payment, tppInfo, paymentProduct.getCode());
+        TppInfo tppInfo = paymentMapper.mapToTppInfo(requestParameters);
+        if (requestParameters.getPaymentType() == PaymentType.SINGLE) {
+            response = createPaymentInitiation((SinglePayment) payment, tppInfo, requestParameters.getPaymentProduct().getCode());
+        } else if (requestParameters.getPaymentType() == PaymentType.PERIODIC) {
+            response = initiatePeriodicPayment((PeriodicPayment) payment, tppInfo, requestParameters.getPaymentProduct().getCode());
         } else {
-            response = createBulkPayments((List<SinglePayment>) payment, tppInfo, paymentProduct.getCode());
+            response = createBulkPayments((List<SinglePayment>) payment, tppInfo, requestParameters.getPaymentProduct().getCode());
         }
-        return response;
+        return response.hasError()
+                   ? response
+                   : pisConsentService.createPisConsent(payment, response.getBody(), requestParameters, tppInfo);
     }
 
     /**

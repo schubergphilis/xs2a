@@ -22,12 +22,8 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.consent.CreatePisConsentData;
 import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorisationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
-import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
+import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorisationService;
-import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
@@ -55,24 +51,23 @@ public class PisConsentService {
     private final RestTemplate consentRestTemplate;
     private final PisConsentRemoteUrls remotePisConsentUrls;
     private final Xs2aPisConsentMapper pisConsentMapper;
-    private final PaymentMapper paymentMapper;
     private final AspspProfileService profileService;
     private final PisScaAuthorisationService pisScaAuthorisationService;
 
-    public <T> ResponseObject createPisConsent(T payment, T xs2aResponse, String tppSignatureCertificate, String paymentProduct, PaymentType paymentType, String tppRedirectUri, String tppNokRedirectUri) {
-        CreatePisConsentData consentData = getPisConsentData(payment, xs2aResponse, tppSignatureCertificate, paymentProduct, new AspspConsentData(), paymentType, tppRedirectUri, tppNokRedirectUri);
+    public ResponseObject createPisConsent(Object payment, Object xs2aResponse, PaymentRequestParameters requestParameters, TppInfo tppInfo) {
+        CreatePisConsentData consentData = getPisConsentData(payment, xs2aResponse, tppInfo, requestParameters, new AspspConsentData());
 
         PisConsentRequest pisConsentRequest;
-        if (paymentType == SINGLE) {
+        if (requestParameters.getPaymentType() == SINGLE) {
             pisConsentRequest = pisConsentMapper.mapToCmsPisConsentRequestForSinglePayment(consentData);
-        } else if (paymentType == PERIODIC) {
+        } else if (requestParameters.getPaymentType() == PERIODIC) {
             pisConsentRequest = pisConsentMapper.mapToCmsPisConsentRequestForPeriodicPayment(consentData);
         } else {
             pisConsentRequest = pisConsentMapper.mapToCmsPisConsentRequestForBulkPayment(consentData);
         }
         CreatePisConsentResponse consentResponse = consentRestTemplate.postForEntity(remotePisConsentUrls.createPisConsent(), pisConsentRequest, CreatePisConsentResponse.class).getBody();
 
-        return ResponseObject.builder().body(extendPaymentResponseFields(xs2aResponse, consentResponse, paymentType)).build();
+        return ResponseObject.builder().body(extendPaymentResponseFields(xs2aResponse, consentResponse, requestParameters.getPaymentType())).build();
     }
 
     private <T> Object extendPaymentResponseFields(T response, CreatePisConsentResponse cmsResponse, PaymentType paymentType) {
@@ -126,18 +121,18 @@ public class PisConsentService {
         return response;
     }
 
-    private CreatePisConsentData getPisConsentData(Object payment, Object xs2aResponse, String tppSignatureCertificate, String paymentProduct, AspspConsentData aspspConsentData, PaymentType paymentType, String tppRedirectUri, String tppNokRedirectUri) {
+    private CreatePisConsentData getPisConsentData(Object payment, Object xs2aResponse, TppInfo tppInfo, PaymentRequestParameters requestParameters, AspspConsentData aspspConsentData) {
         CreatePisConsentData pisConsentData;
-        if (paymentType == SINGLE) {
+        if (requestParameters.getPaymentType() == SINGLE) {
             SinglePayment singlePayment = (SinglePayment) payment;
             PaymentInitialisationResponse response = (PaymentInitialisationResponse) xs2aResponse;
             singlePayment.setPaymentId(response.getPaymentId());
-            pisConsentData = new CreatePisConsentData(singlePayment, paymentMapper.mapToTppInfo(tppSignatureCertificate, tppRedirectUri, tppNokRedirectUri), paymentProduct, aspspConsentData);
-        } else if (paymentType == PERIODIC) {
+            pisConsentData = new CreatePisConsentData(singlePayment, tppInfo, requestParameters.getPaymentProduct().getCode(), aspspConsentData);
+        } else if (requestParameters.getPaymentType() == PERIODIC) {
             PeriodicPayment periodicPayment = (PeriodicPayment) payment;
             PaymentInitialisationResponse response = (PaymentInitialisationResponse) xs2aResponse;
             periodicPayment.setPaymentId(response.getPaymentId());
-            pisConsentData = new CreatePisConsentData(periodicPayment, paymentMapper.mapToTppInfo(tppSignatureCertificate, tppRedirectUri, tppNokRedirectUri), paymentProduct, aspspConsentData);
+            pisConsentData = new CreatePisConsentData(periodicPayment,tppInfo, requestParameters.getPaymentProduct().getCode(), aspspConsentData);
         } else {
             List<SinglePayment> payments = (List<SinglePayment>) payment;
             List<PaymentInitialisationResponse> responses = (List<PaymentInitialisationResponse>) xs2aResponse;
@@ -146,7 +141,7 @@ public class PisConsentService {
                                                                                .boxed()
                                                                                .collect(Collectors.toMap(payments::get, responses::get));
             paymentMap.forEach((k, v) -> k.setPaymentId(v.getPaymentId()));
-            pisConsentData = new CreatePisConsentData(paymentMap, paymentMapper.mapToTppInfo(tppSignatureCertificate, tppRedirectUri, tppNokRedirectUri), paymentProduct, aspspConsentData);
+            pisConsentData = new CreatePisConsentData(paymentMap, tppInfo, requestParameters.getPaymentProduct().getCode(), aspspConsentData);
         }
         return pisConsentData;
     }

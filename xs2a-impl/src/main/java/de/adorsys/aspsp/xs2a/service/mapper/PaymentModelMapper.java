@@ -27,8 +27,10 @@ import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -47,10 +49,10 @@ public class PaymentModelMapper {
     private final MessageErrorMapper messageErrorMapper;
 
     // Mappers into xs2a domain classes
-    public Object mapToXs2aPayment(Object payment, PaymentType type, PaymentProduct product) {
-        if (type == SINGLE) {
+    public Object mapToXs2aPayment(Object payment, PaymentRequestParameters requestParameters) {
+        if (requestParameters.getPaymentType() == SINGLE) {
             return mapToXs2aSinglePayment(validatePayment(payment, PaymentInitiationSctJson.class));
-        } else if (type == PERIODIC) {
+        } else if (requestParameters.getPaymentType() == PERIODIC) {
             return mapToXs2aPeriodicPayment(validatePayment(payment, PeriodicPaymentInitiationSctJson.class));
         } else {
             return mapToXs2aBulkPayment(validatePayment(payment, BulkPaymentInitiationSctJson.class));
@@ -196,9 +198,9 @@ public class PaymentModelMapper {
         return TransactionStatus.valueOf(responseObject.name());
     }
 
-    public Object mapToPaymentInitiationResponse12(Object response, PaymentType type, PaymentProduct product) {
+    public Object mapToPaymentInitiationResponse12(Object response,PaymentRequestParameters requestParameters) {
         PaymentInitationRequestResponse201 response201 = new PaymentInitationRequestResponse201();
-        if (type == SINGLE || type == PERIODIC) {
+        if (EnumSet.of(SINGLE,PERIODIC).contains(requestParameters.getPaymentType())) {
             PaymentInitialisationResponse specificResponse = (PaymentInitialisationResponse) response;
             response201.setTransactionStatus(mapToTransactionStatus12(specificResponse.getTransactionStatus()));
             response201.setPaymentId(specificResponse.getPaymentId());
@@ -214,7 +216,11 @@ public class PaymentModelMapper {
         } else {
             List<PaymentInitialisationResponse> specificResponse = (List<PaymentInitialisationResponse>) response;
             return specificResponse.stream()
-                       .map(r -> mapToPaymentInitiationResponse12(r, SINGLE, product))
+                       .peek(r -> {
+                           PaymentRequestParameters parameters = new PaymentRequestParameters();
+                           parameters.setPaymentType(SINGLE);
+                           mapToPaymentInitiationResponse12(r, parameters);
+                       })
                        .collect(Collectors.toList());
         }
     }
@@ -235,5 +241,15 @@ public class PaymentModelMapper {
         bulkPart.setCreditorAddress(mapToAddress12(payment.getCreditorAddress()));
         bulkPart.setRemittanceInformationUnstructured(payment.getRemittanceInformationUnstructured());
         return bulkPart;
+    }
+
+    public PaymentRequestParameters mapToPaymentRequestParameters(String paymentProduct, String paymentService, byte[] tpPSignatureCertificate, String tpPRedirectURI, String tpPNokRedirectURI) {
+        PaymentRequestParameters parameters = new PaymentRequestParameters();
+        parameters.setPaymentProduct(PaymentProduct.getByCode(paymentProduct).orElseThrow(() -> new IllegalArgumentException("Unsupported payment product")));
+        parameters.setPaymentType(PaymentType.getByValue(paymentService).orElseThrow(() -> new IllegalArgumentException("Unsupported payment service")));
+        parameters.setQwacCertificate(new String(Optional.ofNullable(tpPSignatureCertificate).orElse(new byte[]{}), StandardCharsets.UTF_8));
+        parameters.setTppRedirectUri(tpPRedirectURI);
+        parameters.setTppNokRedirectUri(tpPNokRedirectURI);
+        return parameters;
     }
 }
