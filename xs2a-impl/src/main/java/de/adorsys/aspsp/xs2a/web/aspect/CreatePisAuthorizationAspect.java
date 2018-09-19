@@ -23,7 +23,7 @@ import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorisationRes
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.service.message.MessageService;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
-import de.adorsys.aspsp.xs2a.web12.PaymentController;
+import de.adorsys.aspsp.xs2a.web.PaymentController;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
