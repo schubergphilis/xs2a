@@ -45,11 +45,11 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.time.LocalDate;
 import java.util.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -60,6 +60,7 @@ import static org.mockito.Mockito.when;
 public class ConsentServiceTest {
     private static final String WRONG_CONSENT_ID = "wrong_consent_id";
     private final String TPP_ID = "This is a test TppId";
+    private final String WRONG_TPP_ID = "wrong_tpp_id";
     private final String CORRECT_ACCOUNT_ID = "123";
     private final String CORRECT_PSU_ID = "123456789";
     private final String CONSENT_ID = "c966f143-f6a2-41db-9036-8abaeeef3af7";
@@ -318,6 +319,17 @@ public class ConsentServiceTest {
     }
 
     @Test
+    public void getAccountConsentById_WRONG_TPP_ID() {
+        //Given:
+        changeTppIdInSecurityContext(WRONG_TPP_ID);
+        //When:
+        ResponseObject response = consentService.getAccountConsentById(CONSENT_ID);
+        //Than:
+        assertThat(response.getError().getTppMessage().getMessageErrorCode()).isEqualTo(MessageErrorCode.CONSENT_UNKNOWN_400);
+        changeTppIdInSecurityContext(TPP_ID);
+    }
+
+    @Test
     public void deleteAccountConsentsById_Success() {
         //When:
         ResponseObject response = consentService.deleteAccountConsentsById(CONSENT_ID);
@@ -431,5 +443,12 @@ public class ConsentServiceTest {
         ref.setIban(iban);
         ref.setCurrency(currency);
         return ref;
+    }
+
+    private void changeTppIdInSecurityContext(String tppId) {
+        HashMap<String, String> credential = new HashMap<>();
+        credential.put("authorityId", tppId);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(null, credential, null);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }
