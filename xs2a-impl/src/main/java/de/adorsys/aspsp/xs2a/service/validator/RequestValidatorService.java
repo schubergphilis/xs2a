@@ -183,10 +183,6 @@ public class RequestValidatorService {
     }
 
     private boolean isPaymentTypeAvailable(PisPaymentType paymentType) {
-        if (paymentType == PisPaymentType.SINGLE) {
-            return true;
-        }
-
         List<PisPaymentType> paymentTypes = aspspProfileService.getAvailablePaymentTypes();
         return paymentTypes.contains(paymentType);
     }
