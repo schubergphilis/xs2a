@@ -167,7 +167,6 @@ public class RequestValidatorService {
                    : Collections.singletonMap(MessageErrorCode.PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct.getCode());
     }
 
-
     private Map<String, String> getViolationMapForPaymentType(PaymentType paymentType) {
         PisPaymentType consentPaymentType = paymentMapper.mapToPisPaymentType(paymentType);
         boolean available = Optional.ofNullable(consentPaymentType)
