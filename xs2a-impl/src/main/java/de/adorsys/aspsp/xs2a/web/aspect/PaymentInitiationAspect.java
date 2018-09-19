@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.web.aspect;
 
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
-import de.adorsys.aspsp.xs2a.web12.PaymentController12;
+import de.adorsys.aspsp.xs2a.web.PaymentController;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-public class PaymentInitiationAspect extends AbstractPaymentLink<PaymentController12> {
+public class PaymentInitiationAspect extends AbstractPaymentLink<PaymentController> {
     @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.service.PaymentService.createPayment(..)) && args(payment, paymentType, ..)", returning = "result", argNames = "result,payment,paymentType")
     public ResponseObject<?> createPaymentAspect(ResponseObject<?> result, Object payment, PaymentType paymentType) {
         if (!result.hasError()) {

@@ -20,7 +20,7 @@ import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentResponse;
-import de.adorsys.aspsp.xs2a.web12.ConsentController12;
+import de.adorsys.aspsp.xs2a.web.ConsentController;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @AllArgsConstructor
-public class ConsentAspect extends AbstractLinkAspect<ConsentController12> {
+public class ConsentAspect extends AbstractLinkAspect<ConsentController> {
 
     @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.service.ConsentService.createAccountConsentsWithResponse(..)) && args(request, psuId)", returning = "result")
     public ResponseObject<CreateConsentResponse> invokeCreateAccountConsentAspect(ResponseObject<CreateConsentResponse> result, CreateConsentReq request, String psuId) {
