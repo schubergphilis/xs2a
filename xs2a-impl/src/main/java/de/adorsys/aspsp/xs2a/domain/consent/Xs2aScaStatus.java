@@ -18,6 +18,12 @@ package de.adorsys.aspsp.xs2a.domain.consent;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import io.swagger.annotations.ApiModelProperty;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public enum Xs2aScaStatus {
     RECEIVED("received"),
@@ -29,25 +35,27 @@ public enum Xs2aScaStatus {
     FAILED("failed"),
     EXEMPTED("exempted");
 
-    private String value;
+    private static Map<String, Xs2aScaStatus> container = new HashMap<>();
 
-    Xs2aScaStatus(String value) {
-        this.value = value;
+    static {
+        Arrays.stream(values())
+            .forEach(status -> container.put(status.getDescription(), status));
     }
+
+    @ApiModelProperty(value = "description", example = "allAccounts")
+    private String description;
 
     @JsonCreator
-    public static Xs2aScaStatus fromValue(String text) {
-        for (Xs2aScaStatus b : Xs2aScaStatus.values()) {
-            if (String.valueOf(b.value).equals(text)) {
-                return b;
-            }
-        }
-        return null;
+    Xs2aScaStatus(String description) {
+        this.description = description;
     }
 
-    @Override
     @JsonValue
-    public String toString() {
-        return String.valueOf(value);
+    public String getDescription() {
+        return description;
+    }
+
+    public static Optional<Xs2aScaStatus> getByDescription(String description) {
+        return Optional.ofNullable(container.get(description));
     }
 }
