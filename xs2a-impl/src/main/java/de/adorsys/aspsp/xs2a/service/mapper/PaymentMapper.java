@@ -219,10 +219,8 @@ public class PaymentMapper {
                            return PisPaymentType.BULK;
                        } else if (xs2aType == PaymentType.PERIODIC) {
                            return PisPaymentType.PERIODIC;
-                       } else if (xs2aType == PaymentType.SINGLE){
-                           return PisPaymentType.SINGLE;
                        } else {
-                           return null;
+                           return PisPaymentType.SINGLE;
                        }
         }).orElse(null);
     }
