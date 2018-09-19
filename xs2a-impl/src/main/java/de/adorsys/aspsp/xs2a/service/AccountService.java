@@ -296,8 +296,7 @@ public class AccountService {
         return filterAccountDetailsByWithBalance(withBalance, details);
     }
 
-    private List<Xs2aAccountDetails> getAccountDetailsByConsentId(
-        boolean withBalance, String consentId) {
+    private List<Xs2aAccountDetails> getAccountDetailsByConsentId(boolean withBalance, String consentId) {
         SpiAccountConsent spiAccountConsent = aisConsentService.getAccountConsentById(consentId);
         List<SpiAccountDetails> spiAccountDetails = accountSpi.readAccountsByPsuId(spiAccountConsent.getPsuId(), new AspspConsentData()).getPayload();
         List<Xs2aAccountDetails> details = spiAccountDetails.stream()
