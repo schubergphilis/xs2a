@@ -69,7 +69,7 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         links.setStatus(buildPath("/v1/{paymentService}/{paymentId}/status", paymentService, encodedPaymentId));
         if (aspspProfileService.getScaApproach() == ScaApproach.EMBEDDED) {
             return addEmbeddedRelatedLinks(links, paymentService, encodedPaymentId, body.getAuthorizationId());
-        } else if (aspspProfileService.getScaApproach() == ScaApproach.EMBEDDED) {
+        } else if (aspspProfileService.getScaApproach() == ScaApproach.REDIRECT) {
             links.setScaRedirect(aspspProfileService.getPisRedirectUrlToAspsp() + body.getPisConsentId() + "/" + encodedPaymentId);
         } else if (aspspProfileService.getScaApproach() == ScaApproach.OAUTH) {
             links.setScaOAuth("scaOAuth"); //TODO generate link for oauth https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/326
