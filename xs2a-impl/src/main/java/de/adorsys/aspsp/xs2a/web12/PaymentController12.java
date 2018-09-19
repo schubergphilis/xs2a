@@ -91,6 +91,7 @@ public class PaymentController12 implements PaymentApi {
         PaymentRequestParameters requestParams = paymentModelMapper.mapToPaymentRequestParameters(paymentProduct,paymentService,tpPSignatureCertificate,tpPRedirectURI,tpPNokRedirectURI);
         ResponseObject serviceResponse =
             xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, requestParams),requestParams);
+        xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, paymentType.get(), product.get()), paymentType.get(), PSU_ID, product.get(), cert);
 
         return serviceResponse.hasError()
                    ? responseMapper.created(serviceResponse)
