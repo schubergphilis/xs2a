@@ -136,6 +136,9 @@ Example
 $ scripts/release-scripts/release.sh 1.0 1.1
 ```
  
+ ## Roadmap
+ 
+ * [roadmap](doc/roadmap.md) - The up-to-date project's roadmap
 
 ## Authors
 
