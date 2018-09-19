@@ -30,11 +30,14 @@ import java.util.List;
 public class BulkPayment {
     @ApiModelProperty(value = "If this element equals \"true\", the PSU prefers only one booking entry. If this element equals \"false\", the PSU prefers individual booking of all contained individual transactions. The ASPSP will follow this preference according to contracts agreed on with the PSU.", example = "true")
     private Boolean batchBookingPreferred;
+
     @NotNull
     @ApiModelProperty(value = "debtor account", required = true)
     private AccountReference debtorAccount;
+
     @ApiModelProperty(value = "requested execution date", example = "2020-01-01")
     private LocalDate requestedExecutionDate;
+
     @ApiModelProperty(value = "The Bulk Entry Type is a type which follows the JSON formats for the supported products for single payments, see Section 11.1, excluding the data elements\n" +
                                   "\uF0B7 debtorAccount,\n" +
                                   "\uF0B7 requestedExecutionDate,\n" +

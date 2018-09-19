@@ -27,6 +27,7 @@ import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,8 +35,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.PERIODIC;
-import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
+import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.*;
 import static de.adorsys.aspsp.xs2a.service.mapper.AccountModelMapper.*;
 import static de.adorsys.aspsp.xs2a.service.mapper.AmountModelMapper.mapToAmount;
 
@@ -55,6 +55,32 @@ public class PaymentModelMapper {
         } else {
             return mapToXs2aBulkPayment(validatePayment(payment, BulkPaymentInitiationSctJson.class));
         }
+    }
+
+    public String mapToTppSignatureCertificate(byte[] certificate) {
+        return new String(
+            Optional.ofNullable(certificate).orElse(new byte[]{}),
+            StandardCharsets.UTF_8);
+    }
+
+    public Xs2aCommonPaymentInitialisationRequest mapToXs2aCommonPaymentInitialisationRequest(Object payment, String paymentServiceStr, String paymentProductStr) {
+        Optional<PaymentProduct> product = PaymentProduct.getByCode(paymentProductStr);
+        Optional<PaymentType> type = PaymentType.getByValue(paymentServiceStr);
+
+        if (product.isPresent() && type.isPresent()) {
+            PaymentType paymentType = type.get();
+            PaymentProduct paymentProduct = product.get();
+
+            if (paymentType == SINGLE) {
+                return new Xs2aCommonPaymentInitialisationRequest(mapToXs2aSinglePayment(validatePayment(payment, PaymentInitiationSctJson.class)), paymentProduct);
+            } else if (paymentType == PERIODIC) {
+                return new Xs2aCommonPaymentInitialisationRequest(mapToXs2aPeriodicPayment(validatePayment(payment, PeriodicPaymentInitiationSctJson.class)), paymentProduct);
+            } else if (paymentType == BULK) {
+                return new Xs2aCommonPaymentInitialisationRequest(mapToXs2aBulkPayment(validatePayment(payment, BulkPaymentInitiationSctJson.class)), paymentProduct);
+            }
+        }
+
+        return null;
     }
 
     private <R> R validatePayment(Object payment, Class<R> clazz) {
@@ -117,27 +143,34 @@ public class PaymentModelMapper {
         return Xs2aFrequencyCode.valueOf(frequency.name());
     }
 
-    private List<SinglePayment> mapToXs2aBulkPayment(BulkPaymentInitiationSctJson paymentRequest) {
-        return paymentRequest.getPayments().stream()
-                   .map(p -> {
-                       SinglePayment payment = new SinglePayment();
-                       payment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
-                       payment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
-                       payment.setEndToEndIdentification(p.getEndToEndIdentification());
-                       payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-                       payment.setInstructedAmount(mapToXs2aAmount(p.getInstructedAmount()));
-                       payment.setCreditorAccount(mapToXs2aAccountReference(p.getCreditorAccount()));
-                       payment.setCreditorAgent(p.getCreditorAgent());
-                       payment.setCreditorName(p.getCreditorName());
-                       payment.setCreditorAddress(mapToXs2aAddress(p.getCreditorAddress()));
-                       payment.setUltimateCreditor(null);
-                       payment.setPurposeCode(new Xs2aPurposeCode(null));
-                       payment.setRemittanceInformationUnstructured(p.getRemittanceInformationUnstructured());
-                       payment.setRemittanceInformationStructured(new Remittance());//TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-                       payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1));//TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-                       return payment;
-                   }).collect(Collectors.toList());
+    private BulkPayment mapToXs2aBulkPayment(BulkPaymentInitiationSctJson paymentRequest) {
+        List<SinglePayment> payments = paymentRequest.getPayments().stream()
+                                           .map(p -> {
+                                               SinglePayment payment = new SinglePayment();
+                                               payment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
+                                               payment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
+                                               payment.setEndToEndIdentification(p.getEndToEndIdentification());
+                                               payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+                                               payment.setInstructedAmount(mapToXs2aAmount(p.getInstructedAmount()));
+                                               payment.setCreditorAccount(mapToXs2aAccountReference(p.getCreditorAccount()));
+                                               payment.setCreditorAgent(p.getCreditorAgent());
+                                               payment.setCreditorName(p.getCreditorName());
+                                               payment.setCreditorAddress(mapToXs2aAddress(p.getCreditorAddress()));
+                                               payment.setUltimateCreditor(null);
+                                               payment.setPurposeCode(new Xs2aPurposeCode(null));
+                                               payment.setRemittanceInformationUnstructured(p.getRemittanceInformationUnstructured());
+                                               payment.setRemittanceInformationStructured(new Remittance());//TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+                                               payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1));//TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+                                               return payment;
+                                           }).collect(Collectors.toList());
 
+        BulkPayment bulkPayment = new BulkPayment();
+        bulkPayment.setPayments(payments);
+        bulkPayment.setBatchBookingPreferred(paymentRequest.getBatchBookingPreferred());
+        bulkPayment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
+        bulkPayment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
+
+        return bulkPayment;
     }
 
     //Mappers into PSD2 generated API model classes
@@ -196,7 +229,7 @@ public class PaymentModelMapper {
         return TransactionStatus.valueOf(responseObject.name());
     }
 
-    public Object mapToPaymentInitiationResponse12(Object response, PaymentType type, PaymentProduct product) {
+    public Object mapToPaymentInitiationResponse12(Object response, PaymentType type) {
         PaymentInitationRequestResponse201 response201 = new PaymentInitationRequestResponse201();
         if (type == SINGLE || type == PERIODIC) {
             PaymentInitialisationResponse specificResponse = (PaymentInitialisationResponse) response;
@@ -214,7 +247,7 @@ public class PaymentModelMapper {
         } else {
             List<PaymentInitialisationResponse> specificResponse = (List<PaymentInitialisationResponse>) response;
             return specificResponse.stream()
-                       .map(r -> mapToPaymentInitiationResponse12(r, SINGLE, product))
+                       .map(r -> mapToPaymentInitiationResponse12(r, SINGLE))
                        .collect(Collectors.toList());
         }
     }

@@ -88,7 +88,7 @@ public class PaymentModelMapperTest {
         PaymentInitialisationResponse givenResponse = getXs2aPaymentResponse();
         PaymentInitationRequestResponse201 expectedResponse = getPaymentResponse12();
         //When
-        PaymentInitationRequestResponse201 result = (PaymentInitationRequestResponse201) paymentModelMapper.mapToPaymentInitiationResponse12(givenResponse, PaymentType.SINGLE, PaymentProduct.SCT);
+        PaymentInitationRequestResponse201 result = (PaymentInitationRequestResponse201) paymentModelMapper.mapToPaymentInitiationResponse12(givenResponse, PaymentType.SINGLE);
         //Then
         assertThat(result).isEqualTo(expectedResponse);
     }

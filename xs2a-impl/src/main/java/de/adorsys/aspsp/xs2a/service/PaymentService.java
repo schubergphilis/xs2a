@@ -22,9 +22,7 @@ import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
-import de.adorsys.aspsp.xs2a.service.payment.ReadPayment;
-import de.adorsys.aspsp.xs2a.service.payment.ReadPaymentFactory;
-import de.adorsys.aspsp.xs2a.service.payment.ScaPaymentService;
+import de.adorsys.aspsp.xs2a.service.payment.*;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import lombok.AllArgsConstructor;
@@ -48,6 +46,20 @@ public class PaymentService {
     private final ScaPaymentService scaPaymentService;
     private final ReadPaymentFactory readPaymentFactory;
     private final AccountReferenceValidationService referenceValidationService;
+    private final InitiatePaymentFactory initiatePaymentFactory;
+
+    /**
+     * Initiates a payment though "payment service" corresponding service method
+     *
+     * @param payment                 Payment information
+     * @param tppSignatureCertificate Tpp signature certificate
+     * @return Response containing information about created payment or corresponding error
+     */
+    public ResponseObject createPayment(Xs2aCommonPaymentInitialisationRequest payment, String tppSignatureCertificate) {
+
+        InitiatePayment initialService = initiatePaymentFactory.getInitialService(payment.getPaymentType());
+        return initialService.createPayment(payment, tppSignatureCertificate);
+    }
 
     /**
      * Initiates a payment though "payment service" corresponding service method
@@ -155,8 +167,8 @@ public class PaymentService {
         ReadPayment service = readPaymentFactory.getService(paymentType.getValue());
         Optional<Object> payment = Optional.ofNullable(service.getPayment(paymentId, "TMP")); //NOT USED IN 1.2
         return payment.map(p -> ResponseObject.builder()
-                                 .body(p)
-                                 .build())
+                                    .body(p)
+                                    .build())
                    .orElseGet(() -> ResponseObject.builder()
                                         .fail(new MessageError(RESOURCE_UNKNOWN_403))
                                         .build());
