@@ -20,6 +20,8 @@ package de.adorsys.aspsp.xs2a.service.validator;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
+import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
+import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
 import de.adorsys.aspsp.xs2a.service.validator.header.HeadersFactory;
 import de.adorsys.aspsp.xs2a.service.validator.header.RequestHeader;
@@ -27,9 +29,6 @@ import de.adorsys.aspsp.xs2a.service.validator.header.impl.ErrorMessageHeaderImp
 import de.adorsys.aspsp.xs2a.service.validator.parameter.ParametersFactory;
 import de.adorsys.aspsp.xs2a.service.validator.parameter.RequestParameter;
 import de.adorsys.aspsp.xs2a.service.validator.parameter.impl.ErrorMessageParameterImpl;
-import de.adorsys.aspsp.xs2a.web.BulkPaymentInitiationController;
-import de.adorsys.aspsp.xs2a.web.PaymentInitiationController;
-import de.adorsys.aspsp.xs2a.web.PeriodicPaymentsController;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,15 +51,11 @@ public class RequestValidatorService {
     private Validator validator;
     @Autowired
     private AspspProfileService aspspProfileService;
+    @Autowired
+    private PaymentMapper paymentMapper;
 
     private static final String PAYMENT_PRODUCT_PATH_VAR = "payment-product";
-    private final static Map<Object, PisPaymentType> classMap = new HashMap<>();
-
-    static {
-        classMap.put(PaymentInitiationController.class, PisPaymentType.FUTURE_DATED);
-        classMap.put(BulkPaymentInitiationController.class, PisPaymentType.BULK);
-        classMap.put(PeriodicPaymentsController.class, PisPaymentType.PERIODIC);
-    }
+    private static final String PAYMENT_SERVICE_PATH_VAR = "payment-service";
 
     public Map<String, String> getRequestViolationMap(HttpServletRequest request, Object handler) {
         Map<String, String> violationMap = new HashMap<>();
@@ -95,13 +90,17 @@ public class RequestValidatorService {
     Map<String, String> getRequestPathVariablesViolationMap(HttpServletRequest request, HandlerMethod handler) {
         Map<String, String> requestPathViolationMap = new HashMap<>();
         requestPathViolationMap.putAll(checkPaymentProductByRequest(request));
-        requestPathViolationMap.putAll(getPaymentTypeViolationMap(handler));
+        requestPathViolationMap.putAll(getPaymentTypeViolationMap(request, handler));
 
         return requestPathViolationMap;
     }
 
-    Map<String, String> getPaymentTypeViolationMap(HandlerMethod handler) {
-        return Optional.ofNullable(classMap.get(handler.getBeanType()))
+    Map<String, String> getPaymentTypeViolationMap(HttpServletRequest request, HandlerMethod handler) {
+        Map<String, String> pathVariableMap = getPathVariableMap(request);
+        return Optional.ofNullable(pathVariableMap)
+                   .map(m -> m.get(PAYMENT_SERVICE_PATH_VAR))
+                   .map(type -> PaymentType.getByValue(type)
+                                    .orElse(null))
                    .map(this::getViolationMapForPaymentType)
                    .orElseGet(Collections::emptyMap);
     }
@@ -170,8 +169,12 @@ public class RequestValidatorService {
     }
 
 
-    private Map<String, String> getViolationMapForPaymentType(PisPaymentType paymentType) {
-        return isPaymentTypeAvailable(paymentType)
+    private Map<String, String> getViolationMapForPaymentType(PaymentType paymentType) {
+        PisPaymentType consentPaymentType = paymentMapper.mapToPisPaymentType(paymentType);
+        boolean available = Optional.ofNullable(consentPaymentType)
+                                .map(this::isPaymentTypeAvailable)
+                                .orElse(false);
+        return available
                    ? Collections.emptyMap()
                    : Collections.singletonMap(MessageErrorCode.PARAMETER_NOT_SUPPORTED.getName(), "Wrong payment type: " + paymentType.getValue());
     }
@@ -182,6 +185,10 @@ public class RequestValidatorService {
     }
 
     private boolean isPaymentTypeAvailable(PisPaymentType paymentType) {
+        if (paymentType == PisPaymentType.SINGLE) {
+            return true;
+        }
+
         List<PisPaymentType> paymentTypes = aspspProfileService.getAvailablePaymentTypes();
         return paymentTypes.contains(paymentType);
     }
@@ -191,5 +198,10 @@ public class RequestValidatorService {
                    .collect(Collectors.toMap(
                        violation -> violation.getPropertyPath().toString(),
                        violation -> "'" + violation.getPropertyPath().toString() + "' " + violation.getMessage()));
+    }
+
+    private Map<String, String> getPathVariableMap(HttpServletRequest request) {
+        //noinspection unchecked
+        return (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE);
     }
 }

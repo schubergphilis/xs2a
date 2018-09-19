@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
@@ -209,6 +210,21 @@ public class PaymentMapper {
             return payment;
         })
                    .orElse(null);
+    }
+
+    public PisPaymentType mapToPisPaymentType(PaymentType xs2aType) {
+        return Optional.ofNullable(xs2aType)
+                   .map(type -> {
+                       if (xs2aType == PaymentType.BULK) {
+                           return PisPaymentType.BULK;
+                       } else if (xs2aType == PaymentType.PERIODIC) {
+                           return PisPaymentType.PERIODIC;
+                       } else if (xs2aType == PaymentType.SINGLE){
+                           return PisPaymentType.SINGLE;
+                       } else {
+                           return null;
+                       }
+        }).orElse(null);
     }
 
     public List<SinglePayment> mapToBulkPayment(List<SpiSinglePayment> spiSinglePayment) {
