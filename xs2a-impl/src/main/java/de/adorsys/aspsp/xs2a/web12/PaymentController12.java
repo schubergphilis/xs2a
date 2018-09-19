@@ -88,9 +88,9 @@ public class PaymentController12 implements PaymentApi {
                                              Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding,
                                              String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID,
                                              String psUGeoLocation) {
-        PaymentRequestParameters requestParams = paymentModelMapper.mapToPaymentRequestParameters(paymentProduct,paymentService,tpPSignatureCertificate,tpPRedirectURI,tpPNokRedirectURI);
+        PaymentRequestParameters requestParams = paymentModelMapper.mapToPaymentRequestParameters(paymentProduct, paymentService, tpPSignatureCertificate, tpPRedirectURI, tpPNokRedirectURI);
         ResponseObject serviceResponse =
-            xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, requestParams),requestParams, PSU_ID);
+            xs2aPaymentService.createPayment(paymentModelMapper.mapToXs2aPayment(body, requestParams), requestParams, PSU_ID);
 
         return serviceResponse.hasError()
                    ? responseMapper.created(serviceResponse)
