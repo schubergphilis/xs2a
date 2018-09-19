@@ -47,7 +47,6 @@ import java.util.*;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.RESOURCE_UNKNOWN_403;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
-import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.BULK;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.PERIODIC;
 import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -62,7 +61,6 @@ import static org.springframework.http.HttpStatus.OK;
 public class PaymentControllerTest {
     private static final String CORRECT_PAYMENT_ID = "33333-444444-55555-55555";
     private static final String WRONG_PAYMENT_ID = "wrong_payment_id";
-    private static final String PAYMENT_PRODUCT = "33333-444444-55555-55555";
 
     private static final String CREATE_PAYMENT_INITIATION_REQUEST_JSON_PATH = "/json/CreatePaymentInitiationRequestTest.json";
     private static final String CREATE_PAYMENT_INITIATION_RESPONSE_JSON_PATH = "/json/CreatePaymentInitiationResponseTest.json";
@@ -99,28 +97,24 @@ public class PaymentControllerTest {
         when(paymentService.getPaymentById(SINGLE, WRONG_PAYMENT_ID))
             .thenReturn(ResponseObject.builder().fail(new MessageError(
                 new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
-        when(paymentService.createPayment(any(), any(), any(), any())).thenReturn(readResponseObject());
+        when(paymentService.createPayment(any(), any(), any(), any()))
+            .thenReturn(readResponseObject());
 
-        // Bulk
-        when(paymentService.createBulkPayments(any(), anyString(), any())).thenReturn(readListOfXs2aResponses());
-        when(aspspProfileService.getPisRedirectUrlToAspsp()).thenReturn(REDIRECT_LINK);
-        when(referenceValidationService.validateAccountReferences(any())).thenReturn(ResponseObject.builder().build());
+        when(paymentService.createBulkPayments(any(), anyString(), any()))
+            .thenReturn(readListOfXs2aPaymentInitialisationResponses());
+        when(aspspProfileService.getPisRedirectUrlToAspsp())
+            .thenReturn(REDIRECT_LINK);
+        when(referenceValidationService.validateAccountReferences(any()))
+            .thenReturn(ResponseObject.builder().build());
     }
-
-//    @Before
-//    public void setUpPeriodic() {
-//        when(paymentService.initiatePeriodicPayment(any(), any(), any())).thenReturn(readResponseObject());
-//        when(aspspProfileService.getPisRedirectUrlToAspsp()).thenReturn(REDIRECT_LINK);
-//        when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(getPaymentInitializationResponse(), HttpStatus.CREATED));
-//        when(referenceValidationService.validateAccountReferences(any())).thenReturn(ResponseObject.builder().build());
-//    }
 
     @Before
     public void setUpPaymentServiceMock() throws IOException {
         when(paymentService.getPaymentStatusById(CORRECT_PAYMENT_ID, PaymentType.SINGLE))
             .thenReturn(ResponseObject.<Xs2aTransactionStatus>builder().body(Xs2aTransactionStatus.ACCP).build());
         when(paymentService.getPaymentStatusById(WRONG_PAYMENT_ID, PaymentType.SINGLE))
-            .thenReturn(ResponseObject.<Xs2aTransactionStatus>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
+            .thenReturn(ResponseObject.<Xs2aTransactionStatus>builder().fail(new MessageError(
+                new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build());
         when(paymentService.createPaymentInitiation(any(), any(), any())).thenReturn(readResponseObject());
     }
 
@@ -222,8 +216,11 @@ public class PaymentControllerTest {
 
     @Test
     public void createPaymentInitiation() throws IOException {
-        doReturn(new ResponseEntity<>(readPaymentInitialisationResponse(), HttpStatus.CREATED)).when(responseMapper).created(any());
-        when(referenceValidationService.validateAccountReferences(readSinglePayment().getAccountReferences())).thenReturn(ResponseObject.builder().build());
+        doReturn(new ResponseEntity<>(readPaymentInitialisationResponse(), HttpStatus.CREATED))
+            .when(responseMapper)
+            .created(any());
+        when(referenceValidationService.validateAccountReferences(readSinglePayment().getAccountReferences()))
+            .thenReturn(ResponseObject.builder().build());
         //Given
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         PaymentType paymentType = PaymentType.SINGLE;
@@ -231,10 +228,11 @@ public class PaymentControllerTest {
         ResponseEntity<PaymentInitialisationResponse> expectedResult = new ResponseEntity<>(readPaymentInitialisationResponse(), HttpStatus.CREATED);
 
         //When:
-        ResponseEntity<PaymentInitialisationResponse> actualResult = (ResponseEntity<PaymentInitialisationResponse>) paymentController.initiatePayment(payment,
+        ResponseEntity<PaymentInitialisationResponse> actualResult =
+            (ResponseEntity<PaymentInitialisationResponse>) paymentController.initiatePayment(payment,
             paymentType.getValue(), paymentProduct.getCode(), null, null, null,
-            null, null, null, null, null,
-            null, null, null, null, null,
+                null, null, null, null, null,
+                null, null, null, null, null,
             null, null, null, null, null,
             null ,null, null, null, null);
 
@@ -249,7 +247,8 @@ public class PaymentControllerTest {
     }
 
     private PaymentInitialisationResponse readPaymentInitialisationResponse() throws IOException {
-        PaymentInitialisationResponse resp = jsonConverter.toObject(IOUtils.resourceToString(CREATE_PAYMENT_INITIATION_RESPONSE_JSON_PATH, UTF_8), PaymentInitialisationResponse.class).get();
+        PaymentInitialisationResponse resp = jsonConverter.toObject(IOUtils.resourceToString(
+            CREATE_PAYMENT_INITIATION_RESPONSE_JSON_PATH, UTF_8), PaymentInitialisationResponse.class).get();
         resp.setPisConsentId("932f8184-59dc-4fdb-848e-58b887b3ba02");
         Links links = new Links();
         String encodedPaymentId = Base64.getEncoder().encodeToString(resp.getPaymentId().getBytes());
@@ -259,29 +258,31 @@ public class PaymentControllerTest {
     }
 
     private SinglePayment readSinglePayment() throws IOException {
-        return jsonConverter.toObject(IOUtils.resourceToString(CREATE_PAYMENT_INITIATION_REQUEST_JSON_PATH, UTF_8), SinglePayment.class).get();
+        return jsonConverter.toObject(IOUtils.resourceToString(CREATE_PAYMENT_INITIATION_REQUEST_JSON_PATH, UTF_8),
+            SinglePayment.class).get();
     }
-
-    //
-    // Pereodic
-    //
 
     @Test
     public void initiationForStandingOrdersForRecurringOrPeriodicPayments() throws IOException {
-        doReturn(new ResponseEntity<>(getPaymentInitializationResponse(), HttpStatus.CREATED)).when(responseMapper).created(any());
-        when(referenceValidationService.validateAccountReferences(readSinglePayment().getAccountReferences())).thenReturn(ResponseObject.builder().build());
+        doReturn(new ResponseEntity<>(getPaymentInitializationResponse(), HttpStatus.CREATED))
+            .when(responseMapper).created(any());
+        when(referenceValidationService.validateAccountReferences(readSinglePayment().getAccountReferences()))
+            .thenReturn(ResponseObject.builder().build());
         //Given
         PaymentProduct paymentProduct = PaymentProduct.SCT;
         PeriodicPayment periodicPayment = readPeriodicPayment();
-        ResponseEntity<PaymentInitialisationResponse> expectedResult = new ResponseEntity<>(getPaymentInitializationResponse(), HttpStatus.CREATED);
+        ResponseEntity<PaymentInitialisationResponse> expectedResult = new ResponseEntity<>(
+            getPaymentInitializationResponse(), HttpStatus.CREATED);
 
         //When:
-        ResponseEntity<PaymentInitialisationResponse> result = (ResponseEntity<PaymentInitialisationResponse>) paymentController.initiatePayment(periodicPayment,
+        ResponseEntity<PaymentInitialisationResponse> result =
+            (ResponseEntity<PaymentInitialisationResponse>) paymentController.initiatePayment(periodicPayment,
             PERIODIC.getValue(), paymentProduct.getCode(), null,null, null, null,
             null, null, null, null, null,
-            null ,null, null, null,
-            null, null, null, null, null,
-            null, null, null, null, null);
+                null ,null, null, null,
+                null, null, null, null,
+                null, null, null, null, null,
+                null);
 
         //Then:
         assertThat(result.getStatusCode()).isEqualTo(expectedResult.getStatusCode());
@@ -289,7 +290,8 @@ public class PaymentControllerTest {
     }
 
     private PeriodicPayment readPeriodicPayment() throws IOException {
-        return jsonConverter.toObject(IOUtils.resourceToString(PERIODIC_PAYMENT_DATA, UTF_8), PeriodicPayment.class).get();
+        return jsonConverter.toObject(IOUtils.resourceToString(PERIODIC_PAYMENT_DATA, UTF_8),
+            PeriodicPayment.class).get();
     }
 
     private PaymentInitialisationResponse getPaymentInitializationResponse() {
@@ -301,19 +303,21 @@ public class PaymentControllerTest {
         return resp;
     }
 
-    // Bulk
-
     @Test
     public void createBulkPaymentInitiation() throws IOException {
-        when(responseMapper.created(any())).thenReturn(new ResponseEntity<>(readPaymentInitialisationResponseBulk(), HttpStatus.CREATED));
+        when(responseMapper.created(any()))
+            .thenReturn(new ResponseEntity<>(readListOfPaymentInitialisationResponses(), HttpStatus.CREATED));
         //Given
         List<SinglePayment> payments = readBulkPayments();
-        ResponseEntity<List<PaymentInitationRequestResponse201>> expectedResult = new ResponseEntity<>(readPaymentInitialisationResponseBulk(), HttpStatus.CREATED);
+        ResponseEntity<List<PaymentInitationRequestResponse201>> expectedResult = new ResponseEntity<>(
+            readListOfPaymentInitialisationResponses(), HttpStatus.CREATED);
 
         //When:
-        ResponseEntity<List<PaymentInitationRequestResponse201>> actualResult = (ResponseEntity<List<PaymentInitationRequestResponse201>>) paymentController.initiatePayment(payments, PaymentType.BULK.getValue(), PaymentProduct.SCT.getCode(), null,null, null, null,
-            null, null, null, null, null,
-            null ,null, null, null,
+        ResponseEntity<List<PaymentInitationRequestResponse201>> actualResult =
+            (ResponseEntity<List<PaymentInitationRequestResponse201>>) paymentController.initiatePayment(payments,
+                PaymentType.BULK.getValue(), PaymentProduct.SCT.getCode(), null,null, null,
+                null, null, null, null, null,
+                null, null ,null, null, null,
             null, null, null, null, null,
             null, null, null, null, null);
 
@@ -322,26 +326,23 @@ public class PaymentControllerTest {
         assertThat(actualResult.getBody()).isEqualTo(expectedResult.getBody());
     }
 
-    private ResponseObject<List<PaymentInitationRequestResponse201>> readListOfResponses() throws IOException {
-        return ResponseObject.<List<PaymentInitationRequestResponse201>>builder()
-                   .body(readPaymentInitialisationResponseBulk()).build();
-    }
-
-    private ResponseObject<List<PaymentInitialisationResponse>> readListOfXs2aResponses() throws IOException {
+    private ResponseObject<List<PaymentInitialisationResponse>> readListOfXs2aPaymentInitialisationResponses() throws IOException {
         return ResponseObject.<List<PaymentInitialisationResponse>>builder()
                    .body(readPaymentInitialisationXs2aResponse()).build();
     }
 
     private List<PaymentInitialisationResponse> readPaymentInitialisationXs2aResponse() throws IOException {
-        PaymentInitialisationResponse response = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitialisationResponse.class).get();
+        PaymentInitialisationResponse response = jsonConverter.toObject(IOUtils.resourceToString(
+            BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitialisationResponse.class).get();
         List<PaymentInitialisationResponse> responseList = new ArrayList<>();
         responseList.add(response);
 
         return responseList;
     }
 
-    private List<PaymentInitationRequestResponse201> readPaymentInitialisationResponseBulk() throws IOException {
-        PaymentInitationRequestResponse201 response = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitationRequestResponse201.class).get();
+    private List<PaymentInitationRequestResponse201> readListOfPaymentInitialisationResponses() throws IOException {
+        PaymentInitationRequestResponse201 response = jsonConverter.toObject(IOUtils.resourceToString(
+            BULK_PAYMENT_RESP_DATA, UTF_8), PaymentInitationRequestResponse201.class).get();
         List<PaymentInitationRequestResponse201> responseList = new ArrayList<>();
         responseList.add(response);
 
@@ -349,9 +350,8 @@ public class PaymentControllerTest {
     }
 
     private List<SinglePayment> readBulkPayments() throws IOException {
-        SinglePayment[] payments = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_DATA, UTF_8), SinglePayment[].class).get();
+        SinglePayment[] payments = jsonConverter.toObject(IOUtils.resourceToString(BULK_PAYMENT_DATA, UTF_8),
+            SinglePayment[].class).get();
         return Arrays.asList(payments);
     }
-
-
 }
