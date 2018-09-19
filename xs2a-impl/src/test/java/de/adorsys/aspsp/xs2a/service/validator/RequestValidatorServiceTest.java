@@ -119,7 +119,7 @@ public class RequestValidatorServiceTest {
         HandlerMethod handler = getPaymentInitiationControllerHandler();
 
         //When:
-        Map<String, String> actualViolations = requestValidatorService.getRequestPathVariablesViolationMap(request, handler);
+        Map<String, String> actualViolations = requestValidatorService.getRequestPathVariablesViolationMap(request);
 
         //Then:
         assertThat(actualViolations.size()).isEqualTo(1);
@@ -138,7 +138,7 @@ public class RequestValidatorServiceTest {
         HandlerMethod handler = getPaymentInitiationControllerHandler();
 
         //When:
-        Map<String, String> actualViolations = requestValidatorService.getRequestPathVariablesViolationMap(request, handler);
+        Map<String, String> actualViolations = requestValidatorService.getRequestPathVariablesViolationMap(request);
 
         //Then:
         assertThat(actualViolations.isEmpty()).isTrue();
@@ -156,7 +156,7 @@ public class RequestValidatorServiceTest {
         HandlerMethod handler = getPeriodicPaymentsControllerHandler();
 
         //When:
-        Map<String, String> actualViolations = requestValidatorService.getPaymentTypeViolationMap(request, handler);
+        Map<String, String> actualViolations = requestValidatorService.getPaymentTypeViolationMap(request);
 
         //Then:
         assertThat(actualViolations.size()).isEqualTo(1);
