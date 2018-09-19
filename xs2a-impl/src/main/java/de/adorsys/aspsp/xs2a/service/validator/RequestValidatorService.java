@@ -68,7 +68,7 @@ public class RequestValidatorService {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             violationMap.putAll(getRequestHeaderViolationMap(request, handlerMethod));
             violationMap.putAll(getRequestParametersViolationMap(request, handlerMethod));
-            violationMap.putAll(getRequestPathVariablesViolationMap(request, handlerMethod));
+            violationMap.putAll(getRequestPathVariablesViolationMap(request));
         }
 
         return violationMap;
@@ -87,20 +87,19 @@ public class RequestValidatorService {
         return getViolationMessagesMap(validator.validate(parameterImpl));
     }
 
-    Map<String, String> getRequestPathVariablesViolationMap(HttpServletRequest request, HandlerMethod handler) {
+    Map<String, String> getRequestPathVariablesViolationMap(HttpServletRequest request) {
         Map<String, String> requestPathViolationMap = new HashMap<>();
         requestPathViolationMap.putAll(checkPaymentProductByRequest(request));
-        requestPathViolationMap.putAll(getPaymentTypeViolationMap(request, handler));
+        requestPathViolationMap.putAll(getPaymentTypeViolationMap(request));
 
         return requestPathViolationMap;
     }
 
-    Map<String, String> getPaymentTypeViolationMap(HttpServletRequest request, HandlerMethod handler) {
+    Map<String, String> getPaymentTypeViolationMap(HttpServletRequest request) {
         Map<String, String> pathVariableMap = getPathVariableMap(request);
         return Optional.ofNullable(pathVariableMap)
                    .map(m -> m.get(PAYMENT_SERVICE_PATH_VAR))
-                   .map(type -> PaymentType.getByValue(type)
-                                    .orElse(null))
+                   .flatMap(PaymentType::getByValue)
                    .map(this::getViolationMapForPaymentType)
                    .orElseGet(Collections::emptyMap);
     }
