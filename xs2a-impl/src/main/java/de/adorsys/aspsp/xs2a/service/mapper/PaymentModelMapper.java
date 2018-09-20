@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.PERIODIC;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
-import static de.adorsys.aspsp.xs2a.service.mapper.AccountModelMapper.*;
 import static de.adorsys.aspsp.xs2a.service.mapper.AmountModelMapper.mapToAmount;
 
 @Component
@@ -47,6 +46,7 @@ public class PaymentModelMapper {
     private final ObjectMapper mapper;
     private final ValueValidatorService validationService;
     private final MessageErrorMapper messageErrorMapper;
+    private final AccountModelMapper accountModelMapper;
 
     // Mappers into xs2a domain classes
     public Object mapToXs2aPayment(Object payment, PaymentRequestParameters requestParameters) {
@@ -71,11 +71,11 @@ public class PaymentModelMapper {
         payment.setEndToEndIdentification(paymentRequest.getEndToEndIdentification());
         payment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
         payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-        payment.setInstructedAmount(mapToXs2aAmount(paymentRequest.getInstructedAmount()));
+        payment.setInstructedAmount(accountModelMapper.mapToXs2aAmount(paymentRequest.getInstructedAmount()));
         payment.setCreditorAccount(mapToXs2aAccountReference(paymentRequest.getCreditorAccount()));
         payment.setCreditorAgent(paymentRequest.getCreditorAgent());
         payment.setCreditorName(paymentRequest.getCreditorName());
-        payment.setCreditorAddress(mapToXs2aAddress(paymentRequest.getCreditorAddress()));
+        payment.setCreditorAddress(accountModelMapper.mapToXs2aAddress(paymentRequest.getCreditorAddress()));
         payment.setUltimateCreditor(paymentRequest.getCreditorName());  //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         payment.setPurposeCode(new Xs2aPurposeCode("N/A"));  //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         payment.setRemittanceInformationUnstructured(paymentRequest.getRemittanceInformationUnstructured());
@@ -95,11 +95,11 @@ public class PaymentModelMapper {
         payment.setEndToEndIdentification(paymentRequest.getEndToEndIdentification());
         payment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
         payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-        payment.setInstructedAmount(mapToXs2aAmount(paymentRequest.getInstructedAmount()));
+        payment.setInstructedAmount(accountModelMapper.mapToXs2aAmount(paymentRequest.getInstructedAmount()));
         payment.setCreditorAccount(mapToXs2aAccountReference(paymentRequest.getCreditorAccount()));
         payment.setCreditorAgent(paymentRequest.getCreditorAgent());
         payment.setCreditorName(paymentRequest.getCreditorName());
-        payment.setCreditorAddress(mapToXs2aAddress(paymentRequest.getCreditorAddress()));
+        payment.setCreditorAddress(accountModelMapper.mapToXs2aAddress(paymentRequest.getCreditorAddress()));
         payment.setUltimateCreditor(paymentRequest.getCreditorName());  //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         payment.setPurposeCode(new Xs2aPurposeCode("N/A"));  //TODO check for presence in new SPEC https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
         payment.setRemittanceInformationUnstructured(paymentRequest.getRemittanceInformationUnstructured());
@@ -119,26 +119,32 @@ public class PaymentModelMapper {
         return Xs2aFrequencyCode.valueOf(frequency.name());
     }
 
-    private List<SinglePayment> mapToXs2aBulkPayment(BulkPaymentInitiationSctJson paymentRequest) {
-        return paymentRequest.getPayments().stream()
-                   .map(p -> {
-                       SinglePayment payment = new SinglePayment();
-                       payment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
-                       payment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
-                       payment.setEndToEndIdentification(p.getEndToEndIdentification());
-                       payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-                       payment.setInstructedAmount(mapToXs2aAmount(p.getInstructedAmount()));
-                       payment.setCreditorAccount(mapToXs2aAccountReference(p.getCreditorAccount()));
-                       payment.setCreditorAgent(p.getCreditorAgent());
-                       payment.setCreditorName(p.getCreditorName());
-                       payment.setCreditorAddress(mapToXs2aAddress(p.getCreditorAddress()));
-                       payment.setUltimateCreditor(null);
-                       payment.setPurposeCode(new Xs2aPurposeCode(null));
-                       payment.setRemittanceInformationUnstructured(p.getRemittanceInformationUnstructured());
-                       payment.setRemittanceInformationStructured(new Remittance());//TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-                       payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1));//TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-                       return payment;
-                   }).collect(Collectors.toList());
+    private BulkPayment mapToXs2aBulkPayment(BulkPaymentInitiationSctJson paymentRequest) {
+        BulkPayment bulkPayment = new BulkPayment();
+        bulkPayment.setBatchBookingPreferred(paymentRequest.getBatchBookingPreferred());
+        bulkPayment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
+        bulkPayment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
+        bulkPayment.setPayments(paymentRequest.getPayments().stream()
+                                    .map(p -> {
+                                        SinglePayment payment = new SinglePayment();
+                                        payment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
+                                        payment.setRequestedExecutionDate(paymentRequest.getRequestedExecutionDate());
+                                        payment.setEndToEndIdentification(p.getEndToEndIdentification());
+                                        payment.setUltimateDebtor("NOT SUPPORTED"); //TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+                                        payment.setInstructedAmount(accountModelMapper.mapToXs2aAmount(p.getInstructedAmount()));
+                                        payment.setCreditorAccount(mapToXs2aAccountReference(p.getCreditorAccount()));
+                                        payment.setCreditorAgent(p.getCreditorAgent());
+                                        payment.setCreditorName(p.getCreditorName());
+                                        payment.setCreditorAddress(accountModelMapper.mapToXs2aAddress(p.getCreditorAddress()));
+                                        payment.setUltimateCreditor(null);
+                                        payment.setPurposeCode(new Xs2aPurposeCode(null));
+                                        payment.setRemittanceInformationUnstructured(p.getRemittanceInformationUnstructured());
+                                        payment.setRemittanceInformationStructured(new Remittance());//TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+                                        payment.setRequestedExecutionTime(LocalDateTime.now().plusHours(1));//TODO check for presence in new SPEC  https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+                                        return payment;
+                                    }).collect(Collectors.toList()));
+
+        return bulkPayment;
 
     }
 
@@ -148,12 +154,12 @@ public class PaymentModelMapper {
             SinglePayment xs2aPayment = (SinglePayment) payment;
             PaymentInitiationTarget2WithStatusResponse paymentResponse = new PaymentInitiationTarget2WithStatusResponse();
             paymentResponse.setEndToEndIdentification(xs2aPayment.getEndToEndIdentification());
-            paymentResponse.setDebtorAccount(mapToAccountReference12(xs2aPayment.getDebtorAccount()));
+            paymentResponse.setDebtorAccount(accountModelMapper.mapToAccountReference12(xs2aPayment.getDebtorAccount()));
             paymentResponse.setInstructedAmount(mapToAmount(xs2aPayment.getInstructedAmount()));
-            paymentResponse.setCreditorAccount(mapToAccountReference12(xs2aPayment.getCreditorAccount()));
+            paymentResponse.setCreditorAccount(accountModelMapper.mapToAccountReference12(xs2aPayment.getCreditorAccount()));
             paymentResponse.setCreditorAgent(xs2aPayment.getCreditorAgent());
             paymentResponse.setCreditorName(xs2aPayment.getCreditorName());
-            paymentResponse.setCreditorAddress(mapToAddress12(xs2aPayment.getCreditorAddress()));
+            paymentResponse.setCreditorAddress(accountModelMapper.mapToAddress12(xs2aPayment.getCreditorAddress()));
             paymentResponse.setRemittanceInformationUnstructured(xs2aPayment.getRemittanceInformationUnstructured());
             paymentResponse.setTransactionStatus(mapToTransactionStatus12(xs2aPayment.getTransactionStatus())); //TODO add field to xs2a entity https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
             return paymentResponse;
@@ -162,12 +168,12 @@ public class PaymentModelMapper {
             PeriodicPaymentInitiationTarget2WithStatusResponse paymentResponse = new PeriodicPaymentInitiationTarget2WithStatusResponse();
 
             paymentResponse.setEndToEndIdentification(xs2aPayment.getEndToEndIdentification());
-            paymentResponse.setDebtorAccount(mapToAccountReference12(xs2aPayment.getDebtorAccount()));
+            paymentResponse.setDebtorAccount(accountModelMapper.mapToAccountReference12(xs2aPayment.getDebtorAccount()));
             paymentResponse.setInstructedAmount(mapToAmount(xs2aPayment.getInstructedAmount()));
-            paymentResponse.setCreditorAccount(mapToAccountReference12(xs2aPayment.getCreditorAccount()));
+            paymentResponse.setCreditorAccount(accountModelMapper.mapToAccountReference12(xs2aPayment.getCreditorAccount()));
             paymentResponse.setCreditorAgent(xs2aPayment.getCreditorAgent());
             paymentResponse.setCreditorName(xs2aPayment.getCreditorName());
-            paymentResponse.setCreditorAddress(mapToAddress12(xs2aPayment.getCreditorAddress()));
+            paymentResponse.setCreditorAddress(accountModelMapper.mapToAddress12(xs2aPayment.getCreditorAddress()));
             paymentResponse.setRemittanceInformationUnstructured(xs2aPayment.getRemittanceInformationUnstructured());
             paymentResponse.setStartDate(xs2aPayment.getStartDate());
             paymentResponse.setEndDate(xs2aPayment.getEndDate());
@@ -178,13 +184,13 @@ public class PaymentModelMapper {
             paymentResponse.setTransactionStatus(mapToTransactionStatus12(xs2aPayment.getTransactionStatus())); //TODO add field to xs2a entity https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
             return paymentResponse;
         } else {
-            List<SinglePayment> xs2aPayment = (List<SinglePayment>) payment;
+            BulkPayment xs2aPayment = (BulkPayment) payment;
             BulkPaymentInitiationTarget2WithStatusResponse paymentResponse = new BulkPaymentInitiationTarget2WithStatusResponse();
 
-            paymentResponse.setBatchBookingPreferred(false); //TODO create entity and add value! https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-            paymentResponse.setRequestedExecutionDate(LocalDate.now()); //TODO create entity and add field! https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-            paymentResponse.setDebtorAccount(mapToAccountReference12(xs2aPayment.get(0).getDebtorAccount())); //TODO create entity and add field! https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
-            paymentResponse.setPayments(mapToBulkPartList12(xs2aPayment));
+            paymentResponse.setBatchBookingPreferred(xs2aPayment.getBatchBookingPreferred());
+            paymentResponse.setRequestedExecutionDate(xs2aPayment.getRequestedExecutionDate());
+            paymentResponse.setDebtorAccount(xs2aPayment.getDebtorAccount());
+            paymentResponse.setPayments(mapToBulkPartList12(xs2aPayment.getPayments()));
             paymentResponse.setTransactionStatus(mapToTransactionStatus12(Xs2aTransactionStatus.RCVD)); //TODO add field to xs2a entity https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
             return paymentResponse;
         }
@@ -227,18 +233,18 @@ public class PaymentModelMapper {
 
     private List<PaymentInitiationTarget2Json> mapToBulkPartList12(List<SinglePayment> payments) {
         return payments.stream()
-                   .map(PaymentModelMapper::mapToBulkPart12)
+                   .map(this::mapToBulkPart12)
                    .collect(Collectors.toList());
     }
 
-    private static PaymentInitiationTarget2Json mapToBulkPart12(SinglePayment payment) {
+    private PaymentInitiationTarget2Json mapToBulkPart12(SinglePayment payment) {
         PaymentInitiationTarget2Json bulkPart = new PaymentInitiationTarget2Json().endToEndIdentification(payment.getEndToEndIdentification());
-        bulkPart.setDebtorAccount(mapToAccountReference12(payment.getDebtorAccount()));
+        bulkPart.setDebtorAccount(accountModelMapper.mapToAccountReference12(payment.getDebtorAccount()));
         bulkPart.setInstructedAmount(mapToAmount(payment.getInstructedAmount()));
-        bulkPart.setCreditorAccount(mapToAccountReference12(payment.getCreditorAccount()));
+        bulkPart.setCreditorAccount(accountModelMapper.mapToAccountReference12(payment.getCreditorAccount()));
         bulkPart.setCreditorAgent(payment.getCreditorAgent());
         bulkPart.setCreditorName(payment.getCreditorName());
-        bulkPart.setCreditorAddress(mapToAddress12(payment.getCreditorAddress()));
+        bulkPart.setCreditorAddress(accountModelMapper.mapToAddress12(payment.getCreditorAddress()));
         bulkPart.setRemittanceInformationUnstructured(payment.getRemittanceInformationUnstructured());
         return bulkPart;
     }

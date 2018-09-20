@@ -33,9 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus.RJCT;
@@ -65,7 +63,7 @@ public class PaymentService {
         } else if (requestParameters.getPaymentType() == PaymentType.PERIODIC) {
             response = initiatePeriodicPayment((PeriodicPayment) payment, tppInfo, requestParameters.getPaymentProduct().getCode());
         } else {
-            response = createBulkPayments((List<SinglePayment>) payment, tppInfo, requestParameters.getPaymentProduct().getCode());
+            response = createBulkPayments((BulkPayment) payment, tppInfo, requestParameters.getPaymentProduct().getCode());
         }
         return response.hasError()
                    ? response
@@ -109,24 +107,25 @@ public class PaymentService {
     /**
      * Initiates a bulk payment
      *
-     * @param payments       List of single payments forming bulk payment
+     * @param bulkPayment    BulkPayment information
      * @param paymentProduct The addressed payment product
      * @return List of payment initiation responses containing information about created payments or an error if non of the payments could pass the validation
      */
-    public ResponseObject<List<PaymentInitialisationResponse>> createBulkPayments(List<SinglePayment> payments, TppInfo tppInfo, String paymentProduct) {
-        if (CollectionUtils.isEmpty(payments)) {
+    public ResponseObject<List<PaymentInitialisationResponse>> createBulkPayments(BulkPayment bulkPayment, TppInfo tppInfo, String paymentProduct) {
+        if (bulkPayment == null || CollectionUtils.isEmpty(bulkPayment.getPayments())) {
             return ResponseObject.<List<PaymentInitialisationResponse>>builder()
                        .fail(new MessageError(FORMAT_ERROR))
                        .build();
         }
         List<SinglePayment> validPayments = new ArrayList<>();
         List<PaymentInitialisationResponse> invalidPayments = new ArrayList<>();
-        for (SinglePayment payment : payments) {
+        for (SinglePayment payment : bulkPayment.getPayments()) {
+            payment.setDebtorAccount(bulkPayment.getDebtorAccount());
             validatePayment(payment, payment.isValidExecutionDateAndTime())
                 .map(e -> invalidPayments.add(paymentMapper.mapToPaymentInitResponseFailedPayment(payment, e)))
                 .orElseGet(() -> validPayments.add(payment));
         }
-        return processValidPayments(tppInfo, paymentProduct, validPayments, invalidPayments);
+        return processValidPayments(tppInfo, paymentProduct, validPayments, invalidPayments, bulkPayment);
     }
 
     /**
@@ -164,9 +163,10 @@ public class PaymentService {
                                         .build());
     }
 
-    private ResponseObject<List<PaymentInitialisationResponse>> processValidPayments(TppInfo tppInfo, String paymentProduct, List<SinglePayment> validPayments, List<PaymentInitialisationResponse> invalidPayments) {
+    private ResponseObject<List<PaymentInitialisationResponse>> processValidPayments(TppInfo tppInfo, String paymentProduct, List<SinglePayment> validPayments, List<PaymentInitialisationResponse> invalidPayments, BulkPayment bulkPayment) {
         if (CollectionUtils.isNotEmpty(validPayments)) {
-            List<PaymentInitialisationResponse> paymentResponses = scaPaymentService.createBulkPayment(validPayments, tppInfo, paymentProduct);
+            bulkPayment.setPayments(validPayments);
+            List<PaymentInitialisationResponse> paymentResponses = scaPaymentService.createBulkPayment(bulkPayment, tppInfo, paymentProduct);
             if (paymentResponses.stream()
                     .anyMatch(pr -> pr.getTransactionStatus() != RJCT)) {
                 paymentResponses.addAll(invalidPayments);

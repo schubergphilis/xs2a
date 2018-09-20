@@ -144,6 +144,21 @@ public class PaymentService {
         consentRestTemplate.put(remotePisConsentUrls.updatePisConsentStatus(), null, consentId, consentStatus.name());
     }
 
+    public List<AspspPayment> getPaymentById(String paymentId) {
+        return paymentRepository.findByPaymentIdOrBulkId(paymentId, paymentId);
+    }
+
+    public List<AspspPayment> getAllPayments() {
+        return paymentRepository.findAll();
+    }
+
+    BigDecimal calculateAmountToBeCharged(String accountId) {
+        return paymentRepository.findAll().stream()
+                   .filter(paym -> getDebtorAccountIdFromPayment(paym).equals(accountId))
+                   .map(this::getAmountFromPayment)
+                   .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
     private boolean areFundsSufficient(SpiAccountReference reference, BigDecimal amount) {
         Optional<SpiAccountBalance> balance = Optional.ofNullable(reference)
                                                   .flatMap(this::getInterimAvailableBalanceByReference);
@@ -181,10 +196,6 @@ public class PaymentService {
         return Optional.ofNullable(amount)
                    .map(SpiAmount::getContent)
                    .orElse(BigDecimal.ZERO);
-    }
-
-    public Optional<AspspPayment> getPaymentById(String paymentId) {
-        return Optional.ofNullable(paymentRepository.findOne(paymentId));
     }
 
     public List<AspspPayment> getAllPayments() {
