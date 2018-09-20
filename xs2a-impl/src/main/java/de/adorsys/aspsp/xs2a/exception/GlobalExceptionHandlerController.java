@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.HandlerMethod;
@@ -45,6 +46,12 @@ public class GlobalExceptionHandlerController {
 
     @ExceptionHandler(value = {ValidationException.class})
     public ResponseEntity validationException(ValidationException ex, HandlerMethod handlerMethod) {
+        log.warn("Validation exception handled in service: {}, message: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
+        return new ResponseEntity<>(getTppMessages(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value = {ServletRequestBindingException.class})
+    public ResponseEntity servletRequestBindingException(ServletRequestBindingException ex, HandlerMethod handlerMethod) {
         log.warn("Validation exception handled in service: {}, message: {}", handlerMethod.getMethod().getDeclaringClass().getSimpleName(), ex.getMessage());
         return new ResponseEntity<>(getTppMessages(FORMAT_ERROR), HttpStatus.BAD_REQUEST);
     }
