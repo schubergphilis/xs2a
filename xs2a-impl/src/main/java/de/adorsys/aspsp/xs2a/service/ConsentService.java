@@ -26,10 +26,10 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.authorization.ais.AisAuthorizationService;
-import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorisationService;
+import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorisationService;
 import de.adorsys.aspsp.xs2a.service.consent.AisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aAisConsentMapper;
-import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
+import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import lombok.RequiredArgsConstructor;
@@ -38,10 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static de.adorsys.aspsp.xs2a.domain.consent.ConsentStatus.RECEIVED;
 import static de.adorsys.aspsp.xs2a.domain.consent.Xs2aAccountAccessType.ALL_ACCOUNTS;
@@ -53,8 +50,8 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     private final Xs2aAisConsentMapper aisConsentMapper;
     private final AisConsentService aisConsentService;
     private final AisAuthorizationService aisAuthorizationService;
-    private final PisAuthorisationService pisAuthorizationService;
-    private final AspspProfileService aspspProfileService;
+    private final AspspProfileServiceWrapper aspspProfileService;
+    private final PisScaAuthorisationService pisAuthorizationService;
     private final TppService tppService;
 
     /**
@@ -248,5 +245,12 @@ public class ConsentService { //TODO change format of consentRequest to mandator
         return Optional.ofNullable(aisConsentService.getAccountConsentById(consentId))
                    .filter(consent -> tppService.getTppId().equals(consent.getTppId()))
                    .orElse(null);
+    }
+
+    private String getTppId() {
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                   .map(authentication -> (HashMap<String, String>) authentication.getCredentials())
+                   .map(credentials -> credentials.get("authorityId"))
+                   .orElse("This is a test TppId");
     }
 }
