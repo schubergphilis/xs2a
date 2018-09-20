@@ -134,12 +134,12 @@ public class PisConsentService {
             periodicPayment.setPaymentId(response.getPaymentId());
             pisConsentData = new CreatePisConsentData(periodicPayment, tppInfo, requestParameters.getPaymentProduct().getCode(), aspspConsentData);
         } else {
-            List<SinglePayment> payments = (List<SinglePayment>) payment;
+            BulkPayment payments = (BulkPayment) payment;
             List<PaymentInitialisationResponse> responses = (List<PaymentInitialisationResponse>) xs2aResponse;
 
-            Map<SinglePayment, PaymentInitialisationResponse> paymentMap = IntStream.range(0, payments.size())
+            Map<SinglePayment, PaymentInitialisationResponse> paymentMap = IntStream.range(0, payments.getPayments().size())
                                                                                .boxed()
-                                                                               .collect(Collectors.toMap(payments::get, responses::get));
+                                                                               .collect(Collectors.toMap(payments.getPayments()::get, responses::get));
             paymentMap.forEach((k, v) -> k.setPaymentId(v.getPaymentId()));
             pisConsentData = new CreatePisConsentData(paymentMap, tppInfo, requestParameters.getPaymentProduct().getCode(), aspspConsentData);
         }

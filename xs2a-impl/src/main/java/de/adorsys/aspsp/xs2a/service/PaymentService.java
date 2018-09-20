@@ -33,7 +33,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.*;
 import static de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus.RJCT;
@@ -125,7 +127,8 @@ public class PaymentService {
                 .map(e -> invalidPayments.add(paymentMapper.mapToPaymentInitResponseFailedPayment(payment, e)))
                 .orElseGet(() -> validPayments.add(payment));
         }
-        return processValidPayments(tppInfo, paymentProduct, validPayments, invalidPayments, bulkPayment);
+        bulkPayment.setPayments(validPayments);
+        return processValidPayments(tppInfo, paymentProduct, invalidPayments, bulkPayment);
     }
 
     /**
@@ -163,9 +166,8 @@ public class PaymentService {
                                         .build());
     }
 
-    private ResponseObject<List<PaymentInitialisationResponse>> processValidPayments(TppInfo tppInfo, String paymentProduct, List<SinglePayment> validPayments, List<PaymentInitialisationResponse> invalidPayments, BulkPayment bulkPayment) {
-        if (CollectionUtils.isNotEmpty(validPayments)) {
-            bulkPayment.setPayments(validPayments);
+    private ResponseObject<List<PaymentInitialisationResponse>> processValidPayments(TppInfo tppInfo, String paymentProduct, List<PaymentInitialisationResponse> invalidPayments, BulkPayment bulkPayment) {
+        if (CollectionUtils.isNotEmpty(bulkPayment.getPayments())) {
             List<PaymentInitialisationResponse> paymentResponses = scaPaymentService.createBulkPayment(bulkPayment, tppInfo, paymentProduct);
             if (paymentResponses.stream()
                     .anyMatch(pr -> pr.getTransactionStatus() != RJCT)) {
