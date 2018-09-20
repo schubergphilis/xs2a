@@ -51,10 +51,8 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     private final Xs2aAisConsentMapper aisConsentMapper;
     private final AisConsentService aisConsentService;
     private final AisAuthorizationService aisAuthorizationService;
-    private final PisAuthorisationService pisAuthorizationService;
     private final AspspProfileServiceWrapper aspspProfileService;
     private final PisScaAuthorisationService pisAuthorizationService;
-    private final AspspProfileService aspspProfileService;
 
     /**
      * @param request body of create consent request carrying such parameters as AccountAccess, validity terms etc.

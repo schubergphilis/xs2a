@@ -25,7 +25,7 @@ import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorisationRes
 import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorisationService;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
-import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
+import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
@@ -51,7 +51,7 @@ public class PisConsentService {
     private final RestTemplate consentRestTemplate;
     private final PisConsentRemoteUrls remotePisConsentUrls;
     private final Xs2aPisConsentMapper pisConsentMapper;
-    private final AspspProfileService profileService;
+    private final AspspProfileServiceWrapper profileService;
     private final PisScaAuthorisationService pisScaAuthorisationService;
 
     public ResponseObject createPisConsent(Object payment, Object xs2aResponse, PaymentRequestParameters requestParameters, TppInfo tppInfo) {

@@ -22,11 +22,11 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.CreatePisConsentAutho
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.GetPisConsentAuthorisationResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
+import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.authorisation.SpiAuthorisationStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
-import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentConfirmation;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import lombok.RequiredArgsConstructor;
@@ -49,6 +49,7 @@ public class PisAuthorisationService {
     private final PisConsentRemoteUrls remotePisConsentUrls;
     private final Xs2aPisConsentMapper pisConsentMapper;
     private final PaymentSpi paymentSpi;
+    private final PaymentMapper paymentMapper;
 
     /**
      * Sends a POST request to CMS to store created consent authorization
@@ -103,7 +104,7 @@ public class PisAuthorisationService {
             }
         } else if (SCAMETHODSELECTED == pisConsentAuthorisation.getScaStatus()) {
             request.setScaStatus(FINALISED);
-            paymentSpi.applyStrongUserAuthorisation(buildSpiPaymentConfirmation(request, pisConsentAuthorisation.getConsentId()), new AspspConsentData());
+            paymentSpi.applyStrongUserAuthorisation(paymentMapper.buildSpiPaymentConfirmation(request, pisConsentAuthorisation.getConsentId()), new AspspConsentData());
             paymentSpi.executePayment(pisConsentAuthorisation.getPaymentType(), pisConsentAuthorisation.getPayments(), new AspspConsentData());
             return doUpdatePisConsentAuthorisation(request);
 
@@ -120,14 +121,6 @@ public class PisAuthorisationService {
             UpdatePisConsentPsuDataResponse.class, request.getAuthorizationId()).getBody();
     }
 
-    private SpiPaymentConfirmation buildSpiPaymentConfirmation(UpdatePisConsentPsuDataRequest request, String consentId) {
-        SpiPaymentConfirmation paymentConfirmation = new SpiPaymentConfirmation();
-        paymentConfirmation.setTanNumber(request.getPassword());
-        paymentConfirmation.setPaymentId(request.getPaymentId());
-        paymentConfirmation.setConsentId(consentId);
-        paymentConfirmation.setPsuId(request.getPsuId());
-        return paymentConfirmation;
-    }
 
     private boolean isSingleScaMethod(List<SpiScaMethod> spiScaMethods) {
         return spiScaMethods.size() == 1;

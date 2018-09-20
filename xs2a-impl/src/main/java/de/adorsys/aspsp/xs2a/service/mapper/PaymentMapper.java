@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.service.mapper; //NOPMD
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
@@ -71,12 +72,6 @@ public class PaymentMapper {
         return Optional.ofNullable(spiTransactionStatus)
                    .map(ts -> Xs2aTransactionStatus.valueOf(ts.name()))
                    .orElse(null);
-    }
-
-    public List<SpiSinglePayment> mapToSpiSinglePaymentList(List<SinglePayment> payments) {
-        return payments.stream()
-                   .map(this::mapToSpiSinglePayment)
-                   .collect(Collectors.toList());
     }
 
     public SpiSinglePayment mapToSpiSinglePayment(SinglePayment paymentInitiationRequest) {
@@ -239,6 +234,15 @@ public class PaymentMapper {
             return bulkPayment;
         }
         return null;
+    }
+
+    public SpiPaymentConfirmation buildSpiPaymentConfirmation(UpdatePisConsentPsuDataRequest request, String consentId) {
+        SpiPaymentConfirmation paymentConfirmation = new SpiPaymentConfirmation();
+        paymentConfirmation.setTanNumber(request.getPassword());
+        paymentConfirmation.setPaymentId(request.getPaymentId());
+        paymentConfirmation.setConsentId(consentId);
+        paymentConfirmation.setPsuId(request.getPsuId());
+        return paymentConfirmation;
     }
 
     private AccountReference getDebtorAccountForBulkPayment(List<SpiSinglePayment> spiSinglePayments) {

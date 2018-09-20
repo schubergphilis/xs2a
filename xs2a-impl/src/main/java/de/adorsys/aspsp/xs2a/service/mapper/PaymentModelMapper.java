@@ -251,7 +251,7 @@ public class PaymentModelMapper {
 
     public PaymentRequestParameters mapToPaymentRequestParameters(String paymentProduct, String paymentService, byte[] tpPSignatureCertificate, String tpPRedirectURI, String tpPNokRedirectURI) {
         PaymentRequestParameters parameters = new PaymentRequestParameters();
-        parameters.setPaymentProduct(PaymentProduct.getByCode(paymentProduct).orElseThrow(() -> new IllegalArgumentException("Unsupported payment product")));
+        parameters.setPaymentProduct(PaymentProduct.getByValue(paymentProduct).orElseThrow(() -> new IllegalArgumentException("Unsupported payment product")));
         parameters.setPaymentType(PaymentType.getByValue(paymentService).orElseThrow(() -> new IllegalArgumentException("Unsupported payment service")));
         parameters.setQwacCertificate(new String(Optional.ofNullable(tpPSignatureCertificate).orElse(new byte[]{}), StandardCharsets.UTF_8));
         parameters.setTppRedirectUri(tpPRedirectURI);

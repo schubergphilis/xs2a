@@ -18,7 +18,6 @@ package de.adorsys.aspsp.xs2a.service.payment;
 
 import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
-import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
@@ -31,8 +30,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class RedirectAndEmbeddedPaymentService implements ScaPaymentService {
-    private final AspspProfileServiceWrapper profileService;
-    private final PisAuthorisationService pisAuthorizationService;
     private final PaymentSpi paymentSpi;
     private final PaymentMapper paymentMapper;
 
