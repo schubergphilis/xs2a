@@ -35,7 +35,6 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import java.lang.Exception;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Base64;
@@ -351,7 +350,7 @@ public class PaymentMapper { // NOPMD
             tppInfo.setRedirectUri(requestParameters.getTppRedirectUri());
             tppInfo.setNokRedirectUri(requestParameters.getTppNokRedirectUri());
             return tppInfo;
-        } catch (Exception e) {
+        } catch (java.lang.Exception e) {
             log.warn("Error with converting TppInfo from certificate {}", requestParameters.getQwacCertificate());
             return null;
         }
