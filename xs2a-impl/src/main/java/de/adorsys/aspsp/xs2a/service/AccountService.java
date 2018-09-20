@@ -62,7 +62,7 @@ public class AccountService {
     private final AisConsentService aisConsentService;
     private final Xs2aAisConsentMapper consentMapper;
     private final TppService tppService;
-    public final AspspProfileService aspspProfileService;
+    public final AspspProfileServiceWrapper aspspProfileService;
     private final AccountModelMapper accountModelMapper;
 
     /**

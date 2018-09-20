@@ -246,11 +246,4 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                    .filter(consent -> tppService.getTppId().equals(consent.getTppId()))
                    .orElse(null);
     }
-
-    private String getTppId() {
-        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                   .map(authentication -> (HashMap<String, String>) authentication.getCredentials())
-                   .map(credentials -> credentials.get("authorityId"))
-                   .orElse("This is a test TppId");
-    }
 }
