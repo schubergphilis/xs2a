@@ -36,6 +36,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.time.LocalDate;
 import java.util.*;
 
+import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
@@ -104,7 +105,7 @@ public class PaymentModelMapperTest {
         PaymentInitialisationResponse givenResponse = getXs2aPaymentResponse();
         PaymentInitationRequestResponse201 expectedResponse = getPaymentResponse12();
         //When
-        PaymentInitationRequestResponse201 result = (PaymentInitationRequestResponse201) paymentModelMapperPsd2.mapToPaymentInitiationResponse12(givenResponse, PaymentType.SINGLE, PaymentProduct.SCT);
+        PaymentInitationRequestResponse201 result = (PaymentInitationRequestResponse201) paymentModelMapperPsd2.mapToPaymentInitiationResponse12(givenResponse, getRequestParameters(SINGLE));
         //Then
         assertThat(result).isEqualTo(expectedResponse);
     }
@@ -116,7 +117,7 @@ public class PaymentModelMapperTest {
         //Given
         Object payment = getSinglePayment(true, true, true, true, true, true, true);
         //When
-        SinglePayment result = (SinglePayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, PaymentType.SINGLE, PaymentProduct.SCT);
+        SinglePayment result = (SinglePayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, getRequestParameters(SINGLE));
         //Then
         assertThat(result.getEndToEndIdentification()).isEqualTo(((LinkedHashMap) payment).get("endToEndIdentification"));
         assertThat(result.getDebtorAccount()).isNotNull();
@@ -348,6 +349,7 @@ public class PaymentModelMapperTest {
         PaymentInitialisationResponse response = new PaymentInitialisationResponse();
         response.setTransactionStatus(Xs2aTransactionStatus.ACCP);
         response.setPaymentId(PAYMENT_ID);
+
         response.setTransactionFees(getXs2aAmount());
         response.setTransactionFeeIndicator(true);
         response.setScaMethods(null);
@@ -370,5 +372,14 @@ public class PaymentModelMapperTest {
         amount.setAmount(AMOUNT);
         amount.setCurrency(EUR);
         return amount;
+    }
+
+    private PaymentRequestParameters getRequestParameters(PaymentType paymentType){
+        PaymentRequestParameters requestParameters = new PaymentRequestParameters();
+        requestParameters.setPaymentType(paymentType);
+        requestParameters.setQwacCertificate("TEST CERTIFICATE");
+        requestParameters.setPaymentProduct(PaymentProduct.SCT);
+
+        return requestParameters;
     }
 }

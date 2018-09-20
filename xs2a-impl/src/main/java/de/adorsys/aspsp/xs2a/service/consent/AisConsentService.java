@@ -22,8 +22,7 @@ import de.adorsys.aspsp.xs2a.consent.api.AisConsentStatusResponse;
 import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.ais.*;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
-import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
-import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAccountAccess;
+import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aAisConsentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsentAuthorization;
@@ -122,7 +121,7 @@ public class AisConsentService {
      * @param consentId String representation of identifier of stored consent
      * @return long representation of identifier of stored consent authorization
      */
-    public Optional<String> createAisConsentAuthorization(String consentId, SpiScaStatus scaStatus) {
+    public Optional<String> createAisConsentAuthorization(String consentId, Xs2aScaStatus scaStatus) {
         AisConsentAuthorizationRequest request = aisConsentMapper.mapToAisConsentAuthorization(scaStatus);
 
         CreateAisConsentAuthorizationResponse response = consentRestTemplate.postForEntity(remoteAisConsentUrls.createAisConsentAuthorization(),
@@ -139,10 +138,9 @@ public class AisConsentService {
      * @return Response containing AIS Consent Authorization
      */
 
-    public SpiAccountConsentAuthorization getAccountConsentAuthorizationById(String authorizationId, String consentId) {
+    public AccountConsentAuthorization getAccountConsentAuthorizationById(String authorizationId, String consentId) {
         AisConsentAuthorizationResponse resp = consentRestTemplate.getForEntity(remoteAisConsentUrls.getAisConsentAuthorizationById(), AisConsentAuthorizationResponse.class, consentId, authorizationId).getBody();
-
-        return aisConsentMapper.mapToSpiAccountConsentAuthorization(resp);
+        return aisConsentMapper.mapToAccountConsentAuthorization(resp);
     }
 
     /**
@@ -150,7 +148,7 @@ public class AisConsentService {
      *
      * @param updatePsuData Consent psu data
      */
-    public void updateConsentAuthorization(SpiUpdateConsentPsuDataReq updatePsuData) {
+    public void updateConsentAuthorization(UpdateConsentPsuDataReq updatePsuData) {
         final String consentId = updatePsuData.getConsentId();
         final String authorizationId = updatePsuData.getAuthorizationId();
         final AisConsentAuthorizationRequest request = aisConsentMapper.mapToAisConsentAuthorizationRequest(updatePsuData);
