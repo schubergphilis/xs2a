@@ -20,18 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aPurposeCode;
-import de.adorsys.aspsp.xs2a.domain.pis.BulkPayment;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
-import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
-import de.adorsys.aspsp.xs2a.domain.pis.Remittance;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
+import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.service.validator.ValueValidatorService;
-import de.adorsys.psd2.model.BulkPaymentInitiationSctJson;
-import de.adorsys.psd2.model.ExecutionRule;
-import de.adorsys.psd2.model.FrequencyCode;
-import de.adorsys.psd2.model.PaymentInitiationSctJson;
-import de.adorsys.psd2.model.PeriodicPaymentInitiationSctJson;
+import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -43,7 +34,6 @@ import java.util.stream.Collectors;
 
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.PERIODIC;
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
-import static de.adorsys.aspsp.xs2a.service.mapper.AccountModelMapper.*;
 
 @Component
 @RequiredArgsConstructor
@@ -98,11 +88,11 @@ public class PaymentModelMapperXs2a {
         payment.setEndToEndIdentification(paymentRequest.getEndToEndIdentification());
         payment.setDebtorAccount(mapToXs2aAccountReference(paymentRequest.getDebtorAccount()));
         payment.setUltimateDebtor("NOT SUPPORTED");
-        payment.setInstructedAmount(mapToXs2aAmount(paymentRequest.getInstructedAmount()));
+        payment.setInstructedAmount(accountModelMapper.mapToXs2aAmount(paymentRequest.getInstructedAmount()));
         payment.setCreditorAccount(mapToXs2aAccountReference(paymentRequest.getCreditorAccount()));
         payment.setCreditorAgent(paymentRequest.getCreditorAgent());
         payment.setCreditorName(paymentRequest.getCreditorName());
-        payment.setCreditorAddress(mapToXs2aAddress(paymentRequest.getCreditorAddress()));
+        payment.setCreditorAddress(accountModelMapper.mapToXs2aAddress(paymentRequest.getCreditorAddress()));
         payment.setUltimateCreditor(paymentRequest.getCreditorName());
         payment.setPurposeCode(new Xs2aPurposeCode("N/A"));
         payment.setRemittanceInformationUnstructured(paymentRequest.getRemittanceInformationUnstructured());

@@ -18,11 +18,8 @@ package de.adorsys.aspsp.xs2a.service.payment;
 
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
-import de.adorsys.aspsp.xs2a.domain.pis.BulkPayment;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentInitialisationResponse;
-import de.adorsys.aspsp.xs2a.domain.pis.SinglePayment;
-import de.adorsys.aspsp.xs2a.domain.pis.TppInfo;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
+import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
@@ -195,8 +192,8 @@ public class OauthScaPaymentServiceTest {
         );
     }
 
-    private AccountReference getReference(String iban) {
-        AccountReference reference = new AccountReference();
+    private Xs2aAccountReference getReference(String iban) {
+        Xs2aAccountReference reference = new Xs2aAccountReference();
         reference.setIban(iban);
         reference.setCurrency(Currency.getInstance("EUR"));
         return reference;
@@ -212,5 +209,14 @@ public class OauthScaPaymentServiceTest {
                                     ? OK_CREDITOR
                                     : WRONG_CREDITOR);
         return payment;
+    }
+
+    private PaymentRequestParameters getRequestParameters(PaymentType paymentType) {
+        PaymentRequestParameters requestParameters = new PaymentRequestParameters();
+        requestParameters.setPaymentType(paymentType);
+        requestParameters.setQwacCertificate("TEST CERTIFICATE");
+        requestParameters.setPaymentProduct(PaymentProduct.SCT);
+
+        return requestParameters;
     }
 }

@@ -34,7 +34,10 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Collections;
+import java.util.Currency;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.SINGLE;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -153,7 +156,7 @@ public class PaymentModelMapperTest {
             true, true, true, true, true, true,
             true);
         //When
-        PeriodicPayment result = (PeriodicPayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, PaymentType.PERIODIC, PaymentProduct.SCT);
+        PeriodicPayment result = (PeriodicPayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, getRequestParameters(PaymentType.PERIODIC));
         //Then
         assertThat(result.getEndToEndIdentification()).isEqualTo(PAYMENT_ID);
         assertThat(result.getDebtorAccount()).isNotNull();
@@ -183,7 +186,7 @@ public class PaymentModelMapperTest {
         //Given
         Object payment = getBulkPayment(true, true, true, true);
         //When
-        BulkPayment result = (BulkPayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, PaymentType.BULK, PaymentProduct.SCT);
+        BulkPayment result = (BulkPayment) paymentModelMapperXs2a.mapToXs2aPayment(payment, getRequestParameters(PaymentType.BULK));
         //Then
         assertThat(result.getBatchBookingPreferred()).isEqualTo(BATCH_BOOKING_PREFERRED);
         assertThat(result.getDebtorAccount()).isNotNull();

@@ -30,7 +30,7 @@ import java.util.List;
 public class Xs2aTransactionsReport {
 
     @ApiModelProperty(value = "AccountReference")
-    private AccountReference accountReference;
+    private Xs2aAccountReference accountReference;
 
     @ApiModelProperty(value = "AccountReport")
     private Xs2aAccountReport accountReport;

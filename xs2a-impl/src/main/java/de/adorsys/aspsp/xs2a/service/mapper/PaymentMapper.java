@@ -18,13 +18,8 @@ package de.adorsys.aspsp.xs2a.service.mapper; //NOPMD
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
-import de.adorsys.aspsp.xs2a.domain.Links;
-import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
-import de.adorsys.aspsp.xs2a.domain.OtpFormat;
-import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
-import de.adorsys.aspsp.xs2a.domain.Xs2aChallengeData;
-import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
-import de.adorsys.aspsp.xs2a.domain.account.AccountReference;
+import de.adorsys.aspsp.xs2a.domain.*;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
@@ -40,6 +35,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import java.lang.Exception;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Base64;
@@ -50,7 +46,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class PaymentMapper {
+public class PaymentMapper { // NOPMD
     // TODO fix high amount of different objects as members denotes a high coupling https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/322
     private final ObjectMapper objectMapper;
     private final AccountMapper accountMapper;
@@ -249,7 +245,7 @@ public class PaymentMapper {
         return paymentConfirmation;
     }
 
-    private AccountReference getDebtorAccountForBulkPayment(List<SpiSinglePayment> spiSinglePayments) {
+    private Xs2aAccountReference getDebtorAccountForBulkPayment(List<SpiSinglePayment> spiSinglePayments) {
         return accountMapper.mapToAccountReference(spiSinglePayments.get(0).getDebtorAccount());
     }
 
