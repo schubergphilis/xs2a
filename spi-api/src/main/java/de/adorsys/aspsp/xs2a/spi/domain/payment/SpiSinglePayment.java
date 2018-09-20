@@ -51,5 +51,4 @@ public class SpiSinglePayment {
     @Deprecated // Since 1.2
     private LocalDateTime requestedExecutionTime;
     private SpiTransactionStatus paymentStatus;
-
 }

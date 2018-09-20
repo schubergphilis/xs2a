@@ -57,6 +57,7 @@ public class AspspPayment {
     private int dayOfExecution; //Day here max 31
     private PisPaymentType pisPaymentType;
     private SpiTransactionStatus paymentStatus;
+    private String bulkId;
 
     public AspspPayment() {}
 
