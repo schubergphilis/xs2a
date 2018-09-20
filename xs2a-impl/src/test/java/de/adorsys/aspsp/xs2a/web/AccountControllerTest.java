@@ -26,6 +26,7 @@ import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReport;
 import de.adorsys.aspsp.xs2a.domain.code.BankTransactionCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aPurposeCode;
 import de.adorsys.aspsp.xs2a.service.AccountService;
+import de.adorsys.aspsp.xs2a.service.mapper.AccountModelMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
 import de.adorsys.psd2.model.AccountDetails;
 import de.adorsys.psd2.model.AccountList;
@@ -72,6 +73,8 @@ public class AccountControllerTest {
     private AccountService accountService;
     @Mock
     private ResponseMapper responseMapper;
+    @Mock
+    private AccountModelMapper accountModelMapper;
 
     @Before
     public void setUp() throws Exception {
