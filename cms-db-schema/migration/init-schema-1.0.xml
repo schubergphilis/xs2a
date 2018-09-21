@@ -250,7 +250,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet author="mpo@adorsys.com.ua" id="2018-09-20-1">
+    <changeSet author="msh@adorsys.com.ua" id="2018-08-14-10">
         <comment>Create table pis_payment_data.</comment>
 
         <createTable tableName="pis_payment_data">
@@ -272,7 +272,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="creditor_account_account_reference_id" type="BIGINT"/>
-            <column name="creditor_agent" type="VARCHAR(100)"/>
+            <column name="creditor_agent" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
             <column name="creditor_name" type="VARCHAR(100)">
                 <constraints nullable="false"/>
             </column>
