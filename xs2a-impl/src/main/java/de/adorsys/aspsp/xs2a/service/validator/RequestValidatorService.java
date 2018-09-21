@@ -20,9 +20,7 @@ package de.adorsys.aspsp.xs2a.service.validator;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
-import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
-import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
+import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.service.validator.header.HeadersFactory;
 import de.adorsys.aspsp.xs2a.service.validator.header.RequestHeader;
 import de.adorsys.aspsp.xs2a.service.validator.header.impl.ErrorMessageHeaderImpl;
@@ -50,7 +48,7 @@ public class RequestValidatorService {
     @Autowired
     private Validator validator;
     @Autowired
-    private AspspProfileService aspspProfileService;
+    private AspspProfileServiceWrapper aspspProfileService;
     @Autowired
     private PaymentMapper paymentMapper;
 
@@ -156,7 +154,7 @@ public class RequestValidatorService {
 
     private Map<String, String> checkPaymentProductSupportAndGetViolationMap(String paymentProduct) {
         return Optional.ofNullable(paymentProduct)
-                   .flatMap(PaymentProduct::getByCode)
+                   .flatMap(PaymentProduct::getByValue)
                    .map(this::getViolationMapForPaymentProduct)
                    .orElseGet(() -> Collections.singletonMap(MessageErrorCode.PRODUCT_UNKNOWN.getName(), "Wrong payment product: " + paymentProduct));
     }

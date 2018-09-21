@@ -18,11 +18,11 @@ package de.adorsys.aspsp.xs2a.service.validator;
 
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
-import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
-import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
-import de.adorsys.aspsp.xs2a.service.profile.AspspProfileService;
-import de.adorsys.aspsp.xs2a.web.ConsentController;
-import de.adorsys.aspsp.xs2a.web.PaymentController;
+import de.adorsys.aspsp.xs2a.domain.pis.PeriodicPayment;
+import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
+import de.adorsys.aspsp.xs2a.web.ConsentInformationController;
+import de.adorsys.aspsp.xs2a.web.PaymentInitiationController;
+import de.adorsys.aspsp.xs2a.web.PeriodicPaymentsController;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +35,10 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Validator;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
 
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.PARAMETER_NOT_SUPPORTED;
 import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.PRODUCT_UNKNOWN;
@@ -53,7 +56,7 @@ public class RequestValidatorServiceTest {
     @Mock
     private PaymentController paymentController;
     @Mock
-    private AspspProfileService aspspProfileService;
+    private AspspProfileServiceWrapper aspspProfileService;
     @Mock
     private PaymentMapper paymentMapper;
 
