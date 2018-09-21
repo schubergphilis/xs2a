@@ -18,7 +18,7 @@ export interface AccountReference {
     /**
      * BBAN: This data elements is used for payment accounts which have no IBAN
      */
-    bban?: string;
+    bban?: number;
     /**
      * Codes following ISO 4217
      */

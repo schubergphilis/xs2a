@@ -17,5 +17,6 @@ export const environment = {
   apis: { dota: 'https://api.opendota.com/api' },
   mockServerUrl: 'http://localhost:28080',
   xs2aServerUrl: 'http://localhost:8080',
+  consentManagmentUrl: 'http://localhost:38080/api/v1/pis/consent/',
   keycloak: keycloakConfig
 };

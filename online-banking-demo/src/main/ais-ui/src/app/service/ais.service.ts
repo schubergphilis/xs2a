@@ -7,7 +7,6 @@ import { AccountConsent } from '../model/aspsp/accountConsent';
 import { Account } from '../model/aspsp/account';
 import { AccountsResponse } from '../model/aspsp/AccountsResponse';
 import { AspspSettings } from '../model/profile/aspspSettings';
-import { SpiAccountDetails } from '../model/mock/spiAccountDetails';
 import { AccountReference } from '../model/aspsp/accountReference';
 import { SelectedAccountConsent } from '../model/aspsp/selectedAccountConsent';
 import { AccountAccess } from '../model/aspsp/accountAccess';

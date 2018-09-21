@@ -27,11 +27,11 @@ export interface Address {
     /**
      * Country
      */
-    country: Model49;
+    country: string;
     /**
      * Postal code
      */
-    postalCode?: string;
+    postalCode?: number;
     /**
      * Street
      */
