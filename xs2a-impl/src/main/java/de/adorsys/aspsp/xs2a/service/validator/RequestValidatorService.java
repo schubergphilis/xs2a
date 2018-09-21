@@ -166,10 +166,7 @@ public class RequestValidatorService {
 
     private Map<String, String> getViolationMapForPaymentType(PaymentType paymentType) {
         PisPaymentType consentPaymentType = PisPaymentType.valueOf(paymentType.name());
-        boolean available = Optional.of(consentPaymentType)
-                                .map(this::isPaymentTypeAvailable)
-                                .orElse(false);
-        return available
+        return isPaymentTypeAvailable(consentPaymentType)
                    ? Collections.emptyMap()
                    : Collections.singletonMap(MessageErrorCode.PARAMETER_NOT_SUPPORTED.getName(), "Wrong payment type: " + paymentType.getValue());
     }
