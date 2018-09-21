@@ -250,7 +250,7 @@
         </createTable>
     </changeSet>
 
-    <changeSet author="msh@adorsys.com.ua" id="2018-08-14-10">
+    <changeSet author="pru@adorsys.com.ua" id="2018-08-14-10">
         <comment>Create table pis_payment_data.</comment>
 
         <createTable tableName="pis_payment_data">
