@@ -24,11 +24,11 @@ public class SpiResponse<T> {
         this.message = null;
     }
 
-    public boolean hasError(){
-        return status==null;
+    public boolean hasError() {
+        return status != null;
     }
 
-    public enum ErrorStatus{
+    public enum ErrorStatus {
         NOT_FOUND,
         BAD_REQUEST,
         REJECTED
