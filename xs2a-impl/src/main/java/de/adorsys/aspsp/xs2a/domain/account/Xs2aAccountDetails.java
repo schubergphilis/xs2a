@@ -18,9 +18,9 @@
 package de.adorsys.aspsp.xs2a.domain.account;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.adorsys.aspsp.xs2a.domain.Xs2aBalance;
 import de.adorsys.aspsp.xs2a.domain.CashAccountType;
 import de.adorsys.aspsp.xs2a.domain.Links;
+import de.adorsys.aspsp.xs2a.domain.Xs2aBalance;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -93,4 +93,15 @@ public class Xs2aAccountDetails {
     @ApiModelProperty(value = "links: inks to the account, which can be directly used for retrieving account information from the dedicated account")
     @JsonProperty("_links")
     private Links links = new Links();
+
+    public Xs2aAccountReference getAccountReference(){
+        Xs2aAccountReference reference = new Xs2aAccountReference();
+        reference.setIban(iban);
+        reference.setBban(bban);
+        reference.setPan(pan);
+        reference.setMaskedPan(maskedPan);
+        reference.setMsisdn(msisdn);
+        reference.setCurrency(currency);
+        return reference;
+    }
 }
