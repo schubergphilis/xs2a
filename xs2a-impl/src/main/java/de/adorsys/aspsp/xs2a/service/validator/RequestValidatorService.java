@@ -21,7 +21,6 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
-import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.service.validator.header.HeadersFactory;
 import de.adorsys.aspsp.xs2a.service.validator.header.RequestHeader;
@@ -51,8 +50,6 @@ public class RequestValidatorService {
     private Validator validator;
     @Autowired
     private AspspProfileServiceWrapper aspspProfileService;
-    @Autowired
-    private PaymentMapper paymentMapper;
 
     private static final String PAYMENT_PRODUCT_PATH_VAR = "payment-product";
     private static final String PAYMENT_SERVICE_PATH_VAR = "payment-service";
@@ -168,8 +165,8 @@ public class RequestValidatorService {
     }
 
     private Map<String, String> getViolationMapForPaymentType(PaymentType paymentType) {
-        PisPaymentType consentPaymentType = paymentMapper.mapToPisPaymentType(paymentType);
-        boolean available = Optional.ofNullable(consentPaymentType)
+        PisPaymentType consentPaymentType = PisPaymentType.valueOf(paymentType.name());
+        boolean available = Optional.of(consentPaymentType)
                                 .map(this::isPaymentTypeAvailable)
                                 .orElse(false);
         return available

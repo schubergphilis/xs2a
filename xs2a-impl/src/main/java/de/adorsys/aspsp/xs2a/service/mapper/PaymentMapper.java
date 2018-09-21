@@ -17,7 +17,6 @@
 package de.adorsys.aspsp.xs2a.service.mapper; //NOPMD
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
@@ -49,8 +48,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class PaymentMapper { // NOPMD
-    // TODO fix large amount of methods in PaymentMapper https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/333
+public class PaymentMapper {
     // TODO fix high amount of different objects as members denotes a high coupling https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/322
     private final ObjectMapper objectMapper;
     private final AccountMapper accountMapper;
@@ -223,19 +221,6 @@ public class PaymentMapper { // NOPMD
             return payment;
         })
                    .orElse(null);
-    }
-
-    public PisPaymentType mapToPisPaymentType(PaymentType xs2aType) {
-        return Optional.ofNullable(xs2aType)
-                   .map(type -> {
-                       if (xs2aType == PaymentType.BULK) {
-                           return PisPaymentType.BULK;
-                       } else if (xs2aType == PaymentType.PERIODIC) {
-                           return PisPaymentType.PERIODIC;
-                       } else {
-                           return PisPaymentType.SINGLE;
-                       }
-                   }).orElse(null);
     }
 
     public BulkPayment mapToBulkPayment(List<SpiSinglePayment> spiSinglePayments) {

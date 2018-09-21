@@ -19,7 +19,6 @@ package de.adorsys.aspsp.xs2a.service.validator;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentProduct;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
-import de.adorsys.aspsp.xs2a.service.mapper.PaymentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.web.ConsentController;
 import de.adorsys.aspsp.xs2a.web.PaymentController;
@@ -54,8 +53,6 @@ public class RequestValidatorServiceTest {
     private PaymentController paymentController;
     @Mock
     private AspspProfileServiceWrapper aspspProfileService;
-    @Mock
-    private PaymentMapper paymentMapper;
 
     @Mock
     private Validator validator;
@@ -66,7 +63,7 @@ public class RequestValidatorServiceTest {
             .thenReturn(Arrays.asList(PaymentProduct.ISCT, PaymentProduct.SCT));
 
         when(aspspProfileService.getAvailablePaymentTypes())
-            .thenReturn(Arrays.asList(PisPaymentType.BULK, PisPaymentType.FUTURE_DATED));
+            .thenReturn(Arrays.asList(PisPaymentType.SINGLE, PisPaymentType.BULK, PisPaymentType.FUTURE_DATED));
     }
 
     @Test
@@ -128,7 +125,6 @@ public class RequestValidatorServiceTest {
 
     @Test
     public void getRequestPathVariablesViolationMap() throws Exception {
-        when(paymentMapper.mapToPisPaymentType(any())).thenReturn(PisPaymentType.FUTURE_DATED);
         //Given:
         HttpServletRequest request = getCorrectRequestForPayment();
         Map<String, String> templates = new HashMap<>();
@@ -146,7 +142,6 @@ public class RequestValidatorServiceTest {
 
     @Test
     public void getRequestPathVariablesViolationMap_wrongPaymentType() throws Exception {
-        when(paymentMapper.mapToPisPaymentType(any())).thenReturn(PisPaymentType.PERIODIC);
         //Given:
         HttpServletRequest request = getCorrectRequestForPayment();
         Map<String, String> templates = new HashMap<>();
