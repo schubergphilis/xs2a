@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Component
 @AllArgsConstructor
-public class PaymentMapper { // NOPMD
+public class PaymentMapper { // NOPMD TODO fix large amount of methods in PaymentMapper https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/333
     // TODO fix high amount of different objects as members denotes a high coupling https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/322
     private final ObjectMapper objectMapper;
     private final AccountMapper accountMapper;
