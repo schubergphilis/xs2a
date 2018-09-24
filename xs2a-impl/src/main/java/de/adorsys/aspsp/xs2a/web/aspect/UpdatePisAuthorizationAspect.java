@@ -24,7 +24,7 @@ import de.adorsys.aspsp.xs2a.domain.consent.Xs2aChosenScaMethod;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aUpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.service.message.MessageService;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
-import de.adorsys.aspsp.xs2a.web12.PaymentController12;
+import de.adorsys.aspsp.xs2a.web.PaymentController;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Aspect
 @Component
-public class UpdatePisAuthorizationAspect extends AbstractLinkAspect<PaymentController12> {
+public class UpdatePisAuthorizationAspect extends AbstractLinkAspect<PaymentController> {
     public UpdatePisAuthorizationAspect(int maxNumberOfCharInTransactionJson, AspspProfileServiceWrapper aspspProfileService, JsonConverter jsonConverter, MessageService messageService) {
         super(maxNumberOfCharInTransactionJson, aspspProfileService, jsonConverter, messageService);
     }
