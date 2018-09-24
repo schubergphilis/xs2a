@@ -20,10 +20,7 @@ public class SpiResponse<T> {
     }
 
     public SpiResponse(T payload, AspspConsentData aspspConsentData) {
-        this.payload = payload;
-        this.aspspConsentData = aspspConsentData;
-        this.responseStatus = null;
-        this.message = null;
+        this(payload, aspspConsentData, null, null);
     }
 
     public boolean hasError() {
@@ -41,7 +38,7 @@ public class SpiResponse<T> {
         this.message = builder.message;
     }
 
-    public static <T> SpiResponseBuilder<T> builder(){
+    public static <T> SpiResponseBuilder<T> builder() {
         return new SpiResponseBuilder<>();
     }
 
@@ -51,19 +48,19 @@ public class SpiResponse<T> {
         private SpiResponseStatus responseStatus;
         private String message;
 
-        public SpiResponseBuilder<T> success(T payload, AspspConsentData aspspConsentData){
+        public SpiResponseBuilder<T> success(T payload, AspspConsentData aspspConsentData) {
             this.payload = payload;
             this.aspspConsentData = aspspConsentData;
             this.responseStatus = SUCCESS;
             return this;
+
         }
 
-        public SpiResponseBuilder<T> success(){
-            this.responseStatus = SUCCESS;
-            return this;
+        public SpiResponseBuilder<T> success() {
+            return success(null,null);
         }
 
-        public SpiResponseBuilder<T> fail(T payload, AspspConsentData aspspConsentData, SpiResponseStatus responseStatus, String message){
+        public SpiResponseBuilder<T> fail(T payload, AspspConsentData aspspConsentData, SpiResponseStatus responseStatus, String message) {
             this.payload = payload;
             this.aspspConsentData = aspspConsentData;
             this.responseStatus = responseStatus;
@@ -71,21 +68,17 @@ public class SpiResponse<T> {
             return this;
         }
 
-        public SpiResponseBuilder<T> fail(T payload, AspspConsentData aspspConsentData, SpiResponseStatus responseStatus){
-            this.payload = payload;
-            this.aspspConsentData = aspspConsentData;
-            this.responseStatus = responseStatus;
-            return this;
+        public SpiResponseBuilder<T> fail(T payload, AspspConsentData aspspConsentData, SpiResponseStatus responseStatus) {
+            return fail(payload, aspspConsentData, responseStatus, null);
         }
 
-        public SpiResponseBuilder<T> fail(SpiResponseStatus responseStatus, String message){
-            this.responseStatus = responseStatus;
-            this.message = message;
-            return this;
+        public SpiResponseBuilder<T> fail(SpiResponseStatus responseStatus, String message) {
+            return fail(null, null, responseStatus, message);
+
         }
-        public SpiResponseBuilder<T> fail( SpiResponseStatus responseStatus){
-            this.responseStatus = responseStatus;
-            return this;
+
+        public SpiResponseBuilder<T> fail(SpiResponseStatus responseStatus) {
+            return fail(null, null, responseStatus, null);
         }
 
         public SpiResponse<T> build() {
