@@ -60,6 +60,7 @@ public class PaymentMapper { // NOPMD
                        spiBulkPayment.setPayments(bulk.getPayments().stream()
                                                       .map(this::mapToSpiSinglePayment)
                                                       .collect(Collectors.toList()));
+                       spiBulkPayment.setPaymentStatus(mapToSpiTransactionStatus(bulk.getTransactionStatus()));
                        return spiBulkPayment;
                    })
                    .orElse(null);
@@ -68,6 +69,12 @@ public class PaymentMapper { // NOPMD
     public Xs2aTransactionStatus mapToTransactionStatus(SpiTransactionStatus spiTransactionStatus) {
         return Optional.ofNullable(spiTransactionStatus)
                    .map(ts -> Xs2aTransactionStatus.valueOf(ts.name()))
+                   .orElse(null);
+    }
+
+    public SpiTransactionStatus mapToSpiTransactionStatus(Xs2aTransactionStatus xs2aTransactionStatus) {
+        return Optional.ofNullable(xs2aTransactionStatus)
+                   .map(ts -> SpiTransactionStatus.valueOf(ts.name()))
                    .orElse(null);
     }
 

@@ -82,7 +82,7 @@ public class PaymentModelMapperPsd2 {
             paymentResponse.setRequestedExecutionDate(xs2aPayment.getRequestedExecutionDate());
             paymentResponse.setDebtorAccount(accountModelMapper.mapToAccountReference12(xs2aPayment.getDebtorAccount()));
             paymentResponse.setPayments(mapToBulkPartList12(xs2aPayment.getPayments()));
-            paymentResponse.setTransactionStatus(mapToTransactionStatus12(Xs2aTransactionStatus.RCVD)); //TODO add field to xs2a entity https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/243
+            paymentResponse.setTransactionStatus(mapToTransactionStatus12(xs2aPayment.getTransactionStatus()));
             return paymentResponse;
         }
     }
