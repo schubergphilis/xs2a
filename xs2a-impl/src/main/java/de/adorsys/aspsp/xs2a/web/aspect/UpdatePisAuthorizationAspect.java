@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.web.aspect;
 
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
+import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
@@ -42,19 +43,29 @@ public class UpdatePisAuthorizationAspect extends AbstractLinkAspect<PaymentCont
     @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.service.ConsentService.updatePisConsentPsuData(..)) && args(request)", returning = "result", argNames = "request, result")
     public ResponseObject<Xs2aUpdatePisConsentPsuDataResponse> updatePisConsentAuthorizationAspect(UpdatePisConsentPsuDataRequest request, ResponseObject<Xs2aUpdatePisConsentPsuDataResponse> result) {
         if (!result.hasError()) {
-            if (StringUtils.isNotBlank(request.getAuthenticationMethodId())) {
+            if (StringUtils.isNotBlank(request.getAuthenticationMethodId())
+                    && request.getScaStatus() == CmsScaStatus.SCAMETHODSELECTED) {
                 Xs2aUpdatePisConsentPsuDataResponse body = result.getBody();
-                body.setLinks(buildLink(body.getLinks(), request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
+                Links links = body.getLinks();
+
+                links.setAuthoriseTransaction(
+                    buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
+                body.setLinks(links);
                 body.setChosenScaMethod(getChosenScaMethod(request.getAuthenticationMethodId()));
+            } else if (StringUtils.isNotBlank(request.getScaAuthenticationData())
+                           && request.getScaStatus() == CmsScaStatus.FINALISED) {
+
+                Xs2aUpdatePisConsentPsuDataResponse body = result.getBody();
+                Links links = body.getLinks();
+
+                links.setScaStatus(
+                    buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorisationId}", request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
+                body.setLinks(links);
             }
+
             return result;
         }
         return enrichErrorTextMessage(result);
-    }
-
-    private Links buildLink(Links links, String paymentService, String paymentId, String authorizationId) {
-        links.setAuthoriseTransaction(buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorizationId));
-        return links;
     }
 
     private Xs2aChosenScaMethod getChosenScaMethod(String authenticationMethodId) {
