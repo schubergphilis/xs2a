@@ -93,15 +93,4 @@ public class Xs2aAccountDetails {
     @ApiModelProperty(value = "links: inks to the account, which can be directly used for retrieving account information from the dedicated account")
     @JsonProperty("_links")
     private Links links = new Links();
-
-    public Xs2aAccountReference getAccountReference(){
-        Xs2aAccountReference reference = new Xs2aAccountReference();
-        reference.setIban(iban);
-        reference.setBban(bban);
-        reference.setPan(pan);
-        reference.setMaskedPan(maskedPan);
-        reference.setMsisdn(msisdn);
-        reference.setCurrency(currency);
-        return reference;
-    }
 }

@@ -91,7 +91,7 @@ public class SpiXs2aAccountMapper {
 
     public Xs2aAccountReference mapToXs2aAccountReference(SpiAccountReference spiAccountReference) {
         return Optional.ofNullable(spiAccountReference)
-                   .map(spiReference->{
+                   .map(spiReference -> {
                        Xs2aAccountReference reference = new Xs2aAccountReference();
                        reference.setIban(spiReference.getIban());
                        reference.setBban(spiReference.getBban());
@@ -177,9 +177,18 @@ public class SpiXs2aAccountMapper {
                    .collect(Collectors.toList());
     }
 
-    private Xs2aAccountReference mapToXs2aAccountReference(Xs2aAccountDetails details) {
+    public Xs2aAccountReference mapToXs2aAccountReference(Xs2aAccountDetails details) {
         return Optional.ofNullable(details)
-                   .map(Xs2aAccountDetails::getAccountReference)
+                   .map(d -> {
+                       Xs2aAccountReference reference = new Xs2aAccountReference();
+                       reference.setIban(d.getIban());
+                       reference.setBban(d.getBban());
+                       reference.setPan(d.getPan());
+                       reference.setMaskedPan(d.getMaskedPan());
+                       reference.setMsisdn(d.getMsisdn());
+                       reference.setCurrency(d.getCurrency());
+                       return reference;
+                   })
                    .orElse(null);
 
     }
