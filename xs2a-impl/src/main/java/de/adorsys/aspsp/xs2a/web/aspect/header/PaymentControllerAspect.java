@@ -35,7 +35,7 @@ public class PaymentControllerAspect extends HeaderController {
         super(aspspProfileServiceWrapper);
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.initiatePayment(..)) && args(body, paymentService, paymentProduct, xRequestID, ..)", returning = "result", argNames = "result,body,paymentService,paymentProduct,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.initiatePayment(..)) && args(body, paymentService, paymentProduct, xRequestID, ..)", returning = "result", argNames = "result,body,paymentService,paymentProduct,xRequestID")
     public ResponseEntity<?> paymentInitiationAspect(ResponseEntity<?> result, Object body, String paymentService, String paymentProduct, UUID xRequestID) {
         addXRequestIdHeader(xRequestID.toString());
         addAspspScaApproachHeader();
@@ -47,7 +47,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.getPaymentInitiationStatus(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.getPaymentInitiationStatus(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
     public ResponseEntity<?> getPaymentInitiationStatusAspect(ResponseEntity<?> result, String paymentService, String paymentId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -56,7 +56,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.getPaymentInformation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.getPaymentInformation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
     public ResponseEntity<?> getPaymentInformationAspect(ResponseEntity<?> result, String paymentService, String paymentId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -65,7 +65,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.cancelPayment(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.cancelPayment(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
     public ResponseEntity<?> cancelPaymentAspect(ResponseEntity<?> result, String paymentService, String paymentId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -74,7 +74,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.getPaymentInitiationCancellationAuthorisationInformation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.getPaymentInitiationCancellationAuthorisationInformation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
     public ResponseEntity<?> getPaymentInitiationCancellationAuthorisationInformationAspect(ResponseEntity<?> result, String paymentService, String paymentId, UUID xRequestID)  {
         return new ResponseEntity<>(
             result.getBody(),
@@ -83,7 +83,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.startPaymentAuthorisation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.startPaymentAuthorisation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
     public ResponseEntity<?> startPaymentAuthorisationAspect(ResponseEntity<?> result, String paymentService, String paymentId, UUID xRequestID)  {
         addStartAuthorizarionHeaders(xRequestID.toString());
         return new ResponseEntity<>(
@@ -93,7 +93,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.startPaymentInitiationCancellationAuthorisation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.startPaymentInitiationCancellationAuthorisation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
     public ResponseEntity<?> startPaymentInitiationCancellationAuthorisationAspect(ResponseEntity<?> result, String paymentService, String paymentId, UUID xRequestID)  {
         addStartAuthorizarionHeaders(xRequestID.toString());
         return new ResponseEntity<>(
@@ -103,7 +103,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.updatePaymentPsuData(..)) && args(paymentService, paymentId, authorisationId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,authorisationId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.updatePaymentPsuData(..)) && args(paymentService, paymentId, authorisationId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,authorisationId,xRequestID")
     public ResponseEntity<?> updatePaymentPsuDataAspect(ResponseEntity<?> result, String paymentService, String paymentId, String authorisationId, UUID xRequestID)  {
         addStartAuthorizarionHeaders(xRequestID.toString());
         return new ResponseEntity<>(
@@ -113,7 +113,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.updatePaymentCancellationPsuData(..)) && args(paymentService, paymentId, cancellationId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,cancellationId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.updatePaymentCancellationPsuData(..)) && args(paymentService, paymentId, cancellationId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,cancellationId,xRequestID")
     public ResponseEntity<?> updatePaymentCancellationPsuDataAspect(ResponseEntity<?> result, String paymentService, String paymentId, String cancellationId, UUID xRequestID)  {
         return new ResponseEntity<>(
             result.getBody(),
@@ -122,7 +122,7 @@ public class PaymentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.PaymentController12.getPaymentInitiationAuthorisation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.PaymentController.getPaymentInitiationAuthorisation(..)) && args(paymentService, paymentId, xRequestID, ..)", returning = "result", argNames = "result,paymentService,paymentId,xRequestID")
     public ResponseEntity<?> getPaymentInitiationAuthorisationAspect(ResponseEntity<?> result, String paymentService, String paymentId, UUID xRequestID)  {
         return new ResponseEntity<>(
             result.getBody(),

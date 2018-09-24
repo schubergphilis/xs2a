@@ -35,7 +35,7 @@ public class SigningBasketControllerAspect extends HeaderController {
         super(aspspProfileServiceWrapper);
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.SigningBasketController12.createSigningBasket(..)) && args(xRequestID, ..)", returning = "result", argNames = "result,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.SigningBasketController.createSigningBasket(..)) && args(xRequestID, ..)", returning = "result", argNames = "result,xRequestID")
     public ResponseEntity<?> createSigningBasketAspect(ResponseEntity<?> result, UUID xRequestID) {
         addXRequestIdHeader(xRequestID.toString());
         addAspspScaApproachHeader();
@@ -46,7 +46,7 @@ public class SigningBasketControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.SigningBasketController12.getSigningBasket(..)) && args(basketId, xRequestID, ..)", returning = "result", argNames = "result,basketId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.SigningBasketController.getSigningBasket(..)) && args(basketId, xRequestID, ..)", returning = "result", argNames = "result,basketId,xRequestID")
     public ResponseEntity<?> getSigningBasketAspect(ResponseEntity<?> result, String basketId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),

@@ -35,7 +35,7 @@ public class ConsentControllerAspect extends HeaderController {
         super(aspspProfileServiceWrapper);
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.ConsentController12.createConsent(..)) && args(xRequestID, ..)", returning = "result", argNames = "result,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentController.createConsent(..)) && args(xRequestID, ..)", returning = "result", argNames = "result,xRequestID")
     public ResponseEntity<?> paymentInitiationAspect(ResponseEntity<?> result, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -44,7 +44,7 @@ public class ConsentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.ConsentController12.getConsentStatus(..)) && args(consentId, xRequestID, ..)", returning = "result", argNames = "result,consentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentController.getConsentStatus(..)) && args(consentId, xRequestID, ..)", returning = "result", argNames = "result,consentId,xRequestID")
     public ResponseEntity<?> getConsentStatusAspect(ResponseEntity<?> result, String consentId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -53,7 +53,7 @@ public class ConsentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.ConsentController12.getConsentInformation(..)) && args(consentId, xRequestID, ..)", returning = "result", argNames = "result,consentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentController.getConsentInformation(..)) && args(consentId, xRequestID, ..)", returning = "result", argNames = "result,consentId,xRequestID")
     public ResponseEntity<?> getConsentInformationAspect(ResponseEntity<?> result, String consentId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -62,7 +62,7 @@ public class ConsentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.ConsentController12.deleteConsent(..)) && args(consentId, xRequestID, ..)", returning = "result", argNames = "result,consentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentController.deleteConsent(..)) && args(consentId, xRequestID, ..)", returning = "result", argNames = "result,consentId,xRequestID")
     public ResponseEntity<?> deleteConsentAspect(ResponseEntity<?> result, String consentId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -71,7 +71,7 @@ public class ConsentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.ConsentController12.startConsentAuthorisation(..)) && args(consentId, xRequestID, ..)", returning = "result", argNames = "result,consentId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentController.startConsentAuthorisation(..)) && args(consentId, xRequestID, ..)", returning = "result", argNames = "result,consentId,xRequestID")
     public ResponseEntity<?> startConsentAuthorisationAspect(ResponseEntity<?> result, String consentId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -80,7 +80,7 @@ public class ConsentControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.ConsentController12.updateConsentsPsuData( ..)) && args(consentId,authorisationId, xRequestID, ..)", returning = "result", argNames = "result,consentId,authorisationId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentController.updateConsentsPsuData( ..)) && args(consentId,authorisationId, xRequestID, ..)", returning = "result", argNames = "result,consentId,authorisationId,xRequestID")
     public ResponseEntity<?> startConsentAuthorisationAspect(ResponseEntity<?> result, String consentId, String authorisationId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),

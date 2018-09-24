@@ -32,7 +32,7 @@ public class AccountControllerAspect extends HeaderController {
         super(aspspProfileServiceWrapper);
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.AccountController12.getAccountList(..)) && args(xRequestID, ..)", returning = "result", argNames = "result,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.getAccountList(..)) && args(xRequestID, ..)", returning = "result", argNames = "result,xRequestID")
     public ResponseEntity<?> getAccountListAspect(ResponseEntity<?> result, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -41,7 +41,7 @@ public class AccountControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.AccountController12.readAccountDetails(..)) && args(accountId, xRequestID, ..)", returning = "result", argNames = "result,accountId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.readAccountDetails(..)) && args(accountId, xRequestID, ..)", returning = "result", argNames = "result,accountId,xRequestID")
     public ResponseEntity<?> readAccountDetailsAspect(ResponseEntity<?> result, String accountId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -50,7 +50,7 @@ public class AccountControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.AccountController12.getBalances(..)) && args(accountId, xRequestID,consentID, ..)", returning = "result", argNames = "result,accountId,xRequestID,consentID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.getBalances(..)) && args(accountId, xRequestID,consentID, ..)", returning = "result", argNames = "result,accountId,xRequestID,consentID")
     public ResponseEntity<?> getBalancesAspect(ResponseEntity<?> result, String accountId, UUID xRequestID, String consentID) {
         addHeadersForGetBalancesAspect(xRequestID, consentID);
         return new ResponseEntity<>(
@@ -60,7 +60,7 @@ public class AccountControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.AccountController12.getTransactionList(..)) && args(accountId, bookingStatus, xRequestID, ..)", returning = "result", argNames = "result,accountId,bookingStatus,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.getTransactionList(..)) && args(accountId, bookingStatus, xRequestID, ..)", returning = "result", argNames = "result,accountId,bookingStatus,xRequestID")
     public ResponseEntity<?> getTransactionListAspect(ResponseEntity<?> result, String accountId, String bookingStatus, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
@@ -69,7 +69,7 @@ public class AccountControllerAspect extends HeaderController {
         );
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.AccountController12.getTransactionDetails(..)) && args(accountId, resourceId, xRequestID, ..)", returning = "result", argNames = "result,accountId,resourceId,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.getTransactionDetails(..)) && args(accountId, resourceId, xRequestID, ..)", returning = "result", argNames = "result,accountId,resourceId,xRequestID")
     public ResponseEntity<?> getTransactionDetailsAspect(ResponseEntity<?> result, String accountId, String resourceId, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),

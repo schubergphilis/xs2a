@@ -33,7 +33,7 @@ public class FundsConfirmationtControllerAspect extends HeaderController {
         super(aspspProfileServiceWrapper);
     }
 
-    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web12.FundsConfirmationController12.checkAvailabilityOfFunds(..)) && args(body,xRequestID, ..)", returning = "result", argNames = "result,body,xRequestID")
+    @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.FundsConfirmationController.checkAvailabilityOfFunds(..)) && args(body,xRequestID, ..)", returning = "result", argNames = "result,body,xRequestID")
     public ResponseEntity<?> createSigningBasketAspect(ResponseEntity<?> result, ConfirmationOfFunds body, UUID xRequestID) {
         addXRequestIdHeader(xRequestID.toString());
         return new ResponseEntity<>(
