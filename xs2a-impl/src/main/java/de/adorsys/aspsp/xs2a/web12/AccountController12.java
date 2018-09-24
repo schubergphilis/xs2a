@@ -47,17 +47,26 @@ public class AccountController12 implements AccountApi {
     private final AccountModelMapper accountModelMapper;
 
     @Override
-    public ResponseEntity<?> getAccountList(UUID xRequestID, String consentID, Boolean withBalance, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> getAccountList(UUID xRequestID, String consentID, Boolean withBalance, String digest, String signature,
+                                            byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept,
+                                            String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent,
+                                            String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         return responseMapper.ok(accountService.getAccountDetailsList(consentID, Optional.ofNullable(withBalance).orElse(false)), accountModelMapper::mapToAccountList);
     }
 
     @Override
-    public ResponseEntity<?> readAccountDetails(String accountId, UUID xRequestID, String consentID, Boolean withBalance, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> readAccountDetails(String accountId, UUID xRequestID, String consentID, Boolean withBalance, String digest,
+                                                String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort,
+                                                String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage,
+                                                String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         return responseMapper.ok(accountService.getAccountDetails(consentID, accountId, Optional.ofNullable(withBalance).orElse(false)), accountModelMapper::mapToAccountDetails);
     }
 
     @Override
-    public ResponseEntity<?> getBalances(String accountId, UUID xRequestID, String consentID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> getBalances(String accountId, UUID xRequestID, String consentID, String digest, String signature,
+                                         byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept,
+                                         String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent,
+                                         String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         return responseMapper.ok(accountService.getBalances(consentID, accountId), accountModelMapper::mapToBalance);
     }
 
@@ -105,14 +114,21 @@ public class AccountController12 implements AccountApi {
     }
 
     @Override
-    public ResponseEntity<?> getTransactionList(String accountId, String bookingStatus, UUID xRequestID, String consentID, LocalDate dateFrom, LocalDate dateTo, String entryReferenceFrom, Boolean deltaList, Boolean withBalance, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> getTransactionList(String accountId, String bookingStatus, UUID xRequestID, String consentID, LocalDate dateFrom,
+                                                LocalDate dateTo, String entryReferenceFrom, Boolean deltaList, Boolean withBalance, String digest,
+                                                String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort,
+                                                String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage,
+                                                String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         ResponseObject<Xs2aTransactionsReport> transactionsReport =
             accountService.getTransactionsReportByPeriod(accountId, Optional.ofNullable(withBalance).orElse(false), consentID, dateFrom, dateTo, Xs2aBookingStatus.forValue(bookingStatus));
         return responseMapper.ok(transactionsReport, accountModelMapper::mapToTransactionsResponse200Json);
     }
 
     @Override
-    public ResponseEntity<?> getTransactionDetails(String accountId, String resourceId, UUID xRequestID, String consentID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> getTransactionDetails(String accountId, String resourceId, UUID xRequestID, String consentID, String digest,
+                                                   String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort,
+                                                   String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage,
+                                                   String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         ResponseObject<Xs2aAccountReport> responseObject =
             accountService.getAccountReportByTransactionId(consentID, accountId, resourceId);
         return responseMapper.ok(responseObject, accountModelMapper::mapToAccountReport);

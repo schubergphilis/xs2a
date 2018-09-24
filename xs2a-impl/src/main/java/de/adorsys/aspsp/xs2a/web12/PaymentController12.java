@@ -101,7 +101,10 @@ public class PaymentController12 implements PaymentApi {
     }
 
     @Override
-    public ResponseEntity<?> cancelPayment(String paymentService, String paymentId, UUID xRequestID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> cancelPayment(String paymentService, String paymentId, UUID xRequestID, String digest, String signature,
+                                           byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept,
+                                           String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage,
+                                           String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         return null; //TODO implement
     }
 
@@ -116,7 +119,11 @@ public class PaymentController12 implements PaymentApi {
     }
 
     @Override
-    public ResponseEntity<?> getPaymentInitiationCancellationAuthorisationInformation(String paymentService, String paymentId, UUID xRequestID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> getPaymentInitiationCancellationAuthorisationInformation(String paymentService, String paymentId, UUID xRequestID,
+                                                                                      String digest, String signature, byte[] tpPSignatureCertificate,
+                                                                                      String psUIPAddress, Object psUIPPort, String psUAccept,
+                                                                                      String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage,
+                                                                                      String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         return null; //TODO implement
     }
 
@@ -126,7 +133,11 @@ public class PaymentController12 implements PaymentApi {
     }
 
     @Override
-    public ResponseEntity<?> startPaymentAuthorisation(String paymentService, String paymentId, UUID xRequestID, String PSU_ID, String psUIDType, String psUCorporateID, String psUCorporateIDType, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> startPaymentAuthorisation(String paymentService, String paymentId, UUID xRequestID, String PSU_ID, String psUIDType,
+                                                       String psUCorporateID, String psUCorporateIDType, String digest, String signature,
+                                                       byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept,
+                                                       String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage,
+                                                       String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         return responseMapper.ok(consentService.createPisConsentAuthorization(paymentId, PaymentType.getByValue(paymentService).get()), consentModelMapper::mapToStartScaProcessResponse);
     }
 

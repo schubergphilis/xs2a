@@ -48,7 +48,12 @@ public class ConsentController12 implements ConsentApi {
     private final ConsentModelMapper consentModelMapper;
 
     @Override
-    public ResponseEntity<?> createConsent(UUID xRequestID, Consents body, String digest, String signature, byte[] tpPSignatureCertificate, String PSU_ID, String psUIDType, String psUCorporateID, String psUCorporateIDType, Boolean tpPRedirectPreferred, String tpPRedirectURI, String tpPNokRedirectURI, Boolean tpPExplicitAuthorisationPreferred, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> createConsent(UUID xRequestID, Consents body, String digest, String signature, byte[] tpPSignatureCertificate,
+                                           String PSU_ID, String psUIDType, String psUCorporateID, String psUCorporateIDType,
+                                           Boolean tpPRedirectPreferred, String tpPRedirectURI, String tpPNokRedirectURI,
+                                           Boolean tpPExplicitAuthorisationPreferred, String psUIPAddress, Object psUIPPort,
+                                           String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage,
+                                           String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
         CreateConsentReq createConsent = consentModelMapper.mapToCreateConsentReq(body);
 
         Set<AccountReference> references = createConsent.getAccountReferences();
@@ -64,7 +69,10 @@ public class ConsentController12 implements ConsentApi {
     }
 
     @Override
-    public ResponseEntity<?> getConsentStatus(String consentId, UUID xRequestID, String digest, String signature, byte[] tpPSignatureCertificate, String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset, String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod, UUID psUDeviceID, String psUGeoLocation) {
+    public ResponseEntity<?> getConsentStatus(String consentId, UUID xRequestID, String digest, String signature, byte[] tpPSignatureCertificate,
+                                              String psUIPAddress, Object psUIPPort, String psUAccept, String psUAcceptCharset,
+                                              String psUAcceptEncoding, String psUAcceptLanguage, String psUUserAgent, String psUHttpMethod,
+                                              UUID psUDeviceID, String psUGeoLocation) {
         return responseMapper.ok(consentService.getAccountConsentsStatusById(consentId), consentModelMapper::mapToConsentStatusResponse200);
     }
 
