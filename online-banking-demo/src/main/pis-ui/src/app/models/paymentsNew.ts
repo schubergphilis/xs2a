@@ -20,8 +20,11 @@ import { AccountReference } from './accountReference';
 import { Amount } from './amount';
 import { PurposeCode } from './purposeCode';
 import { Remittance } from './remittance';
+import { TppInfo } from './tppInfo';
+import { AccountReferenceNew } from './AccountReferenceNew';
+import { AddressNew } from './AddressNew';
 
-export interface Payments{
+export interface PaymentsNew{
 
   paymentId?: number;
 
@@ -32,7 +35,7 @@ export interface Payments{
   /**
    * debtor account
    */
-  debtorAccount?: AccountReference;
+  debtorAccount?: AccountReferenceNew;
   /**
    * ultimate debtor
    */
@@ -48,7 +51,7 @@ export interface Payments{
   /**
    * debtor account
    */
-  creditorAccount?: AccountReference;
+  creditorAccount?: AccountReferenceNew;
   /**
    * creditor agent
    */
@@ -60,7 +63,7 @@ export interface Payments{
   /**
   * creditor Address
   */
-  creditorAddress?: Address;
+  creditorAddress?: AddressNew;
   /**
    * remittance information unstructured
    */
@@ -80,7 +83,7 @@ export interface Payments{
   /**
    * requested execution time
    */
-  requestedExecutionTime?: Date;
+  requestedExecutionTime?: string;
   /**
    * ultimate creditor
    */
@@ -95,11 +98,10 @@ export interface Payments{
   dayOfExecution?: number;
 
 
-
-
   endDate?:string;
   executionId?: number;
-  executionRule?: number;
+  executionRule?: string;
   frequency?: string;
   startDate?: string;
+  tppInfo?: TppInfo;
 }

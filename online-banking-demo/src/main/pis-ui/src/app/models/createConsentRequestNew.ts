@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Payments } from './payments';
+import { PaymentsNew } from './paymentsNew';
 import { TppInfo } from './tppInfo';
 
-export interface CreateConsentRequest {
+export interface CreateConsentRequestNew {
   aspspConsentData: string;
   paymentProduct: string;
   paymentType: string;
-  payments: Payments[];
+  payments: PaymentsNew[];
   tppInfo: TppInfo;
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Payments } from './payments'
+import { PaymentsNew } from './paymentsNew'
 import { TppInfo } from './tppInfo';
 
 export interface SinglePayment {
@@ -24,5 +24,5 @@ export interface SinglePayment {
   paymentType?: string,
   externalId?: string
   tppInfo?: TppInfo;
-  payments?: Payments[];
+  payments?: PaymentsNew[];
 }

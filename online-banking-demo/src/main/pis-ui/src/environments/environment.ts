@@ -15,7 +15,7 @@ export const environment = {
   production: false,
   assets: { dotaImages: 'https://api.opendota.com/apps/dota2/images' },
   apis: { dota: 'https://api.opendota.com/api' },
-  mockServerUrl: 'http://localhost:28080',
+  mockServerUrl: 'http://localhost:28080/consent/confirmation/pis',
   xs2aServerUrl: 'http://localhost:8080',
   consentManagmentUrl: 'http://localhost:38080/api/v1/pis/consent/',
   keycloak: keycloakConfig
