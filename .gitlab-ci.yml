@@ -251,8 +251,9 @@ deploy_branch_stage:
   <<: *build_docker_image
   <<: *push_docker_openshift
   <<: *helm_env_deploy
+  when: manual
   only:
-    - /^*-helm-*$/
+    - /^.*-helm-.*$/
   variables:
     <<: *variables
     OPENSHIFT_NAMESPACE: "${DEV_NAMESPACE}"
