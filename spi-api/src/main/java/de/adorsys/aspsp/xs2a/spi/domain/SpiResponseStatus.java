@@ -18,7 +18,5 @@ package de.adorsys.aspsp.xs2a.spi.domain;
 
 public enum SpiResponseStatus {
     SUCCESS,
-    NOT_FOUND,
-    BAD_REQUEST,
-    REJECTED
+    FAILED
 }
