@@ -17,9 +17,9 @@
 package de.adorsys.aspsp.xs2a.service.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthenticationObject;
 import de.adorsys.aspsp.xs2a.domain.Xs2aChallengeData;
 import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
+import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthenticationObject;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
 import de.adorsys.psd2.model.*;
 import lombok.RequiredArgsConstructor;
@@ -104,7 +104,6 @@ public class PaymentModelMapperPsd2 {
             response201.setTransactionFees(mapToAmount(specificResponse.getTransactionFees()));
             response201.setTransactionFeeIndicator(specificResponse.isTransactionFeeIndicator());
             response201.setScaMethods(mapToScaMethods(specificResponse.getScaMethods()));
-            response201.setChosenScaMethod(null); // TODO add proper mapping
             response201.setChallengeData(mapToChallengeData(specificResponse.getChallengeData()));
             response201.setLinks(mapper.convertValue(((PaymentInitialisationResponse) response).getLinks(), Map.class));
             response201.setPsuMessage(specificResponse.getPsuMessage());
