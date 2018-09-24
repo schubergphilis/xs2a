@@ -186,7 +186,7 @@ public class AccountService {
 
         Xs2aAccountDetails accountDetails = spiXs2aAccountMapper.mapToXs2aAccountDetails(accountSpi.readAccountDetails(accountId, new AspspConsentData()).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (accountDetails == null) {
-            return ResponseObject.<Xs2aAccountReport>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+            return ResponseObject.<Xs2aAccountReport>builder().fail(new MessageError(RESOURCE_UNKNOWN_404)).build();
         }
 
         boolean isValid = consentService.isValidAccountByAccess(accountDetails.getIban(), accountDetails.getCurrency(), allowedAccountData.getBody().getTransactions());
@@ -195,7 +195,7 @@ public class AccountService {
         ResponseObject<Xs2aAccountReport> response = isValid && report.isPresent()
                                                          ? ResponseObject.<Xs2aAccountReport>builder().body(report.get()).build()
                                                          : ResponseObject.<Xs2aAccountReport>builder()
-                                                               .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
+                                                               .fail(new MessageError(CONSENT_INVALID)).build();
 
         aisConsentService.consentActionLog(TPP_ID, consentId, createActionStatus(withBalance, TypeAccess.TRANSACTION, response));
         return response;
@@ -231,7 +231,7 @@ public class AccountService {
 
         if (!(isValid && report.isPresent())) {
             return ResponseObject.<Xs2aTransactionsReport>builder()
-                       .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
+                       .fail(new MessageError(CONSENT_INVALID)).build();
         }
 
         Xs2aTransactionsReport transactionsReport = new Xs2aTransactionsReport();
@@ -268,7 +268,7 @@ public class AccountService {
 
         Xs2aAccountDetails accountDetails = spiXs2aAccountMapper.mapToXs2aAccountDetails(accountSpi.readAccountDetails(accountId, new AspspConsentData()).getPayload()); // TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/191 Put a real data here
         if (accountDetails == null) {
-            return ResponseObject.<Xs2aAccountReport>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_404))).build();
+            return ResponseObject.<Xs2aAccountReport>builder().fail(new MessageError(RESOURCE_UNKNOWN_404)).build();
         }
 
         boolean isValid = consentService.isValidAccountByAccess(accountDetails.getIban(), accountDetails.getCurrency(), allowedAccountData.getBody().getTransactions());
@@ -277,9 +277,9 @@ public class AccountService {
         ResponseObject<Xs2aAccountReport> response = isValid && report.isPresent()
                                                          ? ResponseObject.<Xs2aAccountReport>builder().body(report.get()).build()
                                                          : ResponseObject.<Xs2aAccountReport>builder()
-                                                               .fail(new MessageError(new TppMessageInformation(ERROR, CONSENT_INVALID))).build();
+                                                               .fail(new MessageError(CONSENT_INVALID)).build();
         if (!report.isPresent()) {
-            response = ResponseObject.<Xs2aAccountReport>builder().fail(new MessageError(new TppMessageInformation(ERROR, RESOURCE_UNKNOWN_403))).build();
+            response = ResponseObject.<Xs2aAccountReport>builder().fail(new MessageError(RESOURCE_UNKNOWN_403)).build();
         }
 
         aisConsentService.consentActionLog(TPP_ID, consentId, createActionStatus(false, TypeAccess.TRANSACTION, response));
