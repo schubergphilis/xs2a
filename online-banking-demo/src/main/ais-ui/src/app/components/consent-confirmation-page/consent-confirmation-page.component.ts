@@ -86,8 +86,9 @@ export class ConsentConfirmationPageComponent implements OnInit {
   getAccountsWithConsentId() {
     this.aisService.getAccountsWithConsentID()
       .subscribe(accounts => {
-        this.iban = accounts[0].iban;
-        this.accounts = accounts;
+      this.accounts = accounts;
+      this.iban = this.accounts[0].iban;
+      console.log(this.accounts);
       });
   }
 }

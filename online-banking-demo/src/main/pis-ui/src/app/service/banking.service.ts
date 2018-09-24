@@ -50,7 +50,70 @@ export class BankingService {
   }
 
   createPaymentConsent():Observable<any> {
-    return this.httpClient.post<any>(env.consentManagmentUrl, {});
+    const test = {
+      "aspspConsentData": "zzzzzzzz",
+      "paymentProduct": "sepa-credit-transfers",
+      "paymentType": "SINGLE",
+      "payments": [
+        {
+          "amount": 1000,
+          "creditorAccount": {
+            "bban": 89370400440532010000,
+            "currency": "EUR",
+            "iban": "DE89370400440532013000",
+            "maskedPan": "2356xxxxxx1234",
+            "msisdn": "+49(0)911 360698-0",
+            "pan": "2356 5746 3217 1234"
+          },
+          "creditorAddress": {
+            "buildingNumber": "123-34",
+            "city": "Nürnberg",
+            "country": "Germany",
+            "postalCode": 90431,
+            "street": "Herrnstraße"
+          },
+          "creditorAgent": "Telekom",
+          "creditorName": "Telekom",
+          "currency": "EUR",
+          "dayOfExecution": 14,
+          "debtorAccount": {
+            "bban": 89370400440532010000,
+            "currency": "EUR",
+            "iban": "DE89370400440532013000",
+            "maskedPan": "2356xxxxxx1234",
+            "msisdn": "+49(0)911 360698-0",
+            "pan": "2356 5746 3217 1234"
+          },
+          "endDate": "2020-03-03",
+          "endToEndIdentification": "RI-123456789",
+          "executionId": 32454656712432,
+          "executionRule": "latest",
+          "frequency": "ANNUAL",
+          "paymentId": 32454656712432,
+          "purposeCode": "BCENECEQ",
+          "remittanceInformationStructured": {
+            "reference": "Ref Number Merchant",
+            "referenceIssuer": "reference issuer",
+            "referenceType": "reference type"
+          },
+          "remittanceInformationUnstructured": "Ref. Number TELEKOM-1222",
+          "requestedExecutionDate": "2020-01-01",
+          "requestedExecutionTime": "2020-01-01T15:30:35.035Z",
+          "startDate": "2020-01-01",
+          "ultimateCreditor": "Telekom",
+          "ultimateDebtor": "Mueller"
+        }
+      ],
+      "tppInfo": {
+        "nationalCompetentAuthority": "National competent authority",
+        "nokRedirectUri": "Nok redirect URI",
+        "redirectUri": "Redirect URI",
+        "registrationNumber": "1234_registrationNumber",
+        "tppName": "Tpp company",
+        "tppRole": "Tpp role"
+      }
+    };
+    return this.httpClient.post<any>(env.consentManagmentUrl, test);
   }
 
 }

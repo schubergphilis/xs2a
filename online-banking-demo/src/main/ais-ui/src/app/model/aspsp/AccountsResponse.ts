@@ -17,5 +17,5 @@
 import { Account } from './account';
 
 export interface AccountsResponse {
-  accountList: Account[];
+  accounts: Account[];
 }

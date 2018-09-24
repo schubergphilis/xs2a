@@ -54,7 +54,7 @@ export class ConsentConfirmationPageComponent implements OnInit {
   onClickContinue() {
     this.bankingService.createPaymentConsent()
       .subscribe(data=>{
-        console.log('post', data);
+        console.log('post 11', data);
       });
     this.router.navigate(['/tanconfirmation'], {
       queryParams: this.createQueryParams()

@@ -16,13 +16,6 @@ import { AccountAccess } from '../model/aspsp/accountAccess';
   providedIn: 'root'
 })
 export class AisService {
-  GET_CONSENT_URL = `${environment.aspspServerUrl}/api/v1/consents`;
-  GET_ACCOUNTS_WITH_CONSENTID_URL = `${environment.aspspServerUrl}/api/v1/accounts?with-balance=true`;
-  GENERATE_TAN_URL = `${environment.mockServerUrl}/consent/confirmation/ais/aspsp`;
-  UPDATE_CONSENT_STATUS_URL = `${environment.mockServerUrl}/consent/confirmation/ais`;
-  UPDATE_CONSENT = `${environment.cmsServerUrl}/api/v1/ais/consent`;
-  VALIDATE_TAN_URL = `${environment.mockServerUrl}/consent/confirmation/ais`;
-  GET_PROFILE_URL = `${environment.profileServerUrl}/api/v1/aspsp-profile`;
   savedConsentId: string;
   savedIban: string;
 
@@ -42,7 +35,7 @@ export class AisService {
       'x-request-id': environment.xRequestId,
       'tpp-qwac-certificate': environment.tppQwacCertificate,
     });
-    return this.httpClient.get<AccountConsent>(`${this.GET_CONSENT_URL}/${consentId}` , {headers: headers});
+    return this.httpClient.get<AccountConsent>(`${environment.aspspConsentServerUrl}/${consentId}` , {headers: headers});
   }
 
   getAccountsWithConsentID(): Observable<Account[]> {
@@ -52,24 +45,24 @@ export class AisService {
       'tpp-qwac-certificate': environment.tppQwacCertificate,
       'accept': 'application/json'
     });
-    return this.httpClient.get <AccountsResponse>(this.GET_ACCOUNTS_WITH_CONSENTID_URL, {headers: headers})
+    return this.httpClient.get <AccountsResponse>(environment.aspspAccountServerUrl + '/?with-balance=true', {headers: headers})
       .pipe(
         map(data => {
-          return data.accountList;
+          return data.accounts;
         })
       );
   }
 
   getProfile(): Observable<AspspSettings> {
-    return this.httpClient.get<AspspSettings>(`${this.GET_PROFILE_URL}`);
+    return this.httpClient.get<AspspSettings>(`${environment.profileServerUrl}`);
   }
 
   generateTan(): Observable<string> {
-    return this.httpClient.post<string>(`${this.GENERATE_TAN_URL}`, {});
+    return this.httpClient.post<string>(`${environment.mockServerUrl+ '/aspsp'}`, {});
   }
 
   updateConsentStatus(consentStatus): Observable<any> {
-    return this.httpClient.put(`${this.UPDATE_CONSENT_STATUS_URL}/${this.savedConsentId}/${consentStatus}`, {});
+    return this.httpClient.put(`${environment.mockServerUrl}/${this.savedConsentId}/${consentStatus}`, {});
   }
 
   validateTan(tan: string): Observable<string> {
@@ -78,13 +71,13 @@ export class AisService {
       consentId: this.savedConsentId,
       psuId: 'aspsp'
     };
-    return this.httpClient.put<string>(this.VALIDATE_TAN_URL, body);
+    return this.httpClient.put<string>(environment.mockServerUrl, body);
   }
 
   updateConsent(selectedAccounts: Account[]) {
     const selectedAccountConsent: SelectedAccountConsent = this.buildAccountConsent(selectedAccounts);
 
-    return this.httpClient.put(`${this.UPDATE_CONSENT}/${this.savedConsentId}/access`, selectedAccountConsent);
+    return this.httpClient.put(`${environment.mockServerUrl}/${this.savedConsentId}/${'RECEIVED'}`, selectedAccountConsent);
   }
 
   private buildAccountConsent(selectedAccounts: Account[]) {
