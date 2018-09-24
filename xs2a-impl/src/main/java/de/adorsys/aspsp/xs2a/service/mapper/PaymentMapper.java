@@ -239,7 +239,7 @@ public class PaymentMapper {
 
     public SpiPaymentConfirmation buildSpiPaymentConfirmation(UpdatePisConsentPsuDataRequest request, String consentId) {
         SpiPaymentConfirmation paymentConfirmation = new SpiPaymentConfirmation();
-        paymentConfirmation.setTanNumber(request.getPassword());
+        paymentConfirmation.setTanNumber(request.getScaAuthenticationData());
         paymentConfirmation.setPaymentId(request.getPaymentId());
         paymentConfirmation.setConsentId(consentId);
         paymentConfirmation.setPsuId(request.getPsuId());
