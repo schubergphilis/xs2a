@@ -1,5 +1,6 @@
 package de.adorsys.psd2.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -130,6 +131,7 @@ public class StartScaprocessResponse {
     @ApiModelProperty(required = true)
     @NotNull
     @Valid
+    @JsonIgnore
     public Map getLinks() {
         return _links;
     }

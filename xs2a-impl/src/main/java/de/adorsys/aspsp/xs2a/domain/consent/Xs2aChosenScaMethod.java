@@ -14,21 +14,24 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis.authorisation;
+package de.adorsys.aspsp.xs2a.domain.consent;
 
-import de.adorsys.aspsp.xs2a.consent.api.CmsAspspConsentData;
-import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
+import de.adorsys.psd2.model.ChosenScaMethod;
 import lombok.Data;
 
 @Data
-public class UpdatePisConsentPsuDataRequest {
-    private String paymentId;
-    private String authorizationId;
-    private String psuId;
-    private String password;
+public class Xs2aChosenScaMethod {
+    private String authenticationType;
     private String authenticationMethodId;
-    private CmsScaStatus scaStatus;
-    private String paymentService;
-    private CmsAspspConsentData cmsAspspConsentData;
-    private String scaAuthenticationData;
+
+    /*
+    TODO Delete inner class after fixing bug in ChosenScaMethod
+     This class was created for extending incorrect class ChosenScaMethod.
+     Because ChosenScaMethod doesn't have any fields
+    */
+    @Data
+    public class ExtendedChosenScaMethod extends ChosenScaMethod {
+        private String authenticationType;
+        private String authenticationMethodId;
+    }
 }

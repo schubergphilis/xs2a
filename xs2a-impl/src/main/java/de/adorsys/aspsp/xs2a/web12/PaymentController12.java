@@ -24,7 +24,6 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.ConsentService;
 import de.adorsys.aspsp.xs2a.service.PaymentService;
-import de.adorsys.aspsp.xs2a.service.consent.PisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.ConsentModelMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.PaymentModelMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.ResponseMapper;
@@ -46,7 +45,6 @@ public class PaymentController12 implements PaymentApi {
     private final PaymentModelMapper paymentModelMapper;
     private final ConsentService consentService;
     private final ConsentModelMapper consentModelMapper;
-    private final PisConsentService pisConsentService;
 
     @Override
     public ResponseEntity<?> getPaymentInitiationStatus(String paymentService, String paymentId, UUID xRequestID, String digest,

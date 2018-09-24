@@ -113,7 +113,7 @@ public class PisAuthorisationService {
             paymentSpi.performStrongUserAuthorisation(request.getPsuId(), new AspspConsentData());
             return doUpdatePisConsentAuthorisation(request);
         }
-        return new UpdatePisConsentPsuDataResponse(null);
+        return new UpdatePisConsentPsuDataResponse(FINALISED);
     }
 
     private UpdatePisConsentPsuDataResponse doUpdatePisConsentAuthorisation(UpdatePisConsentPsuDataRequest request) {
