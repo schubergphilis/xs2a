@@ -14,27 +14,7 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain;
+package de.adorsys.aspsp.xs2a.exception;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-
-public enum ContentType {
-
-    XML("application/xml"),
-    JSON("application/json"),
-    TXT("text/plain"),
-    EMPTY("*/*");
-
-    private String type;
-
-    @JsonCreator
-    ContentType(String type) {
-        this.type = type;
-    }
-
-    @JsonValue
-    public String getType() {
-        return type;
-    }
+public class CertificateException extends RuntimeException {
 }
