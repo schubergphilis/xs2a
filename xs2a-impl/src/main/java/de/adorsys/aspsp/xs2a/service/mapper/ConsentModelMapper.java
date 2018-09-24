@@ -236,9 +236,9 @@ public class ConsentModelMapper {
             Optional.ofNullable(body.get("psuData"))
                 .map(o -> (LinkedHashMap<String, String>) o)
                 .ifPresent(psuData -> request.setAuthenticationMethodId(psuData.get("authenticationMethodId")));
-            Optional.ofNullable(body.get("psuData"))
-                .map(o -> (LinkedHashMap<String, String>) o)
-                .ifPresent(psuData -> request.setScaAuthenticationData(psuData.get("scaAuthenticationData")));
+
+            Optional.ofNullable(body.get("scaAuthenticationData"))
+                .ifPresent(authData -> request.setScaAuthenticationData((String) authData));
         }
         return request;
     }
