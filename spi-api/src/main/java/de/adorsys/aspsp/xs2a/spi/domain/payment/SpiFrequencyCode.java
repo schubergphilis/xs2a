@@ -16,16 +16,6 @@
 
 package de.adorsys.aspsp.xs2a.spi.domain.payment;
 
-import lombok.Value;
-
-import java.util.List;
-
-@Value
-public class SpiPayment {
-    //A blank for future implementation of generic payment for spi level
-    SpiPaymentType paymentType;
-    String paymentProduct;
-    boolean batchBookingPreferred;
-    String bulkPaymentId;
-    List<SpiPaymentObject> payments;
+public enum SpiFrequencyCode {
+    DAILY, WEEKLY, EVERYTWOWEEKS, MONTHLY, EVERYTWOMONTHS, QUARTERLY, SEMIANNUAL, ANNUAL
 }
