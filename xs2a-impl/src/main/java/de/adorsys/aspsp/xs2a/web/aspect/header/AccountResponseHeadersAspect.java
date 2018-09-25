@@ -19,6 +19,7 @@ package de.adorsys.aspsp.xs2a.web.aspect.header;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -26,9 +27,9 @@ import java.util.UUID;
 
 @Aspect
 @Component
-public class AccountControllerAspect extends HeaderController {
+public class AccountResponseHeadersAspect extends HeaderController {
 
-    public AccountControllerAspect(AspspProfileServiceWrapper aspspProfileServiceWrapper) {
+    public AccountResponseHeadersAspect(AspspProfileServiceWrapper aspspProfileServiceWrapper) {
         super(aspspProfileServiceWrapper);
     }
 
@@ -52,10 +53,9 @@ public class AccountControllerAspect extends HeaderController {
 
     @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.AccountController.getBalances(..)) && args(accountId, xRequestID,consentID, ..)", returning = "result", argNames = "result,accountId,xRequestID,consentID")
     public ResponseEntity<?> getBalancesAspect(ResponseEntity<?> result, String accountId, UUID xRequestID, String consentID) {
-        addHeadersForGetBalancesAspect(xRequestID, consentID);
         return new ResponseEntity<>(
             result.getBody(),
-            getHeaders(),
+            addHeadersForGetBalancesAspect(xRequestID, consentID),
             result.getStatusCode()
         );
     }
@@ -78,8 +78,8 @@ public class AccountControllerAspect extends HeaderController {
         );
     }
 
-    private void addHeadersForGetBalancesAspect(UUID xRequestID, String consentId) {
+    private HttpHeaders addHeadersForGetBalancesAspect(UUID xRequestID, String consentId) {
         addXRequestIdHeader(xRequestID.toString());
-        addHeader("consent-id", consentId);
+        return addHeader("consent-id", consentId);
     }
 }

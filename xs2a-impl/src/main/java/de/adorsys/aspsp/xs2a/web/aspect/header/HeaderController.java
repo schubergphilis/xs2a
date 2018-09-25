@@ -18,11 +18,9 @@ package de.adorsys.aspsp.xs2a.web.aspect.header;
 
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.psd2.aspsp.profile.domain.ScaApproach;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 
-@Data
 @RequiredArgsConstructor
 public abstract class HeaderController {
     private final AspspProfileServiceWrapper aspspProfileServiceWrapper;

@@ -29,14 +29,14 @@ import java.util.UUID;
 
 @Aspect
 @Component
-public class ConsentControllerAspect extends HeaderController {
+public class ConsentResponseHeadersAspect extends HeaderController {
 
-    public ConsentControllerAspect(AspspProfileServiceWrapper aspspProfileServiceWrapper) {
+    public ConsentResponseHeadersAspect(AspspProfileServiceWrapper aspspProfileServiceWrapper) {
         super(aspspProfileServiceWrapper);
     }
 
     @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.web.ConsentController.createConsent(..)) && args(xRequestID, ..)", returning = "result", argNames = "result,xRequestID")
-    public ResponseEntity<?> paymentInitiationAspect(ResponseEntity<?> result, UUID xRequestID) {
+    public ResponseEntity<?> createConsentAspect(ResponseEntity<?> result, UUID xRequestID) {
         return new ResponseEntity<>(
             result.getBody(),
             addHeadersForCreateConsent(xRequestID, result),
