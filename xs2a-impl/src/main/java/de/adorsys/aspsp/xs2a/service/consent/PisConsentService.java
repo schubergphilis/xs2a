@@ -86,7 +86,7 @@ public class PisConsentService {
     }
 
     private PaymentInitialisationResponse extendPaymentResponseFieldsSimple(PaymentInitialisationResponse response, String consentId, PaymentType paymentType) {
-        if (StringUtils.isNoneBlank(consentId)) {
+        if (StringUtils.isNotBlank(consentId)) {
             response.setTransactionStatus(RCVD);
             response.setPisConsentId(consentId);
             response.setPaymentType(paymentType.name());
