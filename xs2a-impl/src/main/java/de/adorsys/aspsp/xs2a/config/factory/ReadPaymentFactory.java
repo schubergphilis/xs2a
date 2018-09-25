@@ -14,19 +14,10 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.exception;
+package de.adorsys.aspsp.xs2a.config.factory;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.web.client.DefaultResponseErrorHandler;
-
-import java.io.IOException;
-
-public class AspspProfileRestErrorHandler extends DefaultResponseErrorHandler {
-
-    @Override
-    public void handleError(ClientHttpResponse response) throws IOException {
-        HttpStatus statusCode = response.getStatusCode();
-        throw new AspspProfileRestException(statusCode, statusCode.getReasonPhrase());
-    }
+/**
+ * This is specific factory intended to retrieve specific payment type dependent service, which retrieves the payment by ID
+ */
+public interface ReadPaymentFactory extends ServiceFactory {
 }

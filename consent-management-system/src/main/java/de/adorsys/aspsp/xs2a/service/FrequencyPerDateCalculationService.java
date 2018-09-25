@@ -16,32 +16,20 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-
-import de.adorsys.aspsp.xs2a.config.rest.ASPSPProfileRemoteUrls;
-import de.adorsys.aspsp.xs2a.domain.profile.AspspSettings;
+import de.adorsys.psd2.aspsp.profile.service.AspspProfileService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 @Service
 @RequiredArgsConstructor
-public class AspspProfileService {
-    @Qualifier("aspspProfileRestTemplate")
-    private final RestTemplate aspspProfileRestTemplate;
-    private final ASPSPProfileRemoteUrls aspspProfileRemoteUrls;
+public class FrequencyPerDateCalculationService {
+    private final AspspProfileService aspspProfileService;
 
     public int getMinFrequencyPerDay(int tppFrequency) {
         return Math.min(Math.abs(tppFrequency), getFrequencyPerDay());
     }
 
     private Integer getFrequencyPerDay() {
-        return readAspspSettings().getFrequencyPerDay();
-    }
-
-    private AspspSettings readAspspSettings() {
-        return aspspProfileRestTemplate.exchange(
-            aspspProfileRemoteUrls.getAspspSettingsUrl(), HttpMethod.GET, null, AspspSettings.class).getBody();
+        return aspspProfileService.getAspspSettings().getFrequencyPerDay();
     }
 }

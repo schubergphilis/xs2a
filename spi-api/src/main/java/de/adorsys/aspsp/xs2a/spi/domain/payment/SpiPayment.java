@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.exception;
+package de.adorsys.aspsp.xs2a.spi.domain.payment;
 
-import lombok.Value;
-import org.springframework.http.HttpStatus;
-
-@Value
-public class AspspProfileRestException extends RuntimeException {
-    private HttpStatus httpStatus;
-    private String message;
+public class SpiPayment {
+    //A blank for future implementation of generic payment for spi level
+    SpiPaymentType paymentType;
+    String paymentProduct;
 }
