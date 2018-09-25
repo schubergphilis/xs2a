@@ -22,8 +22,8 @@ export class TanConfirmationPageComponent implements OnInit {
       .subscribe(params => { this.getBankingDetailsFromUrl(params); });
     let bankingData = <Banking>({ tan: this.tan, consentId: this.consentId, paymentId: this.paymentId });
     this.bankingService.saveData(bankingData);
-    this.bankingService.getSinglePayments().subscribe();
-    this.bankingService.generateTan().subscribe();
+    // this.bankingService.getSinglePayments().subscribe();
+    // this.bankingService.generateTan().subscribe();
   }
 
   getBankingDetailsFromUrl(params: Params) {

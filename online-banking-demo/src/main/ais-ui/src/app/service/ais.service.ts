@@ -11,7 +11,6 @@ import { AccountReference } from '../model/aspsp/accountReference';
 import { SelectedAccountConsent } from '../model/aspsp/selectedAccountConsent';
 import { AccountAccess } from '../model/aspsp/accountAccess';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -45,7 +44,7 @@ export class AisService {
       'tpp-qwac-certificate': environment.tppQwacCertificate,
       'accept': 'application/json'
     });
-    return this.httpClient.get <AccountsResponse>(environment.aspspAccountServerUrl + '/?with-balance=true', {headers: headers})
+    return this.httpClient.get <AccountsResponse>(environment.aspspAccountServerUrl + '?withBalance=true', {headers: headers})
       .pipe(
         map(data => {
           return data.accounts;

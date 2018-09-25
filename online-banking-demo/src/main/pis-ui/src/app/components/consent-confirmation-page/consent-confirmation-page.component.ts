@@ -33,7 +33,7 @@ export class ConsentConfirmationPageComponent implements OnInit {
   }
 
   getSinglePayments(){
-    this.bankingService.getSinglePayments().subscribe(data => {
+    this.bankingService.getConsentById().subscribe(data => {
       console.log('get', data);
       this.singlePayments = data;
     });
@@ -52,10 +52,12 @@ export class ConsentConfirmationPageComponent implements OnInit {
   }
 
   onClickContinue() {
-    this.bankingService.createPaymentConsent()
+    this.bankingService.updateConsent()
       .subscribe(data=>{
         console.log('post 11', data);
+        this.bankingService.generateTan().subscribe();
       });
+
     this.router.navigate(['/tanconfirmation'], {
       queryParams: this.createQueryParams()
     });
