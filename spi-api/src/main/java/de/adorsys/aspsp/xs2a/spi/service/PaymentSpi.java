@@ -167,11 +167,11 @@ public interface PaymentSpi {
     SpiResponse<SpiPaymentInitialisationResponse> createPaymentInitiation(SpiPayment spiPayment, AspspConsentData aspspConsentData);
 
     /**
-     * Authorises psu and returns current autorization status
+     * Authorises psu and returns current autorisation status
      *
      * @param psuId            ASPSP identifier of the psu
      * @param password         Psu's password
-     * @param spiPayment       ASPSP payment
+     * @param spiPayment       generic payment object
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return success or failure authorization status
@@ -182,7 +182,7 @@ public interface PaymentSpi {
      * Returns a list of SCA methods for PSU by its login
      *
      * @param psuId            ASPSP identifier of the psu
-     * @param spiPayment       ASPSP payment
+     * @param spiPayment       generic payment object
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return a list of SCA methods applicable for specified PSU
@@ -190,27 +190,37 @@ public interface PaymentSpi {
     SpiResponse<List<SpiScaMethod>> readAvailableScaMethod(String psuId, SpiPayment spiPayment, AspspConsentData aspspConsentData);
 
     /**
-     * Returns a bulk payment by its ASPSP identifier
+     * Performs payment execution at ASPSP side and returns payment id
      *
      * @param spiPaymentType   Type of payment
-     * @param spiPayment       ASPSP payment for execution
+     * @param spiPayment       generic payment for execution
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return execution payment id
      */
-    SpiResponse<String> executePayment(SpiPaymentType spiPaymentType, SpiPayment spiPayment, AspspConsentData aspspConsentData);
+    SpiResponse executePayment(SpiPaymentType spiPaymentType, SpiPayment spiPayment, AspspConsentData aspspConsentData);
 
     /**
-     * Performs strong customer authorization
+     * Performs strong customer authorisation depending on selected SCA method
      *
      * @param psuId            ASPSP identifier of the psu
      * @param scaMethod        Chosen sca method
-     * @param spiPayment       ASPSP payment
+     * @param spiPayment       generic payment object
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
+     * @return Return a positive or negative response as part of SpiResponse
      */
     SpiResponse requestSendAuthorisationCode(String psuId, SpiScaMethod scaMethod, SpiPayment spiPayment, AspspConsentData aspspConsentData);
 
+    /**
+     * Sends authorisation confirmation information (secure code or such) to ASPSP and if confirmed sends execute payment request to ASPSP
+     *
+     * @param spiPaymentConfirmation payment confirmation information
+     * @param spiPayment             generic payment object
+     * @param aspspConsentData       Encrypted data that may stored in the consent management system in the consent linked to a request.
+     *                               May be null if consent does not contain such data, or request isn't done from a workflow with a consent
+     * @return Return a positive or negative response as part of SpiResponse
+     */
     SpiResponse confirmAuthorisationCodeAndExecutePayment(SpiPaymentConfirmation spiPaymentConfirmation, SpiPayment spiPayment, AspspConsentData aspspConsentData);
 
 }
