@@ -19,7 +19,7 @@ export const environment = {
   aspspAccountServerUrl: 'http://localhost:8080/v1/accounts',
   cmsServerUrl: 'http://localhost:38080/api/v1/ais/consent',
   mockServerUrl: 'http://localhost:28080/consent/confirmation/ais',
-  profileServerUrl: 'http://localhost:48080/aspsp-profile',
+  profileServerUrl: 'http://localhost:48080/api/v1/aspsp-profile',
   keycloak: keycloakConfig,
   xRequestId: '2f77a125-aa7a-45c0-b414-cea25a116035',
   tppQwacCertificate: 'qwac certificate'
