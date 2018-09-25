@@ -242,15 +242,6 @@ public class PaymentMapper { // NOPMD TODO fix large amount of methods in Paymen
         return null;
     }
 
-    public SpiPaymentConfirmation buildSpiPaymentConfirmation(UpdatePisConsentPsuDataRequest request, String consentId) {
-        SpiPaymentConfirmation paymentConfirmation = new SpiPaymentConfirmation();
-        paymentConfirmation.setTanNumber(request.getScaAuthenticationData());
-        paymentConfirmation.setPaymentId(request.getPaymentId());
-        paymentConfirmation.setConsentId(consentId);
-        paymentConfirmation.setPsuId(request.getPsuId());
-        return paymentConfirmation;
-    }
-
     private Xs2aAccountReference getDebtorAccountForBulkPayment(List<SpiSinglePayment> spiSinglePayments) {
         return spiXs2aAccountMapper.mapToXs2aAccountReference(spiSinglePayments.get(0).getDebtorAccount());
     }
