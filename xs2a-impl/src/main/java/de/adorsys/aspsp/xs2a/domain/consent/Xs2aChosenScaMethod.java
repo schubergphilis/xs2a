@@ -25,7 +25,7 @@ public class Xs2aChosenScaMethod {
     private String authenticationMethodId;
 
     /*
-    TODO Delete inner class after fixing bug in ChosenScaMethod
+    TODO Delete inner class after fixing bug in ChosenScaMethod : https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/343
      This class was created for extending incorrect class ChosenScaMethod.
      Because ChosenScaMethod doesn't have any fields
     */
