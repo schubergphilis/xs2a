@@ -53,7 +53,7 @@ public interface PaymentSpi {
     /**
      * Initiates a bulk payment at ASPSP
      *
-     * @param spiBulkPayment         bulk payment to be sent for saving at ASPSP
+     * @param spiBulkPayment   bulk payment to be sent for saving at ASPSP
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return Response from ASPSP containing information about carried payment initiation operation
@@ -159,7 +159,7 @@ public interface PaymentSpi {
     /**
      * Initiates a payment at ASPSP
      *
-     * @param spiPayment payment to be sent for saving at ASPSP
+     * @param spiPayment       payment to be sent for saving at ASPSP
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return Response from ASPSP containing information about carried payment initiation operation
@@ -187,18 +187,18 @@ public interface PaymentSpi {
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return a list of SCA methods applicable for specified PSU
      */
-    SpiResponse<List<SpiScaMethod>> readAvailableScaMethod(String psuId,SpiPayment spiPayment, AspspConsentData aspspConsentData);
+    SpiResponse<List<SpiScaMethod>> readAvailableScaMethod(String psuId, SpiPayment spiPayment, AspspConsentData aspspConsentData);
 
     /**
      * Returns a bulk payment by its ASPSP identifier
      *
-     * @param pisPaymentType   Type of payment
+     * @param spiPaymentType   Type of payment
      * @param spiPayment       ASPSP payment for execution
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return execution payment id
      */
-    SpiResponse<String> executePayment(PisPaymentType pisPaymentType, SpiPayment spiPayment, AspspConsentData aspspConsentData);
+    SpiResponse<String> executePayment(SpiPaymentType spiPaymentType, SpiPayment spiPayment, AspspConsentData aspspConsentData);
 
     /**
      * Performs strong customer authorization

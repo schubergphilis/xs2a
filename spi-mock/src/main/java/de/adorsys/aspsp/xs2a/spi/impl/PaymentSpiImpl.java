@@ -244,7 +244,7 @@ public class PaymentSpiImpl implements PaymentSpi {
     }
 
     @Override
-    public SpiResponse<String> executePayment(PisPaymentType pisPaymentType, SpiPayment spiPayment, AspspConsentData aspspConsentData) {
+    public SpiResponse<String> executePayment(SpiPaymentType spiPaymentType, SpiPayment spiPayment, AspspConsentData aspspConsentData) {
         return null; //TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
     }
 
