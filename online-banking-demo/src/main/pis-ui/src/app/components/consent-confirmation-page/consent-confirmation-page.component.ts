@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, UrlSegment } from '@angular/router';
 import { BankingService } from '../../service/banking.service';
-import { SinglePayments } from '../../models/models';
 import { Banking } from '../../models/banking.model';
 import { SinglePayment } from '../../models/singlePayment';
-import { forEach } from '@angular-devkit/schematics';
+import { AccountConsent } from '../../models/accountConsent';
+import ConsentStatusEnum = AccountConsent.ConsentStatusEnum;
 
 @Component({
   selector: 'app-consent-confirmation-page',
@@ -52,19 +52,18 @@ export class ConsentConfirmationPageComponent implements OnInit {
   }
 
   onClickContinue() {
-    this.bankingService.updateConsent()
+    this.bankingService.updateConsentStatus(ConsentStatusEnum.RECEIVED)
       .subscribe(data=>{
         console.log('post 11', data);
-        this.bankingService.generateTan().subscribe();
       });
-
+    this.bankingService.generateTan().subscribe();
     this.router.navigate(['/tanconfirmation'], {
       queryParams: this.createQueryParams()
     });
   }
 
   onClickCancel() {
-    this.bankingService.setConsentStatus('REVOKED_BY_PSU')
+    this.bankingService.updateConsentStatus(ConsentStatusEnum.REVOKEDBYPSU)
       .subscribe();
     this.router.navigate(['/consentconfirmationdenied']);
   }

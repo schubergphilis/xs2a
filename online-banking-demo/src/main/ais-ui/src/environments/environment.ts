@@ -17,7 +17,7 @@ export const environment = {
   apis: { dota: 'https://api.opendota.com/api' },
   aspspConsentServerUrl: 'http://localhost:8080/v1/consents',
   aspspAccountServerUrl: 'http://localhost:8080/v1/accounts',
-  cmsServerUrl: 'http://localhost:38080',
+  cmsServerUrl: 'http://localhost:38080/api/v1/ais/consent',
   mockServerUrl: 'http://localhost:28080/consent/confirmation/ais',
   profileServerUrl: 'http://localhost:48080/aspsp-profile',
   keycloak: keycloakConfig,

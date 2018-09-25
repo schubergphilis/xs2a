@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { BankingService } from '../../service/banking.service';
 import { Banking } from '../../models/banking.model';
+import { AccountConsent } from '../../models/accountConsent';
+import ConsentStatusEnum = AccountConsent.ConsentStatusEnum;
 
 @Component({
   selector: 'app-tan-confirmation-page',
@@ -12,6 +14,7 @@ export class TanConfirmationPageComponent implements OnInit {
   consentId: string;
   paymentId: string;
   tanError: boolean;
+
 
 
   constructor(private route: ActivatedRoute, private router: Router, private bankingService: BankingService) { }
@@ -36,7 +39,7 @@ export class TanConfirmationPageComponent implements OnInit {
     this.bankingService.validateTan(this.tan)
       .subscribe(
         success => {
-          this.bankingService.setConsentStatus('VALID').subscribe();
+          this.bankingService.updateConsentStatus(ConsentStatusEnum.VALID).subscribe();
           this.router.navigate(['/consentconfirmationsuccessful']);
         },
         error => {
@@ -51,7 +54,7 @@ export class TanConfirmationPageComponent implements OnInit {
   }
 
   onClickCancel() {
-    this.bankingService.setConsentStatus('REVOKED_BY_PSU')
+    this.bankingService.updateConsentStatus(ConsentStatusEnum.REVOKEDBYPSU)
       .subscribe();
     this.router.navigate(['/tanconfirmationcanceled']);
   }

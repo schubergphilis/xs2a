@@ -13,11 +13,8 @@
             <li>
               <span>{{account?.iban}}</span>
             </li>
-            <!--li *ngFor="let balance of account?.balances">
-              <span>{{balance.balanceAmount.amount}} {{balance.balanceAmount.currency}}</span>
-            </li-->
-            <li>
-              <span>{{account?.amount}} {{account?.currency}}</span>
+            <li *ngFor="let balance of account?.balances">
+              <span>{{balance?.balanceAmount?.amount}} {{balance?.balanceAmount?.currency}}</span>
             </li>
           </ul>
           <ul>Your Account Details:

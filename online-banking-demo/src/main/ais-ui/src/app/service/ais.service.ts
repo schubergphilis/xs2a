@@ -75,8 +75,7 @@ export class AisService {
 
   updateConsent(selectedAccounts: Account[]) {
     const selectedAccountConsent: SelectedAccountConsent = this.buildAccountConsent(selectedAccounts);
-
-    return this.httpClient.put(`${environment.mockServerUrl}/${this.savedConsentId}/${'RECEIVED'}`, selectedAccountConsent);
+    return this.httpClient.put(`${environment.cmsServerUrl}/${this.savedConsentId}/${'access'}`, selectedAccountConsent);
   }
 
   private buildAccountConsent(selectedAccounts: Account[]) {
