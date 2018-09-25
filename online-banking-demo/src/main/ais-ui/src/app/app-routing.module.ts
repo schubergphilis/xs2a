@@ -1,26 +1,26 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { TanConfirmationPageComponent } from './components/tan-confirmation-page/tan-confirmation-page.component';
-import { TanConfirmationErrorComponent } from './components/tan-confirmation-error/tan-confirmation-error.component';
-import { TanConfirmationCanceledComponent } from './components/tan-confirmation-canceled/tan-confirmation-canceled.component';
-import { ConsentConfirmationPageComponent } from './components/consent-confirmation-page/consent-confirmation-page.component';
-import { ConsentConfirmationDeniedComponent } from './components/consent-confirmation-denied/consent-confirmation-denied.component';
+import { AisTanConfirmationPageComponent } from './components/ais-tan-confirmation-page/ais-tan-confirmation-page.component';
+import { AisTanConfirmationErrorComponent } from './components/ais-tan-confirmation-error/ais-tan-confirmation-error.component';
+import { AisTanConfirmationCanceledComponent } from './components/ais-tan-confirmation-canceled/ais-tan-confirmation-canceled.component';
+import { AisConsentConfirmationPageComponent } from './components/ais-consent-confirmation-page/ais-consent-confirmation-page.component';
+import { AisConsentConfirmationDeniedComponent } from './components/ais-consent-confirmation-denied/ais-consent-confirmation-denied.component';
 import { AppAuthGuard } from './app.authguard';
-import { TanConfirmationSuccessfulComponent } from './components/tan-confirmation-successful/tan-confirmation-successful.component';
-import { ConsentConfirmationErrorComponent } from './components/consent-confirmation-error/consent-confirmation-error.component';
-import { HelpPageComponent } from './components/help-page/help-page.component';
+import { AisTanConfirmationSuccessfulComponent } from './components/ais-tan-confirmation-successful/ais-tan-confirmation-successful.component';
+import { AisConsentConfirmationErrorComponent } from './components/ais-consent-confirmation-error/ais-consent-confirmation-error.component';
+import { AisHelpPageComponent } from './components/ais-help-page/ais-help-page.component';
 
 
 
 const routes: Routes = [
-  { path: '', component: HelpPageComponent},
-  { path: 'consentconfirmationerror', component: ConsentConfirmationErrorComponent },
-  { path: 'consentconfirmationdenied', component: ConsentConfirmationDeniedComponent },
-  { path: 'tanconfirmation', component: TanConfirmationPageComponent},
-  { path: 'tanconfirmationcanceled', component: TanConfirmationCanceledComponent },
-  { path: 'tanconfirmationerror', component: TanConfirmationErrorComponent },
-  { path: 'tanconfirmationsuccessful', component: TanConfirmationSuccessfulComponent },
-  { path: ':consentId', component: ConsentConfirmationPageComponent},
+  { path: 'ais', component: AisHelpPageComponent},
+  { path: 'ais/consentconfirmationerror', component: AisConsentConfirmationErrorComponent },
+  { path: 'ais/consentconfirmationdenied', component: AisConsentConfirmationDeniedComponent },
+  { path: 'ais/tanconfirmation', component: AisTanConfirmationPageComponent},
+  { path: 'ais/tanconfirmationcanceled', component: AisTanConfirmationCanceledComponent },
+  { path: 'ais/tanconfirmationerror', component: AisTanConfirmationErrorComponent },
+  { path: 'ais/tanconfirmationsuccessful', component: AisTanConfirmationSuccessfulComponent },
+  { path: 'ais/:consentId', component: AisConsentConfirmationPageComponent},
 
 ];
 

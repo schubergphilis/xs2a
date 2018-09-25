@@ -4,34 +4,34 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { TanConfirmationPageComponent } from './components/tan-confirmation-page/tan-confirmation-page.component';
-import { TanConfirmationErrorComponent } from './components/tan-confirmation-error/tan-confirmation-error.component';
-import { TanConfirmationCanceledComponent } from './components/tan-confirmation-canceled/tan-confirmation-canceled.component';
-import { ConsentConfirmationPageComponent } from './components/consent-confirmation-page/consent-confirmation-page.component';
-import { ConsentConfirmationDeniedComponent } from './components/consent-confirmation-denied/consent-confirmation-denied.component';
-import { ConsentConfirmationSuccessfulComponent } from './components/consent-confirmation-successful/consent-confirmation-successful.component';
+import { PisTanConfirmationPageComponent } from './components/pis-tan-confirmation-page/pis-tan-confirmation-page.component';
+import { PisTanConfirmationErrorComponent } from './components/pis-tan-confirmation-error/pis-tan-confirmation-error.component';
+import { PisTanConfirmationCanceledComponent } from './components/pis-tan-confirmation-canceled/pis-tan-confirmation-canceled.component';
+import { PisConsentConfirmationPageComponent } from './components/pis-consent-confirmation-page/pis-consent-confirmation-page.component';
+import { PisConsentConfirmationDeniedComponent } from './components/pis-consent-confirmation-denied/pis-consent-confirmation-denied.component';
+import { PisConsentConfirmationSuccessfulComponent } from './components/pis-consent-confirmation-successful/pis-consent-confirmation-successful.component';
 import { initializer } from './utils/app-init';
 import { KeycloakAngularModule, KeycloakService } from '../../node_modules/keycloak-angular';
 import { FormsModule } from '@angular/forms';
-import { ConsentConfirmationErrorComponent } from './components/consent-confirmation-error/consent-confirmation-error.component';
+import { PisConsentConfirmationErrorComponent } from './components/pis-consent-confirmation-error/pis-consent-confirmation-error.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
-import { HelpPageComponent } from './components/help-page/help-page.component';
+import { PisHelpPageComponent } from './components/pis-help-page/pis-help-page.component';
 
 registerLocaleData(localeDE);
 
 @NgModule({
   declarations: [
     AppComponent,
-    TanConfirmationPageComponent,
-    TanConfirmationErrorComponent,
-    TanConfirmationCanceledComponent,
-    ConsentConfirmationPageComponent,
-    ConsentConfirmationDeniedComponent,
-    ConsentConfirmationSuccessfulComponent,
-    ConsentConfirmationErrorComponent,
-    HelpPageComponent,
+    PisTanConfirmationPageComponent,
+    PisTanConfirmationErrorComponent,
+    PisTanConfirmationCanceledComponent,
+    PisConsentConfirmationPageComponent,
+    PisConsentConfirmationDeniedComponent,
+    PisConsentConfirmationSuccessfulComponent,
+    PisConsentConfirmationErrorComponent,
+    PisHelpPageComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,16 +1,16 @@
 import { TestBed, inject, async } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { BankingService } from './banking.service';
+import { PisService } from './pis.service';
 
-describe('BankingService', () => {
+describe('PisService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [BankingService]
+      providers: [PisService]
     });
   });
 
-  it('should be created', async(inject([HttpTestingController, BankingService], (httpClient: HttpTestingController, service: BankingService) => {
+  it('should be created', async(inject([HttpTestingController, PisService], (httpClient: HttpTestingController, service: PisService) => {
     expect(service).toBeTruthy();
   })));
 });
