@@ -213,13 +213,4 @@ public class OauthScaPaymentServiceTest {
                                     : WRONG_CREDITOR);
         return payment;
     }
-
-    private PaymentRequestParameters getRequestParameters(PaymentType paymentType) {
-        PaymentRequestParameters requestParameters = new PaymentRequestParameters();
-        requestParameters.setPaymentType(paymentType);
-        requestParameters.setQwacCertificate("TEST CERTIFICATE");
-        requestParameters.setPaymentProduct(PaymentProduct.SCT);
-
-        return requestParameters;
-    }
 }
