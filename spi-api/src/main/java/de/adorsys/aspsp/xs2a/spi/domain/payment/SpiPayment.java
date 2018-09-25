@@ -19,4 +19,5 @@ package de.adorsys.aspsp.xs2a.spi.domain.payment;
 public class SpiPayment {
     //A blank for future implementation of generic payment for spi level
     SpiPaymentType paymentType;
+    String paymentProduct;
 }
