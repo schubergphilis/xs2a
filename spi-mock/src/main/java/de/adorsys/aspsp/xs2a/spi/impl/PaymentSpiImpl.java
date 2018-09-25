@@ -227,4 +227,34 @@ public class PaymentSpiImpl implements PaymentSpi {
         }
         return paymentResponse;
     }
+
+    @Override
+    public SpiResponse<SpiPaymentInitialisationResponse> createPaymentInitiation(SpiPayment spiPayment, AspspConsentData aspspConsentData) {
+        return null; //TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
+    }
+
+    @Override
+    public SpiResponse<SpiAuthorisationStatus> authorisePsu(String psuId, String password, SpiPayment spiPayment, AspspConsentData aspspConsentData) {
+        return null; //TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
+    }
+
+    @Override
+    public SpiResponse<List<SpiScaMethod>> readAvailableScaMethod(String psuId, SpiPayment spiPayment, AspspConsentData aspspConsentData) {
+        return null; //TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
+    }
+
+    @Override
+    public SpiResponse<String> executePayment(PisPaymentType pisPaymentType, SpiPayment spiPayment, AspspConsentData aspspConsentData) {
+        return null; //TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
+    }
+
+    @Override
+    public SpiResponse requestSendAuthorisationCode(String psuId, SpiScaMethod scaMethod, SpiPayment spiPayment, AspspConsentData aspspConsentData) {
+        return null; //TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
+    }
+
+    @Override
+    public SpiResponse confirmAuthorisationCodeAndExecutePayment(SpiPaymentConfirmation spiPaymentConfirmation, SpiPayment spiPayment, AspspConsentData aspspConsentData) {
+        return null; //TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
+    }
 }
