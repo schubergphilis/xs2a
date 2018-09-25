@@ -19,11 +19,11 @@ package de.adorsys.aspsp.xs2a.service.mapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
-import de.adorsys.aspsp.xs2a.consent.api.ais.CreateAisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.AccountConsent;
 import de.adorsys.aspsp.xs2a.domain.consent.ConsentStatus;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aAisConsentMapper;
+import de.adorsys.aspsp.xs2a.service.mapper.spi_xs2a_mappers.SpiXs2aAccountMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import org.apache.commons.io.IOUtils;
@@ -55,15 +55,15 @@ public class Xs2aAisConsentMapperTest {
     private Xs2aAisConsentMapper aisConsentMapper;
 
     @Mock
-    private AccountMapper accountMapper;
+    private SpiXs2aAccountMapper spiXs2aAccountMapper;
 
     private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
     private JsonConverter jsonConverter = new JsonConverter(objectMapper);
 
     @Before
     public void setUp() {
-        when(accountMapper.mapToAccountReferences(any())).thenReturn(getReferences());
-        when(accountMapper.mapToSpiAccountReferences(any())).thenReturn(getSpiReferences());
+        when(spiXs2aAccountMapper.mapToXs2aAccountReferences(any())).thenReturn(getReferences());
+        when(spiXs2aAccountMapper.mapToSpiAccountReferences(any())).thenReturn(getSpiReferences());
     }
 
     @Test

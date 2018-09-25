@@ -18,7 +18,10 @@ package de.adorsys.aspsp.xs2a.service.mapper; //NOPMD
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
-import de.adorsys.aspsp.xs2a.domain.*;
+import de.adorsys.aspsp.xs2a.domain.Links;
+import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
+import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
+import de.adorsys.aspsp.xs2a.domain.Xs2aTransactionStatus;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
@@ -26,6 +29,7 @@ import de.adorsys.aspsp.xs2a.domain.code.Xs2aFrequencyCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aPurposeCode;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAuthenticationObject;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
+import de.adorsys.aspsp.xs2a.service.mapper.spi_xs2a_mappers.SpiXs2aAccountMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.*;
@@ -48,14 +52,14 @@ import java.util.stream.Collectors;
 public class PaymentMapper { // NOPMD TODO fix large amount of methods in PaymentMapper https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/333
     // TODO fix high amount of different objects as members denotes a high coupling https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/322
     private final ObjectMapper objectMapper;
-    private final AccountMapper accountMapper;
+    private final SpiXs2aAccountMapper spiXs2aAccountMapper;
 
     public SpiBulkPayment mapToSpiBulkPayment(BulkPayment bulkPayment) {
         return Optional.ofNullable(bulkPayment)
                    .map(bulk -> {
                        SpiBulkPayment spiBulkPayment = new SpiBulkPayment();
                        spiBulkPayment.setBatchBookingPreferred(bulk.getBatchBookingPreferred());
-                       spiBulkPayment.setDebtorAccount(accountMapper.mapToSpiAccountReference(bulk.getDebtorAccount()));
+                       spiBulkPayment.setDebtorAccount(spiXs2aAccountMapper.mapToSpiAccountReference(bulk.getDebtorAccount()));
                        spiBulkPayment.setRequestedExecutionDate(bulk.getRequestedExecutionDate());
                        spiBulkPayment.setPayments(bulk.getPayments().stream()
                                                       .map(this::mapToSpiSinglePayment)
@@ -83,10 +87,10 @@ public class PaymentMapper { // NOPMD TODO fix large amount of methods in Paymen
                    .map(pr -> {
                        SpiSinglePayment spiSinglePayment = new SpiSinglePayment();
                        spiSinglePayment.setEndToEndIdentification(pr.getEndToEndIdentification());
-                       spiSinglePayment.setDebtorAccount(accountMapper.mapToSpiAccountReference(pr.getDebtorAccount()));
+                       spiSinglePayment.setDebtorAccount(spiXs2aAccountMapper.mapToSpiAccountReference(pr.getDebtorAccount()));
                        spiSinglePayment.setUltimateDebtor(pr.getUltimateDebtor());
                        spiSinglePayment.setInstructedAmount(mapToSpiAmount(pr.getInstructedAmount()));
-                       spiSinglePayment.setCreditorAccount(accountMapper.mapToSpiAccountReference(pr.getCreditorAccount()));
+                       spiSinglePayment.setCreditorAccount(spiXs2aAccountMapper.mapToSpiAccountReference(pr.getCreditorAccount()));
 
                        spiSinglePayment.setCreditorAgent(pr.getCreditorAgent());
                        spiSinglePayment.setCreditorName(pr.getCreditorName());
@@ -110,10 +114,10 @@ public class PaymentMapper { // NOPMD TODO fix large amount of methods in Paymen
                    .map(pp -> {
                        SpiPeriodicPayment spiPeriodicPayment = new SpiPeriodicPayment();
                        spiPeriodicPayment.setEndToEndIdentification(pp.getEndToEndIdentification());
-                       spiPeriodicPayment.setDebtorAccount(accountMapper.mapToSpiAccountReference(pp.getDebtorAccount()));
+                       spiPeriodicPayment.setDebtorAccount(spiXs2aAccountMapper.mapToSpiAccountReference(pp.getDebtorAccount()));
                        spiPeriodicPayment.setUltimateDebtor(pp.getUltimateDebtor());
                        spiPeriodicPayment.setInstructedAmount(mapToSpiAmount(pp.getInstructedAmount()));
-                       spiPeriodicPayment.setCreditorAccount(accountMapper.mapToSpiAccountReference(pp.getCreditorAccount()));
+                       spiPeriodicPayment.setCreditorAccount(spiXs2aAccountMapper.mapToSpiAccountReference(pp.getCreditorAccount()));
                        spiPeriodicPayment.setCreditorAgent(pp.getCreditorAgent());
                        spiPeriodicPayment.setCreditorName(pp.getCreditorName());
                        spiPeriodicPayment.setCreditorAddress(mapToSpiAddress(pp.getCreditorAddress()));
@@ -145,12 +149,11 @@ public class PaymentMapper { // NOPMD TODO fix large amount of methods in Paymen
                        PaymentInitialisationResponse initialisationResponse = new PaymentInitialisationResponse();
                        initialisationResponse.setTransactionStatus(mapToTransactionStatus(pir.getTransactionStatus()));
                        initialisationResponse.setPaymentId(pir.getPaymentId());
-                       initialisationResponse.setTransactionFees(accountMapper.mapToAmount(pir.getSpiTransactionFees()));
+                       initialisationResponse.setTransactionFees(spiXs2aAccountMapper.mapToXs2aAmount(pir.getSpiTransactionFees()));
                        initialisationResponse.setTransactionFeeIndicator(pir.isSpiTransactionFeeIndicator());
                        initialisationResponse.setPsuMessage(pir.getPsuMessage());
                        initialisationResponse.setTppRedirectPreferred(pir.isTppRedirectPreferred());
                        initialisationResponse.setScaMethods(mapToAuthenticationObjects(pir.getScaMethods()));
-                       initialisationResponse.setChosenScaMethod(null); // TODO add proper mapping
                        initialisationResponse.setChallengeData(mapToChallengeData(pir.getChallengeData()));
                        initialisationResponse.setTppMessages(mapToMessageErrorCodes(pir.getTppMessages()));
                        initialisationResponse.setLinks(new Links());
@@ -182,10 +185,10 @@ public class PaymentMapper { // NOPMD TODO fix large amount of methods in Paymen
                    .map(sp -> {
                        SinglePayment payments = new SinglePayment();
                        payments.setEndToEndIdentification(sp.getEndToEndIdentification());
-                       payments.setDebtorAccount(accountMapper.mapToAccountReference(sp.getDebtorAccount()));
+                       payments.setDebtorAccount(spiXs2aAccountMapper.mapToXs2aAccountReference(sp.getDebtorAccount()));
                        payments.setUltimateDebtor(sp.getUltimateDebtor());
-                       payments.setInstructedAmount(accountMapper.mapToAmount(sp.getInstructedAmount()));
-                       payments.setCreditorAccount(accountMapper.mapToAccountReference(sp.getCreditorAccount()));
+                       payments.setInstructedAmount(spiXs2aAccountMapper.mapToXs2aAmount(sp.getInstructedAmount()));
+                       payments.setCreditorAccount(spiXs2aAccountMapper.mapToXs2aAccountReference(sp.getCreditorAccount()));
                        payments.setCreditorAgent(sp.getCreditorAgent());
                        payments.setCreditorName(sp.getCreditorName());
                        payments.setCreditorAddress(mapToAddress(sp.getCreditorAddress()));
@@ -205,10 +208,10 @@ public class PaymentMapper { // NOPMD TODO fix large amount of methods in Paymen
         return Optional.ofNullable(spiPeriodicPayment).map(sp -> {
             PeriodicPayment payment = new PeriodicPayment();
             payment.setEndToEndIdentification(sp.getEndToEndIdentification());
-            payment.setDebtorAccount(accountMapper.mapToAccountReference(sp.getDebtorAccount()));
+            payment.setDebtorAccount(spiXs2aAccountMapper.mapToXs2aAccountReference(sp.getDebtorAccount()));
             payment.setUltimateDebtor(sp.getUltimateDebtor());
-            payment.setInstructedAmount(accountMapper.mapToAmount(sp.getInstructedAmount()));
-            payment.setCreditorAccount(accountMapper.mapToAccountReference(sp.getCreditorAccount()));
+            payment.setInstructedAmount(spiXs2aAccountMapper.mapToXs2aAmount(sp.getInstructedAmount()));
+            payment.setCreditorAccount(spiXs2aAccountMapper.mapToXs2aAccountReference(sp.getCreditorAccount()));
             payment.setCreditorAgent(sp.getCreditorAgent());
             payment.setCreditorName(sp.getCreditorName());
             payment.setCreditorAddress(mapToAddress(sp.getCreditorAddress()));
@@ -252,7 +255,7 @@ public class PaymentMapper { // NOPMD TODO fix large amount of methods in Paymen
     }
 
     private Xs2aAccountReference getDebtorAccountForBulkPayment(List<SpiSinglePayment> spiSinglePayments) {
-        return accountMapper.mapToAccountReference(spiSinglePayments.get(0).getDebtorAccount());
+        return spiXs2aAccountMapper.mapToXs2aAccountReference(spiSinglePayments.get(0).getDebtorAccount());
     }
 
     private Xs2aAuthenticationObject[] mapToAuthenticationObjects(String[] authObjects) { //NOPMD TODO review and check PMD assertion https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/115

@@ -19,8 +19,8 @@ package de.adorsys.aspsp.xs2a.integtest.util;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.consent.api.ais.CreateAisConsentResponse;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
-import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAccountAccess;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
+import de.adorsys.aspsp.xs2a.domain.consent.Xs2aAccountAccess;
 import de.adorsys.aspsp.xs2a.integtest.config.rest.consent.AisConsentRemoteUrls;
 import de.adorsys.aspsp.xs2a.integtest.config.rest.consent.ConsentMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiConsentStatus;
@@ -82,11 +82,11 @@ public class ConsentTestData {
         final String IBAN = "DE52500105173911841934";
         final String CURRENCY = "EUR";
 
-        Xs2aAccountReference accountReference1 = new Xs2aAccountReference();
-        accountReference1.setIban(IBAN);
-        accountReference1.setCurrency(Currency.getInstance(CURRENCY));
+        Xs2aAccountReference xs2aAccountReference1 = new Xs2aAccountReference();
+        xs2aAccountReference1.setIban(IBAN);
+        xs2aAccountReference1.setCurrency(Currency.getInstance(CURRENCY));
 
-        return Collections.singletonList(accountReference1);
+        return Collections.singletonList(xs2aAccountReference1);
     }
 
     public String createConsentTestData () throws IOException {

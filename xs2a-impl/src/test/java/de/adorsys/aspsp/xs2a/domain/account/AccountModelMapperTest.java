@@ -243,14 +243,14 @@ public class AccountModelMapperTest {
     }
 
     private Xs2aAccountReference createAccountReference() {
-        Xs2aAccountReference accountReference = new Xs2aAccountReference();
-        accountReference.setBban("bban");
-        accountReference.setCurrency(Currency.getInstance("EUR"));
-        accountReference.setIban("DE1234");
-        accountReference.setMaskedPan("maskedPan");
-        accountReference.setMsisdn("msisdn");
-        accountReference.setPan("pan");
-        return accountReference;
+        Xs2aAccountReference xs2aAccountReference = new Xs2aAccountReference();
+        xs2aAccountReference.setBban("bban");
+        xs2aAccountReference.setCurrency(Currency.getInstance("EUR"));
+        xs2aAccountReference.setIban("DE1234");
+        xs2aAccountReference.setMaskedPan("maskedPan");
+        xs2aAccountReference.setMsisdn("msisdn");
+        xs2aAccountReference.setPan("pan");
+        return xs2aAccountReference;
     }
 
     private Transactions createTransactions() {

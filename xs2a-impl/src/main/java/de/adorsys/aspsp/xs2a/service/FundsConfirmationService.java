@@ -16,10 +16,10 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
-import de.adorsys.aspsp.xs2a.domain.Xs2aBalance;
 import de.adorsys.aspsp.xs2a.domain.BalanceType;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
+import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
+import de.adorsys.aspsp.xs2a.domain.Xs2aBalance;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountDetails;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
@@ -52,8 +52,8 @@ public class FundsConfirmationService {
                              .body(new FundsConfirmationResponse(isFundsAvailable(request.getPsuAccount(), request.getInstructedAmount()))).build();
     }
 
-    private boolean isFundsAvailable(Xs2aAccountReference accountReference, Xs2aAmount requiredAmount) {
-        List<Xs2aBalance> balances = getAccountBalancesByAccountReference(accountReference);
+    private boolean isFundsAvailable(Xs2aAccountReference xs2aAccountReference, Xs2aAmount requiredAmount) {
+        List<Xs2aBalance> balances = getAccountBalancesByAccountReference(xs2aAccountReference);
 
         return balances.stream()
                    .filter(bal -> BalanceType.INTERIM_AVAILABLE == bal.getBalanceType())

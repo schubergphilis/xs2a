@@ -21,6 +21,7 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.PisPayment;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentProduct;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.CreatePisConsentAuthorisationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
@@ -36,6 +37,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiScaStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiAddress;
+import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentConfirmation;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiRemittance;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
@@ -184,8 +186,8 @@ public class Xs2aPisConsentMapper {
                    }).orElse(null);
     }
 
-    private CmsAccountReference mapToPisAccountReference(Xs2aAccountReference accountReference) {
-        return Optional.ofNullable(accountReference)
+    private CmsAccountReference mapToPisAccountReference(Xs2aAccountReference xs2aAccountReference) {
+        return Optional.ofNullable(xs2aAccountReference)
                    .map(ref -> new CmsAccountReference(
                        ref.getIban(),
                        ref.getBban(),
@@ -251,6 +253,15 @@ public class Xs2aPisConsentMapper {
         payment.setPurposeCode(pisPayment.getPurposeCode());
         payment.setPaymentStatus(SpiTransactionStatus.ACCP);
         return payment;
+    }
+
+    public SpiPaymentConfirmation buildSpiPaymentConfirmation(UpdatePisConsentPsuDataRequest request, String consentId) {
+        SpiPaymentConfirmation paymentConfirmation = new SpiPaymentConfirmation();
+        paymentConfirmation.setTanNumber(request.getPassword());
+        paymentConfirmation.setPaymentId(request.getPaymentId());
+        paymentConfirmation.setConsentId(consentId);
+        paymentConfirmation.setPsuId(request.getPsuId());
+        return paymentConfirmation;
     }
 
     private SpiRemittance mapToSpiRemittanceStructuredFromCmsRemittance(CmsRemittance remittanceInformationStructured) {

@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.consent.api.ais.*;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
-import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
+import de.adorsys.aspsp.xs2a.service.mapper.spi_xs2a_mappers.SpiXs2aAccountMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.SpiAccountAccess;
@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class Xs2aAisConsentMapper {
-    private final AccountMapper accountMapper;
+    private final SpiXs2aAccountMapper spiXs2aAccountMapper;
 
     public CreateAisConsentRequest mapToCreateAisConsentRequest(CreateConsentReq req, String psuId, String tppId, AspspConsentData aspspConsentData) {
         return Optional.ofNullable(req)
@@ -175,9 +175,9 @@ public class Xs2aAisConsentMapper {
         return Optional.ofNullable(access)
                    .map(aa ->
                             new Xs2aAccountAccess(
-                                accountMapper.mapToAccountReferences(aa.getAccounts()),
-                                accountMapper.mapToAccountReferences(aa.getBalances()),
-                                accountMapper.mapToAccountReferences(aa.getTransactions()),
+                                spiXs2aAccountMapper.mapToXs2aAccountReferences(aa.getAccounts()),
+                                spiXs2aAccountMapper.mapToXs2aAccountReferences(aa.getBalances()),
+                                spiXs2aAccountMapper.mapToXs2aAccountReferences(aa.getTransactions()),
                                 mapToAccountAccessType(aa.getAvailableAccounts()),
                                 mapToAccountAccessType(aa.getAllPsd2()))
                    )

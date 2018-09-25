@@ -25,8 +25,8 @@ import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.consent.AisConsentService;
-import de.adorsys.aspsp.xs2a.service.mapper.AccountMapper;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aAisConsentMapper;
+import de.adorsys.aspsp.xs2a.service.mapper.spi_xs2a_mappers.SpiXs2aAccountMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
@@ -78,7 +78,7 @@ public class ConsentServiceTest {
     @Mock
     AisConsentService aisConsentService;
     @Mock
-    AccountMapper accountMapper;
+    SpiXs2aAccountMapper spiXs2aAccountMapper;
     @Mock
     Xs2aAisConsentMapper aisConsentMapper;
     @Mock
@@ -89,7 +89,7 @@ public class ConsentServiceTest {
     @Before
     public void setUp() {
         //AccountMapping
-        when(accountMapper.mapToAccountReferencesFromDetails(getSpiDetailsList()))
+        when(spiXs2aAccountMapper.mapToXs2aAccountReferencesFromDetails(getSpiDetailsList()))
             .thenReturn(getReferenceList());
         //ConsentMapping
         when(aisConsentMapper.mapToAccountConsent(getSpiConsent(CONSENT_ID, getSpiAccountAccess(Collections.singletonList(getSpiReference(CORRECT_IBAN, CURRENCY)), null, null, false, false), false)))

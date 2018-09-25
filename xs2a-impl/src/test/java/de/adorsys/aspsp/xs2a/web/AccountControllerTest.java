@@ -20,7 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.*;
-import de.adorsys.aspsp.xs2a.domain.account.*;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountDetails;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReport;
 import de.adorsys.aspsp.xs2a.domain.code.BankTransactionCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aPurposeCode;
 import de.adorsys.aspsp.xs2a.service.AccountService;
@@ -216,8 +218,8 @@ public class AccountControllerTest {
         transaction.setRemittanceInformationUnstructured("Ref Number Merchant");
         transaction.setPurposeCode(new Xs2aPurposeCode("BKDF"));
         transaction.setBankTransactionCodeCode(new BankTransactionCode("BankTransactionCode"));
-        Transactions[] booked = { new Transactions() };
-        Xs2aAccountReport accountReport = new Xs2aAccountReport(booked, new Transactions[] {});
+        Transactions[] booked = {new Transactions()};
+        Xs2aAccountReport accountReport = new Xs2aAccountReport(booked, new Transactions[]{});
         return ResponseObject.<Xs2aAccountReport>builder().body(accountReport).build();
     }
 
