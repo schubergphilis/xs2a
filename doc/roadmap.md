@@ -34,5 +34,7 @@
 - Get a confirmation on the availability of funds. Embedded approach.
 - Support encryption of aspspConsentData.
 - PIS Support a matrix payment-product/payment-type in aspsp-profile and corresponding services.
+- Get list of consents by psu-id in Consent Management System.
+- PIIS Consent. Post, Get, Put. Read aspspConsentData. 
 
 
