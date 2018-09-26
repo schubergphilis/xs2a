@@ -8,8 +8,11 @@
 - Validate Qwac certificate.
 - Support get transaction information for a given account. Embedded approach.
 - Migration to package and Maven GroupId "de.adorsys.psd2": aspsp-profile, aspsp-mockserver
+- Fix the account consent information request to return link information.
+- Add endpoint updateBLOB for PIS consent to Consent Management Service.
 
 ## version 1.9 (planned date: 12.10.2018)
+- Confirmation of funds request. Add interface on side of SPI.
 - Add validation of TPP data
 - Update of Payment cancellation request according to specification 1.2
 - Support of Signing baskets.
@@ -23,25 +26,13 @@
 - Get list of reachable accounts. Embedded approach.
 - Get balances for a given account. Embedded approach.
 - Migration to package and Maven GroupId "de.adorsys.psd2": XS2A and Consent Management
+- Remove empty links in the responses.
 
 ## version 1.10 (Planned date: 26.10.2018)
 - Cancellation of (future/recurring) payments. Embedded approach.
 - Get account details of the list of accessible accounts. Embedded approach.
 - Get a confirmation on the availability of funds. Embedded approach.
-- Confirmation of funds request. Add interface on side of SPI.
-
-## version 1.11 (Planned date: 09.11.2018)
-- Support of Berlin Group XS2A Specification 1.3
-- Consent access Validator
-- Support of multicurrency account
-- Multitier support in Consent Manager
-
-## version 1.12 (Planned date: 23.11.2018)
-- Support XML based endpoints
-- Remove empty links in the responses.
-
-## version 1.13 (Planned date 07.12.2018)
-- Decoupled SCA approach support
-
+- Support encryption of aspspConsentData.
+- PIS Support a matrix payment-product/payment-type in aspsp-profile and corresponding services.
 
 
