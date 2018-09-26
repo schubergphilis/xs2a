@@ -16,9 +16,21 @@
 
 package de.adorsys.aspsp.xs2a.spi.domain.payment;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 public enum SpiOtpFormat {
     CHARACTERS("characters"),
     INTEGER("integer");
+
+    private final static Map<String, SpiOtpFormat> container = new HashMap<>();
+
+    static {
+        for (SpiOtpFormat otpFormat : values()) {
+            container.put(otpFormat.getValue(), otpFormat);
+        }
+    }
 
     private String value;
 
@@ -28,5 +40,9 @@ public enum SpiOtpFormat {
 
     public String getValue() {
         return value;
+    }
+
+    public static Optional<SpiOtpFormat> getByValue(String value) {
+        return Optional.ofNullable(container.get(value));
     }
 }

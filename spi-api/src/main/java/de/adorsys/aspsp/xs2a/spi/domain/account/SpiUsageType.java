@@ -16,9 +16,21 @@
 
 package de.adorsys.aspsp.xs2a.spi.domain.account;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 public enum SpiUsageType {
     PRIV("PRIV"),
     ORGA("ORGA");
+
+    private final static Map<String, SpiUsageType> container = new HashMap<>();
+
+    static {
+        for (SpiUsageType usageType : values()) {
+            container.put(usageType.getValue(), usageType);
+        }
+    }
 
     private String value;
 
@@ -28,5 +40,9 @@ public enum SpiUsageType {
 
     public String getValue() {
         return value;
+    }
+
+    public static Optional<SpiUsageType> getByValue(String value) {
+        return Optional.ofNullable(container.get(value));
     }
 }

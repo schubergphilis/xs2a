@@ -16,10 +16,22 @@
 
 package de.adorsys.aspsp.xs2a.spi.domain.account;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 public enum SpiAccountStatus {
     ENABLED("enabled"),
     DELETED("deleted"),
     BLOCKED("blocked");
+
+    private final static Map<String, SpiAccountStatus> container = new HashMap<>();
+
+    static {
+        for (SpiAccountStatus accountStatus : values()) {
+            container.put(accountStatus.getValue(), accountStatus);
+        }
+    }
 
     private String value;
 
@@ -29,5 +41,9 @@ public enum SpiAccountStatus {
 
     public String getValue() {
         return value;
+    }
+
+    public static Optional<SpiAccountStatus> getByValue(String value) {
+        return Optional.ofNullable(container.get(value));
     }
 }

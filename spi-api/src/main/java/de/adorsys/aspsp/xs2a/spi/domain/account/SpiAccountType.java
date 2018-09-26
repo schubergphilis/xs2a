@@ -16,6 +16,10 @@
 
 package de.adorsys.aspsp.xs2a.spi.domain.account;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 public enum SpiAccountType {
     CACC("Current"),  // Account used to post debits and credits when no specific account has been nominated
     CASH("CashPayment"),  // Account used for the payment of cash
@@ -38,6 +42,14 @@ public enum SpiAccountType {
     TRAN("TransactingAccount"),  // A transacting account is the most basic type of bank account that you can get. The main difference between transaction and cheque accounts is that you usually do not get a cheque book with your transacting account and neither are you offered an overdraft facility
     TRAS("Cash Trading");  // Account used for trading if different from the current cash account
 
+    private final static Map<String, SpiAccountType> container = new HashMap<>();
+
+    static {
+        for (SpiAccountType accountType : values()) {
+            container.put(accountType.getValue(), accountType);
+        }
+    }
+
     private String value;
 
     SpiAccountType(String value) {
@@ -46,5 +58,9 @@ public enum SpiAccountType {
 
     public String getValue() {
         return value;
+    }
+
+    public static Optional<SpiAccountType> getByValue(String value) {
+        return Optional.ofNullable(container.get(value));
     }
 }
