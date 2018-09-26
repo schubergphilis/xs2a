@@ -186,7 +186,7 @@ public class PaymentSpiImpl implements PaymentSpi {
     @Override
     public SpiResponse<String> executePayment(PisPaymentType paymentType, List<PisPayment> payments, AspspConsentData aspspConsentData) {
         //TODO get rid of Cms dependent models shall be done in scope of https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
-        String paymentId = null;
+        String paymentId;
         if (PisPaymentType.SINGLE == paymentType) {
             SpiPaymentInitialisationResponse paymentInitiation = createPaymentInitiation(spiCmsPisMapper.mapToSpiSinglePayment(payments.get(0)), aspspConsentData)
                                                                      .getPayload();

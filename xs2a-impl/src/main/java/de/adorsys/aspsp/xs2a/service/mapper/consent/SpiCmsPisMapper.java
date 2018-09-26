@@ -30,6 +30,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -126,7 +127,7 @@ public class SpiCmsPisMapper {
                    .collect(Collectors.toList());
     }
 
-    private CmsScaMethod mapToCmsScaMethod(SpiScaMethod spiScaMethod) {
+    private CmsScaMethod mapToCmsScaMethod(@NotNull SpiScaMethod spiScaMethod) {
         return CmsScaMethod.valueOf(spiScaMethod.name());
     }
 }

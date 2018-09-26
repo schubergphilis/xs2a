@@ -24,11 +24,13 @@ import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
+import javax.validation.constraints.NotNull;
+
 import static org.springframework.http.HttpStatus.CREATED;
 
 @Component
 public class SpiLayerMapper {
-    public SpiPaymentInitialisationResponse mapToSpiPaymentResponse(SpiSinglePayment spiSinglePayment) {
+    public SpiPaymentInitialisationResponse mapToSpiPaymentResponse(@NotNull SpiSinglePayment spiSinglePayment) {
         SpiPaymentInitialisationResponse paymentResponse = new SpiPaymentInitialisationResponse();
         paymentResponse.setSpiTransactionFees(null);
         paymentResponse.setSpiTransactionFeeIndicator(false);
@@ -38,7 +40,7 @@ public class SpiLayerMapper {
             paymentResponse.setTransactionStatus(SpiTransactionStatus.RJCT);
             paymentResponse.setPaymentId(spiSinglePayment.getEndToEndIdentification());
             paymentResponse.setPsuMessage(null);
-            paymentResponse.setTppMessages(new String[]{"PAYMENT_FAILED"});
+            paymentResponse.setTppMessages(new String[]{"PAYMENT_FAILED"}); //TODO Create ENUM and update everywhere applicable https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/348
         } else {
             paymentResponse.setTransactionStatus(SpiTransactionStatus.RCVD);
             paymentResponse.setPaymentId(spiSinglePayment.getPaymentId());
@@ -46,7 +48,7 @@ public class SpiLayerMapper {
         return paymentResponse;
     }
 
-    public SpiResponse<SpiPaymentInitialisationResponse> mapToSpiPaymentInitiationResponse(SpiSinglePayment spiSinglePayment, ResponseEntity<SpiSinglePayment> responseEntity, AspspConsentData aspspConsentData) {
+    public SpiResponse<SpiPaymentInitialisationResponse> mapToSpiPaymentInitiationResponse(@NotNull SpiSinglePayment spiSinglePayment, ResponseEntity<SpiSinglePayment> responseEntity, AspspConsentData aspspConsentData) {
         SpiPaymentInitialisationResponse response =
             responseEntity.getStatusCode() == CREATED
                 ? mapToSpiPaymentResponse(responseEntity.getBody())
