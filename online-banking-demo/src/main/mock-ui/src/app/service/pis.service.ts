@@ -15,12 +15,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Banking } from '../model/banking.model';
-import { environment as env } from '../../environments/environment';
 import { SinglePayment } from '../model/singlePayment';
-import { environment } from '../../../src/environments/environment';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -33,28 +32,26 @@ export class PisService {
   constructor(private httpClient: HttpClient) {
   }
 
-  validateTan(tan: string): Observable<any> {
+  validateTan(tan: string): Observable<string> {
     const body = {
       tanNumber: tan,
       psuId: "aspsp",
       consentId: this.savedData.consentId,
       paymentId: this.savedData.paymentId
     };
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.put(`${this.mockServerUrl}`, body, { headers: headers });
+    return this.httpClient.put<string>(`${this.mockServerUrl}`, body);
   }
 
-  updateConsentStatus(decision: string) {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-    return this.httpClient.put(`${this.mockServerUrl}/${this.savedData.consentId}/${decision}`, {}, { headers: headers });
+  updateConsentStatus(status: string) {
+    return this.httpClient.put(`${this.mockServerUrl}/${this.savedData.consentId}/${status}`, {});
   }
 
   saveData(data) {
     this.savedData = data;
   }
 
-  generateTan(): Observable<any> {
-    return this.httpClient.post(`${this.mockServerUrl}` + '/aspsp', {});
+  generateTan(): Observable<string> {
+    return this.httpClient.post<string>(`${this.mockServerUrl}` + '/aspsp', {});
   }
 
   getConsentById(): Observable<SinglePayment> {

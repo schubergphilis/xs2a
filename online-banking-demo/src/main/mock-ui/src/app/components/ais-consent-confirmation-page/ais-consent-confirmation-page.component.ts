@@ -18,7 +18,6 @@ export class AisConsentConfirmationPageComponent implements OnInit {
   selectedAccounts = new Array<Account>();
   consent: AccountConsent;
   profile$: Observable<AspspSettings>;
-  iban: string;
   bankOffered: boolean;
 
   constructor(private route: ActivatedRoute, private router: Router, private aisService: AisService) {
@@ -63,7 +62,6 @@ export class AisConsentConfirmationPageComponent implements OnInit {
 
   onClickContinue() {
     this.aisService.updateConsent(this.selectedAccounts).subscribe();
-    this.aisService.saveIban(this.iban);
     this.aisService.generateTan().subscribe();
     this.router.navigate(['ais/tanconfirmation'], {queryParams: this.createQueryParams});
   }
@@ -87,8 +85,6 @@ export class AisConsentConfirmationPageComponent implements OnInit {
     this.aisService.getAccountsWithConsentID()
       .subscribe(accounts => {
       this.accounts = accounts;
-      console.log(this.accounts);
-     // this.iban = this.accounts[0].iban;
       });
   }
 }

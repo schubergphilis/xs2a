@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { AccountConsent } from '../model/aspsp/accountConsent';
@@ -16,7 +16,6 @@ import { AccountAccess } from '../model/aspsp/accountAccess';
 })
 export class AisService {
   savedConsentId: string;
-  savedIban: string;
   consentManagementServerUrl =  environment.consentManagementServerUrl+'/ais/consent';
   xs2aConsentServerUrl= environment.aspspXs2aServerUrl + '/v1/consents';
   xs2aAccountServerUrl= environment.aspspXs2aServerUrl + '/v1/accounts';
@@ -27,10 +26,6 @@ export class AisService {
 
   saveConsentId(consentId) {
     this.savedConsentId = consentId;
-  }
-
-  saveIban(iban) {
-    this.savedIban = iban;
   }
 
   getConsent(consentId): Observable<AccountConsent> {

@@ -50,7 +50,6 @@ export class PisConsentConfirmationPageComponent implements OnInit {
 
   getSinglePayments(){
     this.bankingService.getConsentById().subscribe(data => {
-      console.log('get', data);
       this.singlePayments = data;
     });
   }
@@ -69,9 +68,7 @@ export class PisConsentConfirmationPageComponent implements OnInit {
 
   onClickContinue() {
     this.bankingService.updateConsentStatus(ConsentStatusEnum.RECEIVED)
-      .subscribe(data=>{
-        console.log('post 11', data);
-      });
+      .subscribe();
     this.bankingService.generateTan().subscribe();
     this.router.navigate(['pis/tanconfirmation'], {
       queryParams: this.createQueryParams()
