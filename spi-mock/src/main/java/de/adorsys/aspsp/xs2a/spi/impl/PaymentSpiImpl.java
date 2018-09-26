@@ -29,7 +29,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.*;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 import de.adorsys.aspsp.xs2a.spi.impl.service.KeycloakInvokerService;
-import de.adorsys.aspsp.xs2a.spi.mapper.SpiLayerMapper;
+import de.adorsys.aspsp.xs2a.spi.mapper.SpiPaymentMapper;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -57,7 +57,7 @@ public class PaymentSpiImpl implements PaymentSpi {
     private final RestTemplate aspspRestTemplate;
     private final KeycloakInvokerService keycloakInvokerService;
     private final JsonConverter jsonConverter;
-    private final SpiLayerMapper spiLayerMapper;
+    private final SpiPaymentMapper spiPaymentMapper;
     private final SpiCmsPisMapper spiCmsPisMapper;
 
     /**
@@ -66,7 +66,12 @@ public class PaymentSpiImpl implements PaymentSpi {
     @Override
     public SpiResponse<SpiPaymentInitialisationResponse> createPaymentInitiation(SpiSinglePayment spiSinglePayment, AspspConsentData aspspConsentData) {
         ResponseEntity<SpiSinglePayment> responseEntity = aspspRestTemplate.postForEntity(aspspRemoteUrls.createPayment(), spiSinglePayment, SpiSinglePayment.class);
-        return spiLayerMapper.mapToSpiPaymentInitiationResponse(spiSinglePayment, responseEntity, aspspConsentData);
+
+        SpiPaymentInitialisationResponse response =
+            responseEntity.getStatusCode() == CREATED
+                ? spiPaymentMapper.mapToSpiPaymentResponse(responseEntity.getBody())
+                : spiPaymentMapper.mapToSpiPaymentResponse(spiSinglePayment);
+        return new SpiResponse<>(response, aspspConsentData);
     }
 
     /**
@@ -80,7 +85,7 @@ public class PaymentSpiImpl implements PaymentSpi {
         List<SpiPaymentInitialisationResponse> response =
             (responseEntity.getStatusCode() == CREATED)
                 ? responseEntity.getBody().stream()
-                      .map(spiLayerMapper::mapToSpiPaymentResponse)
+                      .map(spiPaymentMapper::mapToSpiPaymentResponse)
                       .collect(Collectors.toList())
                 : Collections.emptyList();
         return new SpiResponse<>(response, aspspConsentData);
@@ -94,8 +99,8 @@ public class PaymentSpiImpl implements PaymentSpi {
         ResponseEntity<SpiPeriodicPayment> responseEntity = aspspRestTemplate.postForEntity(aspspRemoteUrls.createPeriodicPayment(), periodicPayment, SpiPeriodicPayment.class);
         SpiPaymentInitialisationResponse response =
             responseEntity.getStatusCode() == CREATED
-                ? spiLayerMapper.mapToSpiPaymentResponse(responseEntity.getBody())
-                : spiLayerMapper.mapToSpiPaymentResponse(periodicPayment);
+                ? spiPaymentMapper.mapToSpiPaymentResponse(responseEntity.getBody())
+                : spiPaymentMapper.mapToSpiPaymentResponse(periodicPayment);
         return new SpiResponse<>(response, aspspConsentData);
     }
 

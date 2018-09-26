@@ -16,20 +16,15 @@
 
 package de.adorsys.aspsp.xs2a.spi.mapper;
 
-import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiTransactionStatus;
-import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentInitialisationResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiSinglePayment;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.validation.constraints.NotNull;
 
-import static org.springframework.http.HttpStatus.CREATED;
-
 @Component
-public class SpiLayerMapper {
+public class SpiPaymentMapper {
     public SpiPaymentInitialisationResponse mapToSpiPaymentResponse(@NotNull SpiSinglePayment spiSinglePayment) {
         SpiPaymentInitialisationResponse paymentResponse = new SpiPaymentInitialisationResponse();
         paymentResponse.setSpiTransactionFees(null);
@@ -46,13 +41,5 @@ public class SpiLayerMapper {
             paymentResponse.setPaymentId(spiSinglePayment.getPaymentId());
         }
         return paymentResponse;
-    }
-
-    public SpiResponse<SpiPaymentInitialisationResponse> mapToSpiPaymentInitiationResponse(@NotNull SpiSinglePayment spiSinglePayment, ResponseEntity<SpiSinglePayment> responseEntity, AspspConsentData aspspConsentData) {
-        SpiPaymentInitialisationResponse response =
-            responseEntity.getStatusCode() == CREATED
-                ? mapToSpiPaymentResponse(responseEntity.getBody())
-                : mapToSpiPaymentResponse(spiSinglePayment);
-        return new SpiResponse<>(response, aspspConsentData);
     }
 }
