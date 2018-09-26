@@ -58,6 +58,6 @@ export class PisService {
   }
 
   getConsentById(): Observable<SinglePayment> {
-    return this.httpClient.get<SinglePayment>(`${this.consentManagementServerUrl}` + this.savedData.consentId);
+    return this.httpClient.get<SinglePayment>(`${this.consentManagementServerUrl}` + '/' + this.savedData.consentId);
   }
 }

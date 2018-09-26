@@ -15,7 +15,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../../../pis-ui/src/environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-help-page',
