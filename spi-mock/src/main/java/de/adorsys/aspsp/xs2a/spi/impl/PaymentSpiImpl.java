@@ -66,15 +66,7 @@ public class PaymentSpiImpl implements PaymentSpi {
     @Override
     public SpiResponse<SpiPaymentInitialisationResponse> createPaymentInitiation(SpiSinglePayment spiSinglePayment, AspspConsentData aspspConsentData) {
         ResponseEntity<SpiSinglePayment> responseEntity = aspspRestTemplate.postForEntity(aspspRemoteUrls.createPayment(), spiSinglePayment, SpiSinglePayment.class);
-        return getSpiPaymentInitialisationResponseSpiResponse(spiSinglePayment, responseEntity, aspspConsentData);
-    }
-
-    private SpiResponse<SpiPaymentInitialisationResponse> getSpiPaymentInitialisationResponseSpiResponse(SpiSinglePayment spiSinglePayment, ResponseEntity<SpiSinglePayment> responseEntity, AspspConsentData aspspConsentData) {
-        SpiPaymentInitialisationResponse response =
-            responseEntity.getStatusCode() == CREATED
-                ? spiLayerMapper.mapToSpiPaymentResponse(responseEntity.getBody())
-                : spiLayerMapper.mapToSpiPaymentResponse(spiSinglePayment);
-        return new SpiResponse<>(response, aspspConsentData);
+        return spiLayerMapper.mapToSpiPaymentInitiationResponse(spiSinglePayment, responseEntity, aspspConsentData);
     }
 
     /**
@@ -193,6 +185,7 @@ public class PaymentSpiImpl implements PaymentSpi {
      */
     @Override
     public SpiResponse<String> executePayment(PisPaymentType paymentType, List<PisPayment> payments, AspspConsentData aspspConsentData) {
+        //TODO get rid of Cms dependent models shall be done in scope of https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
         String paymentId = null;
         if (PisPaymentType.SINGLE == paymentType) {
             SpiPaymentInitialisationResponse paymentInitiation = createPaymentInitiation(spiCmsPisMapper.mapToSpiSinglePayment(payments.get(0)), aspspConsentData)
