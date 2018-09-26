@@ -13,14 +13,13 @@ const keycloakConfig: KeycloakConfig = {
 
 export const environment = {
   production: false,
+  consentManagementServerUrl: 'http://localhost:38080/api/v1',
+  aspspXs2aServerUrl: 'http://localhost:8080',
+  mockServerUrl: 'http://localhost:28080/consent/confirmation',
+  profileServerUrl: 'http://localhost:48080/api/v1/aspsp-profile',
   assets: { dotaImages: 'https://api.opendota.com/apps/dota2/images' },
   apis: { dota: 'https://api.opendota.com/api' },
-  aspspConsentServerUrl: 'http://localhost:8080/v1/consents',
-  aspspAccountServerUrl: 'http://localhost:8080/v1/accounts',
-  cmsServerUrl: 'http://localhost:38080/api/v1/ais/consent',
-  mockServerUrl: 'http://localhost:28080/consent/confirmation/ais',
-  profileServerUrl: 'http://localhost:48080/api/v1/aspsp-profile',
   keycloak: keycloakConfig,
   xRequestId: '2f77a125-aa7a-45c0-b414-cea25a116035',
-  tppQwacCertificate: 'qwac certificate'
+  tppQwacCertificate: 'qwac certificate',
 };

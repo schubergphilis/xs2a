@@ -7,7 +7,7 @@ import { environment } from '../../../environments/environment';
   styleUrls: ['./pis-help-page.component.css']
 })
 export class PisHelpPageComponent implements OnInit {
-  SWAGGER_URL = `${environment.xs2aServerUrl}/swagger-ui.html#`;
+  SWAGGER_URL = `${environment.aspspXs2aServerUrl}/swagger-ui.html#`;
 
   constructor() { }
 

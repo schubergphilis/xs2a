@@ -17,6 +17,10 @@ import { AccountAccess } from '../model/aspsp/accountAccess';
 export class AisService {
   savedConsentId: string;
   savedIban: string;
+  consentManagementServerUrl =  environment.consentManagementServerUrl+'/ais/consent';
+  xs2aConsentServerUrl= environment.aspspXs2aServerUrl + '/v1/consents';
+  xs2aAccountServerUrl= environment.aspspXs2aServerUrl + '/v1/accounts';
+  mockServerUrl = environment.mockServerUrl + '/ais';
 
   constructor(private httpClient: HttpClient) {
   }
@@ -34,7 +38,7 @@ export class AisService {
       'x-request-id': environment.xRequestId,
       'tpp-qwac-certificate': environment.tppQwacCertificate,
     });
-    return this.httpClient.get<AccountConsent>(`${environment.aspspConsentServerUrl}/${consentId}` , {headers: headers});
+    return this.httpClient.get<AccountConsent>(`${this.xs2aConsentServerUrl}/${consentId}` , {headers: headers});
   }
 
   getAccountsWithConsentID(): Observable<Account[]> {
@@ -44,7 +48,7 @@ export class AisService {
       'tpp-qwac-certificate': environment.tppQwacCertificate,
       'accept': 'application/json'
     });
-    return this.httpClient.get <AccountsResponse>(environment.aspspAccountServerUrl + '?withBalance=true', {headers: headers})
+    return this.httpClient.get <AccountsResponse>(this.xs2aAccountServerUrl + '?withBalance=true', {headers: headers})
       .pipe(
         map(data => {
           return data.accounts;
@@ -57,11 +61,11 @@ export class AisService {
   }
 
   generateTan(): Observable<string> {
-    return this.httpClient.post<string>(`${environment.mockServerUrl+ '/aspsp'}`, {});
+    return this.httpClient.post<string>(`${this.mockServerUrl+ '/aspsp'}`, {});
   }
 
   updateConsentStatus(consentStatus): Observable<any> {
-    return this.httpClient.put(`${environment.mockServerUrl}/${this.savedConsentId}/${consentStatus}`, {});
+    return this.httpClient.put(`${this.mockServerUrl}/${this.savedConsentId}/${consentStatus}`, {});
   }
 
   validateTan(tan: string): Observable<string> {
@@ -70,12 +74,12 @@ export class AisService {
       consentId: this.savedConsentId,
       psuId: 'aspsp'
     };
-    return this.httpClient.put<string>(environment.mockServerUrl, body);
+    return this.httpClient.put<string>(this.mockServerUrl, body);
   }
 
   updateConsent(selectedAccounts: Account[]) {
     const selectedAccountConsent: SelectedAccountConsent = this.buildAccountConsent(selectedAccounts);
-    return this.httpClient.put(`${environment.cmsServerUrl}/${this.savedConsentId}/${'access'}`, selectedAccountConsent);
+    return this.httpClient.put(`${this.consentManagementServerUrl}/${this.savedConsentId}/${'access'}`, selectedAccountConsent);
   }
 
   private buildAccountConsent(selectedAccounts: Account[]) {

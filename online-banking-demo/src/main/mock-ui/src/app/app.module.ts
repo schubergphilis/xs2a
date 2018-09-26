@@ -18,6 +18,15 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { registerLocaleData } from '@angular/common';
 import localeDE from '@angular/common/locales/de';
 import { AisHelpPageComponent } from './components/ais-help-page/ais-help-page.component';
+import { PisTanConfirmationPageComponent } from '../../../pis-ui/src/app/components/pis-tan-confirmation-page/pis-tan-confirmation-page.component';
+import { PisTanConfirmationErrorComponent } from '../../../pis-ui/src/app/components/pis-tan-confirmation-error/pis-tan-confirmation-error.component';
+import { PisTanConfirmationCanceledComponent } from '../../../pis-ui/src/app/components/pis-tan-confirmation-canceled/pis-tan-confirmation-canceled.component';
+import { PisConsentConfirmationPageComponent } from '../../../pis-ui/src/app/components/pis-consent-confirmation-page/pis-consent-confirmation-page.component';
+import { PisConsentConfirmationDeniedComponent } from '../../../pis-ui/src/app/components/pis-consent-confirmation-denied/pis-consent-confirmation-denied.component';
+import { PisConsentConfirmationSuccessfulComponent } from '../../../pis-ui/src/app/components/pis-consent-confirmation-successful/pis-consent-confirmation-successful.component';
+import { PisConsentConfirmationErrorComponent } from '../../../pis-ui/src/app/components/pis-consent-confirmation-error/pis-consent-confirmation-error.component';
+import { PisHelpPageComponent } from '../../../pis-ui/src/app/components/pis-help-page/pis-help-page.component';
+
 
 registerLocaleData(localeDE);
 
@@ -34,6 +43,15 @@ registerLocaleData(localeDE);
     AisConsentConfirmationDeniedComponent,
     AisConsentConfirmationErrorComponent,
     AisHelpPageComponent,
+    PisTanConfirmationPageComponent,
+    PisTanConfirmationErrorComponent,
+    PisTanConfirmationCanceledComponent,
+    PisConsentConfirmationPageComponent,
+    PisConsentConfirmationDeniedComponent,
+    PisConsentConfirmationSuccessfulComponent,
+    PisConsentConfirmationErrorComponent,
+    PisHelpPageComponent,
+
   ],
   imports: [
     BrowserModule,
