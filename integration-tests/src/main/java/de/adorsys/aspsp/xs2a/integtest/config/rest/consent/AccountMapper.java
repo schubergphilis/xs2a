@@ -206,7 +206,8 @@ public class AccountMapper {
 
     private AccountStatus mapToAccountStatus(SpiAccountStatus spiAccountStatus) {
         return Optional.ofNullable(spiAccountStatus)
-                   .map(status -> AccountStatus.valueOf(status.name()))
+                   .map(SpiAccountStatus::getValue)
+                   .flatMap(AccountStatus::getByValue)
                    .orElse(null);
     }
 

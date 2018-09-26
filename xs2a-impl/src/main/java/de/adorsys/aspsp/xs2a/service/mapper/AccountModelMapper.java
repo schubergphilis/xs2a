@@ -20,14 +20,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.domain.Transactions;
 import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
 import de.adorsys.aspsp.xs2a.domain.Xs2aBalance;
-import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountDetails;
-import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
-import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReport;
-import de.adorsys.aspsp.xs2a.domain.account.Xs2aTransactionsReport;
+import de.adorsys.aspsp.xs2a.domain.account.*;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
 import de.adorsys.aspsp.xs2a.domain.code.Xs2aPurposeCode;
 import de.adorsys.psd2.model.*;
+import de.adorsys.psd2.model.AccountStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -64,12 +62,8 @@ public class AccountModelMapper {
             .cashAccountType(Optional.ofNullable(accountDetails.getCashAccountType())
                                  .map(Enum::name)
                                  .orElse(null))
-            .usage(Optional.ofNullable(accountDetails.getUsageType())
-                       .map(usage -> AccountDetails.UsageEnum.fromValue(usage.getValue()))
-                       .orElse(null))
-            .status(Optional.ofNullable(accountDetails.getAccountStatus())
-                        .map(status -> AccountStatus.fromValue(status.getValue()))
-                        .orElse(null));
+            .usage(mapToAccountDetailsUsageEnum(accountDetails.getUsageType()))
+            .status(mapToAccountStatus(accountDetails.getAccountStatus()));
         return target
                    .balances(mapToBalanceList(accountDetails.getBalances()))
                    ._links(objectMapper.convertValue(accountDetails.getLinks(), Map.class));
@@ -87,6 +81,20 @@ public class AccountModelMapper {
         }
 
         return balanceList;
+    }
+
+    private AccountDetails.UsageEnum mapToAccountDetailsUsageEnum(Xs2aUsageType usageType) {
+        return Optional.ofNullable(usageType)
+                   .map(Xs2aUsageType::getValue)
+                   .map(AccountDetails.UsageEnum::fromValue)
+                   .orElse(null);
+    }
+
+    private AccountStatus mapToAccountStatus(de.adorsys.aspsp.xs2a.domain.account.AccountStatus accountStatus) {
+        return Optional.ofNullable(accountStatus)
+                   .map(de.adorsys.aspsp.xs2a.domain.account.AccountStatus::getValue)
+                   .map(AccountStatus::fromValue)
+                   .orElse(null);
     }
 
     public ReadBalanceResponse200 mapToBalance(List<Xs2aBalance> balances) {
@@ -227,17 +235,6 @@ public class AccountModelMapper {
         transactionsResponse200Json.setLinks(objectMapper.convertValue(transactionsReport.getLinks(), Map.class));
         return transactionsResponse200Json;
 
-    }
-
-    public Xs2aAccountReference mapToAccountReference(Xs2aAccountDetails accountDetails){
-        Xs2aAccountReference accountReference = new Xs2aAccountReference();
-        accountReference.setIban(accountDetails.getIban());
-        accountReference.setBban(accountDetails.getBban());
-        accountReference.setPan(accountDetails.getPan());
-        accountReference.setMaskedPan(accountDetails.getMaskedPan());
-        accountReference.setMsisdn(accountDetails.getMsisdn());
-        accountReference.setCurrency(accountDetails.getCurrency());
-        return accountReference;
     }
 
     private Object createAccountObject(Xs2aAccountReference xs2aAccountReference) {
