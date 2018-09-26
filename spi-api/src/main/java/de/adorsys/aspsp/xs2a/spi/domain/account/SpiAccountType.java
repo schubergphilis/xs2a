@@ -16,6 +16,9 @@
 
 package de.adorsys.aspsp.xs2a.spi.domain.account;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -52,6 +55,7 @@ public enum SpiAccountType {
 
     private String value;
 
+    @JsonCreator
     SpiAccountType(String value) {
         this.value = value;
     }
@@ -60,6 +64,7 @@ public enum SpiAccountType {
         return value;
     }
 
+    @JsonIgnore
     public static Optional<SpiAccountType> getByValue(String value) {
         return Optional.ofNullable(container.get(value));
     }

@@ -16,6 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 
@@ -56,6 +57,7 @@ public enum CashAccountType {
 
     private String value;
 
+    @JsonCreator
     CashAccountType(String value) {
         this.value = value;
     }
