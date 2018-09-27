@@ -41,7 +41,7 @@ import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.FORMAT_ERROR;
 
 @RestController
 @AllArgsConstructor
-@Api(value = "v1", description = "payment API", tags = {"Payment Initiation Service (PIS)"})
+@Api(value = "v1", description = "Provides access to the payment initiation", tags = {"Payment Initiation Service (PIS)"})
 public class PaymentController implements PaymentApi {
     private final PaymentService xs2aPaymentService;
     private final ResponseMapper responseMapper;

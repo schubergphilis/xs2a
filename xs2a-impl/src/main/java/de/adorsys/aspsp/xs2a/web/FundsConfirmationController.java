@@ -32,7 +32,7 @@ import java.util.UUID;
 @Slf4j
 @RestController
 @AllArgsConstructor
-@Api(value = "v1", description = "funds confirmation API", tags = {"Confirmation of Funds Service"})
+@Api(value = "v1", description = "Provides access to the funds confirmation", tags = {"Confirmation of Funds Service"})
 public class FundsConfirmationController implements FundsConfirmationApi {
 
     private final ResponseMapper responseMapper;
