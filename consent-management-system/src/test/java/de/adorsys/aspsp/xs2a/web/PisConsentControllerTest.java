@@ -43,14 +43,14 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PisConsentControllerTest {
 
-    private final String AUTHORISATION_ID = "33333-999999999";
+    private final String AUTHORISATION_ID = "345-9245-2359";
     private final String PAYMENT_ID = "33333-999999999";
     private final String CONSENT_ID = "12345";
     private final String STATUS_RECEIVED = "RECEIVED";
 
-    private final String WRONG_AUTHORISATION_ID = "33333-999999999";
-    private final String WRONG_PAYMENT_ID = "33333-999999999";
-    private final String WRONG_CONSENT_ID = "12345";
+    private final String WRONG_AUTHORISATION_ID = "3254890-5";
+    private final String WRONG_PAYMENT_ID = "32343-999997777";
+    private final String WRONG_CONSENT_ID = "67890";
 
     @InjectMocks
     private PisConsentController pisConsentController;
