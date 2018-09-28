@@ -60,6 +60,13 @@ public class TanConfirmationService {
     private final PaymentService paymentService;
     private final ConsentService consentService;
 
+    /**
+     * Sends Authorization Request to user with selected Sca Method
+     *
+     * @param psuId             PSU id
+     * @param scaMethodSelected Sca method selected by PSU
+     * @return true if PSU was found and Authorisation request sent successfully
+     */
     public boolean sendUserAuthRequestWithPreSelectedScaMethod(String psuId, SpiScaMethod scaMethodSelected) {
         return accountService.getPsuByPsuId(psuId)
                    .map(psu -> {
