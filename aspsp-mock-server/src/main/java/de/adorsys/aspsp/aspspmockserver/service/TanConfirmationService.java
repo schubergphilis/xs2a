@@ -19,6 +19,7 @@ package de.adorsys.aspsp.aspspmockserver.service;
 import de.adorsys.aspsp.aspspmockserver.domain.ConfirmationType;
 import de.adorsys.aspsp.aspspmockserver.exception.ApiError;
 import de.adorsys.aspsp.aspspmockserver.repository.TanRepository;
+import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.Tan;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.TanStatus;
 import freemarker.template.Configuration;
@@ -59,6 +60,17 @@ public class TanConfirmationService {
     private final PaymentService paymentService;
     private final ConsentService consentService;
 
+    public boolean sendUserAuthRequestWithPreSelectedScaMethod(String psuId, SpiScaMethod scaMethodSelected) {
+        return accountService.getPsuByPsuId(psuId)
+                   .map(psu -> {
+                       if (psu.getScaMethods().contains(scaMethodSelected)) {
+                           return generateAndSendTanForPsuById(psuId);
+                       }
+                       return false;
+                   })
+                   .orElse(false);
+    }
+
     /**
      * Generates new Tan and sends it to psu's email for payment confirmation
      *
@@ -74,7 +86,7 @@ public class TanConfirmationService {
     /**
      * Gets new Tan and sends it to psu's email for payment confirmation
      *
-     * @param psuId PSU id
+     * @param psuId     PSU id
      * @param tanNumber TAN
      * @return true if Tan has status UNUSED, otherwise return false
      */
@@ -99,8 +111,8 @@ public class TanConfirmationService {
     private int getTanNumberOfAttempts(String psuId) {
         return accountService.getPsuByPsuId(psuId)
                    .flatMap(psu -> tanRepository.findByPsuIdAndTanStatus(psu.getPsuId(), UNUSED).stream()
-                                         .findFirst()
-                                         .map(Tan::getNumberOfAttempts))
+                                       .findFirst()
+                                       .map(Tan::getNumberOfAttempts))
                    .orElse(maximumNumberOfTanAttempts);
     }
 
