@@ -161,6 +161,7 @@ public interface PaymentSpi {
      * Performs strong customer authorization
      *
      * @param psuId            ASPSP identifier of the psu
+     * @param choosenMethod     Chosen SCA Method
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @deprecated since 1.8. Will be removed in 1.9. Use {@link #requestAuthorisationCode(String, SpiScaMethod, SpiPayment, AspspConsentData)}
