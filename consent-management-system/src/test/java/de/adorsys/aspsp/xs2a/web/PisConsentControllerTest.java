@@ -48,6 +48,10 @@ public class PisConsentControllerTest {
     private final String CONSENT_ID = "12345";
     private final String STATUS_RECEIVED = "RECEIVED";
 
+    private final String WRONG_AUTHORISATION_ID = "33333-999999999";
+    private final String WRONG_PAYMENT_ID = "33333-999999999";
+    private final String WRONG_CONSENT_ID = "12345";
+
     @InjectMocks
     private PisConsentController pisConsentController;
 
@@ -74,10 +78,34 @@ public class PisConsentControllerTest {
     }
 
     @Test
+    public void createPaymentConsent_Failure() {
+        //Given
+        when(pisConsentService.createPaymentConsent(getPisConsentRequest())).thenReturn(Optional.empty());
+
+        //Then
+        ResponseEntity<CreatePisConsentResponse> actual = pisConsentController.createPaymentConsent(getPisConsentRequest());
+        ResponseEntity<CreatePisConsentResponse> expected = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
     public void getConsentStatusById_Success() {
 
         ResponseEntity<PisConsentStatusResponse> actual = pisConsentController.getConsentStatusById(CONSENT_ID);
         ResponseEntity<PisConsentStatusResponse> expected = new ResponseEntity<>(new PisConsentStatusResponse(RECEIVED), HttpStatus.OK);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void getConsentStatusById_Failure() {
+        //Given
+        when(pisConsentService.getConsentStatusById(WRONG_CONSENT_ID)).thenReturn(Optional.empty());
+
+        //Then
+        ResponseEntity<PisConsentStatusResponse> actual = pisConsentController.getConsentStatusById(WRONG_CONSENT_ID);
+        ResponseEntity<PisConsentStatusResponse> expected = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         assertEquals(actual, expected);
     }
@@ -92,10 +120,34 @@ public class PisConsentControllerTest {
     }
 
     @Test
+    public void getConsentById_Failure() {
+        //Given
+        when(pisConsentService.getConsentById(WRONG_CONSENT_ID)).thenReturn(Optional.empty());
+
+        //Then
+        ResponseEntity<PisConsentResponse> actual = pisConsentController.getConsentById(WRONG_CONSENT_ID);
+        ResponseEntity<PisConsentResponse> expected = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
     public void updateConsentStatus_Success() {
 
         ResponseEntity<Void> actual = pisConsentController.updateConsentStatus(CONSENT_ID, STATUS_RECEIVED);
         ResponseEntity<Void> expected = new ResponseEntity<>(HttpStatus.OK);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void updateConsentStatus_Failure() {
+        //Given
+        when(pisConsentService.updateConsentStatusById(WRONG_CONSENT_ID, RECEIVED)).thenReturn(Optional.empty());
+
+        //Then
+        ResponseEntity<Void> actual = pisConsentController.updateConsentStatus(WRONG_CONSENT_ID, STATUS_RECEIVED);
+        ResponseEntity<Void> expected = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         assertEquals(actual, expected);
     }
@@ -110,10 +162,34 @@ public class PisConsentControllerTest {
     }
 
     @Test
+    public void createConsentAuthorization_Failure() {
+        //Given
+        when(pisConsentService.createAuthorization(WRONG_PAYMENT_ID)).thenReturn(Optional.empty());
+
+        //Then
+        ResponseEntity<CreatePisConsentAuthorisationResponse> actual = pisConsentController.createConsentAuthorization(WRONG_PAYMENT_ID);
+        ResponseEntity<CreatePisConsentAuthorisationResponse> expected = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
     public void updateConsentAuthorization_Success() {
 
         ResponseEntity<UpdatePisConsentPsuDataResponse> actual = pisConsentController.updateConsentAuthorization(AUTHORISATION_ID, getUpdatePisConsentPsuDataRequest());
         ResponseEntity<UpdatePisConsentPsuDataResponse> expected = new ResponseEntity<>(new UpdatePisConsentPsuDataResponse(CmsScaStatus.RECEIVED), HttpStatus.OK);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    public void updateConsentAuthorization_Failure() {
+        //Given
+        when(pisConsentService.updateConsentAuthorization(WRONG_AUTHORISATION_ID, getUpdatePisConsentPsuDataRequest())).thenReturn(Optional.empty());
+
+        //Then
+        ResponseEntity<UpdatePisConsentPsuDataResponse> actual = pisConsentController.updateConsentAuthorization(WRONG_AUTHORISATION_ID, getUpdatePisConsentPsuDataRequest());
+        ResponseEntity<UpdatePisConsentPsuDataResponse> expected = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         assertEquals(actual, expected);
     }
