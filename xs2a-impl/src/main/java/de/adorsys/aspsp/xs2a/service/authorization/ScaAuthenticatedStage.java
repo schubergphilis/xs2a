@@ -48,7 +48,7 @@ public class ScaAuthenticatedStage extends ScaStage<UpdatePisConsentPsuDataReque
     }
 
     private SpiScaMethod getMethod(String method){ //TODO: https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
-        SpiScaMethod scaMethod =SpiScaMethod.PUSH_OTP;
+        SpiScaMethod scaMethod =SpiScaMethod.SMS_OTP;
         try {
             scaMethod = SpiScaMethod.valueOf(method);
         }
