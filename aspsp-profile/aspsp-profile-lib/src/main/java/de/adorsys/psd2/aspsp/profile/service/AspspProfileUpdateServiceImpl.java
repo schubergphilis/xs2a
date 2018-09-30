@@ -206,4 +206,14 @@ public class AspspProfileUpdateServiceImpl implements AspspProfileUpdateService 
     public void updateTransactionsWithoutBalancesSupported(boolean transactionsWithoutBalancesSupported) {
         profileConfiguration.setTransactionsWithoutBalancesSupported(transactionsWithoutBalancesSupported);
     }
+
+    /**
+     * Update the value of payment cancellation authorisation mandated
+     *
+     * @param paymentCancellationAuthorisationMandated the value of payment cancellation authorisation mandated
+     */
+    @Override
+    public void updatePaymentCancellationAuthorisationMandated(boolean paymentCancellationAuthorisationMandated) {
+        profileConfiguration.setPaymentCancellationAuthorisationMandated(paymentCancellationAuthorisationMandated);
+    }
 }

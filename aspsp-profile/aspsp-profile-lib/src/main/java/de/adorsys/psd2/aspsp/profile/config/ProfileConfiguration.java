@@ -122,6 +122,11 @@ public class ProfileConfiguration {
      */
     private boolean transactionsWithoutBalancesSupported;
 
+    /**
+     * If is set to "true", than authorisation of the payment cancellation is mandated by the ASPSP, if is set to "false" - otherwise.
+     */
+    private boolean paymentCancellationAuthorisationMandated;
+
     @PostConstruct
     private void addDefaultValues() { //NOPMD It is necessary to set single payment and booked booking status available by default
         setDefaultPaymentType(PaymentType.FUTURE_DATED);
