@@ -212,7 +212,7 @@ public class AspspProfileUpdateController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(path = "/payment_cancellation_authorization_mandated")
+    @PutMapping(path = "/payment-cancellation-authorization-mandated")
     @ApiOperation(value = "Update the value of payment cancellation authorization mandated. Only for DEBUG!")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = String.class),

@@ -123,7 +123,7 @@ public class ProfileConfiguration {
     private boolean transactionsWithoutBalancesSupported;
 
     /**
-     * If is set to "true", than authorisation of the payment cancellation is mandated by the ASPSP, if is set to "false" - otherwise.
+     * If the option is set to "true", than authorisation of the payment cancellation is mandated by the ASPSP
      */
     private boolean paymentCancellationAuthorisationMandated;
 
