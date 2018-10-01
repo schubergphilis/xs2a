@@ -48,3 +48,4 @@ bank_profile.path=/path/to/yaml-file
 |transactionLifetime             |                                    | 0                                                    |                                                                                                      | 
 |allPsd2Support                  |                                    | false                                                |                                                                                                      | 
 |authorisationStartType          |                                    | EXPLICIT                                             | EXPLICIT, IMPLICIT                                                                                   | 
+|signingBasketSupported          |                                    | true                                                 |                                                                                                      | 
