@@ -6,6 +6,7 @@ import { AccountConsent } from '../../model/aspsp/accountConsent';
 import { AspspSettings } from '../../model/profile/aspspSettings';
 import ConsentStatusEnum = AccountConsent.ConsentStatusEnum;
 import { Observable } from 'rxjs';
+import { environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-consent-confirmation-page',
@@ -24,20 +25,24 @@ export class AisConsentConfirmationPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.route.url
-      .subscribe(params => {
-        this.getConsentIdFromUrl(params);
-      });
-    this.aisService.saveConsentId(this.consentId);
-    this.getAccountsWithConsentId();
-    this.aisService.getConsent(this.consentId)
-      .subscribe(consent => {
-        this.consent = consent;
-        if (consent.access.accounts === undefined) {
-          this.bankOffered = true;
-        }
-      });
-    this.profile$ = this.aisService.getProfile();
+    this.aisService.getServerUrls().subscribe(urls => {
+      console.log('urls', urls);
+      // environment.keycloak = urls.keycloakConfig;
+      this.route.url
+        .subscribe(params => {
+          this.getConsentIdFromUrl(params);
+        });
+      this.aisService.saveConsentId(this.consentId);
+      this.getAccountsWithConsentId();
+      this.aisService.getConsent(this.consentId)
+        .subscribe(consent => {
+          this.consent = consent;
+          if (consent.access.accounts === undefined) {
+            this.bankOffered = true;
+          }
+        });
+      this.profile$ = this.aisService.getProfile();
+    });
   }
 
   onSelectAllAccounts(): void {

@@ -14,7 +14,7 @@ export function initializer(keycloak: KeycloakService): () => Promise<any> {
             flow: 'implicit',
           },
           enableBearerInterceptor: true,
-          bearerExcludedUrls: []
+          bearerExcludedUrls: ['http://localhost:28081/configuration/properties']
         });
         resolve();
       } catch (error) {

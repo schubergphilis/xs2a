@@ -98,4 +98,8 @@ export class AisService {
     });
     return accountReferencesArray;
   }
+
+  getServerUrls(): Observable<any> {
+    return this.httpClient.get('http://localhost:28081/configuration/properties');
+  }
 }

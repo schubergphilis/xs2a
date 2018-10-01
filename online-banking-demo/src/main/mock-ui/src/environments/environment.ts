@@ -4,14 +4,23 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 import { KeycloakConfig } from 'keycloak-angular';
 
+
+export function saveServerUrls(urls) {
+  environment.mockServerUrl = urls.mockServerUrl;
+  environment.aspspXs2aServerUrl = urls.Xs2aServerUrl;
+  environment.consentManagementServerUrl = urls.consentManagementServerUrl;
+  environment.profileServerUrl = urls.aspspProfileServerUrl;
+  environment.keycloak = urls.keyloakConfig;
+}
+
 // Add here your keycloak setup infos
-const keycloakConfig: KeycloakConfig = {
+var keycloakConfig: KeycloakConfig = {
   url: 'http://localhost:8081/auth/',
   realm: 'xs2a',
   clientId: 'aspsp-mock'
 };
 
-export const environment = {
+export var environment = {
   production: false,
   consentManagementServerUrl: 'http://localhost:38080/api/v1',
   aspspXs2aServerUrl: 'http://localhost:8080',
