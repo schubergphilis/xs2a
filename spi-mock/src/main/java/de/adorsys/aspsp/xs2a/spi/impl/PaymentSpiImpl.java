@@ -209,11 +209,11 @@ public class PaymentSpiImpl implements PaymentSpi {
     }
 
     /**
-     * For detailed description see {@link PaymentSpi#performStrongUserAuthorisation(String, AspspConsentData)}
+     * For detailed description see {@link PaymentSpi#performStrongUserAuthorisation(String, SpiScaMethod, AspspConsentData)}
      */
     @Override
-    public SpiResponse<Void> performStrongUserAuthorisation(String psuId, AspspConsentData aspspConsentData) {
-        aspspRestTemplate.exchange(aspspRemoteUrls.getGenerateTanConfirmation(), HttpMethod.POST, null, Void.class, psuId);
+    public SpiResponse<Void> performStrongUserAuthorisation(String psuId, SpiScaMethod choosenScaMethod, AspspConsentData aspspConsentData) {
+        aspspRestTemplate.exchange(aspspRemoteUrls.getGenerateTanConfirmation(), HttpMethod.POST, null, Void.class, psuId, choosenScaMethod);
         return new SpiResponse<>(null, aspspConsentData);
     }
 
@@ -261,5 +261,11 @@ public class PaymentSpiImpl implements PaymentSpi {
     @Override
     public SpiResponse<SpiTransactionStatus> getPaymentStatusById(String paymentId, SpiPayment spiPayment, AspspConsentData aspspConsentData) {
         return null; //TODO https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
+    }
+
+    @Override
+    public SpiResponse<SpiCancelPayment> cancelPayment(String paymentId, AspspConsentData aspspConsentData) {
+        ResponseEntity<SpiCancelPayment> responseEntity = aspspRestTemplate.exchange(aspspRemoteUrls.cancelPayment(), HttpMethod.DELETE, null, SpiCancelPayment.class, paymentId);
+        return new SpiResponse<>(responseEntity.getBody(), aspspConsentData);
     }
 }
