@@ -208,12 +208,12 @@ public class AspspProfileUpdateServiceImpl implements AspspProfileUpdateService 
     }
 
     /**
-     * Update the value of payment cancellation authorisation mandated
+     * Update the value of payment cancellation authorization mandated
      *
-     * @param paymentCancellationAuthorisationMandated the value of payment cancellation authorisation mandated
+     * @param paymentCancellationAuthorizationMandated the value of payment cancellation authorization mandated
      */
     @Override
-    public void updatePaymentCancellationAuthorisationMandated(boolean paymentCancellationAuthorisationMandated) {
-        profileConfiguration.setPaymentCancellationAuthorisationMandated(paymentCancellationAuthorisationMandated);
+    public void updatePaymentCancellationAuthorizationMandated(boolean paymentCancellationAuthorizationMandated) {
+        profileConfiguration.setPaymentCancellationAuthorizationMandated(paymentCancellationAuthorizationMandated);
     }
 }

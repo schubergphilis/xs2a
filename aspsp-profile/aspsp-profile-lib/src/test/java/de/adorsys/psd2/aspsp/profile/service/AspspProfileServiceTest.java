@@ -94,7 +94,7 @@ public class AspspProfileServiceTest {
             .thenReturn(BANK_OFFERED_CONSENT_SUPPORT);
         Mockito.when(profileConfiguration.getAuthorisationStartType())
             .thenReturn(AUTHORIZATION_START_TYPE);
-        Mockito.when(profileConfiguration.isPaymentCancellationAuthorisationMandated())
+        Mockito.when(profileConfiguration.isPaymentCancellationAuthorizationMandated())
             .thenReturn(PAYMENT_CANCELLATION_AUTHORIZATION_MANDATED);
 
         aspspProfileService = new AspspProfileServiceImpl(profileConfiguration);

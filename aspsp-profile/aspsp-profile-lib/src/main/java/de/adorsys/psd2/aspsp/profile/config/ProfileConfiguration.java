@@ -125,7 +125,7 @@ public class ProfileConfiguration {
     /**
      * If the option is set to "true", than authorisation of the payment cancellation is mandated by the ASPSP
      */
-    private boolean paymentCancellationAuthorisationMandated;
+    private boolean paymentCancellationAuthorizationMandated;
 
     @PostConstruct
     private void addDefaultValues() { //NOPMD It is necessary to set single payment and booked booking status available by default
