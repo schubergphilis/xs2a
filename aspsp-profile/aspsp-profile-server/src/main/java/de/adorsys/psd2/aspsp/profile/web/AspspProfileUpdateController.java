@@ -217,7 +217,7 @@ public class AspspProfileUpdateController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = String.class),
         @ApiResponse(code = 400, message = "Bad request")})
-    public ResponseEntity<Void> updatePaymentCancellationAuthorisationMandated(@RequestBody boolean paymentCancellationAuthorizationMandated) {
+    public ResponseEntity<Void> updatePaymentCancellationAuthorizationMandated(@RequestBody boolean paymentCancellationAuthorizationMandated) {
         aspspProfileService.updatePaymentCancellationAuthorizationMandated(paymentCancellationAuthorizationMandated);
         return new ResponseEntity<>(HttpStatus.OK);
     }
