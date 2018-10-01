@@ -16,7 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.config.rest.consent.ConsentRemoteUrls;
+import de.adorsys.aspsp.xs2a.config.rest.consent.AspspConsentDataRemoteUrls;
 import de.adorsys.aspsp.xs2a.domain.Xs2aConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import lombok.Data;
@@ -34,20 +34,16 @@ public abstract class ConsentDataService {
     @Qualifier("consentRestTemplate")
     private final RestTemplate consentRestTemplate;
 
-    public AspspConsentData getConsentData(String consentId) {
-        Xs2aConsentData xs2aConsentData = consentRestTemplate.getForEntity(getRemoteUrl().getConsentData(), Xs2aConsentData.class, consentId).getBody();
-        return new AspspConsentData(xs2aConsentData.getAspspConsentData(), consentId);
+    public AspspConsentData getAspspConsentData(String id) {
+        Xs2aConsentData xs2aConsentData = consentRestTemplate.getForEntity(getRemoteUrl().getAspspConsentData(), Xs2aConsentData.class, id).getBody();
+        return new AspspConsentData(xs2aConsentData.getAspspConsentData(), id);
     }
 
-    public AspspConsentData getConsentDataByPaymentId(String paymentId) {
-        return consentRestTemplate.getForEntity(getRemoteUrl().getConsentDataByPaymentId(), AspspConsentData.class, paymentId).getBody();
-    }
-
-    public void updateConsentData(AspspConsentData consentData) {
+    public void updateAspspConsentData(AspspConsentData consentData) {
         Optional.ofNullable(consentData)
             .filter(cd -> StringUtils.isNotBlank(cd.getConsentId()))
-            .ifPresent(cd -> consentRestTemplate.put(getRemoteUrl().updateConsentData(), new Xs2aConsentData(cd.getAspspConsentData()), cd.getConsentId()));
+            .ifPresent(cd -> consentRestTemplate.put(getRemoteUrl().updateAspspConsentData(), new Xs2aConsentData(cd.getAspspConsentData()), cd.getConsentId()));
     }
 
-    protected abstract ConsentRemoteUrls getRemoteUrl();
+    protected abstract AspspConsentDataRemoteUrls getRemoteUrl();
 }
