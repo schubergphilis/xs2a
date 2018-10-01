@@ -16,9 +16,12 @@
 
 package de.adorsys.aspsp.xs2a.web;
 
+import de.adorsys.aspsp.xs2a.consent.api.CmsAspspConsentData;
 import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
 import de.adorsys.aspsp.xs2a.consent.api.PisConsentStatusResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.CreatePisConsentAuthorisationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.GetPisConsentAuthorisationResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
@@ -34,10 +37,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.Collections;
 import java.util.Optional;
 
 import static de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus.RECEIVED;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -47,6 +53,9 @@ public class PisConsentControllerTest {
     private final String PAYMENT_ID = "33333-999999999";
     private final String CONSENT_ID = "12345";
     private final String STATUS_RECEIVED = "RECEIVED";
+    private static final String PSU_ID = "testPSU";
+    private static final String PASSWORD = "password";
+    private static final byte[] CONSENT_DATA = "consent data".getBytes();
 
     private final String WRONG_AUTHORISATION_ID = "3254890-5";
     private final String WRONG_PAYMENT_ID = "32343-999997777";
@@ -216,6 +225,48 @@ public class PisConsentControllerTest {
 
         //Then
         assertEquals(actual, expected);
+    }
+
+    @Test
+    public void getConsentAuthorization_Success() {
+        GetPisConsentAuthorisationResponse response = getGetPisConsentAuthorisationResponse();
+        when(pisConsentService.getPisConsentAuthorizationById(any())).thenReturn(Optional.of(response));
+
+        // Given
+        GetPisConsentAuthorisationResponse expectedResponse = getGetPisConsentAuthorisationResponse();
+
+        // When
+        ResponseEntity<GetPisConsentAuthorisationResponse> result =
+            pisConsentController.getConsentAuthorization(AUTHORISATION_ID);
+
+        // Then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(result.getBody()).isEqualTo(expectedResponse);
+    }
+
+    @Test
+    public void getConsentAuthorization_Failure() {
+        when(pisConsentService.getPisConsentAuthorizationById(any())).thenReturn(Optional.empty());
+
+        // When
+        ResponseEntity<GetPisConsentAuthorisationResponse> result =
+            pisConsentController.getConsentAuthorization(AUTHORISATION_ID);
+
+        // Then
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        assertThat(result.getBody()).isNull();
+    }
+
+    private GetPisConsentAuthorisationResponse getGetPisConsentAuthorisationResponse() {
+        GetPisConsentAuthorisationResponse response = new GetPisConsentAuthorisationResponse();
+        response.setPsuId(PSU_ID);
+        response.setScaStatus(CmsScaStatus.STARTED);
+        response.setConsentId(CONSENT_ID);
+        response.setPassword(PASSWORD);
+        response.setPayments(Collections.emptyList());
+        response.setPaymentType(PisPaymentType.SINGLE);
+        response.setCmsAspspConsentData(new CmsAspspConsentData(CONSENT_DATA));
+        return response;
     }
 
     private PisConsentRequest getPisConsentRequest() {
