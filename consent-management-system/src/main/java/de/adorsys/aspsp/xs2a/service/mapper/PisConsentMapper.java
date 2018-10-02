@@ -18,8 +18,8 @@ package de.adorsys.aspsp.xs2a.service.mapper;
 
 import de.adorsys.aspsp.xs2a.consent.api.*;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPayment;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.GetPisConsentAuthorisationResponse;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.GetPisConsentAuthorizationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentResponse;
 import de.adorsys.aspsp.xs2a.domain.ConsentType;
@@ -101,8 +101,8 @@ public class PisConsentMapper {
                    }).orElse(null);
     }
 
-    public GetPisConsentAuthorisationResponse mapToGetPisConsentAuthorizationResponse(PisConsentAuthorization pis) {
-        GetPisConsentAuthorisationResponse response = new GetPisConsentAuthorisationResponse();
+    public GetPisConsentAuthorizationResponse mapToGetPisConsentAuthorizationResponse(PisConsentAuthorization pis) {
+        GetPisConsentAuthorizationResponse response = new GetPisConsentAuthorizationResponse();
         response.setPayments(mapToPisPaymentList(pis.getConsent().getPayments()));
         response.setPaymentType(pis.getConsent().getPisPaymentType());
         response.setCmsAspspConsentData(new CmsAspspConsentData(pis.getConsent().getAspspConsentData()));

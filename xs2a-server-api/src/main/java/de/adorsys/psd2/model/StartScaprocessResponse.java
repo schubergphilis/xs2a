@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Body of the JSON response for a Start SCA authorisation request.
+ * Body of the JSON response for a Start SCA authorization request.
  */
-@ApiModel(description = "Body of the JSON response for a Start SCA authorisation request.")
+@ApiModel(description = "Body of the JSON response for a Start SCA authorization request.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class StartScaprocessResponse {

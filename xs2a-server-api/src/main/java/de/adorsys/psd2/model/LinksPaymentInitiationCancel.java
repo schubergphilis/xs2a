@@ -9,20 +9,20 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * A list of hyperlinks to be recognised by the TPP. The actual hyperlinks used in the response depend on the  dynamical decisions of the ASPSP when processing the request.  Remark: All links can be relative or full links, to be decided by the ASPSP.  Type of links admitted in this response, (further links might be added for ASPSP defined extensions):    * &#x27;startAuthorisation&#x27;:      In case, where just the authorisation process of the cancellation needs to be started,      but no additional data needs to be updated for time being (no authentication method to be selected,      no PSU identification nor PSU authentication data to be uploaded).   * &#x27;startAuthorisationWithPsuIdentification&#x27;:      In case where a PSU Identification needs to be updated when starting the cancellation authorisation:      The link to the cancellation-authorisations end-point, where the cancellation sub-resource has to be      generated while uploading the PSU identification data.   * &#x27;startAuthorisationWithPsuAuthentication&#x27;:      In case of a yet to be created authorisation sub-resource: The link to the authorisation end-point,      where the authorisation sub-resource has to be generated while uploading the PSU authentication data.
+ * A list of hyperlinks to be recognised by the TPP. The actual hyperlinks used in the response depend on the  dynamical decisions of the ASPSP when processing the request.  Remark: All links can be relative or full links, to be decided by the ASPSP.  Type of links admitted in this response, (further links might be added for ASPSP defined extensions):    * &#x27;startAuthorization&#x27;:      In case, where just the authorization process of the cancellation needs to be started,      but no additional data needs to be updated for time being (no authentication method to be selected,      no PSU identification nor PSU authentication data to be uploaded).   * &#x27;startAuthorizationWithPsuIdentification&#x27;:      In case where a PSU Identification needs to be updated when starting the cancellation authorization:      The link to the cancellation-authorisations end-point, where the cancellation sub-resource has to be      generated while uploading the PSU identification data.   * &#x27;startAuthorizationWithPsuAuthentication&#x27;:      In case of a yet to be created authorization sub-resource: The link to the authorization end-point,      where the authorization sub-resource has to be generated while uploading the PSU authentication data.
  */
-@ApiModel(description = "A list of hyperlinks to be recognised by the TPP. The actual hyperlinks used in the response depend on the  dynamical decisions of the ASPSP when processing the request.  Remark: All links can be relative or full links, to be decided by the ASPSP.  Type of links admitted in this response, (further links might be added for ASPSP defined extensions):    * 'startAuthorisation':      In case, where just the authorisation process of the cancellation needs to be started,      but no additional data needs to be updated for time being (no authentication method to be selected,      no PSU identification nor PSU authentication data to be uploaded).   * 'startAuthorisationWithPsuIdentification':      In case where a PSU Identification needs to be updated when starting the cancellation authorisation:      The link to the cancellation-authorisations end-point, where the cancellation sub-resource has to be      generated while uploading the PSU identification data.   * 'startAuthorisationWithPsuAuthentication':      In case of a yet to be created authorisation sub-resource: The link to the authorisation end-point,      where the authorisation sub-resource has to be generated while uploading the PSU authentication data. ")
+@ApiModel(description = "A list of hyperlinks to be recognised by the TPP. The actual hyperlinks used in the response depend on the  dynamical decisions of the ASPSP when processing the request.  Remark: All links can be relative or full links, to be decided by the ASPSP.  Type of links admitted in this response, (further links might be added for ASPSP defined extensions):    * 'startAuthorization':      In case, where just the authorization process of the cancellation needs to be started,      but no additional data needs to be updated for time being (no authentication method to be selected,      no PSU identification nor PSU authentication data to be uploaded).   * 'startAuthorizationWithPsuIdentification':      In case where a PSU Identification needs to be updated when starting the cancellation authorization:      The link to the cancellation-authorisations end-point, where the cancellation sub-resource has to be      generated while uploading the PSU identification data.   * 'startAuthorizationWithPsuAuthentication':      In case of a yet to be created authorization sub-resource: The link to the authorization end-point,      where the authorization sub-resource has to be generated while uploading the PSU authentication data. ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class LinksPaymentInitiationCancel extends HashMap<String, String> {
 
-    @JsonProperty("startAuthorisation")
+    @JsonProperty("startAuthorization")
     private String startAuthorisation = null;
 
-    @JsonProperty("startAuthorisationWithPsuIdentification")
+    @JsonProperty("startAuthorizationWithPsuIdentification")
     private String startAuthorisationWithPsuIdentification = null;
 
-    @JsonProperty("startAuthorisationWithPsuAuthentication")
+    @JsonProperty("startAuthorizationWithPsuAuthentication")
     private String startAuthorisationWithPsuAuthentication = null;
 
     public LinksPaymentInitiationCancel startAuthorisation(String startAuthorisation) {
@@ -31,9 +31,9 @@ public class LinksPaymentInitiationCancel extends HashMap<String, String> {
     }
 
     /**
-     * Get startAuthorisation
+     * Get startAuthorization
      *
-     * @return startAuthorisation
+     * @return startAuthorization
      **/
     @ApiModelProperty
     public String getStartAuthorisation() {
@@ -50,9 +50,9 @@ public class LinksPaymentInitiationCancel extends HashMap<String, String> {
     }
 
     /**
-     * Get startAuthorisationWithPsuIdentification
+     * Get startAuthorizationWithPsuIdentification
      *
-     * @return startAuthorisationWithPsuIdentification
+     * @return startAuthorizationWithPsuIdentification
      **/
     @ApiModelProperty
     public String getStartAuthorisationWithPsuIdentification() {
@@ -69,9 +69,9 @@ public class LinksPaymentInitiationCancel extends HashMap<String, String> {
     }
 
     /**
-     * Get startAuthorisationWithPsuAuthentication
+     * Get startAuthorizationWithPsuAuthentication
      *
-     * @return startAuthorisationWithPsuAuthentication
+     * @return startAuthorizationWithPsuAuthentication
      **/
     @ApiModelProperty
     public String getStartAuthorisationWithPsuAuthentication() {
@@ -107,9 +107,9 @@ public class LinksPaymentInitiationCancel extends HashMap<String, String> {
         StringBuilder sb = new StringBuilder();
         sb.append("class LinksPaymentInitiationCancel {\n");
         sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-        sb.append("    startAuthorisation: ").append(toIndentedString(startAuthorisation)).append("\n");
-        sb.append("    startAuthorisationWithPsuIdentification: ").append(toIndentedString(startAuthorisationWithPsuIdentification)).append("\n");
-        sb.append("    startAuthorisationWithPsuAuthentication: ").append(toIndentedString(startAuthorisationWithPsuAuthentication)).append("\n");
+        sb.append("    startAuthorization: ").append(toIndentedString(startAuthorisation)).append("\n");
+        sb.append("    startAuthorizationWithPsuIdentification: ").append(toIndentedString(startAuthorisationWithPsuIdentification)).append("\n");
+        sb.append("    startAuthorizationWithPsuAuthentication: ").append(toIndentedString(startAuthorisationWithPsuAuthentication)).append("\n");
         sb.append("}");
         return sb.toString();
     }

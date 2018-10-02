@@ -34,7 +34,7 @@ public class SecurityUtil {
         return null;
     }
 
-    public static String getTppAutorisationNumber() {
+    public static String getTppAutorizationNumber() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (Objects.nonNull(authentication)) {
             return authentication.getName();

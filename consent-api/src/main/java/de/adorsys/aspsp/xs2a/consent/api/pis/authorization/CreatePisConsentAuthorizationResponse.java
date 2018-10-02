@@ -14,10 +14,17 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.config.factory;
+package de.adorsys.aspsp.xs2a.consent.api.pis.authorization;
 
-/**
- * This is specific factory intended to retrieve specific, stage-dependent SCA update authorisation services
- */
-public interface ScaStageAuthorisationFactory extends ServiceFactory {
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+@Data
+@AllArgsConstructor
+@ApiModel(description = "PIS consent authorization", value = "PisConsentauthorization")
+public class CreatePisConsentAuthorizationResponse {
+    @ApiModelProperty(value = "ID of the authorization", required = true, example = "6dc3d5b3-5023-7848-3853-f7200a64e80d")
+    private String authorizationId;
 }

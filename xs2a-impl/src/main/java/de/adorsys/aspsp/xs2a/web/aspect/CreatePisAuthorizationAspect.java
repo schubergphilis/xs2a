@@ -19,7 +19,7 @@ package de.adorsys.aspsp.xs2a.web.aspect;
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorisationResponse;
+import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorizationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.service.message.MessageService;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
@@ -38,9 +38,9 @@ public class CreatePisAuthorizationAspect extends AbstractLinkAspect<PaymentCont
     }
 
     @AfterReturning(pointcut = "execution(* de.adorsys.aspsp.xs2a.service.ConsentService.createPisConsentAuthorization(..)) && args(paymentId, paymentType)", returning = "result", argNames = "result,paymentId,paymentType")
-    public ResponseObject<Xsa2CreatePisConsentAuthorisationResponse> createPisConsentAuthorizationAspect(ResponseObject<Xsa2CreatePisConsentAuthorisationResponse> result, String paymentId, PaymentType paymentType) {
+    public ResponseObject<Xsa2CreatePisConsentAuthorizationResponse> createPisConsentAuthorizationAspect(ResponseObject<Xsa2CreatePisConsentAuthorizationResponse> result, String paymentId, PaymentType paymentType) {
         if (!result.hasError()) {
-            Xsa2CreatePisConsentAuthorisationResponse body = result.getBody();
+            Xsa2CreatePisConsentAuthorizationResponse body = result.getBody();
             body.setLinks(buildLink(paymentType.getValue(), paymentId, body.getAuthorizationId()));
             return result;
         }
@@ -49,7 +49,7 @@ public class CreatePisAuthorizationAspect extends AbstractLinkAspect<PaymentCont
 
     private Links buildLink(String paymentService, String paymentId, String authorizationId) {
         Links links = new Links();
-        links.setStartAuthorisationWithPsuAuthentication(buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorizationId));
+        links.setStartAuthorizationWithPsuAuthentication(buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorizationId));
         return links;
     }
 }

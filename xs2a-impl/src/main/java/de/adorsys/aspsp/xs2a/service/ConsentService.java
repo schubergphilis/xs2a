@@ -16,7 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
@@ -26,7 +26,7 @@ import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.exception.MessageCategory;
 import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.authorization.ais.AisAuthorizationService;
-import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorisationService;
+import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorizationService;
 import de.adorsys.aspsp.xs2a.service.consent.AisConsentService;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aAisConsentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
@@ -52,7 +52,7 @@ public class ConsentService { //TODO change format of consentRequest to mandator
     private final AisConsentService aisConsentService;
     private final AisAuthorizationService aisAuthorizationService;
     private final AspspProfileServiceWrapper aspspProfileService;
-    private final PisScaAuthorisationService pisAuthorizationService;
+    private final PisScaAuthorizationService pisAuthorizationService;
     private final TppService tppService;
 
     /**
@@ -181,12 +181,12 @@ public class ConsentService { //TODO change format of consentRequest to mandator
                                         .build());
     }
 
-    public ResponseObject<Xsa2CreatePisConsentAuthorisationResponse> createPisConsentAuthorization(String paymentId, PaymentType paymentType) {
-        return pisAuthorizationService.createConsentAuthorisation(paymentId, paymentType)
-                   .map(resp -> ResponseObject.<Xsa2CreatePisConsentAuthorisationResponse>builder()
+    public ResponseObject<Xsa2CreatePisConsentAuthorizationResponse> createPisConsentAuthorization(String paymentId, PaymentType paymentType) {
+        return pisAuthorizationService.createConsentAuthorization(paymentId, paymentType)
+                   .map(resp -> ResponseObject.<Xsa2CreatePisConsentAuthorizationResponse>builder()
                                     .body(resp)
                                     .build())
-                   .orElseGet(() -> ResponseObject.<Xsa2CreatePisConsentAuthorisationResponse>builder()
+                   .orElseGet(() -> ResponseObject.<Xsa2CreatePisConsentAuthorizationResponse>builder()
                                         .fail(new MessageError(MessageErrorCode.PAYMENT_FAILED))
                                         .build());
     }

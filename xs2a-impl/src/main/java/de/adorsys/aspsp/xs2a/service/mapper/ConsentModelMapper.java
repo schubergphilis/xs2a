@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.service.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.adorsys.aspsp.xs2a.consent.api.CmsScaMethod;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.consent.*;
 import de.adorsys.psd2.api.ConsentApi;
@@ -62,7 +62,7 @@ public class ConsentModelMapper {
                    .orElse(null);
     }
 
-    public StartScaprocessResponse mapToStartScaProcessResponse(Xsa2CreatePisConsentAuthorisationResponse response) {
+    public StartScaprocessResponse mapToStartScaProcessResponse(Xsa2CreatePisConsentAuthorizationResponse response) {
         return Optional.ofNullable(response)
                    .map(r -> new StartScaprocessResponse()
                                  .scaStatus(ScaStatus.valueOf(r.getScaStatus()))
@@ -234,11 +234,11 @@ public class ConsentModelMapper {
         return updatePsuData;
     }
 
-    public UpdatePisConsentPsuDataRequest mapToPisUpdatePsuData(String psuId, String paymentId, String authorisationId, String paymentService, Map body) {
+    public UpdatePisConsentPsuDataRequest mapToPisUpdatePsuData(String psuId, String paymentId, String authorizationId, String paymentService, Map body) {
         UpdatePisConsentPsuDataRequest request = new UpdatePisConsentPsuDataRequest();
         request.setPsuId(psuId);
         request.setPaymentId(paymentId);
-        request.setAuthorizationId(authorisationId);
+        request.setAuthorizationId(authorizationId);
         request.setPaymentService(paymentService);
         if (!body.isEmpty()) {
             Optional.ofNullable(body.get("psuData"))

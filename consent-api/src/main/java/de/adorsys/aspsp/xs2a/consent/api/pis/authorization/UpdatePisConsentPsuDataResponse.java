@@ -14,17 +14,23 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis.authorisation;
+package de.adorsys.aspsp.xs2a.consent.api.pis.authorization;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import de.adorsys.aspsp.xs2a.consent.api.CmsScaMethod;
+import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
-@ApiModel(description = "PIS consent authorisation", value = "PisConsentAuthorisation")
-public class CreatePisConsentAuthorisationResponse {
-    @ApiModelProperty(value = "ID of the Authorisation", required = true, example = "6dc3d5b3-5023-7848-3853-f7200a64e80d")
-    private String authorizationId;
+public class UpdatePisConsentPsuDataResponse {
+    private CmsScaStatus scaStatus;
+    private CmsScaMethod chosenScaMethod;
+    private List<CmsScaMethod> availableScaMethods;
+
+    public UpdatePisConsentPsuDataResponse(CmsScaStatus scaStatus) {
+        this.scaStatus = scaStatus;
+    }
 }

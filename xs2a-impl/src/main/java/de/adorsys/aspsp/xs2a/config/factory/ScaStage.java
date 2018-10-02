@@ -17,7 +17,7 @@
 package de.adorsys.aspsp.xs2a.config.factory;
 
 import de.adorsys.aspsp.xs2a.service.PisConsentDataService;
-import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorisationService;
+import de.adorsys.aspsp.xs2a.service.authorization.pis.PisAuthorizationService;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.SpiCmsPisMapper;
 import de.adorsys.aspsp.xs2a.spi.service.PaymentSpi;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +27,7 @@ import java.util.function.BiFunction;
 @RequiredArgsConstructor
 public abstract class ScaStage<T, U, R> implements BiFunction<T, U, R> {
     protected final PaymentSpi paymentSpi;
-    protected final PisAuthorisationService pisAuthorisationService;
+    protected final PisAuthorizationService pisAuthorizationService;
     protected final SpiCmsPisMapper spiCmsPisMapper;
     protected final PisConsentDataService pisConsentDataService;
 }

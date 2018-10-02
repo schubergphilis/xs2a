@@ -16,21 +16,15 @@
 
 package de.adorsys.aspsp.xs2a.service.authorization.pis;
 
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aUpdatePisConsentPsuDataResponse;
-import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorisationResponse;
+import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorizationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 
 import java.util.Optional;
 
-public class OauthPisScaAuthorisationService implements PisScaAuthorisationService {
-    @Override
-    public Optional<Xsa2CreatePisConsentAuthorisationResponse> createConsentAuthorisation(String paymentId, PaymentType paymentType) {
-        return null;
-    }
+public interface PisScaAuthorizationService {
+    Optional<Xsa2CreatePisConsentAuthorizationResponse> createConsentAuthorization(String paymentId, PaymentType paymentType);
 
-    @Override
-    public Optional<Xs2aUpdatePisConsentPsuDataResponse> updateConsentPsuData(UpdatePisConsentPsuDataRequest request) {
-        return Optional.empty();
-    }
+    Optional<Xs2aUpdatePisConsentPsuDataResponse> updateConsentPsuData(UpdatePisConsentPsuDataRequest request);
 }

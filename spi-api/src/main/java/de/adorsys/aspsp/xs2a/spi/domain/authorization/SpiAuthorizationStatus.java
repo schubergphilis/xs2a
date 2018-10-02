@@ -14,21 +14,9 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis.authorisation;
+package de.adorsys.aspsp.xs2a.spi.domain.authorization;
 
-import de.adorsys.aspsp.xs2a.consent.api.CmsAspspConsentData;
-import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
-import lombok.Data;
-
-@Data
-public class UpdatePisConsentPsuDataRequest {
-    private String paymentId;
-    private String authorizationId;
-    private String psuId;
-    private String password;
-    private String authenticationMethodId;
-    private CmsScaStatus scaStatus;
-    private String paymentService;
-    private CmsAspspConsentData cmsAspspConsentData;
-    private String scaAuthenticationData;
+public enum SpiAuthorizationStatus {
+    SUCCESS,
+    FAILURE;
 }

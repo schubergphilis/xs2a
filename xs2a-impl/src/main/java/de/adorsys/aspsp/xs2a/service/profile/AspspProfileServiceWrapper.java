@@ -152,7 +152,7 @@ public class AspspProfileServiceWrapper {
     /**
      * Reads value Authorisation start type (Explicit/Implicit) from ASPSP profile service
      *
-     * @return String value of authorisation start type
+     * @return String value of authorization start type
      */
     public Xs2aAuthorisationStartType getAuthorisationStartType() {
         return Xs2aAuthorisationStartType.valueOf(readAspspSettings().getAuthorisationStartType().name());

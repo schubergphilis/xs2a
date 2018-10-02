@@ -139,7 +139,7 @@ public class AspspRemoteUrls {
         return spiMockBaseUrl + "/consent/confirmation/pis/{psuId}/{sca-method-selected}";
     }
 
-    public String applyStrongUserAuthorisation() {
+    public String applyStrongUserAuthorization() {
         return spiMockBaseUrl + "/consent/confirmation/pis";
     }
 
@@ -157,7 +157,7 @@ public class AspspRemoteUrls {
      *
      * @return URL
      */
-    public String applyStrongUserAuthorisationForAis() {
+    public String applyStrongUserAuthorizationForAis() {
         return spiMockBaseUrl + "/consent/confirmation/ais";
     }
 

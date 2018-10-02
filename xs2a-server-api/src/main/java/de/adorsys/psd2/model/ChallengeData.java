@@ -10,9 +10,9 @@ import org.springframework.validation.annotation.Validated;
 import java.util.Objects;
 
 /**
- * It is contained in addition to the data element &#x27;chosenScaMethod&#x27; if challenge data is needed for SCA. In rare cases this attribute is also used in the context of the &#x27;startAuthorisationWithPsuAuthentication&#x27; link.
+ * It is contained in addition to the data element &#x27;chosenScaMethod&#x27; if challenge data is needed for SCA. In rare cases this attribute is also used in the context of the &#x27;startAuthorizationWithPsuAuthentication&#x27; link.
  */
-@ApiModel(description = "It is contained in addition to the data element 'chosenScaMethod' if challenge data is needed for SCA. In rare cases this attribute is also used in the context of the 'startAuthorisationWithPsuAuthentication' link. ")
+@ApiModel(description = "It is contained in addition to the data element 'chosenScaMethod' if challenge data is needed for SCA. In rare cases this attribute is also used in the context of the 'startAuthorizationWithPsuAuthentication' link. ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class ChallengeData {

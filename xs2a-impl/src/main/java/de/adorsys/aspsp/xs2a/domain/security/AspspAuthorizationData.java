@@ -14,23 +14,21 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.consent.api.pis.authorisation;
+package de.adorsys.aspsp.xs2a.domain.security;
 
-import de.adorsys.aspsp.xs2a.consent.api.CmsAspspConsentData;
-import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisPayment;
-import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
-import lombok.Data;
+import lombok.Value;
 
-import java.util.List;
-
-@Data
-public class GetPisConsentAuthorisationResponse {
+@Value
+public class AspspAuthorizationData {
     private String psuId;
-    private CmsScaStatus scaStatus;
-    private String consentId;
     private String password;
-    private List<PisPayment> payments;
-    private PisPaymentType paymentType;
-    private CmsAspspConsentData cmsAspspConsentData;
+    private String accessToken;
+    private String refreshToken;
+
+    public AspspAuthorizationData(String psuId, String password, String accessToken, String refreshToken) {
+        this.psuId = psuId;
+        this.password = password;
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }
 }

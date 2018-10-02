@@ -113,7 +113,7 @@ public class ProfileConfiguration {
     private boolean allPsd2Support;
 
     /**
-     * Type of authorisation start: IMPLICIT or EXPLICIT
+     * Type of authorization start: IMPLICIT or EXPLICIT
      */
     private AuthorisationStartType authorisationStartType;
 

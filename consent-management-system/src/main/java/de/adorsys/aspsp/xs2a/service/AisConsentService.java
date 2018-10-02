@@ -177,7 +177,7 @@ public class AisConsentService {
      * Get consent authorization
      *
      * @param consentId       id of consent
-     * @param authorizationId id of authorisation session
+     * @param authorizationId id of authorization session
      * @return AisConsentAuthorizationResponse
      */
     public Optional<AisConsentAuthorizationResponse> getAccountConsentAuthorizationById(String authorizationId, String consentId) {
@@ -190,7 +190,7 @@ public class AisConsentService {
     /**
      * Update consent authorization
      *
-     * @param authorizationId id of authorisation session
+     * @param authorizationId id of authorization session
      * @param consentId       id of consent
      * @param request         needed parameters for updating consent authorization
      * @return boolean

@@ -18,7 +18,7 @@ package de.adorsys.aspsp.xs2a.web.aspect;
 
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.Links;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aChosenScaMethod;
@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 public class UpdatePisConsentPsuDataAspect extends AbstractLinkAspect<PaymentController> {
-    private final static String PSU_AUTHORISATION_URL = "/v1/{paymentService}/{paymentId}/authorisations/{authorisationId}";
+    private final static String PSU_authorization_URL = "/v1/{paymentService}/{paymentId}/authorizations/{authorizationId}";
 
     public UpdatePisConsentPsuDataAspect(int maxNumberOfCharInTransactionJson, AspspProfileServiceWrapper aspspProfileService, JsonConverter jsonConverter, MessageService messageService) {
         super(maxNumberOfCharInTransactionJson, aspspProfileService, jsonConverter, messageService);
@@ -48,15 +48,15 @@ public class UpdatePisConsentPsuDataAspect extends AbstractLinkAspect<PaymentCon
 
             if (isScaStatusMethodAuthenticated(request.getScaStatus())) {
 
-                links.setSelectAuthenticationMethod(buildAuthorisationLink(request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
-                links.setUpdatePsuAuthentication(buildAuthorisationLink(request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
+                links.setSelectAuthenticationMethod(buildauthorizationLink(request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
+                links.setUpdatePsuAuthentication(buildauthorizationLink(request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
             } else if (isScaStatusMethodSelected(request.getAuthenticationMethodId(), request.getScaStatus())) {
 
-                links.setAuthoriseTransaction(buildAuthorisationLink(request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
+                links.setAuthoriseTransaction(buildauthorizationLink(request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
                 body.setChosenScaMethod(getChosenScaMethod(request.getAuthenticationMethodId()));
             } else if (isScaStatusFinalised(request.getScaAuthenticationData(), request.getScaStatus())) {
 
-                links.setScaStatus(buildAuthorisationLink(request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
+                links.setScaStatus(buildauthorizationLink(request.getPaymentService(), request.getPaymentId(), request.getAuthorizationId()));
             }
 
             body.setLinks(links);
@@ -80,8 +80,8 @@ public class UpdatePisConsentPsuDataAspect extends AbstractLinkAspect<PaymentCon
         return method;
     }
 
-    private String buildAuthorisationLink(String paymentService, String paymentId, String authorisationId) {
-        return buildPath(PSU_AUTHORISATION_URL, paymentService, paymentId, authorisationId);
+    private String buildauthorizationLink(String paymentService, String paymentId, String authorizationId) {
+        return buildPath(PSU_authorization_URL, paymentService, paymentId, authorizationId);
     }
 
     private boolean isScaStatusFinalised(String scaAuthenticationData, CmsScaStatus scaStatus) {

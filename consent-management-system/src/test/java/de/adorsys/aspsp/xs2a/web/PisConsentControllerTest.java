@@ -20,10 +20,7 @@ import de.adorsys.aspsp.xs2a.consent.api.CmsAspspConsentData;
 import de.adorsys.aspsp.xs2a.consent.api.CmsScaStatus;
 import de.adorsys.aspsp.xs2a.consent.api.PisConsentStatusResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.CreatePisConsentAuthorisationResponse;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.GetPisConsentAuthorisationResponse;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.*;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentResponse;
@@ -49,7 +46,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class PisConsentControllerTest {
 
-    private final String AUTHORISATION_ID = "345-9245-2359";
+    private final String AUTHORIZATION_ID = "345-9245-2359";
     private final String PAYMENT_ID = "33333-999999999";
     private final String CONSENT_ID = "12345";
     private final String STATUS_RECEIVED = "RECEIVED";
@@ -74,7 +71,7 @@ public class PisConsentControllerTest {
         when(pisConsentService.getConsentById(CONSENT_ID)).thenReturn(Optional.of(getPisConsentResponse()));
         when(pisConsentService.updateConsentStatusById(CONSENT_ID, RECEIVED)).thenReturn(Optional.of(Boolean.TRUE));
         when(pisConsentService.createAuthorization(PAYMENT_ID)).thenReturn(Optional.of(getCreatePisConsentAuthorisationResponse()));
-        when(pisConsentService.updateConsentAuthorization(AUTHORISATION_ID, getUpdatePisConsentPsuDataRequest())).thenReturn(Optional.of(getUpdatePisConsentPsuDataResponse()));
+        when(pisConsentService.updateConsentAuthorization(AUTHORIZATION_ID, getUpdatePisConsentPsuDataRequest())).thenReturn(Optional.of(getUpdatePisConsentPsuDataResponse()));
     }
 
     @Test
@@ -180,10 +177,10 @@ public class PisConsentControllerTest {
     @Test
     public void createConsentAuthorization_Success() {
         //Given
-        ResponseEntity<CreatePisConsentAuthorisationResponse> expected = new ResponseEntity<>(new CreatePisConsentAuthorisationResponse(AUTHORISATION_ID), HttpStatus.CREATED);
+        ResponseEntity<CreatePisConsentAuthorizationResponse> expected = new ResponseEntity<>(new CreatePisConsentAuthorizationResponse(AUTHORIZATION_ID), HttpStatus.CREATED);
 
         //When
-        ResponseEntity<CreatePisConsentAuthorisationResponse> actual = pisConsentController.createConsentAuthorization(PAYMENT_ID);
+        ResponseEntity<CreatePisConsentAuthorizationResponse> actual = pisConsentController.createConsentAuthorization(PAYMENT_ID);
 
         //Then
         assertEquals(actual, expected);
@@ -193,10 +190,10 @@ public class PisConsentControllerTest {
     public void createConsentAuthorization_Failure() {
         //Given
         when(pisConsentService.createAuthorization(WRONG_PAYMENT_ID)).thenReturn(Optional.empty());
-        ResponseEntity<CreatePisConsentAuthorisationResponse> expected = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        ResponseEntity<CreatePisConsentAuthorizationResponse> expected = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         //When
-        ResponseEntity<CreatePisConsentAuthorisationResponse> actual = pisConsentController.createConsentAuthorization(WRONG_PAYMENT_ID);
+        ResponseEntity<CreatePisConsentAuthorizationResponse> actual = pisConsentController.createConsentAuthorization(WRONG_PAYMENT_ID);
 
         //Then
         assertEquals(actual, expected);
@@ -208,7 +205,7 @@ public class PisConsentControllerTest {
         ResponseEntity<UpdatePisConsentPsuDataResponse> expected = new ResponseEntity<>(new UpdatePisConsentPsuDataResponse(CmsScaStatus.RECEIVED), HttpStatus.OK);
 
         //When
-        ResponseEntity<UpdatePisConsentPsuDataResponse> actual = pisConsentController.updateConsentAuthorization(AUTHORISATION_ID, getUpdatePisConsentPsuDataRequest());
+        ResponseEntity<UpdatePisConsentPsuDataResponse> actual = pisConsentController.updateConsentAuthorization(AUTHORIZATION_ID, getUpdatePisConsentPsuDataRequest());
 
         //Then
         assertEquals(actual, expected);
@@ -229,15 +226,15 @@ public class PisConsentControllerTest {
 
     @Test
     public void getConsentAuthorization_Success() {
-        GetPisConsentAuthorisationResponse response = getGetPisConsentAuthorisationResponse();
+        GetPisConsentAuthorizationResponse response = getGetPisConsentAuthorisationResponse();
         when(pisConsentService.getPisConsentAuthorizationById(any())).thenReturn(Optional.of(response));
 
         // Given
-        GetPisConsentAuthorisationResponse expectedResponse = getGetPisConsentAuthorisationResponse();
+        GetPisConsentAuthorizationResponse expectedResponse = getGetPisConsentAuthorisationResponse();
 
         // When
-        ResponseEntity<GetPisConsentAuthorisationResponse> result =
-            pisConsentController.getConsentAuthorization(AUTHORISATION_ID);
+        ResponseEntity<GetPisConsentAuthorizationResponse> result =
+            pisConsentController.getConsentAuthorization(AUTHORIZATION_ID);
 
         // Then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -249,16 +246,16 @@ public class PisConsentControllerTest {
         when(pisConsentService.getPisConsentAuthorizationById(any())).thenReturn(Optional.empty());
 
         // When
-        ResponseEntity<GetPisConsentAuthorisationResponse> result =
-            pisConsentController.getConsentAuthorization(AUTHORISATION_ID);
+        ResponseEntity<GetPisConsentAuthorizationResponse> result =
+            pisConsentController.getConsentAuthorization(AUTHORIZATION_ID);
 
         // Then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(result.getBody()).isNull();
     }
 
-    private GetPisConsentAuthorisationResponse getGetPisConsentAuthorisationResponse() {
-        GetPisConsentAuthorisationResponse response = new GetPisConsentAuthorisationResponse();
+    private GetPisConsentAuthorizationResponse getGetPisConsentAuthorisationResponse() {
+        GetPisConsentAuthorizationResponse response = new GetPisConsentAuthorizationResponse();
         response.setPsuId(PSU_ID);
         response.setScaStatus(CmsScaStatus.STARTED);
         response.setConsentId(CONSENT_ID);
@@ -281,8 +278,8 @@ public class PisConsentControllerTest {
         return new PisConsentResponse();
     }
 
-    private CreatePisConsentAuthorisationResponse getCreatePisConsentAuthorisationResponse() {
-        return new CreatePisConsentAuthorisationResponse(AUTHORISATION_ID);
+    private CreatePisConsentAuthorizationResponse getCreatePisConsentAuthorisationResponse() {
+        return new CreatePisConsentAuthorizationResponse(AUTHORIZATION_ID);
     }
 
     private UpdatePisConsentPsuDataRequest getUpdatePisConsentPsuDataRequest() {

@@ -33,7 +33,7 @@ public class ServiceLocatorFactoryConfiguration {
     @Bean
     public ServiceLocatorFactoryBean scaUpdateAuthorisationFactory() {
         ServiceLocatorFactoryBean serviceLocatorFactoryBean = new ServiceLocatorFactoryBean();
-        serviceLocatorFactoryBean.setServiceLocatorInterface(ScaStageAuthorisationFactory.class);
+        serviceLocatorFactoryBean.setServiceLocatorInterface(ScaStageAuthorizationFactory.class);
         return serviceLocatorFactoryBean;
     }
 }

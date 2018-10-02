@@ -18,10 +18,10 @@ package de.adorsys.aspsp.xs2a.web;
 
 import de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus;
 import de.adorsys.aspsp.xs2a.consent.api.PisConsentStatusResponse;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.CreatePisConsentAuthorisationResponse;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.GetPisConsentAuthorisationResponse;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.CreatePisConsentAuthorizationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.GetPisConsentAuthorizationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentResponse;
@@ -95,7 +95,7 @@ public class PisConsentController {
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Created"),
         @ApiResponse(code = 404, message = "Not Found")})
-    public ResponseEntity<CreatePisConsentAuthorisationResponse> createConsentAuthorization(
+    public ResponseEntity<CreatePisConsentAuthorizationResponse> createConsentAuthorization(
         @ApiParam(name = "payment-id", value = "The consent identification assigned to the created consent authorization.", example = "bf489af6-a2cb-4b75-b71d-d66d58b934d7")
         @PathVariable("payment-id") String paymentId) {
         return pisConsentService.createAuthorization(paymentId)
@@ -122,7 +122,7 @@ public class PisConsentController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "OK"),
         @ApiResponse(code = 404, message = "Not Found")})
-    public ResponseEntity<GetPisConsentAuthorisationResponse> getConsentAuthorization(
+    public ResponseEntity<GetPisConsentAuthorizationResponse> getConsentAuthorization(
         @ApiParam(name = "authorization-id", value = "The consent authorization identification assigned to the created authorization.", example = "bf489af6-a2cb-4b75-b71d-d66d58b934d7")
         @PathVariable("authorization-id") String authorizationId) {
         return pisConsentService.getPisConsentAuthorizationById(authorizationId)

@@ -9,20 +9,20 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * Type of links admitted in this response, (further links might be added for ASPSP defined extensions):    * &#x27;startAuthorisation&#x27;:      In case, where an explicit start of the transaction authorisation is needed, but no more data needs to be updated (no authentication method to be selected, no PSU identification nor PSU authentication data to be uploaded).   * &#x27;startAuthorisationWithPsuIdentification&#x27;:      The link to the authorisation end-point, where the authorisation sub-resource has to be generated while uploading the PSU identification data.   * &#x27;startAuthorisationWithPsuAuthentication&#x27;:     The link to the authorisation end-point, where an authorisation sub-resource has to be generated while uploading the PSU authentication data.   * &#x27;self&#x27;:      The link to the payment initiation resource created by this request. This link can be used to retrieve the resource data.    * &#x27;status&#x27;:      The link to retrieve the transaction status of the payment initiation.
+ * Type of links admitted in this response, (further links might be added for ASPSP defined extensions):    * &#x27;startAuthorization&#x27;:      In case, where an explicit start of the transaction authorization is needed, but no more data needs to be updated (no authentication method to be selected, no PSU identification nor PSU authentication data to be uploaded).   * &#x27;startAuthorizationWithPsuIdentification&#x27;:      The link to the authorization end-point, where the authorization sub-resource has to be generated while uploading the PSU identification data.   * &#x27;startAuthorizationWithPsuAuthentication&#x27;:     The link to the authorization end-point, where an authorization sub-resource has to be generated while uploading the PSU authentication data.   * &#x27;self&#x27;:      The link to the payment initiation resource created by this request. This link can be used to retrieve the resource data.    * &#x27;status&#x27;:      The link to retrieve the transaction status of the payment initiation.
  */
-@ApiModel(description = "Type of links admitted in this response, (further links might be added for ASPSP defined extensions):    * 'startAuthorisation':      In case, where an explicit start of the transaction authorisation is needed, but no more data needs to be updated (no authentication method to be selected, no PSU identification nor PSU authentication data to be uploaded).   * 'startAuthorisationWithPsuIdentification':      The link to the authorisation end-point, where the authorisation sub-resource has to be generated while uploading the PSU identification data.   * 'startAuthorisationWithPsuAuthentication':     The link to the authorisation end-point, where an authorisation sub-resource has to be generated while uploading the PSU authentication data.   * 'self':      The link to the payment initiation resource created by this request. This link can be used to retrieve the resource data.    * 'status':      The link to retrieve the transaction status of the payment initiation. ")
+@ApiModel(description = "Type of links admitted in this response, (further links might be added for ASPSP defined extensions):    * 'startAuthorization':      In case, where an explicit start of the transaction authorization is needed, but no more data needs to be updated (no authentication method to be selected, no PSU identification nor PSU authentication data to be uploaded).   * 'startAuthorizationWithPsuIdentification':      The link to the authorization end-point, where the authorization sub-resource has to be generated while uploading the PSU identification data.   * 'startAuthorizationWithPsuAuthentication':     The link to the authorization end-point, where an authorization sub-resource has to be generated while uploading the PSU authentication data.   * 'self':      The link to the payment initiation resource created by this request. This link can be used to retrieve the resource data.    * 'status':      The link to retrieve the transaction status of the payment initiation. ")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2018-08-09T18:41:17.591+02:00[Europe/Berlin]")
 public class LinksPaymentInitiationMultiLevelSca extends HashMap<String, String> {
 
-    @JsonProperty("startAuthorisation")
+    @JsonProperty("startAuthorization")
     private String startAuthorisation = null;
 
-    @JsonProperty("startAuthorisationWithPsuIdentification")
+    @JsonProperty("startAuthorizationWithPsuIdentification")
     private String startAuthorisationWithPsuIdentification = null;
 
-    @JsonProperty("startAuthorisationWithPsuAuthentication")
+    @JsonProperty("startAuthorizationWithPsuAuthentication")
     private String startAuthorisationWithPsuAuthentication = null;
 
     @JsonProperty("self")
@@ -37,9 +37,9 @@ public class LinksPaymentInitiationMultiLevelSca extends HashMap<String, String>
     }
 
     /**
-     * Get startAuthorisation
+     * Get startAuthorization
      *
-     * @return startAuthorisation
+     * @return startAuthorization
      **/
     @ApiModelProperty
     public String getStartAuthorisation() {
@@ -56,9 +56,9 @@ public class LinksPaymentInitiationMultiLevelSca extends HashMap<String, String>
     }
 
     /**
-     * Get startAuthorisationWithPsuIdentification
+     * Get startAuthorizationWithPsuIdentification
      *
-     * @return startAuthorisationWithPsuIdentification
+     * @return startAuthorizationWithPsuIdentification
      **/
     @ApiModelProperty
     public String getStartAuthorisationWithPsuIdentification() {
@@ -75,9 +75,9 @@ public class LinksPaymentInitiationMultiLevelSca extends HashMap<String, String>
     }
 
     /**
-     * Get startAuthorisationWithPsuAuthentication
+     * Get startAuthorizationWithPsuAuthentication
      *
-     * @return startAuthorisationWithPsuAuthentication
+     * @return startAuthorizationWithPsuAuthentication
      **/
     @ApiModelProperty
     public String getStartAuthorisationWithPsuAuthentication() {
@@ -153,9 +153,9 @@ public class LinksPaymentInitiationMultiLevelSca extends HashMap<String, String>
         StringBuilder sb = new StringBuilder();
         sb.append("class LinksPaymentInitiationMultiLevelSca {\n");
         sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-        sb.append("    startAuthorisation: ").append(toIndentedString(startAuthorisation)).append("\n");
-        sb.append("    startAuthorisationWithPsuIdentification: ").append(toIndentedString(startAuthorisationWithPsuIdentification)).append("\n");
-        sb.append("    startAuthorisationWithPsuAuthentication: ").append(toIndentedString(startAuthorisationWithPsuAuthentication)).append("\n");
+        sb.append("    startAuthorization: ").append(toIndentedString(startAuthorisation)).append("\n");
+        sb.append("    startAuthorizationWithPsuIdentification: ").append(toIndentedString(startAuthorisationWithPsuIdentification)).append("\n");
+        sb.append("    startAuthorizationWithPsuAuthentication: ").append(toIndentedString(startAuthorisationWithPsuAuthentication)).append("\n");
         sb.append("    self: ").append(toIndentedString(self)).append("\n");
         sb.append("    status: ").append(toIndentedString(status)).append("\n");
         sb.append("}");

@@ -21,9 +21,9 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.proto.CreatePisConsentResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.consent.CreatePisConsentData;
-import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorisationResponse;
+import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorizationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.*;
-import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorisationService;
+import de.adorsys.aspsp.xs2a.service.authorization.pis.PisScaAuthorizationService;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
 import de.adorsys.aspsp.xs2a.service.profile.AspspProfileServiceWrapper;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
@@ -51,7 +51,7 @@ public class PisConsentService {
     private final PisConsentRemoteUrls remotePisConsentUrls;
     private final Xs2aPisConsentMapper pisConsentMapper;
     private final AspspProfileServiceWrapper profileService;
-    private final PisScaAuthorisationService pisScaAuthorisationService;
+    private final PisScaAuthorizationService pisScaAuthorizationService;
 
     public ResponseObject createPisConsent(Object payment, Object xs2aResponse, PaymentRequestParameters requestParameters, TppInfo tppInfo) {
         CreatePisConsentData consentData = getPisConsentData(payment, xs2aResponse, tppInfo, requestParameters, new AspspConsentData());
@@ -97,12 +97,12 @@ public class PisConsentService {
     private <T> Object createPisAuthorisationForImplicitApproach(T response, PaymentType paymentType) {
         if (EnumSet.of(SINGLE, PERIODIC).contains(paymentType)) {
             PaymentInitialisationResponse resp = (PaymentInitialisationResponse) response;
-            return pisScaAuthorisationService.createConsentAuthorisation(resp.getPaymentId(), paymentType)
+            return pisScaAuthorizationService.createConsentAuthorization(resp.getPaymentId(), paymentType)
                        .map(r -> extendResponseFieldsWithAuthData(r, resp))
                        .orElseGet(() -> resp);
         } else {
             List<PaymentInitialisationResponse> responses = (List<PaymentInitialisationResponse>) response;
-            return pisScaAuthorisationService.createConsentAuthorisation(responses.get(0).getPaymentId(), paymentType)
+            return pisScaAuthorizationService.createConsentAuthorization(responses.get(0).getPaymentId(), paymentType)
                        .map(r -> responses.stream()
                                      .map(pr -> extendResponseFieldsWithAuthData(r, pr))
                                      .collect(Collectors.toList()))
@@ -110,7 +110,7 @@ public class PisConsentService {
         }
     }
 
-    private PaymentInitialisationResponse extendResponseFieldsWithAuthData(Xsa2CreatePisConsentAuthorisationResponse authorisationResponse, PaymentInitialisationResponse response) {
+    private PaymentInitialisationResponse extendResponseFieldsWithAuthData(Xsa2CreatePisConsentAuthorizationResponse authorisationResponse, PaymentInitialisationResponse response) {
         response.setAuthorizationId(authorisationResponse.getAuthorizationId());
         response.setScaStatus(authorisationResponse.getScaStatus());
         return response;

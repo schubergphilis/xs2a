@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain.authorisation;
+package de.adorsys.aspsp.xs2a.config.factory;
 
-public enum SpiAuthorisationStatus {
-    SUCCESS,
-    FAILURE;
+/**
+ * This is specific factory intended to retrieve specific, stage-dependent SCA update authorization services
+ */
+public interface ScaStageAuthorizationFactory extends ServiceFactory {
 }

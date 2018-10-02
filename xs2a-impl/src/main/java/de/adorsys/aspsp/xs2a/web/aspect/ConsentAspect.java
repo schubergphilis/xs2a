@@ -74,9 +74,9 @@ public class ConsentAspect extends AbstractLinkAspect<ConsentController> {
 
     private void buildLinkForEmbeddedScaApproach(CreateConsentResponse response, Links links) {
         if (Xs2aAuthorisationStartType.EXPLICIT == aspspProfileService.getAuthorisationStartType()) {
-            links.setStartAuthorisation(buildPath("/v1/consents/{consentId}/authorisations", response.getConsentId()));
+            links.setStartAuthorization(buildPath("/v1/consents/{consentId}/authorizations", response.getConsentId()));
         } else {
-            links.setStartAuthorisationWithPsuAuthentication(buildPath("/v1/consents/{consentId}/authorisations/{authorisationId}", response.getConsentId(), response.getAuthorizationId()));
+            links.setStartAuthorizationWithPsuAuthentication(buildPath("/v1/consents/{consentId}/authorizations/{authorizationId}", response.getConsentId(), response.getAuthorizationId()));
         }
     }
 
@@ -100,21 +100,21 @@ public class ConsentAspect extends AbstractLinkAspect<ConsentController> {
 
     private Links buildLinksForPsuAuthenticatedConsentResponse(UpdateConsentPsuDataReq request) {
         Links links = new Links();
-        links.setSelectAuthenticationMethod(buildPath("/v1/consents/{consentId}/authorisations/{authorisationId}", request.getConsentId(), request.getAuthorizationId()));
+        links.setSelectAuthenticationMethod(buildPath("/v1/consents/{consentId}/authorizations/{authorizationId}", request.getConsentId(), request.getAuthorizationId()));
 
         return links;
     }
 
     private Links buildLinksForScaMethodSelectedConsentResponse(UpdateConsentPsuDataReq request) {
         Links links = new Links();
-        links.setAuthoriseTransaction(buildPath("/v1/consents/{consentId}/authorisations/{authorisationId}", request.getConsentId(), request.getAuthorizationId()));
+        links.setAuthoriseTransaction(buildPath("/v1/consents/{consentId}/authorizations/{authorizationId}", request.getConsentId(), request.getAuthorizationId()));
 
         return links;
     }
 
     private Links buildLinksForFinalisedConsentResponse(UpdateConsentPsuDataReq request) {
         Links links = new Links();
-        links.setScaStatus(buildPath("/v1/consents/{consentId}/authorisations/{authorisationId}", request.getConsentId(), request.getAuthorizationId()));
+        links.setScaStatus(buildPath("/v1/consents/{consentId}/authorizations/{authorizationId}", request.getConsentId(), request.getAuthorizationId()));
 
         return links;
     }

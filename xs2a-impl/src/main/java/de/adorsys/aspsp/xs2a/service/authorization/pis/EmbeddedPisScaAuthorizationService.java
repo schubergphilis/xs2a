@@ -16,9 +16,9 @@
 
 package de.adorsys.aspsp.xs2a.service.authorization.pis;
 
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataRequest;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataRequest;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aUpdatePisConsentPsuDataResponse;
-import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorisationResponse;
+import de.adorsys.aspsp.xs2a.domain.consent.Xsa2CreatePisConsentAuthorizationResponse;
 import de.adorsys.aspsp.xs2a.domain.pis.PaymentType;
 import de.adorsys.aspsp.xs2a.service.mapper.consent.Xs2aPisConsentMapper;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ import lombok.RequiredArgsConstructor;
 import java.util.Optional;
 
 @RequiredArgsConstructor
-public class EmbeddedPisScaAuthorisationService implements PisScaAuthorisationService {
-    private final PisAuthorisationService authorisationService;
+public class EmbeddedPisScaAuthorizationService implements PisScaAuthorizationService {
+    private final PisAuthorizationService authorizationService;
     private final Xs2aPisConsentMapper pisConsentMapper;
 
     /**
@@ -38,8 +38,8 @@ public class EmbeddedPisScaAuthorisationService implements PisScaAuthorisationSe
      * @return create consent authorization response, which contains authorization id, sca status, payment type and links
      */
     @Override
-    public Optional<Xsa2CreatePisConsentAuthorisationResponse> createConsentAuthorisation(String paymentId, PaymentType paymentType) {
-        return pisConsentMapper.mapToXsa2CreatePisConsentAuthorizationResponse(authorisationService.createPisConsentAuthorisation(paymentId), paymentType);
+    public Optional<Xsa2CreatePisConsentAuthorizationResponse> createConsentAuthorization(String paymentId, PaymentType paymentType) {
+        return pisConsentMapper.mapToXsa2CreatePisConsentAuthorizationResponse(authorizationService.createPisConsentAuthorization(paymentId), paymentType);
     }
 
     /**
@@ -50,6 +50,6 @@ public class EmbeddedPisScaAuthorisationService implements PisScaAuthorisationSe
      */
     @Override
     public Optional<Xs2aUpdatePisConsentPsuDataResponse> updateConsentPsuData(UpdatePisConsentPsuDataRequest request) {
-        return pisConsentMapper.mapToXs2aUpdatePisConsentPsuDataResponse(authorisationService.updatePisConsentAuthorisation(request));
+        return pisConsentMapper.mapToXs2aUpdatePisConsentPsuDataResponse(authorizationService.updatePisConsentAuthorization(request));
     }
 }
