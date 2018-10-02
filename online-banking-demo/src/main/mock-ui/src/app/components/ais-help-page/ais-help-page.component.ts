@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { AisService } from '../../service/ais.service';
-import { ActivatedRoute, Router } from '@angular/router';
 
 
 @Component({
@@ -10,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class AisHelpPageComponent implements OnInit {
 
-  constructor(private route: ActivatedRoute, private router: Router, private aisService: AisService) {
+  constructor() {
   }
 
   ngOnInit() {

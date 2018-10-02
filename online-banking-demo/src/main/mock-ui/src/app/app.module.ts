@@ -66,8 +66,7 @@ registerLocaleData(localeDE);
     deps: [KeycloakService, ConfigService],
   }, {
     provide: LOCALE_ID, useValue: 'de'
-  },
-  ],
+  }],
   bootstrap: [AppComponent],
 })
 export class AppModule { }
