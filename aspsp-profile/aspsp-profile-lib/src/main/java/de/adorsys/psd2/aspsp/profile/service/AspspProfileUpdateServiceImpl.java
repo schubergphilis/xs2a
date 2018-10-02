@@ -208,6 +208,16 @@ public class AspspProfileUpdateServiceImpl implements AspspProfileUpdateService 
     }
 
     /**
+     * Update the value of signing basket support
+     *
+     * @param signingBasketSupported the value of signing basket support
+     */
+    @Override
+    public void updateSigningBasketSupported(boolean signingBasketSupported) {
+        profileConfiguration.setSigningBasketSupported(signingBasketSupported);
+    }
+
+    /**
      * Update the value of payment cancellation authorization mandated
      *
      * @param paymentCancellationAuthorizationMandated the value of payment cancellation authorization mandated

@@ -177,6 +177,15 @@ public class AspspProfileServiceWrapper {
     }
 
     /**
+     * Reads if signing basket supported from ASPSP profile service
+     *
+     * @return true if ASPSP supports signing basket , false if doesn't
+     */
+    public boolean isSigningBasketSupported() {
+        return readAspspSettings().isSigningBasketSupported();
+    }
+
+    /**
      * Reads if is payment cancellation authorization mandated from ASPSP profile service
      *
      * @return true if payment cancellation authorization is mandated, false if doesn't
