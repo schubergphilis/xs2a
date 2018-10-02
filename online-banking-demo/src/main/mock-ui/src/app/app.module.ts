@@ -59,8 +59,7 @@ registerLocaleData(localeDE);
     FormsModule,
     NgbModule.forRoot(),
   ],
-  providers: [
-    {
+  providers: [{
     provide: APP_INITIALIZER,
     useFactory: initializer,
     multi: true,

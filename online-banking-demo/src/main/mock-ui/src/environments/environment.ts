@@ -14,13 +14,13 @@ export function saveServerUrls(urls) {
 }
 
 // Add here your keycloak setup infos
-var keycloakConfig: KeycloakConfig = {
+const keycloakConfig: KeycloakConfig = {
   url: 'http://localhost:8081/auth/',
   realm: 'xs2a',
   clientId: 'aspsp-mock'
 };
 
-export var environment = {
+export const environment = {
   production: false,
   consentManagementServerUrl: 'http://localhost:38080/api/v1',
   aspspXs2aServerUrl: 'http://localhost:8080',
