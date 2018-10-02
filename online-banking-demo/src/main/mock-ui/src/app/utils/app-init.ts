@@ -1,13 +1,22 @@
 import { KeycloakService } from 'keycloak-angular';
 
-import { environment } from '../../environments/environment';
+import { ConfigService } from '../service/config.service';
+import { Config } from '../model/Config';
 
-export function initializer(keycloak: KeycloakService): () => Promise<any> {
+export function initializer(keycloakService: KeycloakService, configService: ConfigService): () => Promise<any> {
+  return (): Promise<any> => configService.loadConfig().then((config: Config) => {
+    configService.setConfig(config);
+    console.log('awi configService getConfig', configService.getConfig());
+    return keycloakInit(keycloakService, configService);
+  });
+}
+
+export function keycloakInit(keycloak: KeycloakService, configService: ConfigService): () => Promise<any> {
   return (): Promise<any> => {
     return new Promise(async (resolve, reject) => {
       try {
         await keycloak.init({
-          config: environment.keycloak,
+          config: configService.getConfig().keycloakConfig,
           initOptions: {
             onLoad: 'login-required',
             checkLoginIframe: false,

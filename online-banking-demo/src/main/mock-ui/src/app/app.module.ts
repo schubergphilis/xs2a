@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -12,7 +12,7 @@ import { AisTanConfirmationCanceledComponent } from './components/ais-tan-confir
 import { AisTanConfirmationErrorComponent } from './components/ais-tan-confirmation-error/ais-tan-confirmation-error.component';
 import { AisTanConfirmationSuccessfulComponent } from './components/ais-tan-confirmation-successful/ais-tan-confirmation-successful.component';
 import { initializer } from './utils/app-init';
-import { KeycloakAngularModule, KeycloakService } from '../../node_modules/keycloak-angular';
+import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { registerLocaleData } from '@angular/common';
@@ -26,11 +26,14 @@ import { PisTanConfirmationCanceledComponent } from './components/pis-tan-confir
 import { PisConsentConfirmationSuccessfulComponent } from './components/pis-consent-confirmation-successful/pis-consent-confirmation-successful.component';
 import { PisConsentConfirmationErrorComponent } from './components/pis-consent-confirmation-error/pis-consent-confirmation-error.component';
 import { PisHelpPageComponent } from './components/pis-help-page/pis-help-page.component';
+import { ConfigService } from './service/config.service';
 
 
 registerLocaleData(localeDE);
 
-
+export function init(config: ConfigService) {
+  return config.loadConfig();
+}
 
 @NgModule({
   declarations: [
@@ -50,8 +53,7 @@ registerLocaleData(localeDE);
     PisConsentConfirmationDeniedComponent,
     PisConsentConfirmationSuccessfulComponent,
     PisConsentConfirmationErrorComponent,
-    PisHelpPageComponent,
-
+    PisHelpPageComponent
   ],
   imports: [
     BrowserModule,
@@ -61,11 +63,20 @@ registerLocaleData(localeDE);
     FormsModule,
     NgbModule.forRoot(),
   ],
-  providers: [{
+  providers: [
+    ConfigService,
+  //   {
+  //   provide: APP_INITIALIZER,
+  //   useFactory: init,
+  //   multi: true,
+  //   deps: [ConfigService],
+  // }
+  // ,
+    {
     provide: APP_INITIALIZER,
     useFactory: initializer,
     multi: true,
-    deps: [KeycloakService],
+    deps: [KeycloakService, ConfigService],
   }, {
     provide: LOCALE_ID, useValue: 'de'
   },

@@ -19,23 +19,26 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Banking } from '../model/banking.model';
 import { SinglePayment } from '../model/singlePayment';
-import { environment } from '../../environments/environment';
+import { ConfigService } from './config.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PisService {
   savedData = new Banking();
-  consentManagementServerUrl =  environment.consentManagementServerUrl+'/pis/consent';
-  mockServerUrl = environment.mockServerUrl + '/pis';
+  consentManagementServerUrl: string;
+  mockServerUrl: string;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private configService: ConfigService) {
+    this.consentManagementServerUrl =  configService.getConfig().consentManagementServerUrl +'/pis/consent';
+    this.mockServerUrl = configService.getConfig().mockServerUrl + '/pis';
+    console.log("awi config", this.mockServerUrl);
   }
 
   validateTan(tan: string): Observable<string> {
     const body = {
       tanNumber: tan,
-      psuId: "aspsp",
+      psuId: 'aspsp',
       consentId: this.savedData.consentId,
       paymentId: this.savedData.paymentId
     };
