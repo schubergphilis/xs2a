@@ -48,7 +48,7 @@ public class FundsConfirmationService {
                              fundConfirmationSpi.isFundsSufficient(
                                  accountMapper.mapToSpiAccountReference(request.getPsuAccount()),
                                  accountMapper.mapToSpiAmount(request.getInstructedAmount()),
-                                 new AspspConsentData())    //TODO Add actual aspsp consent data after impementation of consent for funds confirmation
+                                 new AspspConsentData())    //TODO Add actual aspsp consent data after implementation of consent for funds confirmation https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
                                  .getPayload()
                          )).build();
     }
