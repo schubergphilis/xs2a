@@ -7,14 +7,25 @@ export function initializer(keycloakService: KeycloakService, configService: Con
   return (): Promise<any> => configService.loadConfig().then((config: Config) => {
     configService.setConfig(config);
     console.log('awi configService getConfig', configService.getConfig());
-    return keycloakInit(keycloakService, configService);
+    keycloakInit(keycloakService, configService).then();
   });
+
+
+  // return (): Promise<any> => {
+  //   return new Promise( async (resolve, reject) => {
+  //     configService.loadConfig().then((config: Config) => {
+  //         configService.setConfig(config);
+  //         console.log('awi configService getConfig', configService.getConfig());
+  //         keycloakInit(keycloakService, configService);
+  //       });
+  //   });
+  // };
 }
 
-export function keycloakInit(keycloak: KeycloakService, configService: ConfigService): () => Promise<any> {
-  return (): Promise<any> => {
+export function keycloakInit(keycloak: KeycloakService, configService: ConfigService): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log('awi keycloakInit');
         await keycloak.init({
           config: configService.getConfig().keycloakConfig,
           initOptions: {
@@ -23,12 +34,11 @@ export function keycloakInit(keycloak: KeycloakService, configService: ConfigSer
             flow: 'implicit',
           },
           enableBearerInterceptor: true,
-          bearerExcludedUrls: ['http://localhost:28081/configuration/properties']
+          bearerExcludedUrls: []
         });
         resolve();
       } catch (error) {
         reject(error);
       }
     });
-  };
 }
