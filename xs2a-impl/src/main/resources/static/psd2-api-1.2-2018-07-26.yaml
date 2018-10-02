@@ -35,11 +35,11 @@ info:
     * **This API definition contains the messages for all different approaches defined in the Implementation Guidelines.**
     * According to the OpenAPI-Specification [https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.1.md]
 
-        "If in is "header" and the name field is "Accept", "Content-Type" or "Authorization", the parameter definition SHALL be ignored."
+        "If in is "header" and the name field is "Accept", "Content-Type" or "Authorisation", the parameter definition SHALL be ignored."
 
       The element "Accept" will not be defined in this file at any place.
 
-      The elements "Content-Type" and "Authorization" are implicitly defined by the OpenApi tags "content" and "security".
+      The elements "Content-Type" and "Authorisation" are implicitly defined by the OpenApi tags "content" and "security".
 
     * There are several predefined types which might occur in payment initiation messages,
       but are not used in the standard JSON messages in the Implementation Guidelines.
@@ -357,7 +357,7 @@ paths:
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
   '/v1/{payment-service}/{paymentId}/authorisations':
     post:
-      summary: Start the authorization process for a payment initiation
+      summary: Start the authorisation process for a payment initiation
       description: |
         Create an authorisation sub-resource and start the authorisation process.
         The message might in addition transmit authentication and authorisation related data.
@@ -501,7 +501,7 @@ paths:
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
   '/v1/{payment-service}/{paymentId}/authorisations/{authorisationId}':
     get:
-      summary: Read the SCA Status of the payment authorization
+      summary: Read the SCA Status of the payment authorisation
       description: |
         This method returns the SCA status of a payment initiation's authorisation sub-resource.
       operationId: getPaymentInitiationScaStatus
@@ -669,7 +669,7 @@ paths:
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
   '/v1/{payment-service}/{paymentId}/cancellation-authorisations':
     post:
-      summary: Start the authorization process for the cancellation of the addressed payment
+      summary: Start the authorisation process for the cancellation of the addressed payment
       description: |
         Creates an authorisation sub-resource and start the authorisation process of the cancellation of the addressed payment.
         The message might in addition transmit authentication and authorisation related data.
@@ -757,7 +757,7 @@ paths:
         '503':
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
     get:
-      summary: Will deliver an array of resource identifications to all generated cancellation authorization sub-resources.
+      summary: Will deliver an array of resource identifications to all generated cancellation authorisation sub-resources.
       description: |
         Retrieve a list of all created cancellation authorisation sub-resources.
       operationId: getPaymentInitiationCancellationAuthorisationInformation
@@ -810,7 +810,7 @@ paths:
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
   '/v1/{payment-service}/{paymentId}/cancellation-authorisations/{cancellationId}':
     get:
-      summary: Read the SCA status of the payment cancellation's authorization.
+      summary: Read the SCA status of the payment cancellation's authorisation.
       description: |
         This method returns the SCA status of a payment initiation's authorisation sub-resource.
       operationId: getPaymentCancellationScaStatus
@@ -1527,7 +1527,7 @@ paths:
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
   '/v1/consents/{consentId}/authorisations':
     post:
-      summary: Start the authorization process for a consent
+      summary: Start the authorisation process for a consent
       description: |
         Create an authorisation sub-resource and start the authorisation process of a consent.
         The message might in addition transmit authentication and authorisation related data.
@@ -1668,7 +1668,7 @@ paths:
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
   '/v1/consents/{consentId}/authorisations/{authorisationId}':
     get:
-      summary: Read the SCA status of the consent authorization.
+      summary: Read the SCA status of the consent authorisation.
       description: |
         This method returns the SCA status of a consent initiation's authorisation sub-resource.
       operationId: getConsentScaStatus
@@ -1989,7 +1989,7 @@ paths:
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
   '/v1/signing-baskets/{basketId}/authorisations':
     post:
-      summary: Start the authorization process for a signing basket
+      summary: Start the authorisation process for a signing basket
       description: |
         Create an authorisation sub-resource and start the authorisation process of a signing basket.
         The message might in addition transmit authentication and authorisation related data.
@@ -2246,7 +2246,7 @@ paths:
         '503':
           $ref: '#/components/responses/SERVICE_UNAVAILABLE_503'
     get:
-      summary: Read the SCA status of the signing basket authorization
+      summary: Read the SCA status of the signing basket authorisation
       description: |
         This method returns the SCA status of a signing basket's authorisation sub-resource.
       operationId: getSigningBasketScaStatus
@@ -2799,7 +2799,7 @@ components:
             Is asking for detailed account information.
 
             If the array is empty, the TPP is asking for an accessible account list.
-            This may be restricted in a PSU/ASPSP authorization dialogue.
+            This may be restricted in a PSU/ASPSP authorisation dialogue.
             If the array is empty, also the arrays for balances or transactions shall be empty, if used.
           type: array
           items:
@@ -2814,7 +2814,7 @@ components:
             Is asking for balances of the addressed accounts.
 
             If the array is empty, the TPP is asking for the balances of all accessible account lists.
-            This may be restricted in a PSU/ASPSP authorization dialogue.
+            This may be restricted in a PSU/ASPSP authorisation dialogue.
             If the array is empty, also the arrays for accounts or transactions shall be empty, if used.
           type: array
           items:
@@ -2829,7 +2829,7 @@ components:
             Is asking for transactions of the addressed accounts.
 
             If the array is empty, the TPP is asking for the transactions of all accessible account lists.
-            This may be restricted in a PSU/ASPSP authorization dialogue.
+            This may be restricted in a PSU/ASPSP authorisation dialogue.
             If the array is empty, also the arrays for accounts or balances shall be empty, if used.
           type: array
           items:
@@ -4983,7 +4983,7 @@ components:
         scaStatus:
           $ref: '#/components/schemas/scaStatus'
     startScaprocessResponse:
-      description: Body of the JSON response for a Start SCA authorization request.
+      description: Body of the JSON response for a Start SCA authorisation request.
       type: object
       required:
         - scaStatus
@@ -7314,7 +7314,7 @@ components:
           schema:
             $ref: '#/components/schemas/signingBasketResponse-201'
           examples:
-            Response (always with explicit authorization start):
+            Response (always with explicit authorisation start):
               $ref: '#/components/examples/createSigningBasketResponseExample1'
     CREATED_201_StartScaProcess:
       description: Created
@@ -7800,7 +7800,7 @@ components:
           - 123qwert456789
           - 12345qwert7899
     createSigningBasketResponseExample1:
-      description: Response (always with explicit authorization start)
+      description: Response (always with explicit authorisation start)
       value:
         transactionStatus: RCVD
         basketId: 1234-basket-567
@@ -7892,7 +7892,7 @@ components:
           scaStatus:
             href: v1/consents/1234-wertiq-983/authorisations/123auth567
     consentResponseExample1b_Redirect:
-      description: Consent request Response in case of a redirect with a dedicated start of the authorization process
+      description: Consent request Response in case of a redirect with a dedicated start of the authorisation process
       value:
         consentStatus: received
         consentId: 1234-wertiq-983
@@ -7900,7 +7900,7 @@ components:
           startAuthorisation:
             href: v1/consents/1234-wertiq-983/authorisations
     consentResponseExample2_OAuth2:
-      description: Response in case of the OAuth2 approach with an implicit generated authorization resource
+      description: Response in case of the OAuth2 approach with an implicit generated authorisation resource
       value:
         consentStatus: received
         consentId: 1234-wertiq-983
@@ -7910,7 +7910,7 @@ components:
           scaStatus:
             href: v1/consents/1234-wertiq-983/authorisations/123auth567
           scaOAuth:
-            href: 'https://www.testbank.com/oauth/.well-known/oauth-authorization-server'
+            href: 'https://www.testbank.com/oauth/.well-known/oauth-authorisation-server'
     consentResponseExample3_Decoupled:
       description: Response in case of the decoupled approach
       value:
@@ -7932,7 +7932,7 @@ components:
       value:
         consentStatus: valid
     paymentInitiationExample_json_Redirect:
-      description: Response in case of a redirect with an implicitly created authorization sub-resource
+      description: Response in case of a redirect with an implicitly created authorisation sub-resource
       value:
         transactionStatus: RCVD
         paymentId: 1234-wertiq-983
@@ -7946,7 +7946,7 @@ components:
           scaStatus:
             href: /v1/payments/1234-wertiq-983/authorisations/123auth456
     paymentInitiationExample_json__RedirectExplicitAuthorisation:
-      description: Response in case of a redirect with an explicit authorization start
+      description: Response in case of a redirect with an explicit authorisation start
       value:
         transactionStatus: RCVD
         paymentId: 1234-wertiq-983
@@ -7958,13 +7958,13 @@ components:
           startAuthorisation:
             href: /v1/payments1234-wertiq-983/authorisations
     paymentInitiationExample_json_OAuth2:
-      description: Response in case of an OAuth2 SCA approach approach with implicitly creating an authorization sub-resource
+      description: Response in case of an OAuth2 SCA approach approach with implicitly creating an authorisation sub-resource
       value:
         transactionStatus: RCVD
         paymentId: 1234-wertiq-983
         _links:
           scaOAuth:
-            href: 'https://www.testbank.com/oauth/.well-known/oauth-authorization-server'
+            href: 'https://www.testbank.com/oauth/.well-known/oauth-authorisation-server'
           self:
             href: /v1/payments/1234-wertiq-983
           status:
@@ -7972,7 +7972,7 @@ components:
           scaStatus:
             href: /v1/payments/1234-wertiq-983/authorisations/123auth456
     paymentInitiationExample_json_Decoupled:
-      description: Response in case of the decoupled approach with explicit start of authorization needed
+      description: Response in case of the decoupled approach with explicit start of authorisation needed
       value:
         transactionStatus: RCVD
         paymentId: 1234-wertiq-983
@@ -7982,7 +7982,7 @@ components:
           self:
             href: /v1/payments/1234-wertiq-983
     paymentInitiationExample_json_Embedded:
-      description: Response in case of the embedded approach with explicit start of authorization
+      description: Response in case of the embedded approach with explicit start of authorisation
       value:
         transactionStatus: RCVD
         paymentId: 1234-wertiq-983
