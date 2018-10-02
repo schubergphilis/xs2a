@@ -295,14 +295,14 @@ public class AccountService {
         return response;
     }
 
-    Optional<Xs2aAccountDetails> getAccountDetailsByAccountReference(Xs2aAccountReference reference, String consentId) {
+    private Optional<Xs2aAccountDetails> getAccountDetailsByAccountReference(Xs2aAccountReference reference, String consentId) {
         if (reference == null) {
             return Optional.empty();
         }
 
         SpiResponse<List<SpiAccountDetails>> spiResponse = accountSpi.readAccountDetailsByIban(reference.getIban(), aisConsentDataService.getConsentData(consentId));
         aisConsentDataService.updateConsentData(spiResponse.getAspspConsentData());
-        return Optional.of(spiResponse.getPayload())
+        return Optional.ofNullable(spiResponse.getPayload())
                    .map(Collection::stream)
                    .flatMap(accDts -> accDts
                                           .filter(spiAcc -> spiAcc.getCurrency() == reference.getCurrency())
