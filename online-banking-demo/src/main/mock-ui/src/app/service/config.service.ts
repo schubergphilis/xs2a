@@ -25,7 +25,6 @@ export class ConfigService {
   private config: Config;
 
   constructor(private httpClient: HttpClient) {
-    console.log("awi ConfigService Test");
   }
 
   loadConfig(): Promise<Config> {

@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule, APP_INITIALIZER, LOCALE_ID } from '@angular/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { APP_INITIALIZER, LOCALE_ID, NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
@@ -16,7 +16,6 @@ import { KeycloakAngularModule, KeycloakService } from 'keycloak-angular';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { registerLocaleData } from '@angular/common';
-import localeDE from '@angular/common/locales/de';
 import { AisHelpPageComponent } from './components/ais-help-page/ais-help-page.component';
 import { PisTanConfirmationErrorComponent } from './components/pis-tan-confirmation-error/pis-tan-confirmation-error.component';
 import { PisConsentConfirmationDeniedComponent } from './components/pis-consent-confirmation-denied/pis-consent-confirmation-denied.component';
@@ -27,13 +26,10 @@ import { PisConsentConfirmationSuccessfulComponent } from './components/pis-cons
 import { PisConsentConfirmationErrorComponent } from './components/pis-consent-confirmation-error/pis-consent-confirmation-error.component';
 import { PisHelpPageComponent } from './components/pis-help-page/pis-help-page.component';
 import { ConfigService } from './service/config.service';
+import localeDE from '@angular/common/locales/de';
 
 
 registerLocaleData(localeDE);
-
-export function init(config: ConfigService) {
-  return config.loadConfig();
-}
 
 @NgModule({
   declarations: [
@@ -64,14 +60,6 @@ export function init(config: ConfigService) {
     NgbModule.forRoot(),
   ],
   providers: [
-    ConfigService,
-  //   {
-  //   provide: APP_INITIALIZER,
-  //   useFactory: init,
-  //   multi: true,
-  //   deps: [ConfigService],
-  // }
-  // ,
     {
     provide: APP_INITIALIZER,
     useFactory: initializer,

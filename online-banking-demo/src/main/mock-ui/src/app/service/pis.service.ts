@@ -31,13 +31,13 @@ export class PisService {
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
     this.consentManagementServerUrl =  configService.getConfig().consentManagementServerUrl +'/api/v1/pis/consent';
-    this.mockServerUrl = configService.getConfig().mockServerUrl + '/pis';
+    this.mockServerUrl = configService.getConfig().mockServerUrl + '/consent/confirmation/pis';
   }
 
   validateTan(tan: string): Observable<string> {
     const body = {
       tanNumber: tan,
-      psuId: 'aspsp',
+      psuId: 'aspsp1',
       consentId: this.savedData.consentId,
       paymentId: this.savedData.paymentId
     };
@@ -53,7 +53,7 @@ export class PisService {
   }
 
   generateTan(): Observable<string> {
-    return this.httpClient.post<string>(`${this.mockServerUrl}` + '/aspsp', {});
+    return this.httpClient.post<string>(`${this.mockServerUrl}` + '/aspsp1/SMS_OTP', {});
   }
 
   getConsentById(): Observable<SinglePayment> {
