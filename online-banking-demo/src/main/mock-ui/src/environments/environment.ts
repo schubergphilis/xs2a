@@ -6,9 +6,9 @@ import { KeycloakConfig } from 'keycloak-angular';
 
 
 export function saveServerUrls(urls) {
-  environment.mockServerUrl = urls.mockServerUrl;
+  environment.mockServerUrl = urls.MOCK_CONSENT_CONFIRMATION_URI;
   environment.aspspXs2aServerUrl = urls.Xs2aServerUrl;
-  environment.consentManagementServerUrl = urls.consentManagementServerUrl;
+  environment.consentManagementServerUrl = urls.CM_CONSENT_URI;
   environment.profileServerUrl = urls.aspspProfileServerUrl;
   environment.keycloak = urls.keyloakConfig;
 }

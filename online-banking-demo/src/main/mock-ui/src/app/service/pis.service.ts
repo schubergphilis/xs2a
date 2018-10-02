@@ -26,12 +26,12 @@ import { ConfigService } from './config.service';
 })
 export class PisService {
   savedData = new Banking();
-  consentManagementServerUrl: string;
-  mockServerUrl: string;
+  CM_CONSENT_URI: string;
+  MOCK_CONSENT_CONFIRMATION_URI: string;
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
-    this.consentManagementServerUrl =  configService.getConfig().consentManagementServerUrl +'/api/v1/pis/consent';
-    this.mockServerUrl = configService.getConfig().mockServerUrl + '/consent/confirmation/pis';
+    this.CM_CONSENT_URI =  configService.getConfig().consentManagementServerUrl +'/api/v1/pis/consent';
+    this.MOCK_CONSENT_CONFIRMATION_URI = configService.getConfig().mockServerUrl + '/consent/confirmation/pis';
   }
 
   validateTan(tan: string): Observable<string> {
@@ -41,11 +41,11 @@ export class PisService {
       consentId: this.savedData.consentId,
       paymentId: this.savedData.paymentId
     };
-    return this.httpClient.put<string>(`${this.mockServerUrl}`, body);
+    return this.httpClient.put<string>(`${this.MOCK_CONSENT_CONFIRMATION_URI}`, body);
   }
 
   updateConsentStatus(status: string) {
-    return this.httpClient.put(`${this.mockServerUrl}/${this.savedData.consentId}/${status}`, {});
+    return this.httpClient.put(`${this.MOCK_CONSENT_CONFIRMATION_URI}/${this.savedData.consentId}/${status}`, {});
   }
 
   saveData(data) {
@@ -53,10 +53,10 @@ export class PisService {
   }
 
   generateTan(): Observable<string> {
-    return this.httpClient.post<string>(`${this.mockServerUrl}` + '/aspsp1/SMS_OTP', {});
+    return this.httpClient.post<string>(`${this.MOCK_CONSENT_CONFIRMATION_URI}` + '/aspsp1/SMS_OTP', {});
   }
 
   getConsentById(): Observable<SinglePayment> {
-    return this.httpClient.get<SinglePayment>(`${this.consentManagementServerUrl}` + '/' + this.savedData.consentId);
+    return this.httpClient.get<SinglePayment>(`${this.CM_CONSENT_URI}` + '/' + this.savedData.consentId);
   }
 }
