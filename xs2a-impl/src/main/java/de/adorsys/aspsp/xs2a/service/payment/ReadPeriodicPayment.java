@@ -27,7 +27,7 @@ import static de.adorsys.aspsp.xs2a.domain.pis.PaymentType.PERIODIC;
 public class ReadPeriodicPayment extends ReadPayment<PeriodicPayment> {
     @Override
     public PeriodicPayment getPayment(String paymentId, String paymentProduct) {
-        SpiResponse<SpiPeriodicPayment> spiResponse = paymentSpi.getPeriodicPaymentById(paymentMapper.mapToSpiPaymentType(PERIODIC), paymentProduct, paymentId, pisConsentDataService.getAspspConsentData(paymentId));
+        SpiResponse<SpiPeriodicPayment> spiResponse = paymentSpi.getPeriodicPaymentById(paymentMapper.mapToSpiPaymentType(PERIODIC), paymentProduct, paymentId, pisConsentDataService.getAspspConsentDataByPaymentId(paymentId));
         pisConsentDataService.updateAspspConsentData(spiResponse.getAspspConsentData());
         SpiPeriodicPayment periodicPayment = spiResponse.getPayload();
         return paymentMapper.mapToPeriodicPayment(periodicPayment);

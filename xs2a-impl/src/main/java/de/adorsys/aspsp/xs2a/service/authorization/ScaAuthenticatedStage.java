@@ -41,7 +41,7 @@ public class ScaAuthenticatedStage extends ScaStage<UpdatePisConsentPsuDataReque
 
     @Override
     public UpdatePisConsentPsuDataResponse apply(UpdatePisConsentPsuDataRequest request, GetPisConsentAuthorisationResponse pisConsentAuthorisationResponse) {
-        AspspConsentData aspspConsentData = paymentSpi.performStrongUserAuthorisation(request.getPsuId(), getMethod(request.getAuthenticationMethodId()),pisConsentDataService.getAspspConsentData(request.getPaymentId())).getAspspConsentData();
+        AspspConsentData aspspConsentData = paymentSpi.performStrongUserAuthorisation(request.getPsuId(), getMethod(request.getAuthenticationMethodId()),pisConsentDataService.getAspspConsentDataByPaymentId(request.getPaymentId())).getAspspConsentData();
         pisConsentDataService.updateAspspConsentData(aspspConsentData);
         request.setScaStatus(SCAMETHODSELECTED);
         return pisAuthorisationService.doUpdatePisConsentAuthorisation(request);

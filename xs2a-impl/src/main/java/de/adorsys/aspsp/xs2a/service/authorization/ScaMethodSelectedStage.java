@@ -38,7 +38,7 @@ public class ScaMethodSelectedStage extends ScaStage<UpdatePisConsentPsuDataRequ
 
     @Override
     public UpdatePisConsentPsuDataResponse apply(UpdatePisConsentPsuDataRequest request, GetPisConsentAuthorisationResponse response) {
-        AspspConsentData aspspConsentData = pisConsentDataService.getAspspConsentData(request.getPaymentId());
+        AspspConsentData aspspConsentData = pisConsentDataService.getAspspConsentDataByPaymentId(request.getPaymentId());
         aspspConsentData = paymentSpi.applyStrongUserAuthorisation(
             spiCmsPisMapper.buildSpiPaymentConfirmation(
                     request,

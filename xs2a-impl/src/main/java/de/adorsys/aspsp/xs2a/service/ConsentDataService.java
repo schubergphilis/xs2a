@@ -34,15 +34,19 @@ public abstract class ConsentDataService {
     @Qualifier("consentRestTemplate")
     private final RestTemplate consentRestTemplate;
 
-    public AspspConsentData getAspspConsentData(String id) {
-        Xs2aConsentData xs2aConsentData = consentRestTemplate.getForEntity(getRemoteUrl().getAspspConsentData(), Xs2aConsentData.class, id).getBody();
-        return new AspspConsentData(xs2aConsentData.getAspspConsentData(), xs2aConsentData.getConsentId());
+    public AspspConsentData getAspspConsentDataByConsentId(String consentId) {
+        Xs2aConsentData xs2aConsentData = consentRestTemplate.getForEntity(getRemoteUrl().getAspspConsentData(), Xs2aConsentData.class, consentId).getBody();
+        return new AspspConsentData(xs2aConsentData.getAspspConsentData(), consentId);
+    }
+
+    public AspspConsentData getAspspConsentDataByPaymentId(String paymentId) {
+        return consentRestTemplate.getForEntity(getRemoteUrl().getAspspConsentData(), AspspConsentData.class, paymentId).getBody();
     }
 
     public void updateAspspConsentData(AspspConsentData consentData) {
         Optional.ofNullable(consentData)
             .filter(cd -> StringUtils.isNotBlank(cd.getConsentId()))
-            .ifPresent(cd -> consentRestTemplate.put(getRemoteUrl().updateAspspConsentData(), new Xs2aConsentData(cd.getAspspConsentData(), cd.getConsentId()), cd.getConsentId()));
+            .ifPresent(cd -> consentRestTemplate.put(getRemoteUrl().updateAspspConsentData(), new Xs2aConsentData(cd.getAspspConsentData()), cd.getConsentId()));
     }
 
     protected abstract AspspConsentDataRemoteUrls getRemoteUrl();
