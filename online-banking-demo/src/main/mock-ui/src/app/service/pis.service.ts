@@ -30,9 +30,8 @@ export class PisService {
   mockServerUrl: string;
 
   constructor(private httpClient: HttpClient, private configService: ConfigService) {
-    this.consentManagementServerUrl =  configService.getConfig().consentManagementServerUrl +'/pis/consent';
+    this.consentManagementServerUrl =  configService.getConfig().consentManagementServerUrl +'/api/v1/pis/consent';
     this.mockServerUrl = configService.getConfig().mockServerUrl + '/pis';
-    console.log("awi config", this.mockServerUrl);
   }
 
   validateTan(tan: string): Observable<string> {
