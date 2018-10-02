@@ -164,13 +164,13 @@ public interface PaymentSpi {
      * @param choosenMethod     Chosen SCA Method
      * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
-     * @deprecated since 1.8. Will be removed in 1.9. Use {@link #requestauthorizationCode(String, SpiScaMethod, SpiPayment, AspspConsentData)}
+     * @deprecated since 1.8. Will be removed in 1.9. Use {@link #requestAuthorizationCode(String, SpiScaMethod, SpiPayment, AspspConsentData)}
      */
     @Deprecated
     SpiResponse<Void> performStrongUserAuthorization(String psuId, SpiScaMethod choosenMethod, AspspConsentData aspspConsentData);
 
     /**
-     * @deprecated since 1.8. Will be removed in 1.9. Use {@link #verifyauthorizationCodeAndExecutePayment(SpiPaymentConfirmation, SpiPayment, AspspConsentData)}
+     * @deprecated since 1.8. Will be removed in 1.9. Use {@link #verifyAuthorizationCodeAndExecutePayment(SpiPaymentConfirmation, SpiPayment, AspspConsentData)}
      */
     @Deprecated
     SpiResponse<Void> applyStrongUserAuthorization(SpiPaymentConfirmation spiPaymentConfirmation, AspspConsentData aspspConsentData);
@@ -202,7 +202,7 @@ public interface PaymentSpi {
      *
      * @param psuId            ASPSP identifier of the psu
      * @param spiPayment       generic payment object
-     * @param aspspConsentData Encrypted data that may stored in the consent management system in the consent linked to a request.
+     * @param aspspConsentData Encryptfed data that may stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return a list of SCA methods applicable for specified PSU
      */

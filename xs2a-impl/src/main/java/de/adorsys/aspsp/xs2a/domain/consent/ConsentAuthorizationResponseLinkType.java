@@ -23,7 +23,7 @@ import java.util.Optional;
 public enum ConsentAuthorizationResponseLinkType {
     START_AUTHORIZATION_WITH_PSU_IDENTIFICATION("startAuthorizationWithPsuIdentification"),
     START_AUTHORIZATION_WITH_PSU_AUTHENTICATION("startAuthorizationWithPsuAuthentication"),
-    START_AUTHORIZATION_WITH_AUTHENTICATION_METHOD_SELECTION("startAuthorisationWithAuthentication"),
+    START_AUTHORIZATION_WITH_AUTHENTICATION_METHOD_SELECTION("startAuthorizationWithAuthentication"),
     START_AUTHORIZATION_WITH_TRANSACTION_AUTHORISATION("startAuthorizationWithTransactionAuthorization");
 
     private static final Map<String, ConsentAuthorizationResponseLinkType> container = new HashMap<>();

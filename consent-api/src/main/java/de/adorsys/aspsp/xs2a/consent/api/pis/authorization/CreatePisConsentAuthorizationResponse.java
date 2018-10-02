@@ -23,7 +23,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@ApiModel(description = "PIS consent authorization", value = "PisConsentauthorization")
+@ApiModel(description = "PIS consent authorization", value = "PisConsentAuthorization")
 public class CreatePisConsentAuthorizationResponse {
     @ApiModelProperty(value = "ID of the authorization", required = true, example = "6dc3d5b3-5023-7848-3853-f7200a64e80d")
     private String authorizationId;

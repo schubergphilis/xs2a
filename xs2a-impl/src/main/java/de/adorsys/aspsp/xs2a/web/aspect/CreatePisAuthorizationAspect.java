@@ -49,7 +49,7 @@ public class CreatePisAuthorizationAspect extends AbstractLinkAspect<PaymentCont
 
     private Links buildLink(String paymentService, String paymentId, String authorizationId) {
         Links links = new Links();
-        links.setStartAuthorizationWithPsuAuthentication(buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorizationId}", paymentService, paymentId, authorizationId));
+        links.setStartAuthorizationWithPsuAuthentication(buildPath("/v1/{paymentService}/{paymentId}/authorizations/{authorizationId}", paymentService, paymentId, authorizationId));
         return links;
     }
 }
