@@ -17,6 +17,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Config } from '../model/Config';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +29,7 @@ export class ConfigService {
   }
 
   loadConfig(): Promise<Config> {
-    return this.httpClient.get<Config>('http://localhost:28081/configuration/properties')
+    return this.httpClient.get<Config>(`${environment.onlineBankingUrl}/configuration/properties`)
       .toPromise();
   }
 
