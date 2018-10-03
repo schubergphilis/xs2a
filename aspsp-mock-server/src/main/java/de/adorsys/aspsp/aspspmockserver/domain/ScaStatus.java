@@ -16,19 +16,13 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-
-@Data
-@ApiModel(description = "Remittance in cms", value = "CmsRemittance")
-public class CmsRemittance {
-    @ApiModelProperty(value = "the actual reference", required = true, example = "Ref Number Merchant")
-    private String reference;
-
-    @ApiModelProperty(value = "reference type", example = "reference type")
-    private String referenceType;
-
-    @ApiModelProperty(value = "reference issuer", example = "reference issuer")
-    private String referenceIssuer;
+public enum ScaStatus {
+    RECEIVED,
+    PSUIDENTIFIED,
+    PSUAUTHENTICATED,
+    SCAMETHODSELECTED,
+    STARTED,
+    FINALISED,
+    FAILED,
+    EXEMPTED
 }

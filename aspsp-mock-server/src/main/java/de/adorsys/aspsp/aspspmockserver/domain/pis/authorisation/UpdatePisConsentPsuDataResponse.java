@@ -16,8 +16,8 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain.pis.authorisation;
 
-import de.adorsys.aspsp.aspspmockserver.domain.CmsScaMethod;
-import de.adorsys.aspsp.aspspmockserver.domain.CmsScaStatus;
+import de.adorsys.aspsp.aspspmockserver.domain.ScaMethod;
+import de.adorsys.aspsp.aspspmockserver.domain.ScaStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -26,11 +26,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class UpdatePisConsentPsuDataResponse {
-    private CmsScaStatus scaStatus;
-    private CmsScaMethod chosenScaMethod;
-    private List<CmsScaMethod> availableScaMethods;
+    private ScaStatus scaStatus;
+    private ScaMethod chosenScaMethod;
+    private List<ScaMethod> availableScaMethods;
 
-    public UpdatePisConsentPsuDataResponse(CmsScaStatus scaStatus) {
+    public UpdatePisConsentPsuDataResponse(ScaStatus scaStatus) {
         this.scaStatus = scaStatus;
     }
 }

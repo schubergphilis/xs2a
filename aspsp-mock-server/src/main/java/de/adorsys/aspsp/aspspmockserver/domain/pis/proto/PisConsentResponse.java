@@ -16,8 +16,8 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain.pis.proto;
 
-import de.adorsys.aspsp.aspspmockserver.domain.CmsConsentStatus;
-import de.adorsys.aspsp.aspspmockserver.domain.CmsTppInfo;
+import de.adorsys.aspsp.aspspmockserver.domain.ConsentStatus;
+import de.adorsys.aspsp.aspspmockserver.domain.TppInfo;
 import de.adorsys.aspsp.aspspmockserver.domain.pis.PisPayment;
 import de.adorsys.aspsp.aspspmockserver.domain.pis.PisPaymentProduct;
 import de.adorsys.aspsp.aspspmockserver.domain.pis.PisPaymentType;
@@ -40,13 +40,13 @@ public class PisConsentResponse {
     private PisPaymentType paymentType;
 
     @ApiModelProperty(value = "Tpp information", required = true)
-    private CmsTppInfo tppInfo;
+    private TppInfo tppInfo;
 
     @ApiModelProperty(value = "An external exposed identification of the created payment consent", required = true, example = "bf489af6-a2cb-4b75-b71d-d66d58b934d7")
     private String externalId;
 
     @ApiModelProperty(value = "The following code values are permitted 'received', 'valid', 'rejected', 'expired', 'revoked by psu', 'terminated by tpp'. These values might be extended by ASPSP.", required = true, example = "VALID")
-    private CmsConsentStatus consentStatus;
+    private ConsentStatus consentStatus;
 
     @ApiModelProperty(value = "ASPSP consent data", example = "zzzzzzzz")
     private byte[] aspspConsentData;

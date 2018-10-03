@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-public class CmsTppInfo {
+public class TppInfo {
     @ApiModelProperty(value = "Registration number", required = true, example = "1234_registrationNumber")
     private String registrationNumber;
 

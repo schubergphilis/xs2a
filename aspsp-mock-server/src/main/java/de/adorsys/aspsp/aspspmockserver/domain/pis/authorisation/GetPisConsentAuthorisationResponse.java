@@ -16,8 +16,8 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain.pis.authorisation;
 
-import de.adorsys.aspsp.aspspmockserver.domain.CmsAspspConsentData;
-import de.adorsys.aspsp.aspspmockserver.domain.CmsScaStatus;
+import de.adorsys.aspsp.aspspmockserver.domain.AspspConsentData;
+import de.adorsys.aspsp.aspspmockserver.domain.ScaStatus;
 import de.adorsys.aspsp.aspspmockserver.domain.pis.PisPayment;
 import de.adorsys.aspsp.aspspmockserver.domain.pis.PisPaymentType;
 import lombok.Data;
@@ -27,10 +27,10 @@ import java.util.List;
 @Data
 public class GetPisConsentAuthorisationResponse {
     private String psuId;
-    private CmsScaStatus scaStatus;
+    private ScaStatus scaStatus;
     private String consentId;
     private String password;
     private List<PisPayment> payments;
     private PisPaymentType paymentType;
-    private CmsAspspConsentData cmsAspspConsentData;
+    private AspspConsentData aspspConsentData;
 }

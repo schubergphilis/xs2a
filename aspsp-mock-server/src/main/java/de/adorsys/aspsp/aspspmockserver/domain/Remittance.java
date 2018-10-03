@@ -16,34 +16,19 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain;
 
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Value;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
-import java.util.Arrays;
+@Data
+@ApiModel(description = "Remittance in cms", value = "Remittance")
+public class Remittance {
+    @ApiModelProperty(value = "the actual reference", required = true, example = "Ref Number Merchant")
+    private String reference;
 
-@Value
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
-public class CmsAspspConsentData {
-    private byte[] body;
+    @ApiModelProperty(value = "reference type", example = "reference type")
+    private String referenceType;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        CmsAspspConsentData that = (CmsAspspConsentData) o;
-
-        return Arrays.equals(body, that.body);
-    }
-
-    @Override
-    public int hashCode() {
-        return Arrays.hashCode(body);
-    }
+    @ApiModelProperty(value = "reference issuer", example = "reference issuer")
+    private String referenceIssuer;
 }
