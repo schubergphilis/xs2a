@@ -66,7 +66,7 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         links.setSelf(buildPath("/v1/{paymentService}/{paymentId}", paymentService, encodedPaymentId));
         links.setStatus(buildPath("/v1/{paymentService}/{paymentId}/status", paymentService, encodedPaymentId));
         if (aspspProfileService.getScaApproach() == ScaApproach.EMBEDDED) {
-            return addEmbeddedRelatedLinks(links, paymentService, encodedPaymentId, body.getAuthorizationId());
+            return addEmbeddedRelatedLinks(links, paymentService, encodedPaymentId, body.getAuthorisationId());
         } else if (aspspProfileService.getScaApproach() == ScaApproach.REDIRECT) {
             links.setScaRedirect(aspspProfileService.getPisRedirectUrlToAspsp() + body.getPisConsentId() + "/" + encodedPaymentId + "/" + psuId);
         } else if (aspspProfileService.getScaApproach() == ScaApproach.OAUTH) {
@@ -75,14 +75,14 @@ public abstract class AbstractPaymentLink<T> extends AbstractLinkAspect<T> {
         return links;
     }
 
-    private Links addEmbeddedRelatedLinks(Links links, String paymentService, String paymentId, String authorizationId) {
+    private Links addEmbeddedRelatedLinks(Links links, String paymentService, String paymentId, String authorisationId) {
         if (EXPLICIT == aspspProfileService.getAuthorisationStartType()) {
-            links.setStartAuthorization(buildPath("/v1/{payment-service}/{paymentId}/authorizations", paymentService, paymentId));
+            links.setStartAuthorisation(buildPath("/v1/{payment-service}/{paymentId}/authorisations", paymentService, paymentId));
         } else {
             links.setScaStatus(
-                buildPath("/v1/{paymentService}/{paymentId}/authorizations/{authorizationId}", paymentService, paymentId, authorizationId));
-            links.setStartAuthorizationWithPsuAuthentication(
-                buildPath("/v1/{paymentService}/{paymentId}/authorizations/{authorizationId}", paymentService, paymentId, authorizationId));
+                buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorisationId}", paymentService, paymentId, authorisationId));
+            links.setStartAuthorisationWithPsuAuthentication(
+                buildPath("/v1/{paymentService}/{paymentId}/authorisations/{authorisationId}", paymentService, paymentId, authorisationId));
         }
 
         return links;

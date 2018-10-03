@@ -16,19 +16,10 @@
 
 package de.adorsys.aspsp.xs2a.web.filter;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import de.adorsys.psd2.validator.certificate.util.CertificateExtractorUtil;
+import de.adorsys.psd2.validator.certificate.util.TppCertificateData;
+import lombok.extern.slf4j.Slf4j;
+import no.difi.certvalidator.api.CertificateValidationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -39,10 +30,17 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
-import de.adorsys.psd2.validator.certificate.util.CertificateExtractorUtil;
-import de.adorsys.psd2.validator.certificate.util.TppCertificateData;
-import lombok.extern.slf4j.Slf4j;
-import no.difi.certvalidator.api.CertificateValidationException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * The intent of this Class is to get the Qwac certificate from header, extract
@@ -77,7 +75,7 @@ public class QwacCertificateFilter extends GenericFilterBean {
 					credential.put("authorityCountry", tppCertificateData.getPspAuthorityCountry());
 					credential.put("authorityId", tppCertificateData.getPspAuthorityId());
 					credential.put("authorityName", tppCertificateData.getPspAuthorityName());
-					credential.put("authorizationNumber", tppCertificateData.getPspAuthorizationNumber());
+					credential.put("authorizationNumber", tppCertificateData.getPspAuthorisationNumber());
 					credential.put("name", tppCertificateData.getPspName());
 
 					List<GrantedAuthority> authorities = tppCertificateData.getPspRoles().stream()
@@ -85,7 +83,7 @@ public class QwacCertificateFilter extends GenericFilterBean {
 							.collect(Collectors.toList());
 
 					authentication = new UsernamePasswordAuthenticationToken(
-							tppCertificateData.getPspAuthorizationNumber(), credential, authorities);
+							tppCertificateData.getPspAuthorisationNumber(), credential, authorities);
 
 					SecurityContextHolder.getContext().setAuthentication(authentication);
 

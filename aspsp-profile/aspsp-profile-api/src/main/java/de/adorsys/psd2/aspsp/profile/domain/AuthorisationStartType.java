@@ -18,7 +18,7 @@ package de.adorsys.psd2.aspsp.profile.domain;
 
 import io.swagger.annotations.ApiModel;
 
-@ApiModel(description = "Type of authorization start: implicit or explicit", value = "AuthorisationStartType")
+@ApiModel(description = "Type of authorisation start: implicit or explicit", value = "AuthorisationStartType")
 public enum AuthorisationStartType {
     IMPLICIT,
     EXPLICIT

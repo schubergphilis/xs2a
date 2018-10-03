@@ -28,7 +28,7 @@ public class UpdateConsentPsuDataResponse {
 
     private String psuId;
     private String consentId;
-    private String authorizationId;
+    private String authorisationId;
 
     private Xs2aScaStatus scaStatus;
     private List<CmsScaMethod> availableScaMethods;
@@ -38,7 +38,7 @@ public class UpdateConsentPsuDataResponse {
     private String password;
     private Links links;
 
-    private ConsentAuthorizationResponseLinkType responseLinkType;
+    private ConsentAuthorisationResponseLinkType responseLinkType;
     private String psuMessage;
 
     private MessageErrorCode errorCode;

@@ -24,8 +24,8 @@ import org.springframework.http.client.ClientHttpResponse;
 
 import java.io.IOException;
 
-import static de.adorsys.aspsp.xs2a.spi.domain.constant.AuthorizationConstant.AUTHORIZATION_HEADER;
-import static de.adorsys.aspsp.xs2a.spi.domain.constant.AuthorizationConstant.BEARER_TOKEN_PREFIX;
+import static de.adorsys.aspsp.xs2a.spi.domain.constant.AuthorisationConstant.AUTHORISATION_HEADER;
+import static de.adorsys.aspsp.xs2a.spi.domain.constant.AuthorisationConstant.BEARER_TOKEN_PREFIX;
 
 public class BearerTokenInterceptor implements ClientHttpRequestInterceptor {
     private String bearerToken;
@@ -37,7 +37,7 @@ public class BearerTokenInterceptor implements ClientHttpRequestInterceptor {
     @Override
     public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution) throws IOException {
         HttpHeaders headers = request.getHeaders();
-        headers.add(AUTHORIZATION_HEADER, BEARER_TOKEN_PREFIX + this.bearerToken);
+        headers.add(AUTHORISATION_HEADER, BEARER_TOKEN_PREFIX + this.bearerToken);
         return execution.execute(request, body);
     }
 }

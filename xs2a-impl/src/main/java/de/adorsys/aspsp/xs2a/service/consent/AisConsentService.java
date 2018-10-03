@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.consent.api.ActionStatus;
 import de.adorsys.aspsp.xs2a.consent.api.AisConsentStatusResponse;
 import de.adorsys.aspsp.xs2a.consent.api.ConsentActionRequest;
 import de.adorsys.aspsp.xs2a.consent.api.ais.*;
-import de.adorsys.aspsp.xs2a.domain.consent.AccountConsentAuthorization;
+import de.adorsys.aspsp.xs2a.domain.consent.AccountConsentAuthorisation;
 import de.adorsys.aspsp.xs2a.domain.consent.CreateConsentReq;
 import de.adorsys.aspsp.xs2a.domain.consent.UpdateConsentPsuDataReq;
 import de.adorsys.aspsp.xs2a.domain.consent.Xs2aScaStatus;
@@ -115,46 +115,46 @@ public class AisConsentService {
     }
 
     /**
-     * Sends a POST request to CMS to store created consent authorization
+     * Sends a POST request to CMS to store created consent authorisation
      *
      * @param consentId String representation of identifier of stored consent
-     * @return long representation of identifier of stored consent authorization
+     * @return long representation of identifier of stored consent authorisation
      */
-    public Optional<String> createAisConsentAuthorization(String consentId, Xs2aScaStatus scaStatus, String psuId) {
-        AisConsentAuthorizationRequest request = aisConsentMapper.mapToAisConsentAuthorization(scaStatus, psuId);
+    public Optional<String> createAisConsentAuthorisation(String consentId, Xs2aScaStatus scaStatus, String psuId) {
+        AisConsentAuthorisationRequest request = aisConsentMapper.mapToAisConsentAuthorisation(scaStatus, psuId);
 
-        CreateAisConsentAuthorizationResponse response = consentRestTemplate.postForEntity(remoteAisConsentUrls.createAisConsentAuthorization(),
-            request, CreateAisConsentAuthorizationResponse.class, consentId).getBody();
+        CreateAisConsentAuthorisationResponse response = consentRestTemplate.postForEntity(remoteAisConsentUrls.createAisConsentAuthorisation(),
+            request, CreateAisConsentAuthorisationResponse.class, consentId).getBody();
 
         return Optional.ofNullable(response)
-                   .map(CreateAisConsentAuthorizationResponse::getAuthorizationId);
+                   .map(CreateAisConsentAuthorisationResponse::getAuthorisationId);
     }
 
     /**
-     * Requests CMS to retrieve AIS consent authorization by its identifier
+     * Requests CMS to retrieve AIS consent authorisation by its identifier
      *
-     * @param authorizationId String representation of identifier of stored consent authorization
-     * @return Response containing AIS Consent Authorization
+     * @param authorisationId String representation of identifier of stored consent authorisation
+     * @return Response containing AIS Consent Authorisation
      */
 
-    public AccountConsentAuthorization getAccountConsentAuthorizationById(String authorizationId, String consentId) {
-        AisConsentAuthorizationResponse resp = consentRestTemplate.getForEntity(remoteAisConsentUrls.getAisConsentAuthorizationById(), AisConsentAuthorizationResponse.class, consentId, authorizationId).getBody();
-        return aisConsentMapper.mapToAccountConsentAuthorization(resp);
+    public AccountConsentAuthorisation getAccountConsentAuthorisationById(String authorisationId, String consentId) {
+        AisConsentAuthorisationResponse resp = consentRestTemplate.getForEntity(remoteAisConsentUrls.getAisConsentAuthorisationById(), AisConsentAuthorisationResponse.class, consentId, authorisationId).getBody();
+        return aisConsentMapper.mapToAccountConsentAuthorisation(resp);
     }
 
     /**
-     * Sends a PUT request to CMS to update created AIS consent authorization
+     * Sends a PUT request to CMS to update created AIS consent authorisation
      *
      * @param updatePsuData Consent psu data
      */
-    public void updateConsentAuthorization(UpdateConsentPsuDataReq updatePsuData) {
+    public void updateConsentAuthorisation(UpdateConsentPsuDataReq updatePsuData) {
         Optional.ofNullable(updatePsuData)
             .ifPresent(req -> {
                 final String consentId = req.getConsentId();
-                final String authorizationId = req.getAuthorizationId();
-                final AisConsentAuthorizationRequest request = aisConsentMapper.mapToAisConsentAuthorizationRequest(req);
+                final String authorisationId = req.getAuthorisationId();
+                final AisConsentAuthorisationRequest request = aisConsentMapper.mapToAisConsentAuthorisationRequest(req);
 
-                consentRestTemplate.put(remoteAisConsentUrls.updateAisConsentAuthorization(), request, consentId, authorizationId);
+                consentRestTemplate.put(remoteAisConsentUrls.updateAisConsentAuthorisation(), request, consentId, authorisationId);
             });
     }
 }

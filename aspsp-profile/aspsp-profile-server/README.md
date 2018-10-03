@@ -31,7 +31,7 @@ endpoints.cors.allow-credentials=true
 # Comma-separated list of origins to allow. '*' allows all origins. When not set, CORS support is disabled.
 endpoints.cors.allowed-origins=*
 # Comma-separated list of headers to include in a response.
-endpoints.cors.allowed-headers=Origin,Authorization,Content-Type
+endpoints.cors.allowed-headers=Origin,Authorisation,Content-Type
 # Comma-separated list of methods to allow. '*' allows all methods. When not set, defaults to GET.
 endpoints.cors.allowed-methods=GET,POST,PUT,DELETE
 ```

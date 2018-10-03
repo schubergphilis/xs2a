@@ -61,7 +61,7 @@ public class TanConfirmationService {
     private final ConsentService consentService;
 
     /**
-     * Sends Authorization Request to user with selected Sca Method
+     * Sends Authorisation Request to user with selected Sca Method
      *
      * @param psuId             PSU id
      * @param scaMethodSelected Sca method selected by PSU

@@ -23,7 +23,7 @@ public class UpdateConsentPsuDataReq {
 
     private String psuId;
     private String consentId;
-    private String authorizationId;
+    private String authorisationId;
 
     private Xs2aScaStatus scaStatus;
     private boolean updatePsuIdentification;

@@ -26,7 +26,7 @@ PSU is giving consent on
 
     With Redirect SCA Approach
     If the ASPSP supports the Redirect SCA Approach, the message flow within the Account Information Consent sub-service is simple. 
-    The Account Information Consent Request is followed by a redirection to the ASPSP SCA authorization site. 
+    The Account Information Consent Request is followed by a redirection to the ASPSP SCA authorisation site. 
     A status or content request on the created consent resource might be requested by the TPP after the session is reredirected to the TPP’s system.
     
 ![Account Information Consent Flow for Redirect Approach](img/AIS_Consent_Redirect.png)
@@ -106,7 +106,7 @@ The following usage of abbreviations in the Location and Usage columns is define
 | Request Identification              | x-request-id                    |      |     |    x   |      |             |        m        |                  |     m     |            |     m      |             |      m       |               |
 | Resource ID                         | consentId                         |      |     |        |  x   |             |                 |        m         |           |            |            |             |              |               |
 | Resource-ID[^5]                     | Consent-ID                        |      |     |    x   |      |             |                 |                  |           |            |            |             |              |      c        |
-| Access Token (from optional OAuth2) | Authorization Bearer              |      |     |    x   |      |             |        c        |                  |     c     |            |     c      |             |      c       |               |
+| Access Token (from optional OAuth2) | Authorisation Bearer              |      |     |    x   |      |             |        c        |                  |     c     |            |     c      |             |      c       |               |
 | TPP Signing Certificate Data        | TPP-Certificate                   |      |     |    x   |      |             |        c        |                  |     c     |            |     c      |             |      c       |               |
 | TPP Signing Electronic Signature    | Signature                         |      |     |    x   |      |             |        c        |                  |     c     |            |     c      |             |      c       |               |
 | Further signature related data      | Digest                            |      |     |    x   |      |             |        c        |                  |     c     |            |     c      |             |      c       |               |
@@ -204,7 +204,7 @@ When this Consent Request is a request where the "recurringIndicator" equals "tr
 | PSU-ID-Type |	String	|Conditional	|Type of the PSU-ID, needed in scenarios where PSUs have several PSU-IDs as access possibility. |
 | PSU-Corporate-ID |	String |	Conditional |	Might be mandated in the ASPSP's documentation. Only used in a corporate context. |
 | PSU-Corporate-ID-Type |	String |	Conditional |	Might be mandated in the ASPSP's documentation. Only used in a corporate context. |
-| Authorization Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed to authenticate the PSU. |
+| Authorisation Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed to authenticate the PSU. |
 | TPP-Redirect-URI | String | Conditional | URI of the TPP, where the transaction flow shall be redirected to after a Redirect. Shall be contained at least if the tppRedirectPreferred parameter is set to true or is missing. |
 | Signature	| String |	Conditional |	A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
 | certificate	|String |	Conditional	| The certificate used for signing the request in base64 encoding. Shall be contained if the signature is used. |
@@ -510,7 +510,7 @@ No specific query parameters.
 |--------|------------------|----------|---------|
 | TPP-Transaction-ID | UUID | Mandatory | ID of the transaction as determined by the initiating party. |
 | x-request-id | UUID | Mandatory | |
-| Authorization Bearer | String | Conditional | Is contained only, if an OAuth2 based SCA was performed in the corresponding consent transaction. |
+| Authorisation Bearer | String | Conditional | Is contained only, if an OAuth2 based SCA was performed in the corresponding consent transaction. |
 
 
 ##### Request Body
@@ -566,7 +566,7 @@ Reads a list of accounts. It is assumed that a consent of the PSU to this access
 | TPP-Transaction-ID	| UUID	|Mandatory|	ID of the transaction as determined by the initiating party|
 | x-request-id	| UUID|  	Mandatory	| ID of the request, unique to the call, as determined by the initiating party.|
 | Consent-ID | String | Mandatory | Shall be contained if "Establish Consent Transaction" was performed via this API before. |
-| Authorization Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed or an OAuth2 based SCA was performed in the related consent authorization. |
+| Authorisation Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed or an OAuth2 based SCA was performed in the related consent authorisation. |
 | Signature | String | Conditional | A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
 | TPP-Certificate | String | Conditional | The certificate used for signing the request in base64 encoding. It shall be contained if a signature is used, see above. |
 
@@ -692,7 +692,7 @@ Reads details about an account, with balances where required. It is assumed that
 | TPP-Transaction-ID	| UUID	|Mandatory|	ID of the transaction as determined by the initiating party|
 | x-request-id	| UUID|  	Mandatory	| ID of the request, unique to the call, as determined by the initiating party.|
 | Consent-ID | String | Mandatory | Shall be contained if "Establish Consent Transaction" was performed via this API before. |
-| Authorization Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed or an OAuth2 based SCA was performed in the related consent authorization. |
+| Authorisation Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed or an OAuth2 based SCA was performed in the related consent authorisation. |
 | Signature | String | Conditional | A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
 | TPP-Certificate | String | Conditional | The certificate used for signing the request in base64 encoding. It shall be contained if a signature is used, see above. |
 
@@ -769,7 +769,7 @@ Remark: This account-id can be a tokenized identification due to data protection
 | TPP-Transaction-ID	| UUID	|Mandatory|	ID of the transaction as determined by the initiating party|
 | x-request-id	| UUID|  	Mandatory	| ID of the request, unique to the call, as determined by the initiating party.|
 | Consent-ID | String | Mandatory | Shall be contained if "Establish Consent Transaction" was performed via this API before. |
-| Authorization Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed or an OAuth2 based SCA was performed in the related consent authorization. |
+| Authorisation Bearer |	String |	Conditional |	Is contained only, if the optional OAuth2 Pre-Step was performed or an OAuth2 based SCA was performed in the related consent authorisation. |
 | Signature | String | Conditional | A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
 | TPP-Certificate | String | Conditional | The certificate used for signing the request in base64 encoding. It shall be contained if a signature is used, see above. |
 
@@ -864,7 +864,7 @@ Remark: If the ASPSP is not providing the "GET Account List" call, then the ASPS
 | TPP-Transaction-ID	| UUID	|Mandatory|	ID of the transaction as determined by the initiating party. In case of a once off read data request, this Process-ID equals the Process-ID of the corresponding Account Information Consent Request.|
 | x-request-id	| UUID|  	Mandatory	|  |
 | Consent-ID | String | Mandatory |  |
-| Authorization Bearer |	String |	Conditional |	Is contained only, if an OAuth2 based authentication was performed in a pre-step or an OAuth2 based SCA was performed in the related consent authorization. |
+| Authorisation Bearer |	String |	Conditional |	Is contained only, if an OAuth2 based authentication was performed in a pre-step or an OAuth2 based SCA was performed in the related consent authorisation. |
 | Accept | String | Conditional | The TPP can indicate the formats of account reports supported together with a priorisation following the http header definition. The supported formats are XML, JSON and text. |   
 | Signatue | String | Conditional | A signature of the request by the TPP on application level. This might be mandated by ASPSP. |
 | Tpp-Certificate | String | Conditional | The certificate used for signing the request in base64 encoding. It shall be contained if a signature is used, see above. |

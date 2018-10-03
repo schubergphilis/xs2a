@@ -52,5 +52,5 @@ public class CreateConsentResponse {
 
     //For Embedded approach Implicit case
     @JsonIgnore
-    private String authorizationId;
+    private String authorisationId;
 }

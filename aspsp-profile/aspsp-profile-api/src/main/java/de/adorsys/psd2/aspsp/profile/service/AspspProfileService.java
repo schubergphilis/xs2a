@@ -24,7 +24,7 @@ public interface AspspProfileService {
      * Reads all aspsp settings (frequency per day, combined service indicator, available payment products, available payment types,
      * is tpp signature required, PIS redirect URL, AIS redirect URL, multicurrency account level, is bank offered consent supported,
      * available booking statuses, supported account reference fields, consent lifetime, transaction lifetime, allPsd2 support and
-     * type of authorization start) except SCA approach
+     * type of authorisation start) except SCA approach
      *
      * @return aspsp specific settings method which is stored in profile
      */

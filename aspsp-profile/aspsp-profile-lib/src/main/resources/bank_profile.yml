@@ -18,4 +18,4 @@ setting:
  authorisationStartType: EXPLICIT
  transactionsWithoutBalancesSupported: true
  signingBasketSupported: true
- paymentCancellationAuthorizationMandated: false
+ paymentCancellationAuthorisationMandated: false

@@ -19,9 +19,9 @@ package de.adorsys.aspsp.xs2a.web;
 import de.adorsys.aspsp.xs2a.consent.api.AisConsentStatusResponse;
 import de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus;
 import de.adorsys.aspsp.xs2a.consent.api.UpdateConsentAspspDataRequest;
-import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentAuthorizationRequest;
-import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentAuthorizationResponse;
-import de.adorsys.aspsp.xs2a.consent.api.ais.CreateAisConsentAuthorizationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentAuthorisationRequest;
+import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentAuthorisationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.ais.CreateAisConsentAuthorisationResponse;
 import de.adorsys.aspsp.xs2a.consent.api.ais.CreateAisConsentResponse;
 import de.adorsys.aspsp.xs2a.service.AisConsentService;
 import org.junit.Before;
@@ -52,14 +52,14 @@ public class AisConsentControllerTest {
     private static final String WRONG_CONSENT_ID = "Wrong consent id";
     private static final CmsConsentStatus CONSENT_STATUS = VALID;
     private static final CmsConsentStatus WRONG_CONSENT_STATUS = EXPIRED;
-    private static final AisConsentAuthorizationRequest CONSENT_AUTHORIZATION_REQUEST = getConsentAuthorizationRequest();
-    private static final AisConsentAuthorizationRequest WRONG_CONSENT_AUTHORIZATION_REQUEST = getWrongConsentAuthorizationRequest();
+    private static final AisConsentAuthorisationRequest CONSENT_AUTHORISATION_REQUEST = getConsentAuthorisationRequest();
+    private static final AisConsentAuthorisationRequest WRONG_CONSENT_AUTHORISATION_REQUEST = getWrongConsentAuthorisationRequest();
     private static final String PSU_ID = "4e5dbef0-2377-483f-9ab9-ad510c1a557a";
     private static final String WRONG_PSU_ID = "Wrong psu id";
-    private static final String AUTHORIZATION_ID = "2400de4c-1c74-4ca0-941d-8f56b828f31d";
-    private static final String AUTHORIZATION_ID_1 = "4400de4c-1c74-4ca0-941d-8f56b828f31d";
-    private static final String WRONG_AUTHORIZATION_ID = "Wrong authorization id";
-    private static final AisConsentAuthorizationResponse CONSENT_AUTHORIZATION_RESPONSE = getConsentAuthorizationResponse();
+    private static final String AUTHORISATION_ID = "2400de4c-1c74-4ca0-941d-8f56b828f31d";
+    private static final String AUTHORISATION_ID_1 = "4400de4c-1c74-4ca0-941d-8f56b828f31d";
+    private static final String WRONG_AUTHORISATION_ID = "Wrong authorisation id";
+    private static final AisConsentAuthorisationResponse CONSENT_AUTHORISATION_RESPONSE = getConsentAuthorisationResponse();
 
     @InjectMocks
     private AisConsentController aisConsentController;
@@ -75,42 +75,15 @@ public class AisConsentControllerTest {
         when(aisConsentService.getConsentStatusById(eq(WRONG_CONSENT_ID))).thenReturn(Optional.empty());
         when(aisConsentService.updateConsentStatusById(eq(CONSENT_ID), eq(CONSENT_STATUS))).thenReturn(true);
         when(aisConsentService.updateConsentStatusById(eq(WRONG_CONSENT_ID), eq(WRONG_CONSENT_STATUS))).thenReturn(false);
-        when(aisConsentService.createAuthorization(eq(CONSENT_ID), eq(CONSENT_AUTHORIZATION_REQUEST))).thenReturn(Optional.of(AUTHORIZATION_ID));
-        when(aisConsentService.createAuthorization(eq(WRONG_CONSENT_ID), eq(CONSENT_AUTHORIZATION_REQUEST))).thenReturn(Optional.empty());
-        when(aisConsentService.createAuthorization(eq(CONSENT_ID), eq(WRONG_CONSENT_AUTHORIZATION_REQUEST))).thenReturn(Optional.empty());
-        when(aisConsentService.updateConsentAuthorization(eq(AUTHORIZATION_ID_1), eq(CONSENT_ID), eq(CONSENT_AUTHORIZATION_REQUEST))).thenReturn(true);
-        when(aisConsentService.updateConsentAuthorization(eq(AUTHORIZATION_ID), eq(WRONG_CONSENT_ID), eq(CONSENT_AUTHORIZATION_REQUEST))).thenReturn(false);
-        when(aisConsentService.updateConsentAuthorization(eq(WRONG_AUTHORIZATION_ID), eq(CONSENT_ID), eq(WRONG_CONSENT_AUTHORIZATION_REQUEST))).thenReturn(false);
-        when(aisConsentService.getAccountConsentAuthorizationById(eq(AUTHORIZATION_ID), eq(CONSENT_ID))).thenReturn(Optional.of(CONSENT_AUTHORIZATION_RESPONSE));
-        when(aisConsentService.getAccountConsentAuthorizationById(eq(AUTHORIZATION_ID), eq(WRONG_CONSENT_ID))).thenReturn(Optional.empty());
-        when(aisConsentService.getAccountConsentAuthorizationById(eq(WRONG_AUTHORIZATION_ID), eq(CONSENT_ID))).thenReturn(Optional.empty());
-    }
-
-    @Test
-    public void updateAspspConsentData_Success() {
-
-        //Given:
-        UpdateConsentAspspDataRequest expectedRequest = new UpdateConsentAspspDataRequest();
-
-        //When:
-        ResponseEntity<CreateAisConsentResponse> responseEntity = aisConsentController.updateAspspConsentData(CONSENT_ID, expectedRequest);
-
-        //Then:
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody().getConsentId()).isEqualTo(CONSENT_ID);
-    }
-
-    @Test
-    public void updateAspspConsentData_Fail() {
-
-        //Given:
-        UpdateConsentAspspDataRequest expectedRequest = new UpdateConsentAspspDataRequest();
-
-        //When:
-        ResponseEntity responseEntity = aisConsentController.updateAspspConsentData(WRONG_CONSENT_ID, expectedRequest);
-
-        //Then:
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        when(aisConsentService.createAuthorisation(eq(CONSENT_ID), eq(CONSENT_AUTHORISATION_REQUEST))).thenReturn(Optional.of(AUTHORISATION_ID));
+        when(aisConsentService.createAuthorisation(eq(WRONG_CONSENT_ID), eq(CONSENT_AUTHORISATION_REQUEST))).thenReturn(Optional.empty());
+        when(aisConsentService.createAuthorisation(eq(CONSENT_ID), eq(WRONG_CONSENT_AUTHORISATION_REQUEST))).thenReturn(Optional.empty());
+        when(aisConsentService.updateConsentAuthorisation(eq(AUTHORISATION_ID_1), eq(CONSENT_ID), eq(CONSENT_AUTHORISATION_REQUEST))).thenReturn(true);
+        when(aisConsentService.updateConsentAuthorisation(eq(AUTHORISATION_ID), eq(WRONG_CONSENT_ID), eq(CONSENT_AUTHORISATION_REQUEST))).thenReturn(false);
+        when(aisConsentService.updateConsentAuthorisation(eq(WRONG_AUTHORISATION_ID), eq(CONSENT_ID), eq(WRONG_CONSENT_AUTHORISATION_REQUEST))).thenReturn(false);
+        when(aisConsentService.getAccountConsentAuthorisationById(eq(AUTHORISATION_ID), eq(CONSENT_ID))).thenReturn(Optional.of(CONSENT_AUTHORISATION_RESPONSE));
+        when(aisConsentService.getAccountConsentAuthorisationById(eq(AUTHORISATION_ID), eq(WRONG_CONSENT_ID))).thenReturn(Optional.empty());
+        when(aisConsentService.getAccountConsentAuthorisationById(eq(WRONG_AUTHORISATION_ID), eq(CONSENT_ID))).thenReturn(Optional.empty());
     }
 
     @Test
@@ -155,153 +128,153 @@ public class AisConsentControllerTest {
     }
 
     @Test
-    public void createConsentAuthorization_Success() {
+    public void createConsentAuthorisation_Success() {
 
         //Given:
-        AisConsentAuthorizationRequest expectedRequest = getConsentAuthorizationRequest();
+        AisConsentAuthorisationRequest expectedRequest = getConsentAuthorisationRequest();
 
         //When:
-        ResponseEntity<CreateAisConsentAuthorizationResponse> responseEntity = aisConsentController.createConsentAuthorization(CONSENT_ID, expectedRequest);
+        ResponseEntity<CreateAisConsentAuthorisationResponse> responseEntity = aisConsentController.createConsentAuthorisation(CONSENT_ID, expectedRequest);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(responseEntity.getBody().getAuthorizationId()).isEqualTo(AUTHORIZATION_ID);
+        assertThat(responseEntity.getBody().getAuthorisationId()).isEqualTo(AUTHORISATION_ID);
     }
 
     @Test
-    public void createConsentAuthorization_Fail_WrongConsentId() {
+    public void createConsentAuthorisation_Fail_WrongConsentId() {
 
         //Given:
-        AisConsentAuthorizationRequest expectedRequest = getConsentAuthorizationRequest();
+        AisConsentAuthorisationRequest expectedRequest = getConsentAuthorisationRequest();
 
         //When:
-        ResponseEntity<CreateAisConsentAuthorizationResponse> responseEntity = aisConsentController.createConsentAuthorization(WRONG_CONSENT_ID, expectedRequest);
+        ResponseEntity<CreateAisConsentAuthorisationResponse> responseEntity = aisConsentController.createConsentAuthorisation(WRONG_CONSENT_ID, expectedRequest);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void createConsentAuthorization_Fail_WrondRequest() {
+    public void createConsentAuthorisation_Fail_WrondRequest() {
 
         //Given:
-        AisConsentAuthorizationRequest expectedRequest = getWrongConsentAuthorizationRequest();
+        AisConsentAuthorisationRequest expectedRequest = getWrongConsentAuthorisationRequest();
 
         //When:
-        ResponseEntity<CreateAisConsentAuthorizationResponse> responseEntity = aisConsentController.createConsentAuthorization(CONSENT_ID, expectedRequest);
+        ResponseEntity<CreateAisConsentAuthorisationResponse> responseEntity = aisConsentController.createConsentAuthorisation(CONSENT_ID, expectedRequest);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void updateConsentAuthorization_Success() {
+    public void updateConsentAuthorisation_Success() {
         doReturn(true)
-            .when(aisConsentService).updateConsentAuthorization(anyString(), anyString(), any(AisConsentAuthorizationRequest.class));
+            .when(aisConsentService).updateConsentAuthorisation(anyString(), anyString(), any(AisConsentAuthorisationRequest.class));
 
         //Given:
-        AisConsentAuthorizationRequest expectedRequest = getConsentAuthorizationRequest();
+        AisConsentAuthorisationRequest expectedRequest = getConsentAuthorisationRequest();
 
         //When:
-        ResponseEntity responseEntity = aisConsentController.updateConsentAuthorization(AUTHORIZATION_ID_1, CONSENT_ID, expectedRequest);
+        ResponseEntity responseEntity = aisConsentController.updateConsentAuthorisation(AUTHORISATION_ID_1, CONSENT_ID, expectedRequest);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    public void updateConsentAuthorization_Fail_WrongConsentId() {
+    public void updateConsentAuthorisation_Fail_WrongConsentId() {
 
         //Given:
-        AisConsentAuthorizationRequest expectedRequest = getConsentAuthorizationRequest();
+        AisConsentAuthorisationRequest expectedRequest = getConsentAuthorisationRequest();
 
         //When:
-        ResponseEntity responseEntity = aisConsentController.updateConsentAuthorization(AUTHORIZATION_ID, WRONG_CONSENT_ID, expectedRequest);
+        ResponseEntity responseEntity = aisConsentController.updateConsentAuthorisation(AUTHORISATION_ID, WRONG_CONSENT_ID, expectedRequest);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void updateConsentAuthorization_Fail_WrongAuthorizationId() {
+    public void updateConsentAuthorisation_Fail_WrongAuthorisationId() {
 
         //Given:
-        AisConsentAuthorizationRequest expectedRequest = getConsentAuthorizationRequest();
+        AisConsentAuthorisationRequest expectedRequest = getConsentAuthorisationRequest();
 
         //When:
-        ResponseEntity responseEntity = aisConsentController.updateConsentAuthorization(WRONG_AUTHORIZATION_ID, CONSENT_ID, expectedRequest);
+        ResponseEntity responseEntity = aisConsentController.updateConsentAuthorisation(WRONG_AUTHORISATION_ID, CONSENT_ID, expectedRequest);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void updateConsentAuthorization_Fail_WrongRequest() {
+    public void updateConsentAuthorisation_Fail_WrongRequest() {
 
         //Given:
-        AisConsentAuthorizationRequest expectedRequest = getWrongConsentAuthorizationRequest();
+        AisConsentAuthorisationRequest expectedRequest = getWrongConsentAuthorisationRequest();
 
         //When:
-        ResponseEntity responseEntity = aisConsentController.updateConsentAuthorization(AUTHORIZATION_ID, CONSENT_ID, expectedRequest);
+        ResponseEntity responseEntity = aisConsentController.updateConsentAuthorisation(AUTHORISATION_ID, CONSENT_ID, expectedRequest);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void getConsentAuthorization_Success() {
+    public void getConsentAuthorisation_Success() {
 
         //When:
-        ResponseEntity<AisConsentAuthorizationResponse> responseEntity = aisConsentController.getConsentAuthorization(CONSENT_ID, AUTHORIZATION_ID);
+        ResponseEntity<AisConsentAuthorisationResponse> responseEntity = aisConsentController.getConsentAuthorisation(CONSENT_ID, AUTHORISATION_ID);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isEqualTo(getConsentAuthorizationResponse());
+        assertThat(responseEntity.getBody()).isEqualTo(getConsentAuthorisationResponse());
     }
 
     @Test
-    public void getConsentAuthorization_Fail_WrongConsentId() {
+    public void getConsentAuthorisation_Fail_WrongConsentId() {
 
         //When:
-        ResponseEntity<AisConsentAuthorizationResponse> responseEntity = aisConsentController.getConsentAuthorization(WRONG_CONSENT_ID, AUTHORIZATION_ID);
+        ResponseEntity<AisConsentAuthorisationResponse> responseEntity = aisConsentController.getConsentAuthorisation(WRONG_CONSENT_ID, AUTHORISATION_ID);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
     @Test
-    public void getConsentAuthorization_Fail_WrongAuthorizationId() {
+    public void getConsentAuthorisation_Fail_WrongAuthorisationId() {
 
         //When:
-        ResponseEntity<AisConsentAuthorizationResponse> responseEntity = aisConsentController.getConsentAuthorization(CONSENT_ID, WRONG_AUTHORIZATION_ID);
+        ResponseEntity<AisConsentAuthorisationResponse> responseEntity = aisConsentController.getConsentAuthorisation(CONSENT_ID, WRONG_AUTHORISATION_ID);
 
         //Then:
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-    private static AisConsentAuthorizationRequest getConsentAuthorizationRequest() {
-        AisConsentAuthorizationRequest request = new AisConsentAuthorizationRequest();
+    private static AisConsentAuthorisationRequest getConsentAuthorisationRequest() {
+        AisConsentAuthorisationRequest request = new AisConsentAuthorisationRequest();
         request.setPsuId(PSU_ID);
         request.setPassword("zzz");
 
         return request;
     }
 
-    private static AisConsentAuthorizationRequest getWrongConsentAuthorizationRequest() {
-        AisConsentAuthorizationRequest request = new AisConsentAuthorizationRequest();
+    private static AisConsentAuthorisationRequest getWrongConsentAuthorisationRequest() {
+        AisConsentAuthorisationRequest request = new AisConsentAuthorisationRequest();
         request.setPsuId(WRONG_PSU_ID);
         request.setPassword("zzz");
 
         return request;
     }
 
-    private static AisConsentAuthorizationResponse getConsentAuthorizationResponse() {
-        AisConsentAuthorizationResponse authorizationResponse = new AisConsentAuthorizationResponse();
-        authorizationResponse.setAuthorizationId(AUTHORIZATION_ID);
-        authorizationResponse.setConsentId(CONSENT_ID);
-        authorizationResponse.setPsuId(PSU_ID);
+    private static AisConsentAuthorisationResponse getConsentAuthorisationResponse() {
+        AisConsentAuthorisationResponse authorisationResponse = new AisConsentAuthorisationResponse();
+        authorisationResponse.setAuthorisationId(AUTHORISATION_ID);
+        authorisationResponse.setConsentId(CONSENT_ID);
+        authorisationResponse.setPsuId(PSU_ID);
 
-        return authorizationResponse;
+        return authorisationResponse;
     }
 
 

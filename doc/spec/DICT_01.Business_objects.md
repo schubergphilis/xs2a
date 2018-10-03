@@ -50,7 +50,7 @@
 | Attribute | Type | Condition | Description |
 |:---------:|:----:|:---------:|-----------|
 | redirect | String | Optional | A link to an ASPSP site where SCA is performed within the Redirect SCA approach. |
-| oAuth | String | Optional | The link refers to a JSON document specifying the OAuth details of the ASPSP’s authorization server. JSON document follows the definition given in https://tools.ietf.org/html/draft-ietf-oauth- discovery. |
+| oAuth | String | Optional | The link refers to a JSON document specifying the OAuth details of the ASPSP’s authorisation server. JSON document follows the definition given in https://tools.ietf.org/html/draft-ietf-oauth- discovery. |
 | updatePSUIdentification | String | Optional | The link to the payment initiation or account information resource, which needs to be updated by the PSU identification if not delivered yet. |
 | updateProprietaryData | String | Optional | The link to the payment initiation or account information resource which needs to be updated by the proprietary data. |
 | updatePsuAuthentication | String | Optional | The link to the payment initiation or account information resource, which needs to be updated by a PSU password and eventually the PSU identification if not delivered yet. |
@@ -174,9 +174,9 @@ If the response is JSON based, then the Name entry is used, to get a better read
 
 | Attribute | Type | Condition | Description |
 |:---------:|:----:|:---------:|-----------|
-| accounts | Array of Account Reference | Optional | Is asking for detailed account information. If the array is empty, the TPP is asking for an accessible account list. This may be restricted in a PSU/ASPSP authorization dialogue. |
-| balances | Array of Account Reference | Optional | Is asking for balances of the addressed accounts. If the array is empty, the TPP is asking for the balances of all accessible account lists. This may be restricted in a PSU/ASPSP authorization dialogue. |
-| transactions | Array of Account Reference | Optional | Is asking for transactions of the addressed accounts. If the array is empty, the TPP is asking for the transactions of all accessible account lists. This may be restricted in a PSU/ASPSP authorization dialogue. |
+| accounts | Array of Account Reference | Optional | Is asking for detailed account information. If the array is empty, the TPP is asking for an accessible account list. This may be restricted in a PSU/ASPSP authorisation dialogue. |
+| balances | Array of Account Reference | Optional | Is asking for balances of the addressed accounts. If the array is empty, the TPP is asking for the balances of all accessible account lists. This may be restricted in a PSU/ASPSP authorisation dialogue. |
+| transactions | Array of Account Reference | Optional | Is asking for transactions of the addressed accounts. If the array is empty, the TPP is asking for the transactions of all accessible account lists. This may be restricted in a PSU/ASPSP authorisation dialogue. |
 | availableAccounts | String | [Optional] | Only the value "allAccounts" or "allAccountsWithBalances" is admitted. |
 | allPsd2 | String | [Optional] | Only the value "allAccounts" is admitted. | 
 

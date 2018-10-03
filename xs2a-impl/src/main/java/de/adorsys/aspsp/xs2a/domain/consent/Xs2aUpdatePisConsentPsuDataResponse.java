@@ -29,7 +29,7 @@ public class Xs2aUpdatePisConsentPsuDataResponse {
     private String scaStatus;
     private String psuMessage;
     private String paymentId;
-    private String authorizationId;
+    private String authorisationId;
     private List<CmsScaMethod> availableScaMethods;
     private Links links = new Links();
     private Xs2aChosenScaMethod chosenScaMethod;

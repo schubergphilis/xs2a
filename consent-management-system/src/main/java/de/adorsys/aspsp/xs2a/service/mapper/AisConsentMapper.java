@@ -20,10 +20,10 @@ import de.adorsys.aspsp.xs2a.consent.api.CmsAccountReference;
 import de.adorsys.aspsp.xs2a.consent.api.TypeAccess;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountAccess;
 import de.adorsys.aspsp.xs2a.consent.api.ais.AisAccountConsent;
-import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentAuthorizationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.ais.AisConsentAuthorisationResponse;
 import de.adorsys.aspsp.xs2a.domain.AccountAccess;
 import de.adorsys.aspsp.xs2a.domain.AisConsent;
-import de.adorsys.aspsp.xs2a.domain.AisConsentAuthorization;
+import de.adorsys.aspsp.xs2a.domain.AisConsentAuthorisation;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -44,17 +44,16 @@ public class AisConsentMapper {
             consent.getConsentStatus(),
             false,
             consent.isTppRedirectPreferred(),
-            consent.getAspspConsentData(),
             consent.getAisConsentRequestType(),
             consent.getPsuId(),
             consent.getTppId());
     }
 
-    public AisConsentAuthorizationResponse mapToAisConsentAuthorizationResponse(AisConsentAuthorization aisConsentAuthorization) {
-        return Optional.ofNullable(aisConsentAuthorization)
+    public AisConsentAuthorisationResponse mapToAisConsentAuthorisationResponse(AisConsentAuthorisation aisConsentAuthorisation) {
+        return Optional.ofNullable(aisConsentAuthorisation)
                    .map(conAuth -> {
-                       AisConsentAuthorizationResponse resp = new AisConsentAuthorizationResponse();
-                       resp.setAuthorizationId(conAuth.getExternalId());
+                       AisConsentAuthorisationResponse resp = new AisConsentAuthorisationResponse();
+                       resp.setAuthorisationId(conAuth.getExternalId());
                        resp.setPsuId(conAuth.getPsuId());
                        resp.setConsentId(conAuth.getConsent().getExternalId());
                        resp.setScaStatus(conAuth.getScaStatus());

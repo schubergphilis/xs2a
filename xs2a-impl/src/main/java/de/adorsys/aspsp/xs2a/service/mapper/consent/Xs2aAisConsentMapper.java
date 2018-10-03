@@ -107,7 +107,7 @@ public class Xs2aAisConsentMapper {
                        UpdateConsentPsuDataReq request = new UpdateConsentPsuDataReq();
                        request.setPsuId(updatePsuDataResponse.getPsuId());
                        request.setConsentId(updatePsuDataRequest.getConsentId());
-                       request.setAuthorizationId(updatePsuDataRequest.getAuthorizationId());
+                       request.setAuthorisationId(updatePsuDataRequest.getAuthorisationId());
                        request.setAuthenticationMethodId(updatePsuDataResponse.getAuthenticationMethodId());
                        request.setAuthenticationMethodId(updatePsuDataResponse.getChosenScaMethod());
                        request.setScaAuthenticationData(updatePsuDataResponse.getScaAuthenticationData());
@@ -127,45 +127,45 @@ public class Xs2aAisConsentMapper {
                    .map(status -> SpiConsentStatus.valueOf(status.name()));
     }
 
-    public AccountConsentAuthorization mapToAccountConsentAuthorization(AisConsentAuthorizationResponse spiConsentAuthorization) {
-        return Optional.ofNullable(spiConsentAuthorization)
+    public AccountConsentAuthorisation mapToAccountConsentAuthorisation(AisConsentAuthorisationResponse spiConsentAuthorisation) {
+        return Optional.ofNullable(spiConsentAuthorisation)
                    .map(conAuth -> {
-                       AccountConsentAuthorization consentAuthorization = new AccountConsentAuthorization();
+                       AccountConsentAuthorisation consentAuthorisation = new AccountConsentAuthorisation();
 
-                       consentAuthorization.setId(conAuth.getAuthorizationId());
-                       consentAuthorization.setConsentId(conAuth.getConsentId());
-                       consentAuthorization.setPsuId(conAuth.getPsuId());
-                       consentAuthorization.setScaStatus(ScaStatus.valueOf(conAuth.getScaStatus().name()));
-                       consentAuthorization.setAuthenticationMethodId(conAuth.getAuthenticationMethodId());
-                       consentAuthorization.setScaAuthenticationData(conAuth.getScaAuthenticationData());
-                       consentAuthorization.setPassword(conAuth.getPassword());
-                       return consentAuthorization;
+                       consentAuthorisation.setId(conAuth.getAuthorisationId());
+                       consentAuthorisation.setConsentId(conAuth.getConsentId());
+                       consentAuthorisation.setPsuId(conAuth.getPsuId());
+                       consentAuthorisation.setScaStatus(ScaStatus.valueOf(conAuth.getScaStatus().name()));
+                       consentAuthorisation.setAuthenticationMethodId(conAuth.getAuthenticationMethodId());
+                       consentAuthorisation.setScaAuthenticationData(conAuth.getScaAuthenticationData());
+                       consentAuthorisation.setPassword(conAuth.getPassword());
+                       return consentAuthorisation;
                    })
                    .orElse(null);
     }
 
-    public AisConsentAuthorizationRequest mapToAisConsentAuthorization(Xs2aScaStatus scaStatus, String psuId) {
+    public AisConsentAuthorisationRequest mapToAisConsentAuthorisation(Xs2aScaStatus scaStatus, String psuId) {
         return Optional.ofNullable(scaStatus)
                    .map(st -> {
-                       AisConsentAuthorizationRequest consentAuthorization = new AisConsentAuthorizationRequest();
-                       consentAuthorization.setPsuId(psuId);
-                       consentAuthorization.setScaStatus(mapToCmsScaStatus(scaStatus));
-                       return consentAuthorization;
+                       AisConsentAuthorisationRequest consentAuthorisation = new AisConsentAuthorisationRequest();
+                       consentAuthorisation.setPsuId(psuId);
+                       consentAuthorisation.setScaStatus(mapToCmsScaStatus(scaStatus));
+                       return consentAuthorisation;
                    })
                    .orElse(null);
     }
 
-    public AisConsentAuthorizationRequest mapToAisConsentAuthorizationRequest(UpdateConsentPsuDataReq updatePsuData) {
+    public AisConsentAuthorisationRequest mapToAisConsentAuthorisationRequest(UpdateConsentPsuDataReq updatePsuData) {
         return Optional.ofNullable(updatePsuData)
                    .map(data -> {
-                       AisConsentAuthorizationRequest consentAuthorization = new AisConsentAuthorizationRequest();
-                       consentAuthorization.setPsuId(data.getPsuId());
-                       consentAuthorization.setScaStatus(mapToCmsScaStatus(data.getScaStatus()));
-                       consentAuthorization.setAuthenticationMethodId(data.getAuthenticationMethodId());
-                       consentAuthorization.setPassword(data.getPassword());
-                       consentAuthorization.setScaAuthenticationData(data.getScaAuthenticationData());
+                       AisConsentAuthorisationRequest consentAuthorisation = new AisConsentAuthorisationRequest();
+                       consentAuthorisation.setPsuId(data.getPsuId());
+                       consentAuthorisation.setScaStatus(mapToCmsScaStatus(data.getScaStatus()));
+                       consentAuthorisation.setAuthenticationMethodId(data.getAuthenticationMethodId());
+                       consentAuthorisation.setPassword(data.getPassword());
+                       consentAuthorisation.setScaAuthenticationData(data.getScaAuthenticationData());
 
-                       return consentAuthorization;
+                       return consentAuthorisation;
                    })
                    .orElse(null);
     }

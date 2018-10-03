@@ -7,7 +7,7 @@ This service may be used by a PISP to initiate a single payment on behalf of a P
     With Redirect SCA Approach
     If the ASPSP supports the Redirect SCA Approach, the message flow within the payment
 	   initiation service is simple. The Payment Initiation Request is followed by a redirection to the
-	   ASPSP SCA authorization site. A status request might be requested by the TPP after the
+	   ASPSP SCA authorisation site. A status request might be requested by the TPP after the
 	   session is re-redirected to the TPP’s system.
 
 ![Payment Initiation Service Redirect Approach](img/PIS_Redirect.png)
@@ -15,7 +15,7 @@ This service may be used by a PISP to initiate a single payment on behalf of a P
 
     With OAuth2 SCA Approach
     If the ASPSP supports the OAuth2 SCA Approach, the flow is very similar to the Redirect SCA Approach. 
-    Instead of redirecting the PSU directly on an authentication server, the OAuth2 protocol is used for the transaction authorization process.
+    Instead of redirecting the PSU directly on an authentication server, the OAuth2 protocol is used for the transaction authorisation process.
 
 ![Payment Initiation Service OAuth2 Approach](img/PIS_OAuth.png)
 
@@ -67,7 +67,7 @@ The following usage of abbreviations in the Location and Usage columns is define
 | Transaction Identification          | TPP-Transaction-ID (unique ID of TPP)|      |       |    x   |      |             |     m     |            |     m    |           |     m     |            |
 | Request Identification              | x-request-id                       |      |       |    x   |      |             |     m     |            |     m    |           |     m     |            |
 | Resource ID                         | paymentId                            |   x  |       |        |   x  |             |           |      m     |     m    |           |     m     |            |
-| Access Token (fromoptional OAuth 2) | Authorization Bearer                 |      |       |    x   |      |             |     c     |            |     c    |           |     c     |            |
+| Access Token (fromoptional OAuth 2) | Authorisation Bearer                 |      |       |    x   |      |             |     c     |            |     c    |           |     c     |            |
 | TPP Signing                         | TPP-Certificate                      |      |       |    x   |      |             |     c     |            |     c    |           |     c     |            |
 | Certificate                         |                                      |      |       |    x   |      |             |     c     |            |     c    |           |     c     |            |
 | TPP Electronic Signature            | Signature                            |      |       |    x   |      |             |     c     |            |     c    |           |     c     |            |
@@ -140,7 +140,7 @@ Attribute | Type  | Condition | Description |
 | PSU-ID-Type | String | Conditional | Type of the PSU-ID, needed in scenarios where PSUs have several PSU-IDs as access possibility. |
 | PSU-Corporate-ID |	String |	Conditional |	Might be mandated in the ASPSP's documentation. Only used in a corporate context. |
 | PSU-Corporate-ID-Type | String | Conditional | Might be mandated in the ASPSP's documentation. Only used in a corporate context. |
-| Authorization Bearer |	String |	Conditional |	Is contained only, if an OAuth2 based authentication was performed in a pre-step or an OAuth2 based SCA was performed in an preceeding AIS service in the same session. | |
+| Authorisation Bearer |	String |	Conditional |	Is contained only, if an OAuth2 based authentication was performed in a pre-step or an OAuth2 based SCA was performed in an preceeding AIS service in the same session. | |
 | PSU-Consent-ID |	String |	Optional |	This data element may be contained, if the payment initiation transaction is part of acombined AIS/PIS service. This then contains the consent id of the related AIS consent. |
 | PSU-Agent |	String	| Optional |	The forwarded Agent header field of the http request between PSU and TPP. |
 | PSU-IPAddress | String	| Mandatory |	The forwarded IP Address header field consists of the corresponding http request IP Address field between PSU and TPP. |
@@ -328,7 +328,7 @@ For this initiation the same header as in Section PIS_01_01 is used.
 
 ### Response 
 
-The formats of the Payment Initiation Response resp. the subsequent transaction authorization process for standing orders with JSON based payment data equals the corresponding Payment Initiation Response resp. the subsequent transaction authorization process for a single payment containing JSON based payment data.
+The formats of the Payment Initiation Response resp. the subsequent transaction authorisation process for standing orders with JSON based payment data equals the corresponding Payment Initiation Response resp. the subsequent transaction authorisation process for a single payment containing JSON based payment data.
 
 **Remark:** Please note that for the payment initiation of standing orders, the ASPSP will always mandate an SCA with dynamic linking, exemptions are not permitted.
 
@@ -380,7 +380,7 @@ Attribute | Type | Condition | Description |
 ------- | ---------------- | ---------------- | ----------------
 | TPP-Transaction-ID |  UUID  | Mandatory | |
 | x-request-id |  UUID  | Mandatory | |
-| Authorization Bearer |  String  | Conditional | Is contained only, if an OAuth2 based authentication was performed in a pre-step or an OAuth2 based SCA was performed in the current PIS transaction or in a preceeding AIS service in the same session, if no such OAuth2 SCA approach was chosen in the current PIS transaction.  |
+| Authorisation Bearer |  String  | Conditional | Is contained only, if an OAuth2 based authentication was performed in a pre-step or an OAuth2 based SCA was performed in the current PIS transaction or in a preceeding AIS service in the same session, if no such OAuth2 SCA approach was chosen in the current PIS transaction.  |
 | Signature |  String | Conditional | A signature of the request by the TPP on  application level. This might be mandated by ASPSP. |
 | TPP-Certificate |  String | Conditional | The certificate used for signing the request in base64 encoding. Must be contained if a signature is contained, see above. |
 

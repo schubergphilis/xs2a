@@ -153,7 +153,7 @@ public class PaymentService {
      * Cancel payment
      *
      * @param paymentId Payment identifier
-     * @return SpiCancelPayment containing information about the requirement of aspsp for start authorization
+     * @return SpiCancelPayment containing information about the requirement of aspsp for start authorisation
      */
     public Optional<SpiCancelPayment> cancelPayment(String paymentId) {
         return Optional.ofNullable(paymentRepository.findOne(paymentId))

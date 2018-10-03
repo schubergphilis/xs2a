@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConfirmation;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiTransaction;
-import de.adorsys.aspsp.xs2a.spi.domain.authorization.SpiAuthorizationStatus;
+import de.adorsys.aspsp.xs2a.spi.domain.authorisation.SpiAuthorisationStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
 
@@ -113,25 +113,25 @@ public interface AccountSpi {
      * @param password         Psu's password
      * @param aspspConsentData Encrypted data that may be stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
-     * @return success or failure authorization status
+     * @return success or failure authorisation status
      */
-    SpiResponse<SpiAuthorizationStatus> authorisePsu(String psuId, String password, AspspConsentData aspspConsentData);
+    SpiResponse<SpiAuthorisationStatus> authorisePsu(String psuId, String password, AspspConsentData aspspConsentData);
 
     /**
-     * Performs strong customer authorization
+     * Performs strong customer authorisation
      *
      * @param psuId            ASPSP identifier of the psu
      * @param aspspConsentData Encrypted data that may be stored in the consent management system in the consent linked to a request.
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      */
-    void performStrongUserAuthorization(String psuId, AspspConsentData aspspConsentData);
+    void performStrongUserAuthorisation(String psuId, AspspConsentData aspspConsentData);
 
     /**
-     * Applies strong customer authorization
+     * Applies strong customer authorisation
      *
      * @param spiAccountConfirmation Account confirmation data
      * @param aspspConsentData       Encrypted data that may be stored in the consent management system in the consent linked to a request.
      *                               May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      */
-    void applyStrongUserAuthorization(SpiAccountConfirmation spiAccountConfirmation, AspspConsentData aspspConsentData);
+    void applyStrongUserAuthorisation(SpiAccountConfirmation spiAccountConfirmation, AspspConsentData aspspConsentData);
 }

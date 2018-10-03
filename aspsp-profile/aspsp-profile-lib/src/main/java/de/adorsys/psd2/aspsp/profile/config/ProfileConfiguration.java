@@ -113,7 +113,7 @@ public class ProfileConfiguration {
     private boolean allPsd2Support;
 
     /**
-     * Type of authorization start: IMPLICIT or EXPLICIT
+     * Type of authorisation start: IMPLICIT or EXPLICIT
      */
     private AuthorisationStartType authorisationStartType;
 
@@ -128,9 +128,9 @@ public class ProfileConfiguration {
     private boolean signingBasketSupported;
 
     /**
-     * If the option is set to "true", then authorization of the payment cancellation is mandated by the ASPSP
+     * If the option is set to "true", then authorisation of the payment cancellation is mandated by the ASPSP
      */
-    private boolean paymentCancellationAuthorizationMandated;
+    private boolean paymentCancellationAuthorisationMandated;
 
     @PostConstruct
     private void addDefaultValues() { //NOPMD It is necessary to set single payment and booked booking status available by default

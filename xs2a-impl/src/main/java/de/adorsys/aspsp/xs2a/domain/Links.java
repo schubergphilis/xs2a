@@ -27,7 +27,7 @@ public class Links {
     @ApiModelProperty(value = "The link to an ASPSP site where SCA is performed within the Redirect SCA approach.", example = "https://www.testbank.com/authentication/1234-wertiq-983")
     private String scaRedirect;
 
-    @ApiModelProperty(value = "The link refers to a JSON document specifying the OAuth details of the ASPSP’s authorization server.", example = "https://www.testbank.com/oauth/.well-known/oauth- authorization-server")
+    @ApiModelProperty(value = "The link refers to a JSON document specifying the OAuth details of the ASPSP’s authorisation server.", example = "https://www.testbank.com/oauth/.well-known/oauth- authorisation-server")
     private String scaOAuth;
 
     @ApiModelProperty(value = "The link to the payment initiation or account information resource, which needs to be updated by the PSU identification if not delivered yet.", example = "api/v1/consents/1234-wertiq-983")
@@ -72,24 +72,24 @@ public class Links {
     @ApiModelProperty(value = "download: link to a resource, where the transaction report might be downloaded when is requested which has a huge size", example = "/v1/accounts/12345678999/transactions/download/")
     private String download;
 
-    @ApiModelProperty(value = "In case, where an explicit start of the transaction authorization is needed, but no more data needs to be updated (no authentication method to be selected, no PSU identification nor PSU authentication data to be uploaded)")
-    private String startAuthorization;
+    @ApiModelProperty(value = "In case, where an explicit start of the transaction authorisation is needed, but no more data needs to be updated (no authentication method to be selected, no PSU identification nor PSU authentication data to be uploaded)")
+    private String startAuthorisation;
 
-    @ApiModelProperty(value = "The link to the authorization end-point, where the authorization sub-resource has to be generated while uploading the PSU identification data.")
-    private String startAuthorizationWithPsuIdentification;
+    @ApiModelProperty(value = "The link to the authorisation end-point, where the authorisation sub-resource has to be generated while uploading the PSU identification data.")
+    private String startAuthorisationWithPsuIdentification;
 
-    @ApiModelProperty(value = "The link to the authorization end-point, where the authorization sub-resource has to be generated while uploading the PSU authentication data.")
-    private String startAuthorizationWithPsuAuthentication;
+    @ApiModelProperty(value = "The link to the authorisation end-point, where the authorisation sub-resource has to be generated while uploading the PSU authentication data.")
+    private String startAuthorisationWithPsuAuthentication;
 
-    @ApiModelProperty(value = "The link to the authorization end-point, where the authorization sub-resource has to be generated while selecting the authentication method. This link is contained under exactly the same conditions as the data element \"scaMethods\"")
-    private String startAuthorizationWithAuthenticationMethodSelection;//NOPMD naming according to spec!
+    @ApiModelProperty(value = "The link to the authorisation end-point, where the authorisation sub-resource has to be generated while selecting the authentication method. This link is contained under exactly the same conditions as the data element \"scaMethods\"")
+    private String startAuthorisationWithAuthenticationMethodSelection;//NOPMD naming according to spec!
 
-    @ApiModelProperty(value = "The link to the authorization end-point, where the authorization sub-resource has to be generated while authorising the transaction e.g. by uploading an OTP received by SMS.")
-    private String startAuthorizationWithTransactionAuthorization;
+    @ApiModelProperty(value = "The link to the authorisation end-point, where the authorisation sub-resource has to be generated while authorising the transaction e.g. by uploading an OTP received by SMS.")
+    private String startAuthorisationWithTransactionAuthorisation;
 
-    @ApiModelProperty(value = "The link to retrieve the scaStatus of the corresponding authorization sub-resource. This link is only contained, if an authorization sub-resource has been already created.")
+    @ApiModelProperty(value = "The link to retrieve the scaStatus of the corresponding authorisation sub-resource. This link is only contained, if an authorisation sub-resource has been already created.")
     private String scaStatus;
 
-    @ApiModelProperty(value = "The link to the authorization or cancellation authorization sub-resource, where the authorization data has to be uploaded, e.g. the TOP received by SMS.")
+    @ApiModelProperty(value = "The link to the authorisation or cancellation authorisation sub-resource, where the authorisation data has to be uploaded, e.g. the TOP received by SMS.")
     private String authoriseTransaction;
 }

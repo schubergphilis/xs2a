@@ -18,8 +18,8 @@ package de.adorsys.aspsp.xs2a.service.mapper;
 
 import de.adorsys.aspsp.xs2a.consent.api.*;
 import de.adorsys.aspsp.xs2a.consent.api.pis.PisPayment;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.GetPisConsentAuthorizationResponse;
-import de.adorsys.aspsp.xs2a.consent.api.pis.authorization.UpdatePisConsentPsuDataResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.GetPisConsentAuthorisationResponse;
+import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentResponse;
 import de.adorsys.aspsp.xs2a.domain.ConsentType;
@@ -101,18 +101,17 @@ public class PisConsentMapper {
                    }).orElse(null);
     }
 
-    public GetPisConsentAuthorizationResponse mapToGetPisConsentAuthorizationResponse(PisConsentAuthorization pis) {
-        GetPisConsentAuthorizationResponse response = new GetPisConsentAuthorizationResponse();
+    public GetPisConsentAuthorisationResponse mapToGetPisConsentAuthorisationResponse(PisConsentAuthorisation pis) {
+        GetPisConsentAuthorisationResponse response = new GetPisConsentAuthorisationResponse();
         response.setPayments(mapToPisPaymentList(pis.getConsent().getPayments()));
         response.setPaymentType(pis.getConsent().getPisPaymentType());
-        response.setCmsAspspConsentData(new CmsAspspConsentData(pis.getConsent().getAspspConsentData()));
         response.setScaStatus(pis.getScaStatus());
         response.setConsentId(pis.getConsent().getExternalId());
         return response;
     }
 
-    public UpdatePisConsentPsuDataResponse mapToUpdatePisConsentPsuDataResponse(PisConsentAuthorization pisConsentAuthorization) {
-        return new UpdatePisConsentPsuDataResponse(pisConsentAuthorization.getScaStatus());
+    public UpdatePisConsentPsuDataResponse mapToUpdatePisConsentPsuDataResponse(PisConsentAuthorisation pisConsentAuthorisation) {
+        return new UpdatePisConsentPsuDataResponse(pisConsentAuthorisation.getScaStatus());
     }
 
     public Optional<PisConsentResponse> mapToPisConsentResponse(PisConsent pisConsent) {
@@ -125,7 +124,6 @@ public class PisConsentMapper {
                        response.setPaymentType(pc.getPisPaymentType());
                        response.setPaymentProduct(pc.getPisPaymentProduct());
                        response.setTppInfo(mapToTppInfo(pc.getPisTppInfo()));
-                       response.setAspspConsentData(pc.getAspspConsentData());
                        return response;
                    });
     }

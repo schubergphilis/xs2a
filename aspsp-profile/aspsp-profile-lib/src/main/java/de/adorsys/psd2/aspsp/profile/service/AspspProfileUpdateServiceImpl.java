@@ -188,7 +188,7 @@ public class AspspProfileUpdateServiceImpl implements AspspProfileUpdateService 
     }
 
     /**
-     * Update type of authorization start to implicit or explicit
+     * Update type of authorisation start to implicit or explicit
      *
      * @param authorisationStartType AllPsd2Support status to substitute existing one
      */
@@ -218,12 +218,12 @@ public class AspspProfileUpdateServiceImpl implements AspspProfileUpdateService 
     }
 
     /**
-     * Update the value of payment cancellation authorization mandated
+     * Update the value of payment cancellation authorisation mandated
      *
-     * @param paymentCancellationAuthorizationMandated the value of payment cancellation authorization mandated
+     * @param paymentCancellationAuthorisationMandated the value of payment cancellation authorisation mandated
      */
     @Override
-    public void updatePaymentCancellationAuthorizationMandated(boolean paymentCancellationAuthorizationMandated) {
-        profileConfiguration.setPaymentCancellationAuthorizationMandated(paymentCancellationAuthorizationMandated);
+    public void updatePaymentCancellationAuthorisationMandated(boolean paymentCancellationAuthorisationMandated) {
+        profileConfiguration.setPaymentCancellationAuthorisationMandated(paymentCancellationAuthorisationMandated);
     }
 }

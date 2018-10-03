@@ -36,28 +36,28 @@ evidence, capable of having legal effect, that given data is originated by the l
 * issuing of card-based payment instruments (PSP_IC)
 
 
-## Payment Service Provider Authorizations and Services Passporting
+## Payment Service Provider Authorisations and Services Passporting
 
 According to PSD2 and Credit Institutions Directive, the competent authority (NCA) responsible for payment
-services approves or rejects authorization of PSPs in its own country. If authorization is granted, the NCA issues an
-authorization number and publishes that information in its public register(s). An NCA also approves or rejects the
+services approves or rejects authorisation of PSPs in its own country. If authorisation is granted, the NCA issues an
+authorisation number and publishes that information in its public register(s). An NCA also approves or rejects the
 operation of PSPs in its own country, requesting access via other countries. The NCA approval to operate payment
 services in a new country, to a foreign PSP initially registered in another country, is called passporting. Information
 about passporting is published in the public registry in the home country of the PSP.
 Certificates issued according to the requirements laid down in the present document do not include any attributes
 regarding passporting.
 
-## Authorization Number
+## Authorisation Number
 
 For identification, the RTS  requires the registration number used in a qualified certificate, as stated in the official
-records to be the authorization number of
-the payment service provider. This authorization number is required to be available in the National Competent
+records to be the authorisation number of
+the payment service provider. This authorisation number is required to be available in the National Competent
 Authority public register.
 
 ##  Registration and Certificate Issuance 
 
 Figure below presents the general concept of registration and certificate issuance. The qualified certificate contains an
-authorization number of the PSP, which has been issued/specified by a National Competent Authority (NCA), and is
+authorisation number of the PSP, which has been issued/specified by a National Competent Authority (NCA), and is
 publicly available in that NCA public register.
 
 ![PSP registration](img/PSP_registration.png)
@@ -81,7 +81,7 @@ letter).
 
 Next figure presents the general concept for certificate validation and revocation. Validation process is based on certificate
 status service provided by the TSP. Revocation request can originate from the certificate subject (PSP) or from the NCA
-which has issued the PSP authorization number contained in the certificate. TSP revokes the certificate based on a
+which has issued the PSP authorisation number contained in the certificate. TSP revokes the certificate based on a
 verifiably authentic revocation request. 
 
 
@@ -112,26 +112,26 @@ Syntax:
 
 ## Encoding PSD2 specific attributes
 
-### Authorization number 
+### Authorisation number 
 
-The authorization number shall be placed in organizationIdentifier attribute of the Subject Distinguished Name field in
+The authorisation number shall be placed in organizationIdentifier attribute of the Subject Distinguished Name field in
 the certificate:
 * for QWACs
 * for QSealCs
 
-The authorization number shall be encoded using the syntax identified by the legal person semantics identifier extended for PSD2 authorization identifier as follows.
+The authorisation number shall be encoded using the syntax identified by the legal person semantics identifier extended for PSD2 authorisation identifier as follows.
 The organizationIdentifier attribute shall contain information using the following structure in the presented order:
 * "PSD" as 3 character legal person identity type reference;
 * 2 character ISO 3166 country code representing the NCA country;
 * hyphen-minus "-" (0x2D (ASCII), U+002D (UTF-8)); and
 * 2-8 character NCA identifier (A-Z uppercase only, no separator)
 * hyphen-minus "-" (0x2D (ASCII), U+002D (UTF-8)); and
-* PSP identifier (authorization number as specified by NCA).
+* PSP identifier (authorisation number as specified by NCA).
 
 EXAMPLE:
  
     The organizationIdentifier "PSDES-BDE-3DFD21" means a certificate issued to a PSP where the
-    authorization number is 3DFD21, authorization was granted by the Spanish NCA Banco de
+    authorisation number is 3DFD21, authorisation was granted by the Spanish NCA Banco de
     España (identifier after second hyphen-minus is decided by Spanish numbering system)
 Any separator in NCA identifier shall be removed. 
 
@@ -189,7 +189,7 @@ The NCAId shall contain information using the following structure in the present
 * hyphen-minus "-" (0x2D (ASCII), U+002D (UTF-8)); and
 * 2-8 character NCA identifier (A-Z uppercase only, no separator).
 The NCAId shall be unique and provided by NCA itself for purpose of identification in certificates.
-NCAId identifier shall be composed of the same values as in the equivalent fields of the authorization number.
+NCAId identifier shall be composed of the same values as in the equivalent fields of the authorisation number.
 
     NCAId ::= utf8String (SIZE (256))
 
@@ -207,7 +207,7 @@ syntax.
 
 ## Initial identity validation
 
-The TSP shall verify the PSD2 specific attributes (authorization number, roles, name of NCA) provided by the subject
+The TSP shall verify the PSD2 specific attributes (authorisation number, roles, name of NCA) provided by the subject
 using authentic information from the NCA (e.g. the official registry). If the NCA provides rules for validation of these
 attributes, the TSP shall apply the given rules.
 
@@ -277,6 +277,6 @@ PSD2 QCStatement:
 where RoleOfPspOid is described in the chapter "Roles of payment service provider"
 RoleOfPspName = utf8String (SIZE(256))
 
-organizationIdentifier: for example PSDES-BDE-3DFD21 (See details in the chapter : Authorization number)
+organizationIdentifier: for example PSDES-BDE-3DFD21 (See details in the chapter : Authorisation number)
 
 

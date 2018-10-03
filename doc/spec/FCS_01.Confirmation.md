@@ -95,7 +95,7 @@ No specific query parameter.
 |----------------------|----------|-------------|--------------------------------------------------------------------------------------------|
 | TPP-Transaction-ID   | UUID     | Mandatory   | ID of the transaction as determined by the initiating party.                               |
 | x-request-id       | UUID     | Mandatory   | ID of the request, unique to the call, asdetermined by theinitiating party.                |
-| Authorization Bearer | String   | Conditional | Is contained only, if the optional Oauth Pre-Step was performed.                           |
+| Authorisation Bearer | String   | Conditional | Is contained only, if the optional Oauth Pre-Step was performed.                           |
 | Signature            | String   | Conditional | A signature of the request by the TPP onapplication level. This might be mandated byASPSP. |
 | TPP-Certificate      | String   | Conditional | The certificate used for signing the request in base64 encoding.                                              |
 

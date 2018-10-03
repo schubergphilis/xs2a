@@ -152,7 +152,7 @@ public class AspspProfileServiceWrapper {
     /**
      * Reads value Authorisation start type (Explicit/Implicit) from ASPSP profile service
      *
-     * @return String value of authorization start type
+     * @return String value of authorisation start type
      */
     public Xs2aAuthorisationStartType getAuthorisationStartType() {
         return Xs2aAuthorisationStartType.valueOf(readAspspSettings().getAuthorisationStartType().name());
@@ -186,12 +186,12 @@ public class AspspProfileServiceWrapper {
     }
 
     /**
-     * Reads if is payment cancellation authorization mandated from ASPSP profile service
+     * Reads if is payment cancellation authorisation mandated from ASPSP profile service
      *
-     * @return true if payment cancellation authorization is mandated, false if doesn't
+     * @return true if payment cancellation authorisation is mandated, false if doesn't
      */
-    public boolean isPaymentCancellationAuthorizationMandated() {
-        return readAspspSettings().isPaymentCancellationAuthorizationMandated();
+    public boolean isPaymentCancellationAuthorisationMandated() {
+        return readAspspSettings().isPaymentCancellationAuthorisationMandated();
     }
 
     private AspspSettings readAspspSettings() {

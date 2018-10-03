@@ -24,7 +24,7 @@ public class SecurityUtil {
                 tppCertificateData.setPspAuthorityId(((Map<String, String>) credentials).get("authorityId"));
                 tppCertificateData.setPspAuthorityName(((Map<String, String>) credentials).get("authorityName"));
                 tppCertificateData
-                    .setPspAuthorizationNumber(((Map<String, String>) credentials).get("authorizationNumber"));
+                    .setPspAuthorisationNumber(((Map<String, String>) credentials).get("authorizationNumber"));
                 tppCertificateData.setPspName(((Map<String, String>) credentials).get("name"));
 
                 return tppCertificateData;

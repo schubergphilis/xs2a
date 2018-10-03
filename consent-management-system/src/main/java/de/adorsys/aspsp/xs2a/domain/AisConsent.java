@@ -16,6 +16,7 @@
 
 package de.adorsys.aspsp.xs2a.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.adorsys.aspsp.xs2a.consent.api.AisConsentRequestType;
 import de.adorsys.aspsp.xs2a.consent.api.CmsConsentStatus;
 import io.swagger.annotations.ApiModel;
@@ -107,12 +108,13 @@ public class AisConsent {
     private List<AccountAccess> accesses = new ArrayList<>();
 
     @OneToMany(mappedBy = "consent", cascade = CascadeType.PERSIST, orphanRemoval = true)
-    @ApiModelProperty(value = "List of authorizations related to the consent", required = true)
-    private List<AisConsentAuthorization> authorizations = new ArrayList<>();
+    @ApiModelProperty(value = "List of authorisations related to the consent", required = true)
+    private List<AisConsentAuthorisation> authorisations = new ArrayList<>();
 
     @Lob
     @Column(name = "aspsp_consent_data")
     @Type(type = "org.hibernate.type.BinaryType")
+    @JsonIgnore
     private byte[] aspspConsentData;
 
     @Column(name = "ais_consent_request_type", nullable = false)

@@ -75,7 +75,7 @@ spring.mail.password=
 # email address
 spring.mail.username=
 
-# properties for authorization, for example `true` and `false`
+# properties for authorisation, for example `true` and `false`
 spring.mail.properties.mail.smtp.auth=
 spring.mail.properties.mail.smtp.starttls.enable=
 
@@ -96,7 +96,7 @@ endpoints.cors.allow-credentials=true
 # Comma-separated list of origins to allow. '*' allows all origins. When not set, CORS support is disabled.
 endpoints.cors.allowed-origins=*
 # Comma-separated list of headers to include in a response.
-endpoints.cors.allowed-headers=Origin,Authorization,Content-Type
+endpoints.cors.allowed-headers=Origin,Authorisation,Content-Type
 # Comma-separated list of methods to allow. '*' allows all methods. When not set, defaults to GET.
 endpoints.cors.allowed-methods=GET,POST,PUT,DELETE
 ```

@@ -17,7 +17,7 @@
 package de.adorsys.aspsp.xs2a.spi.impl;
 
 import de.adorsys.aspsp.xs2a.component.JsonConverter;
-import de.adorsys.aspsp.xs2a.domain.security.AspspAuthorizationData;
+import de.adorsys.aspsp.xs2a.domain.security.AspspAuthorisationData;
 import de.adorsys.aspsp.xs2a.spi.config.rest.AspspRemoteUrls;
 import de.adorsys.aspsp.xs2a.spi.domain.ObjectHolder;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
@@ -25,7 +25,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConfirmation;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiTransaction;
-import de.adorsys.aspsp.xs2a.spi.domain.authorization.SpiAuthorizationStatus;
+import de.adorsys.aspsp.xs2a.spi.domain.authorisation.SpiAuthorisationStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.domain.payment.SpiPaymentConfirmation;
 import de.adorsys.aspsp.xs2a.spi.domain.psu.SpiScaMethod;
@@ -46,8 +46,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDate;
 import java.util.*;
 
-import static de.adorsys.aspsp.xs2a.spi.domain.authorization.SpiAuthorizationStatus.FAILURE;
-import static de.adorsys.aspsp.xs2a.spi.domain.authorization.SpiAuthorizationStatus.SUCCESS;
+import static de.adorsys.aspsp.xs2a.spi.domain.authorisation.SpiAuthorisationStatus.FAILURE;
+import static de.adorsys.aspsp.xs2a.spi.domain.authorisation.SpiAuthorisationStatus.SUCCESS;
 
 @Component
 @AllArgsConstructor
@@ -166,28 +166,28 @@ public class AccountSpiImpl implements AccountSpi {
      * For detailed description see {@link PaymentSpi#authorizePsu(String, String, AspspConsentData)}
      */
     @Override
-    public SpiResponse<SpiAuthorizationStatus> authorisePsu(String psuId, String password, AspspConsentData aspspConsentData) {
-        Optional<AspspAuthorizationData> accessToken = keycloakInvokerService.obtainAuthorisationData(psuId, password);
-        SpiAuthorizationStatus spiAuthorizationStatus = accessToken.map(t -> SUCCESS)
+    public SpiResponse<SpiAuthorisationStatus> authorisePsu(String psuId, String password, AspspConsentData aspspConsentData) {
+        Optional<AspspAuthorisationData> accessToken = keycloakInvokerService.obtainAuthorisationData(psuId, password);
+        SpiAuthorisationStatus spiAuthorisationStatus = accessToken.map(t -> SUCCESS)
                                                             .orElse(FAILURE);
         byte[] payload = accessToken.flatMap(jsonConverter::toJson)
                              .map(String::getBytes)
                              .orElse(null);
-        return new SpiResponse<>(spiAuthorizationStatus, new AspspConsentData(payload, aspspConsentData.getConsentId()));
+        return new SpiResponse<>(spiAuthorisationStatus, new AspspConsentData(payload, aspspConsentData.getConsentId()));
     }
 
     /**
-     * For detailed description see {@link PaymentSpi#performStrongUserAuthorization(String, SpiScaMethod, AspspConsentData)}
+     * For detailed description see {@link PaymentSpi#performStrongUserAuthorisation(String, SpiScaMethod, AspspConsentData)}
      */
     @Override
-    public void performStrongUserAuthorization(String psuId, AspspConsentData aspspConsentData) {
+    public void performStrongUserAuthorisation(String psuId, AspspConsentData aspspConsentData) {
         aspspRestTemplate.exchange(remoteSpiUrls.getGenerateTanConfirmationForAis(), HttpMethod.POST, null, Void.class, psuId);
     }
     /**
-     * For detailed description see {@link PaymentSpi#applyStrongUserAuthorization(SpiPaymentConfirmation, AspspConsentData)}
+     * For detailed description see {@link PaymentSpi#applyStrongUserAuthorisation(SpiPaymentConfirmation, AspspConsentData)}
      */
     @Override
-    public void applyStrongUserAuthorization(SpiAccountConfirmation confirmation, AspspConsentData aspspConsentData) {
-        aspspRestTemplate.exchange(remoteSpiUrls.applyStrongUserAuthorizationForAis(), HttpMethod.PUT, new HttpEntity<>(confirmation), ResponseEntity.class);
+    public void applyStrongUserAuthorisation(SpiAccountConfirmation confirmation, AspspConsentData aspspConsentData) {
+        aspspRestTemplate.exchange(remoteSpiUrls.applyStrongUserAuthorisationForAis(), HttpMethod.PUT, new HttpEntity<>(confirmation), ResponseEntity.class);
     }
 }
