@@ -40,7 +40,7 @@ curl -X POST \
     ],
     "token_endpoint_auth_method": "client_secret_basic",
     "grant_types": [
-        "authorisation_code",
+        "authorization_code",
         "refresh_token"
     ],
     "response_types": [

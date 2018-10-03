@@ -36,7 +36,7 @@ export interface Links {
      */
     previous?: string;
     /**
-     * The link refers to a JSON document specifying the OAuth details of the ASPSP’s authorization server.
+     * The link refers to a JSON document specifying the OAuth details of the ASPSP’s authorisation server.
      */
     scaOAuth?: string;
     /**

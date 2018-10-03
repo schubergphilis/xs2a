@@ -120,7 +120,7 @@ public interface PaymentSpi {
     SpiResponse<List<SpiSinglePayment>> getBulkPaymentById(SpiPaymentType paymentType, String paymentProduct, String paymentId, AspspConsentData aspspConsentData);
 
     /**
-     * Authorises psu and returns current autorization status
+     * Authorises psu and returns current authorisation status
      *
      * @param psuId            ASPSP identifier of the psu
      * @param password         Psu's password
@@ -186,7 +186,7 @@ public interface PaymentSpi {
     SpiResponse<SpiPaymentInitialisationResponse> initiatePayment(SpiPayment spiPayment, AspspConsentData aspspConsentData);
 
     /**
-     * Authorises psu and returns current autorization status. Used only with embedded SCA Approach.
+     * Authorises psu and returns current authorisation status. Used only with embedded SCA Approach.
      *
      * @param psuId            ASPSP identifier of the psu
      * @param password         Psu's password
