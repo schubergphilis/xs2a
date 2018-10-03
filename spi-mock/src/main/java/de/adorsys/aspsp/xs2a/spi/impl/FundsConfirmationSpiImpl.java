@@ -39,7 +39,7 @@ public class FundsConfirmationSpiImpl implements FundsConfirmationSpi {
 
     @Override
     public SpiResponse<Boolean> peformFundsSufficientCheck(SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData) {
-        List<SpiAccountDetails> accounts = accountSpi.readAccountDetailsByIban(reference.getIban(), aspspConsentData).getPayload();
+        List<SpiAccountDetails> accounts = accountSpi.readAccountDetailsByIban(reference.getIban(), aspspConsentData).getPayload(); //TODO
         List<SpiAccountBalance> balances = extractAccountBalancesByCurrency(accounts, reference.getCurrency());
 
         return new SpiResponse<>(isBalancesSufficient(balances, amount), aspspConsentData);
