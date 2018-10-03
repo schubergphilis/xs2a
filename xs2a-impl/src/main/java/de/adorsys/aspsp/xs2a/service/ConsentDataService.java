@@ -33,6 +33,7 @@ import java.util.Optional;
 public abstract class ConsentDataService {
     @Qualifier("consentRestTemplate")
     private final RestTemplate consentRestTemplate;
+    //TODO use appropriate class for this service, split layers and responsibilities https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/332
 
     public AspspConsentData getAspspConsentDataByConsentId(String consentId) {
         Xs2aConsentData xs2aConsentData = consentRestTemplate.getForEntity(getRemoteUrl().getAspspConsentData(), Xs2aConsentData.class, consentId).getBody();

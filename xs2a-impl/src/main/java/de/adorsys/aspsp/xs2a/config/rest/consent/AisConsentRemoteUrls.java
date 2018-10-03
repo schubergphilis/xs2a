@@ -96,11 +96,21 @@ public class AisConsentRemoteUrls implements AspspConsentDataRemoteUrls {
         return consentServiceBaseUrl + "/ais/consent/{consent-id}/authorizations/{authorization-id}";
     }
 
+    /**
+     * Returns URL-string to CMS endpoint that gets aspsp consent data by consent ID
+     *
+     * @return String
+     */
     @Override
     public String getAspspConsentData() {
         return consentServiceBaseUrl + "/ais/consent/{consent-id}/aspsp-consent-data";
     }
 
+    /**
+     * Returns URL-string to CMS endpoint that updates aspsp consent data by consent ID
+     *
+     * @return String
+     */
     @Override
     public String updateAspspConsentData() {
         return consentServiceBaseUrl + "/ais/consent/{consent-id}/aspsp-consent-data";
