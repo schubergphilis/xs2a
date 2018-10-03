@@ -142,11 +142,11 @@ public class ConsentControllerTest {
 
     @Test
     public void startConsentAuthorisation_Success() {
-        doReturn(new ResponseEntity<>(getCreateConsentAuthorizationResponse(CONSENT_ID), HttpStatus.CREATED))
+        doReturn(new ResponseEntity<>(getCreateConsentAuthorisationResponse(CONSENT_ID), HttpStatus.CREATED))
             .when(responseMapper).created(any(), any());
 
         // Given
-        CreateConsentAuthorizationResponse expectedResponse = getCreateConsentAuthorizationResponse(CONSENT_ID);
+        CreateConsentAuthorisationResponse expectedResponse = getCreateConsentAuthorisationResponse(CONSENT_ID);
 
         // When
         ResponseEntity responseEntity = consentController.startConsentAuthorisation(CONSENT_ID, null,
@@ -287,10 +287,10 @@ public class ConsentControllerTest {
         return consents;
     }
 
-    private CreateConsentAuthorizationResponse getCreateConsentAuthorizationResponse(String consentId) {
-        CreateConsentAuthorizationResponse response = new CreateConsentAuthorizationResponse();
+    private CreateConsentAuthorisationResponse getCreateConsentAuthorisationResponse(String consentId) {
+        CreateConsentAuthorisationResponse response = new CreateConsentAuthorisationResponse();
         response.setConsentId(consentId);
-        response.setAuthorizationId(AUTHORISATION_ID);
+        response.setAuthorisationId(AUTHORISATION_ID);
         response.setScaStatus(ScaStatus.STARTED);
         return response;
     }

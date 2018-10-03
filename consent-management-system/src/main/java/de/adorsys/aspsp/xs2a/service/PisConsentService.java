@@ -165,11 +165,6 @@ public class PisConsentService {
         if (pisConsentAuthorisationOptional.isPresent()) {
             PisConsentAuthorisation consentAuthorisation = pisConsentAuthorisationOptional.get();
 
-            byte[] bytes = Optional.ofNullable(request.getCmsAspspConsentData())
-                               .map(CmsAspspConsentData::getBody)
-                               .orElse(null);
-            consentAuthorisation.getConsent().setAspspConsentData(bytes);
-
             if (SCAMETHODSELECTED == request.getScaStatus()) {
                 String chosenMethod = request.getAuthenticationMethodId();
                 if (StringUtils.isNotBlank(chosenMethod)) {
