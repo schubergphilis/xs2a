@@ -27,7 +27,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
-import de.adorsys.aspsp.xs2a.spi.service.FundConfirmationSpi;
+import de.adorsys.aspsp.xs2a.spi.service.FundsConfirmationSpi;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +55,7 @@ public class FundsConfirmationServiceTest {
     private AccountReferenceValidationService referenceValidationService;
 
     @Mock
-    private FundConfirmationSpi fundConfirmationSpi;
+    private FundsConfirmationSpi fundsConfirmationSpi;
 
     @Mock
     private SpiXs2aAccountMapper accountMapper;
@@ -70,9 +70,9 @@ public class FundsConfirmationServiceTest {
         when(accountMapper.mapToSpiAccountReference(getInSufficientFundsConfirmationRequest().getPsuAccount())).thenReturn(getValidSpiAccountReference());
         when(accountMapper.mapToSpiAmount(getInSufficientFundsConfirmationRequest().getInstructedAmount())).thenReturn(getInsufficientSpiAmount());
 
-        when(fundConfirmationSpi.isFundsSufficient(getValidSpiAccountReference(), getSufficientSpiAmount(), getAspspConsentData()))
+        when(fundsConfirmationSpi.peformFundsSufficientCheck(getValidSpiAccountReference(), getSufficientSpiAmount(), getAspspConsentData()))
             .thenReturn(new SpiResponse<>(Boolean.TRUE, getAspspConsentData()));
-        when(fundConfirmationSpi.isFundsSufficient(getValidSpiAccountReference(), getInsufficientSpiAmount(), getAspspConsentData()))
+        when(fundsConfirmationSpi.peformFundsSufficientCheck(getValidSpiAccountReference(), getInsufficientSpiAmount(), getAspspConsentData()))
             .thenReturn(new SpiResponse<>(Boolean.FALSE, getAspspConsentData()));
     }
 

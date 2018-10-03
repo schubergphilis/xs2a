@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 
-public interface FundConfirmationSpi {
+public interface FundsConfirmationSpi {
     /**
      * Queries ASPSP to check the sufficiency of requested account funds
      *
@@ -29,7 +29,7 @@ public interface FundConfirmationSpi {
      * @param amount           Requested amount of funds
      * @param aspspConsentData Encrypted data that may be stored in the consent management system in the consent linked to a request.<br>
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
-     * @return 'true' if there are enough funds on the account, 'false' otherwise
+     * @return 'true' if the requested amount can be booked on the account, 'false' otherwise
      */
-    SpiResponse<Boolean> isFundsSufficient(SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData);
+    SpiResponse<Boolean> peformFundsSufficientCheck(SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData);
 }

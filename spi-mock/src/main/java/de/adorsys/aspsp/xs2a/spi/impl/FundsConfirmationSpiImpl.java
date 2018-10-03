@@ -24,7 +24,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiBalanceType;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
-import de.adorsys.aspsp.xs2a.spi.service.FundConfirmationSpi;
+import de.adorsys.aspsp.xs2a.spi.service.FundsConfirmationSpi;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -34,11 +34,11 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class FundConfirmationSpiImpl implements FundConfirmationSpi {
+public class FundsConfirmationSpiImpl implements FundsConfirmationSpi {
     private final AccountSpi accountSpi;
 
     @Override
-    public SpiResponse<Boolean> isFundsSufficient(SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData) {
+    public SpiResponse<Boolean> peformFundsSufficientCheck(SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData) {
         List<SpiAccountDetails> accounts = accountSpi.readAccountDetailsByIban(reference.getIban(), aspspConsentData).getPayload();
         List<SpiAccountBalance> balances = extractAccountBalancesByCurrency(accounts, reference.getCurrency());
 

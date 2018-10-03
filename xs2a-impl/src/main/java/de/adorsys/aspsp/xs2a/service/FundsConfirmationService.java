@@ -21,7 +21,7 @@ import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
 import de.adorsys.aspsp.xs2a.service.mapper.spi_xs2a_mappers.SpiXs2aAccountMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
-import de.adorsys.aspsp.xs2a.spi.service.FundConfirmationSpi;
+import de.adorsys.aspsp.xs2a.spi.service.FundsConfirmationSpi;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class FundsConfirmationService {
     private final AccountReferenceValidationService referenceValidationService;
-    private final FundConfirmationSpi fundConfirmationSpi;
+    private final FundsConfirmationSpi fundsConfirmationSpi;
     private final SpiXs2aAccountMapper accountMapper;
 
     /**
@@ -45,7 +45,7 @@ public class FundsConfirmationService {
                    ? ResponseObject.<FundsConfirmationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
                    : ResponseObject.<FundsConfirmationResponse>builder()
                          .body(new FundsConfirmationResponse(
-                             fundConfirmationSpi.isFundsSufficient(
+                             fundsConfirmationSpi.peformFundsSufficientCheck(
                                  accountMapper.mapToSpiAccountReference(request.getPsuAccount()),
                                  accountMapper.mapToSpiAmount(request.getInstructedAmount()),
                                  new AspspConsentData())    //TODO Add actual aspsp consent data after implementation of consent for funds confirmation https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
