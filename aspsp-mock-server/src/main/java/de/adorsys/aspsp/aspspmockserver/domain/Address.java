@@ -21,8 +21,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "Address", value = "CmsAddress")
-public class CmsAddress {
+@ApiModel(description = "Address", value = "Address")
+public class Address {
     @ApiModelProperty(value = "Street", example = "Herrnstraße")
     private String street;
 
