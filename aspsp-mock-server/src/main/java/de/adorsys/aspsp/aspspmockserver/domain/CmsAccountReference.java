@@ -19,13 +19,11 @@ package de.adorsys.aspsp.aspspmockserver.domain;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Currency;
 
 @Data
 @AllArgsConstructor
-//@NoArgsConstructor
 public class CmsAccountReference {
     @ApiModelProperty(value = "IBAN: This data element can be used in the body of the CreateConsentReq Request Message for retrieving account access consent from this payment account", example = "DE89370400440532013000")
     private String iban;

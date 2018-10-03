@@ -19,10 +19,8 @@ package de.adorsys.aspsp.aspspmockserver.domain;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-//@NoArgsConstructor
 @ApiModel(description = "Account information", value = "AccountInfo")
 public class AccountInfo {
 

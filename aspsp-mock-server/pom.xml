@@ -21,7 +21,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>de.adorsys.aspsp</groupId>
+    <parent>
+        <artifactId>xs2a</artifactId>
+        <groupId>de.adorsys.aspsp</groupId>
+        <version>1.9-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
     <artifactId>aspsp-mock-server</artifactId>
     <version>1.9-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -40,30 +46,10 @@
         <archunit-junit4.version>0.9.1</archunit-junit4.version>
         <apache.commons.version>3.7</apache.commons.version>
         <apache.commons.collections>4.1</apache.commons.collections>
+        <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
     </properties>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.16.RELEASE</version>
-        <relativePath/>
-    </parent>
-
     <dependencies>
-
-        <!-- project dependencies -->
-
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.aspsp</groupId>-->
-            <!--<artifactId>spi-api</artifactId>-->
-            <!--<version>1.9-SNAPSHOT</version>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>de.adorsys.aspsp</groupId>-->
-            <!--<artifactId>consent-api</artifactId>-->
-            <!--<version>1.9-SNAPSHOT</version>-->
-        <!--</dependency>-->
 
         <!-- spring dependencies -->
 
@@ -195,14 +181,6 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <dependency>
-            <groupId>com.tngtech.archunit</groupId>
-            <artifactId>archunit-junit4</artifactId>
-            <version>${archunit-junit4.version}</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
@@ -218,6 +196,29 @@
                         <goals>
                             <goal>repackage</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-banned-dependencies</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <bannedDependencies>
+                                    <excludes>
+                                        <exclude>de.adorsys.*:*</exclude>
+                                    </excludes>
+                                </bannedDependencies>
+                            </rules>
+                            <fail>true</fail>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
