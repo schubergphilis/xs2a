@@ -17,7 +17,7 @@
 package de.adorsys.aspsp.aspspmockserver.domain.pis;
 
 import de.adorsys.aspsp.aspspmockserver.domain.CmsAccountReference;
-import de.adorsys.aspsp.aspspmockserver.domain.CmsAddress;
+import de.adorsys.aspsp.aspspmockserver.domain.Address;
 import de.adorsys.aspsp.aspspmockserver.domain.CmsRemittance;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -60,7 +60,7 @@ public class PisPayment {
     private String creditorName;
 
     @ApiModelProperty(value = "Creditor Address")
-    private CmsAddress creditorAddress;
+    private Address creditorAddress;
 
     @ApiModelProperty(value = "remittance information unstructured", example = "Ref. Number TELEKOM-1222")
     private String remittanceInformationUnstructured;

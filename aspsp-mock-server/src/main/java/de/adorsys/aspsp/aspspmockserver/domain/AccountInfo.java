@@ -18,20 +18,21 @@ package de.adorsys.aspsp.aspspmockserver.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.Currency;
 
 @Data
 @ApiModel(description = "Account information", value = "AccountInfo")
+@AllArgsConstructor
+@NoArgsConstructor
 public class AccountInfo {
 
     @ApiModelProperty(value = "IBAN: This data element can be used in the body of the CreateConsentReq Request Message for retrieving account access consent from this payment accoun", example = "DE2310010010156789")
     private String iban;
 
     @ApiModelProperty(value = "ISO 4217 currency code", example = "EUR")
-    private String currency;
-
-    public AccountInfo(String iban, String currency) {
-        this.iban = iban;
-        this.currency = currency;
-    }
+    private Currency currency;
 }

@@ -22,6 +22,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Currency;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,7 +31,7 @@ import lombok.NoArgsConstructor;
 public class AccessAccountInfo {
 
     @ApiModelProperty(value = "ISO 4217 currency code", example = "EUR")
-    private String currency;
+    private Currency currency;
 
     @ApiModelProperty(value = "Types of access: ACCOUNT, BALANCE, TRANSACTION, PAYMENT", example = "ACCOUNT")
     private TypeAccess typeAccess;
