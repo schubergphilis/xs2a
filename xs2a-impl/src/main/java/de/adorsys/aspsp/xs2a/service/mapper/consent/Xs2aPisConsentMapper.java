@@ -170,7 +170,7 @@ public class Xs2aPisConsentMapper {
                    .map(tpp -> {
                        CmsTppInfo cmsTppInfo = new CmsTppInfo();
 
-                       cmsTppInfo.setRegistrationNumber(tpp.getAuthorizationNumber());
+                       cmsTppInfo.setRegistrationNumber(tpp.getAuthorisationNumber());
                        cmsTppInfo.setTppName(tpp.getTppName());
                        cmsTppInfo.setTppRole(tpp.getTppRoles().get(0).getValue());
                        cmsTppInfo.setNationalCompetentAuthority(tpp.getAuthorityName());

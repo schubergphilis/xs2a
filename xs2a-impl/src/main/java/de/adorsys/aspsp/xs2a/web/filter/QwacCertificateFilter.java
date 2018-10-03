@@ -74,7 +74,7 @@ public class QwacCertificateFilter extends GenericFilterBean {
                 try {
                     TppCertificateData tppCertificateData = CertificateExtractorUtil.extract(encodedTppQwacCert);
                     TppInfo tppInfo = new TppInfo();
-                    tppInfo.setAuthorizationNumber(tppCertificateData.getPspAuthorizationNumber());
+                    tppInfo.setAuthorisationNumber(tppCertificateData.getPspAuthorisationNumber());
                     tppInfo.setTppName(tppCertificateData.getName());
                     tppInfo.setAuthorityId(tppCertificateData.getPspAuthorityId());
                     tppInfo.setAuthorityName(tppCertificateData.getPspAuthorityName());
@@ -94,7 +94,7 @@ public class QwacCertificateFilter extends GenericFilterBean {
                                                              .collect(Collectors.toList());
 
                     UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(tppCertificateData.getPspAuthorizationNumber(),
+                        new UsernamePasswordAuthenticationToken(tppCertificateData.getPspAuthorisationNumber(),
                             tppInfo, authorities);
 
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);

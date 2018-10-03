@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class TppCertificateData {
-    private String pspAuthorizationNumber;
+    private String pspAuthorisationNumber;
     private List<TppRole> pspRoles;
     private String name;
     private String pspAuthorityName;

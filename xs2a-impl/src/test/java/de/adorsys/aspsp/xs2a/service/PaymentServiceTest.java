@@ -336,7 +336,7 @@ public class PaymentServiceTest {
 
     private static TppInfo getTppInfo() {
         TppInfo tppInfo = new TppInfo();
-        tppInfo.setAuthorizationNumber("registrationNumber");
+        tppInfo.setAuthorisationNumber("registrationNumber");
         tppInfo.setTppName("tppName");
         tppInfo.setTppRoles(Collections.singletonList(Xs2aTppRole.PISP));
         tppInfo.setAuthorityId("authorityId");

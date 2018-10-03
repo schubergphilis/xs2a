@@ -24,7 +24,7 @@ import java.util.List;
 @Data
 public class TppInfo {
     @ApiModelProperty(value = "Authorization number", required = true, example = "12345987")
-    private String authorizationNumber;
+    private String authorisationNumber;
 
     @ApiModelProperty(value = "Tpp name", required = true, example = "Tpp company")
     private String tppName;

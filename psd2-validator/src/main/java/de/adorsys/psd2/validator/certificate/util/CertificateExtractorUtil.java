@@ -49,7 +49,7 @@ public class CertificateExtractorUtil {
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
             String pspAuthorisationNumber = IETFUtils
                                                 .valueToString(x500name.getRDNs(BCStyle.ORGANIZATION_IDENTIFIER)[0].getFirst().getValue());
-            tppCertData.setPspAuthorizationNumber(pspAuthorisationNumber);
+            tppCertData.setPspAuthorisationNumber(pspAuthorisationNumber);
 
             String organisation = IETFUtils.valueToString(x500name.getRDNs(BCStyle.O)[0].getFirst().getValue());
             tppCertData.setOrganisation(organisation);
