@@ -16,38 +16,9 @@
 
 package de.adorsys.aspsp.xs2a.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 public enum Xs2aTppRole {
-    PISP("pisp"),
-    AISP("aisp"),
-    PIISP("piisp"),
-    ASPSP("aspsp");
-
-    private final static Map<String, Xs2aTppRole> container = new HashMap<>();
-
-    static {
-        for (Xs2aTppRole role : values()) {
-            container.put(role.getValue(), role);
-        }
-    }
-
-    private String value;
-
-    Xs2aTppRole(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    @JsonIgnore
-    public static Optional<Xs2aTppRole> getByValue(String name) {
-        return Optional.ofNullable(container.get(name));
-    }
+    PISP,
+    AISP,
+    PIISP,
+    ASPSP
 }
