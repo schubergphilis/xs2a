@@ -12,27 +12,22 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *//*
+ */
 
 
 package de.adorsys.aspsp.xs2a.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import de.adorsys.aspsp.xs2a.component.JsonConverter;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
-import de.adorsys.aspsp.xs2a.domain.TppMessageInformation;
-import de.adorsys.aspsp.xs2a.domain.Xs2aBalance;
+import de.adorsys.aspsp.xs2a.domain.Xs2aAmount;
+import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
-import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.mapper.spi_xs2a_mappers.SpiXs2aAccountMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.FundConfirmationSpi;
-import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,90 +35,75 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.Currency;
-import java.util.List;
 
-import static de.adorsys.aspsp.xs2a.domain.MessageErrorCode.FORMAT_ERROR;
-import static de.adorsys.aspsp.xs2a.exception.MessageCategory.ERROR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FundsConfirmationServiceTest {
-    private final String FUNDS_REQ_DATA = "/json/FundsConfirmationRequestTestData.json";
-    private final Charset UTF_8 = Charset.forName("utf-8");
-    private final String BALANCES_SOURCE = "/json/BalancesTestData.json";
-
     private final Currency EUR = Currency.getInstance("EUR");
     private final String AMOUNT_1600 = "1600.00";
     private final String AMOUNT_160 = "160.00";
-    private final MessageError FORMAT_MESSAGE_ERROR = new MessageError(new TppMessageInformation(ERROR, FORMAT_ERROR));
 
     @InjectMocks
     private FundsConfirmationService fundsConfirmationService;
-    private ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-    private JsonConverter jsonConverter = new JsonConverter(objectMapper);
+
     @Mock
     private AccountReferenceValidationService referenceValidationService;
+
     @Mock
     private FundConfirmationSpi fundConfirmationSpi;
+
     @Mock
     private SpiXs2aAccountMapper accountMapper;
 
     @Before
-    public void setUp() throws IOException {
-        when(fundConfirmationSpi.isFundsSufficient(any(SpiAccountReference.class), getSufficientSpiAmount(), any(AspspConsentData.class)))
-            .thenReturn(new SpiResponse<>(Boolean.TRUE, new AspspConsentData()));
-        when(fundConfirmationSpi.isFundsSufficient(any(SpiAccountReference.class), getInsufficientSpiAmount(), any(AspspConsentData.class)))
-            .thenReturn(new SpiResponse<>(Boolean.FALSE, new AspspConsentData()));
+    public void setUp() {
         when(referenceValidationService.validateAccountReferences(any())).thenReturn(ResponseObject.builder().build());
+
+        when(accountMapper.mapToSpiAccountReference(getSufficientFundsConfirmationRequest().getPsuAccount())).thenReturn(getValidSpiAccountReference());
+        when(accountMapper.mapToSpiAmount(getSufficientFundsConfirmationRequest().getInstructedAmount())).thenReturn(getSufficientSpiAmount());
+
+        when(accountMapper.mapToSpiAccountReference(getInSufficientFundsConfirmationRequest().getPsuAccount())).thenReturn(getValidSpiAccountReference());
+        when(accountMapper.mapToSpiAmount(getInSufficientFundsConfirmationRequest().getInstructedAmount())).thenReturn(getInsufficientSpiAmount());
+
+        when(fundConfirmationSpi.isFundsSufficient(getValidSpiAccountReference(), getSufficientSpiAmount(), getAspspConsentData()))
+            .thenReturn(new SpiResponse<>(Boolean.TRUE, getAspspConsentData()));
+        when(fundConfirmationSpi.isFundsSufficient(getValidSpiAccountReference(), getInsufficientSpiAmount(), getAspspConsentData()))
+            .thenReturn(new SpiResponse<>(Boolean.FALSE, getAspspConsentData()));
     }
 
     @Test
-    public void fundsConfirmation_success() throws Exception {
+    public void fundsConfirmation_success() {
         //Given:
-        FundsConfirmationRequest request = readFundsConfirmationRequest();
+        FundsConfirmationResponse successResponse = new FundsConfirmationResponse(true);
+        ResponseObject<FundsConfirmationResponse> expected = new ResponseObject.ResponseBuilder<FundsConfirmationResponse>()
+                                                                 .body(successResponse)
+                                                                 .build();
 
         //When:
-        ResponseObject<FundsConfirmationResponse> actualResponse = fundsConfirmationService.fundsConfirmation(request);
+        ResponseObject<FundsConfirmationResponse> actual = fundsConfirmationService.fundsConfirmation(getSufficientFundsConfirmationRequest());
 
         //Then
-        assertThat(actualResponse.getBody().isFundsAvailable()).isEqualTo(true);
+        assertThat(actual.getBody().isFundsAvailable()).isEqualTo(expected.getBody().isFundsAvailable());
     }
 
     @Test
-    public void fundsConfirmation_notEnoughMoney() throws Exception {
+    public void fundsConfirmation_notEnoughMoney() {
         //Given:
-        FundsConfirmationRequest request = readFundsConfirmationRequest();
-        //request.setInstructedAmount(getInsufficientSpiAmount());
+        FundsConfirmationResponse failureResponse = new FundsConfirmationResponse(false);
+        ResponseObject<FundsConfirmationResponse> expected = new ResponseObject.ResponseBuilder<FundsConfirmationResponse>()
+                                                                 .body(failureResponse)
+                                                                 .build();
 
         //When:
-        ResponseObject<FundsConfirmationResponse> actualResponse = fundsConfirmationService.fundsConfirmation(request);
+        ResponseObject<FundsConfirmationResponse> actual = fundsConfirmationService.fundsConfirmation(getInSufficientFundsConfirmationRequest());
 
         //Then
-        assertThat(actualResponse.getBody().isFundsAvailable()).isEqualTo(false);
-    }
-
-    //@Test - excluded from testing because request validating in de.adorsys.psd2.api.FundsConfirmationApi
-    public void fundsConfirmation_reqIsNull() {
-        //Given:
-        FundsConfirmationRequest request = null;
-
-        //When:
-        ResponseObject<FundsConfirmationResponse> actualResponse = fundsConfirmationService.fundsConfirmation(request);
-
-        //Then
-        assertThat(actualResponse.getBody()).isEqualTo(null);
-        assertThat(actualResponse.getError()).isEqualTo(FORMAT_MESSAGE_ERROR);
-    }
-
-    private FundsConfirmationRequest readFundsConfirmationRequest() throws IOException {
-        return jsonConverter.toObject(IOUtils.resourceToString(FUNDS_REQ_DATA, UTF_8), FundsConfirmationRequest.class).get();
+        assertThat(actual.getBody().isFundsAvailable()).isEqualTo(expected.getBody().isFundsAvailable());
     }
 
     private SpiAmount getSufficientSpiAmount() {
@@ -134,9 +114,30 @@ public class FundsConfirmationServiceTest {
         return new SpiAmount(EUR, new BigDecimal(AMOUNT_1600));
     }
 
-    private List<Xs2aBalance> getBalances() throws IOException {
-        Xs2aBalance balance = jsonConverter.toObject(IOUtils.resourceToString(BALANCES_SOURCE, UTF_8), Xs2aBalance.class).get();
-        return Collections.singletonList(balance);
+    private FundsConfirmationRequest getSufficientFundsConfirmationRequest() {
+        FundsConfirmationRequest request = new FundsConfirmationRequest();
+        request.setPayee("Check24");
+        request.setCardNumber("12345");
+        request.setInstructedAmount(new Xs2aAmount());
+        request.setPsuAccount(new Xs2aAccountReference());
+        return request;
+    }
+
+    private FundsConfirmationRequest getInSufficientFundsConfirmationRequest() {
+        return new FundsConfirmationRequest();
+    }
+
+    private AspspConsentData getAspspConsentData() {
+        return new AspspConsentData();
+    }
+
+    private SpiAccountReference getValidSpiAccountReference() {
+        return new SpiAccountReference("DE371234599999",
+            "1111111111",
+            "1111",
+            "23456xxxxxx1234",
+            "0172/1111111",
+            EUR
+        );
     }
 }
-*/
