@@ -21,45 +21,60 @@ import java.util.List;
 @Slf4j
 public class CertificateExtractorUtil {
 
-	public static TppCertificateData extract(String encodedCert) throws CertificateValidationException {
+    public static TppCertificateData extract(String encodedCert) throws CertificateValidationException {
 
-		X509Certificate cert = X509CertUtils.parse(encodedCert);
+        X509Certificate cert = X509CertUtils.parse(encodedCert);
 
-        if(cert == null) {
+        if (cert == null) {
             log.debug("Error reading certificate ");
             throw new CertificateValidationException(CertificateErrorMsgCode.CERTIFICATE_INVALID.toString());
         }
 
-		List<TppRole> roles = new ArrayList<>();
+        List<TppRole> roles = new ArrayList<>();
 
-		TppCertificateData tppCertData = new TppCertificateData();
+        TppCertificateData tppCertData = new TppCertificateData();
 
-		PSD2QCType psd2qcType = PSD2QCStatement.psd2QCType(cert);
-		RolesOfPSP rolesOfPSP = psd2qcType.getRolesOfPSP();
-		RoleOfPSP[] roles2 = rolesOfPSP.getRoles();
-		for (RoleOfPSP roleOfPSP : roles2) {
-			roles.add(TppRole.valueOf(roleOfPSP.getNormalizedRoleName()));
-		}
-		tppCertData.setPspRoles(roles);
-
-		tppCertData.setPspAuthorityName(psd2qcType.getnCAName().getString());
-		tppCertData.setPspAuthorityId(psd2qcType.getnCAId().getString());
-
-		try {
-			X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
-			String pspAuthorisationNber = IETFUtils
-					.valueToString(x500name.getRDNs(BCStyle.ORGANIZATION_IDENTIFIER)[0].getFirst().getValue());
-			tppCertData.setPspAuthorizationNumber(pspAuthorisationNber);
-			
-			String pspName = IETFUtils
-					.valueToString(x500name.getRDNs(BCStyle.CN)[0].getFirst().getValue());
-			tppCertData.setPspName(pspName);
-		} catch (CertificateEncodingException e) {
-			log.debug(e.getMessage());
-			throw new CertificateValidationException(CertificateErrorMsgCode.CERTIFICATE_INVALID.toString());
+        PSD2QCType psd2qcType = PSD2QCStatement.psd2QCType(cert);
+        RolesOfPSP rolesOfPSP = psd2qcType.getRolesOfPSP();
+        RoleOfPSP[] roles2 = rolesOfPSP.getRoles();
+        for (RoleOfPSP roleOfPSP : roles2) {
+            roles.add(TppRole.valueOf(roleOfPSP.getNormalizedRoleName()));
         }
-		return tppCertData;
+        tppCertData.setPspRoles(roles);
 
-	}
+        tppCertData.setPspAuthorityName(psd2qcType.getnCAName().getString());
+        tppCertData.setPspAuthorityId(psd2qcType.getnCAId().getString());
+
+        try {
+            X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
+            String pspAuthorisationNumber = IETFUtils
+                                                .valueToString(x500name.getRDNs(BCStyle.ORGANIZATION_IDENTIFIER)[0].getFirst().getValue());
+            tppCertData.setPspAuthorizationNumber(pspAuthorisationNumber);
+
+            String organisation = IETFUtils.valueToString(x500name.getRDNs(BCStyle.O)[0].getFirst().getValue());
+            tppCertData.setOrganisation(organisation);
+
+            String organisationUnit = IETFUtils.valueToString(x500name.getRDNs(BCStyle.OU)[0].getFirst().getValue());
+            tppCertData.setOrganisationUnit(organisationUnit);
+
+            String city = IETFUtils.valueToString(x500name.getRDNs(BCStyle.L)[0].getFirst().getValue());
+            tppCertData.setCity(city);
+
+            String state = IETFUtils.valueToString(x500name.getRDNs(BCStyle.ST)[0].getFirst().getValue());
+            tppCertData.setState(state);
+
+            String country = IETFUtils.valueToString(x500name.getRDNs(BCStyle.C)[0].getFirst().getValue());
+            tppCertData.setCountry(country);
+
+            String name = IETFUtils
+                              .valueToString(x500name.getRDNs(BCStyle.CN)[0].getFirst().getValue());
+            tppCertData.setName(name);
+        } catch (CertificateEncodingException e) {
+            log.debug(e.getMessage());
+            throw new CertificateValidationException(CertificateErrorMsgCode.CERTIFICATE_INVALID.toString());
+        }
+        return tppCertData;
+
+    }
 
 }

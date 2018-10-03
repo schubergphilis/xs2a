@@ -1,22 +1,19 @@
 package de.adorsys.psd2.validator.certificate.util;
 
-import java.util.List;
-
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class TppCertificateData {
-
-	private String pspAuthorizationNumber;
-	
-	private List<TppRole> pspRoles;
-	
-	private String pspName;
-	
-	private String pspAuthorityName;
-	
-	private String pspAuthorityCountry;
-	
-	private String pspAuthorityId;
-	
+    private String pspAuthorizationNumber;
+    private List<TppRole> pspRoles;
+    private String name;
+    private String pspAuthorityName;
+    private String pspAuthorityId;
+    private String country;
+    private String organisation;
+    private String organisationUnit;
+    private String city;
+    private String state;
 }

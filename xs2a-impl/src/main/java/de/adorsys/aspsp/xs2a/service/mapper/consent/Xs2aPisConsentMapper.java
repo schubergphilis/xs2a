@@ -26,6 +26,7 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.PisPaymentType;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.CreatePisConsentAuthorisationResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
+import de.adorsys.aspsp.xs2a.domain.TppInfo;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
@@ -169,10 +170,10 @@ public class Xs2aPisConsentMapper {
                    .map(tpp -> {
                        CmsTppInfo cmsTppInfo = new CmsTppInfo();
 
-                       cmsTppInfo.setRegistrationNumber(tpp.getRegistrationNumber());
+                       cmsTppInfo.setRegistrationNumber(tpp.getAuthorizationNumber());
                        cmsTppInfo.setTppName(tpp.getTppName());
-                       cmsTppInfo.setTppRole(tpp.getTppRole());
-                       cmsTppInfo.setNationalCompetentAuthority(tpp.getNationalCompetentAuthority());
+                       cmsTppInfo.setTppRole(tpp.getTppRoles().get(0).getValue());
+                       cmsTppInfo.setNationalCompetentAuthority(tpp.getAuthorityName());
                        cmsTppInfo.setRedirectUri(tpp.getRedirectUri());
                        cmsTppInfo.setNokRedirectUri(tpp.getNokRedirectUri());
                        return cmsTppInfo;
