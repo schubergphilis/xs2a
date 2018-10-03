@@ -16,7 +16,7 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain.pis.proto;
 
-import de.adorsys.aspsp.aspspmockserver.domain.CmsTppInfo;
+import de.adorsys.aspsp.aspspmockserver.domain.TppInfo;
 import de.adorsys.aspsp.aspspmockserver.domain.pis.PisPayment;
 import de.adorsys.aspsp.aspspmockserver.domain.pis.PisPaymentProduct;
 import de.adorsys.aspsp.aspspmockserver.domain.pis.PisPaymentType;
@@ -39,7 +39,7 @@ public class PisConsentRequest {
     private PisPaymentType paymentType;
 
     @ApiModelProperty(value = "Tpp information", required = true)
-    private CmsTppInfo tppInfo;
+    private TppInfo tppInfo;
 
     @ApiModelProperty(value = "ASPSP consent data", example = "zzzzzzzz")
     private byte[] aspspConsentData;

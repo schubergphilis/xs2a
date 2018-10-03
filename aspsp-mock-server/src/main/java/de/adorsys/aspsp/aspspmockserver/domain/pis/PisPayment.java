@@ -16,9 +16,9 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain.pis;
 
-import de.adorsys.aspsp.aspspmockserver.domain.CmsAccountReference;
+import de.adorsys.aspsp.aspspmockserver.domain.AccountReference;
 import de.adorsys.aspsp.aspspmockserver.domain.Address;
-import de.adorsys.aspsp.aspspmockserver.domain.CmsRemittance;
+import de.adorsys.aspsp.aspspmockserver.domain.Remittance;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -39,7 +39,7 @@ public class PisPayment {
     private String endToEndIdentification;
 
     @ApiModelProperty(value = "Debtor account", required = true)
-    private CmsAccountReference debtorAccount;
+    private AccountReference debtorAccount;
 
     @ApiModelProperty(value = "Name of the ultimate debtor", required = true, example = "Mueller")
     private String ultimateDebtor;
@@ -51,7 +51,7 @@ public class PisPayment {
     private BigDecimal amount;
 
     @ApiModelProperty(value = "Creditor account", required = true)
-    private CmsAccountReference creditorAccount;
+    private AccountReference creditorAccount;
 
     @ApiModelProperty(value = "Creditor agent", example = "Telekom")
     private String creditorAgent;
@@ -66,7 +66,7 @@ public class PisPayment {
     private String remittanceInformationUnstructured;
 
     @ApiModelProperty(value = "remittance information structured")
-    private CmsRemittance remittanceInformationStructured;
+    private Remittance remittanceInformationStructured;
 
     @ApiModelProperty(value = "Requested execution date", example = "2020-01-01")
     private LocalDate requestedExecutionDate;

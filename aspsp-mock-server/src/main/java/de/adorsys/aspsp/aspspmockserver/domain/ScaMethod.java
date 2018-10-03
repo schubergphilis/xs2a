@@ -16,13 +16,9 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain;
 
-public enum CmsScaStatus {
-    RECEIVED,
-    PSUIDENTIFIED,
-    PSUAUTHENTICATED,
-    SCAMETHODSELECTED,
-    STARTED,
-    FINALISED,
-    FAILED,
-    EXEMPTED
+public enum ScaMethod {
+    SMS_OTP,
+    CHIP_OTP,
+    PHOTO_OTP,
+    PUSH_OTP
 }

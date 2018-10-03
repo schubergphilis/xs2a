@@ -16,8 +16,8 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain.pis.authorisation;
 
-import de.adorsys.aspsp.aspspmockserver.domain.CmsAspspConsentData;
-import de.adorsys.aspsp.aspspmockserver.domain.CmsScaStatus;
+import de.adorsys.aspsp.aspspmockserver.domain.AspspConsentData;
+import de.adorsys.aspsp.aspspmockserver.domain.ScaStatus;
 import lombok.Data;
 
 @Data
@@ -27,8 +27,8 @@ public class UpdatePisConsentPsuDataRequest {
     private String psuId;
     private String password;
     private String authenticationMethodId;
-    private CmsScaStatus scaStatus;
+    private ScaStatus scaStatus;
     private String paymentService;
-    private CmsAspspConsentData cmsAspspConsentData;
+    private AspspConsentData aspspConsentData;
     private String scaAuthenticationData;
 }

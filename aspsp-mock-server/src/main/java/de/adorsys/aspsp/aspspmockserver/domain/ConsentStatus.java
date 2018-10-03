@@ -16,7 +16,7 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain;
 
-public enum CmsConsentStatus {
+public enum ConsentStatus {
     RECEIVED,
     REJECTED,
     VALID,

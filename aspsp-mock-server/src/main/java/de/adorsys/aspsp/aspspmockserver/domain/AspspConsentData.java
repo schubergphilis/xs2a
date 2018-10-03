@@ -16,9 +16,34 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain;
 
-public enum CmsScaMethod {
-    SMS_OTP,
-    CHIP_OTP,
-    PHOTO_OTP,
-    PUSH_OTP
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.Value;
+
+import java.util.Arrays;
+
+@Value
+@RequiredArgsConstructor
+@NoArgsConstructor(force = true)
+public class AspspConsentData {
+    private byte[] body;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        AspspConsentData that = (AspspConsentData) o;
+
+        return Arrays.equals(body, that.body);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(body);
+    }
 }

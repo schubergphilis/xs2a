@@ -17,7 +17,7 @@
 package de.adorsys.aspsp.aspspmockserver.domain.ais;
 
 import de.adorsys.aspsp.aspspmockserver.domain.AisConsentRequestType;
-import de.adorsys.aspsp.aspspmockserver.domain.CmsConsentStatus;
+import de.adorsys.aspsp.aspspmockserver.domain.ConsentStatus;
 import lombok.Value;
 
 import java.time.LocalDate;
@@ -30,7 +30,7 @@ public class AisAccountConsent {
     private LocalDate validUntil;
     private int frequencyPerDay;
     private LocalDate lastActionDate;
-    private CmsConsentStatus consentStatus;
+    private ConsentStatus consentStatus;
     private boolean withBalance;
     private boolean tppRedirectPreferred;
     private byte[] aspspConsentData;

@@ -16,14 +16,14 @@
 
 package de.adorsys.aspsp.aspspmockserver.domain.ais;
 
-import de.adorsys.aspsp.aspspmockserver.domain.CmsAccountReference;
+import de.adorsys.aspsp.aspspmockserver.domain.AccountReference;
 import lombok.Value;
 
 import java.util.List;
 
 @Value
 public class AisAccountAccess {
-    private List<CmsAccountReference> accounts;
-    private List<CmsAccountReference> balances;
-    private List<CmsAccountReference> transactions;
+    private List<AccountReference> accounts;
+    private List<AccountReference> balances;
+    private List<AccountReference> transactions;
 }
