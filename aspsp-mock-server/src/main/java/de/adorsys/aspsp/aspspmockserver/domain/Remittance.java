@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "Remittance in cms", value = "Remittance")
+@ApiModel(description = "Remittance", value = "Remittance")
 public class Remittance {
     @ApiModelProperty(value = "the actual reference", required = true, example = "Ref Number Merchant")
     private String reference;
