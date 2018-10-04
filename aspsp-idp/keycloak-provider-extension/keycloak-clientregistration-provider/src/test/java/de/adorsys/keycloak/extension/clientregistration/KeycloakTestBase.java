@@ -1,24 +1,26 @@
+/*
+ * Copyright 2018-2018 adorsys GmbH & Co KG
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package de.adorsys.keycloak.extension.clientregistration;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.when;
-
-import java.util.UUID;
 
 import org.apache.http.HttpRequest;
 import org.keycloak.authentication.ClientAuthenticator;
 import org.keycloak.authentication.ClientAuthenticatorFactory;
 import org.keycloak.events.EventBuilder;
-import org.keycloak.models.KeycloakContext;
-import org.keycloak.models.KeycloakSession;
-import org.keycloak.models.KeycloakSessionFactory;
-import org.keycloak.models.RealmModel;
-import org.keycloak.models.UserCredentialManager;
-import org.keycloak.models.UserModel;
-import org.keycloak.models.UserProvider;
+import org.keycloak.models.*;
 import org.keycloak.models.utils.KeycloakModelUtils;
 import org.keycloak.services.clientregistration.ClientRegistrationAuth;
 import org.keycloak.services.clientregistration.ClientRegistrationContext;
@@ -26,6 +28,12 @@ import org.keycloak.services.clientregistration.policy.RegistrationAuth;
 import org.keycloak.storage.adapter.InMemoryUserAdapter;
 import org.keycloak.theme.Theme;
 import org.keycloak.theme.ThemeProvider;
+
+import java.util.UUID;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
 
 public abstract class KeycloakTestBase {
     protected final KeycloakSession session = mock(KeycloakSession.class);
@@ -46,17 +54,17 @@ public abstract class KeycloakTestBase {
         when(session.userCredentialManager()).thenReturn(userCredentialManager);
         when(session.getContext()).thenReturn(context);
         when(session.getKeycloakSessionFactory()).thenReturn(keycloakSessionFactory);
-        
+
 
         when(keycloakSessionFactory.getProviderFactory(
-				ClientAuthenticator.class, KeycloakModelUtils.getDefaultClientAuthenticatorType())).thenReturn(clientAuthenticatorFactory);
-        
+            ClientAuthenticator.class, KeycloakModelUtils.getDefaultClientAuthenticatorType())).thenReturn(clientAuthenticatorFactory);
+
         when(context.getRealm()).thenReturn(realm);
         //when(context.getUri()).thenCallRealMethod();
 
         when(realm.addClient(anyString())).thenReturn(new ClientModelImpl());
         when(realm.addClient(anyString(),anyString())).thenReturn(new ClientModelImpl());
-        
+
         when(auth.requireCreate(any(ClientRegistrationContext.class))).thenReturn(RegistrationAuth.ANONYMOUS);
 
     }
