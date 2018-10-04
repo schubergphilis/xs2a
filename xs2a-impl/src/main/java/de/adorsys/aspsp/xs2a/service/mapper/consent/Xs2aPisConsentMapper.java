@@ -176,7 +176,7 @@ public class Xs2aPisConsentMapper {
 
                        List<Xs2aTppRole> tppRoles = tpp.getTppRoles();
                        if (!tppRoles.isEmpty()) {
-                           cmsTppInfo.setTppRole(tppRoles.get(0).name());
+                           cmsTppInfo.setTppRole(tppRoles.get(0).name()); // TODO properly map tppRoles to CmsTppInfo https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/266
                        }
 
                        cmsTppInfo.setNationalCompetentAuthority(tpp.getAuthorityName());
