@@ -163,7 +163,7 @@ public class AccountSpiImpl implements AccountSpi {
     }
 
     /**
-     * For detailed description see {@link PaymentSpi#authorizePsu(String, String, AspspConsentData)}
+     * For detailed description see {@link PaymentSpi#authorisePsu(String, String, AspspConsentData)}
      */
     @Override
     public SpiResponse<SpiAuthorisationStatus> authorisePsu(String psuId, String password, AspspConsentData aspspConsentData) {
