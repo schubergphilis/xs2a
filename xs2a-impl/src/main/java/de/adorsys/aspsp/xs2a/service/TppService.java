@@ -33,7 +33,7 @@ public class TppService {
     public String getTppId() {
         return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
                    .map(authentication -> (TppInfo) authentication.getCredentials())
-                   .map(TppInfo::getAuthorityId)
+                   .map(TppInfo::getAuthorisationNumber)
                    .orElseThrow(CertificateException::new);
     }
 
