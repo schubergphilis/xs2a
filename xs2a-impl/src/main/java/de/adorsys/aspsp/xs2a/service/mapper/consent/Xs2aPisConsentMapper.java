@@ -38,6 +38,7 @@ import de.adorsys.psd2.consent.api.pis.PisPaymentType;
 import de.adorsys.psd2.consent.api.pis.authorisation.CreatePisConsentAuthorisationResponse;
 import de.adorsys.psd2.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.psd2.consent.api.pis.proto.PisConsentRequest;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -175,7 +176,7 @@ public class Xs2aPisConsentMapper {
                        cmsTppInfo.setTppName(tpp.getTppName());
 
                        List<Xs2aTppRole> tppRoles = tpp.getTppRoles();
-                       if (!tppRoles.isEmpty()) {
+                       if (CollectionUtils.isNotEmpty(tppRoles)) {
                            cmsTppInfo.setTppRole(tppRoles.get(0).name()); // TODO properly map tppRoles to CmsTppInfo https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/266
                        }
 
