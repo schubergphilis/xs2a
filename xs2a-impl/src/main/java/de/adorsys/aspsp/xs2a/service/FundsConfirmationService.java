@@ -16,9 +16,11 @@
 
 package de.adorsys.aspsp.xs2a.service;
 
+import de.adorsys.aspsp.xs2a.domain.MessageErrorCode;
 import de.adorsys.aspsp.xs2a.domain.ResponseObject;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationRequest;
 import de.adorsys.aspsp.xs2a.domain.fund.FundsConfirmationResponse;
+import de.adorsys.aspsp.xs2a.exception.MessageError;
 import de.adorsys.aspsp.xs2a.service.mapper.spi_xs2a_mappers.SpiXs2aAccountMapper;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
@@ -26,6 +28,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import de.adorsys.aspsp.xs2a.spi.service.FundsConfirmationSpi;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,22 +47,34 @@ public class FundsConfirmationService {
     public ResponseObject<FundsConfirmationResponse> fundsConfirmation(FundsConfirmationRequest request) {
         ResponseObject accountReferenceValidationResponse = referenceValidationService.validateAccountReferences(request.getAccountReferences());
 
-        return accountReferenceValidationResponse.hasError()
-                   ? ResponseObject.<FundsConfirmationResponse>builder().fail(accountReferenceValidationResponse.getError()).build()
-                   : ResponseObject.<FundsConfirmationResponse>builder()
-                         .body(getFundsConfirmationResponse(request))
-                         .build();
-    }
+        if (accountReferenceValidationResponse.hasError()) {
+            return ResponseObject.<FundsConfirmationResponse>builder()
+                       .fail(accountReferenceValidationResponse.getError())
+                       .build();
+        }
 
-    private FundsConfirmationResponse getFundsConfirmationResponse(FundsConfirmationRequest request) {
         SpiAccountReference accountReference = accountMapper.mapToSpiAccountReference(request.getPsuAccount());
         SpiAmount amount = accountMapper.mapToSpiAmount(request.getInstructedAmount());
+
+        AspspConsentData aspspConsentData = new AspspConsentData(); // TODO read it https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
+
         SpiResponse<Boolean> fundsSufficientCheck = fundsConfirmationSpi.peformFundsSufficientCheck(
             accountReference,
             amount,
-            new AspspConsentData()  //TODO Add actual aspsp consent data after implementation of consent for funds confirmation https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
-        );
+            aspspConsentData);
 
-        return new FundsConfirmationResponse(fundsSufficientCheck.getPayload());
+        aspspConsentData = fundsSufficientCheck.getAspspConsentData(); // TODO save it https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
+
+        if (fundsSufficientCheck.hasError()) {
+            return ResponseObject.<FundsConfirmationResponse>builder()
+                       .fail(new MessageError(MessageErrorCode.PAYMENT_FAILED)) // TODO put real error from SpiResponse.message
+                       .build();
+        }
+
+        FundsConfirmationResponse fundsConfirmationResponse = new FundsConfirmationResponse(BooleanUtils.isTrue(fundsSufficientCheck.getPayload()));
+
+        return ResponseObject.<FundsConfirmationResponse>builder()
+                   .body(fundsConfirmationResponse)
+                   .build();
     }
 }
