@@ -23,6 +23,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiBalanceType;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
+import de.adorsys.aspsp.xs2a.spi.domain.fund.SpiFundsConfirmationConsent;
 import de.adorsys.aspsp.xs2a.spi.service.AccountSpi;
 import de.adorsys.aspsp.xs2a.spi.service.FundsConfirmationSpi;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class FundsConfirmationSpiImpl implements FundsConfirmationSpi {
     private final AccountSpi accountSpi;
 
     @Override
-    public SpiResponse<Boolean> peformFundsSufficientCheck(SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData) {
+    public SpiResponse<Boolean> peformFundsSufficientCheck(SpiFundsConfirmationConsent consent, SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData) {
         //TODO Account data reads should be performed through specially created endpoint https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/383
         List<SpiAccountDetails> accounts = accountSpi.readAccountDetailsByIban(reference.getIban(), aspspConsentData).getPayload();
         List<SpiAccountBalance> balances = extractAccountBalancesByCurrency(accounts, reference.getCurrency());

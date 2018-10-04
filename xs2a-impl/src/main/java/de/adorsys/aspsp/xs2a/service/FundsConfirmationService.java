@@ -37,6 +37,7 @@ public class FundsConfirmationService {
     private final AccountReferenceValidationService referenceValidationService;
     private final FundsConfirmationSpi fundsConfirmationSpi;
     private final SpiXs2aAccountMapper accountMapper;
+    private final FundsConfirmationConsentDataService fundsConfirmationConsentDataService;
 
     /**
      * Checks if the account balance is sufficient for requested operation
@@ -55,19 +56,21 @@ public class FundsConfirmationService {
 
         SpiAccountReference accountReference = accountMapper.mapToSpiAccountReference(request.getPsuAccount());
         SpiAmount amount = accountMapper.mapToSpiAmount(request.getInstructedAmount());
-
-        AspspConsentData aspspConsentData = new AspspConsentData(); // TODO read it https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
+        AspspConsentData aspspConsentData = fundsConfirmationConsentDataService.getAspspConsentDataByConsentId("Put here actual consent data"); // TODO Read it by actual consent_id https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
 
         SpiResponse<Boolean> fundsSufficientCheck = fundsConfirmationSpi.peformFundsSufficientCheck(
+            null, //TODO Put here actual FundsConfirmationConsent https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
             accountReference,
             amount,
-            aspspConsentData);
+            aspspConsentData
+        );
 
-        aspspConsentData = fundsSufficientCheck.getAspspConsentData(); // TODO save it https://git.adorsys.de/adorsys/xs2a/aspsp-xs2a/issues/379
+        aspspConsentData = fundsSufficientCheck.getAspspConsentData();
+        fundsConfirmationConsentDataService.updateAspspConsentData(aspspConsentData);
 
         if (fundsSufficientCheck.hasError()) {
             return ResponseObject.<FundsConfirmationResponse>builder()
-                       .fail(new MessageError(MessageErrorCode.PAYMENT_FAILED)) // TODO put real error from SpiResponse.message
+                       .fail(new MessageError(MessageErrorCode.RESOURCE_UNKNOWN_404))
                        .build();
         }
 

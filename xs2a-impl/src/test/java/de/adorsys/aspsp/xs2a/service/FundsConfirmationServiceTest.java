@@ -27,6 +27,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
+import de.adorsys.aspsp.xs2a.spi.domain.fund.SpiFundsConfirmationConsent;
 import de.adorsys.aspsp.xs2a.spi.service.FundsConfirmationSpi;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,7 @@ import java.util.Currency;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -60,19 +62,22 @@ public class FundsConfirmationServiceTest {
     @Mock
     private SpiXs2aAccountMapper accountMapper;
 
+    @Mock
+    private FundsConfirmationConsentDataService fundsConfirmationConsentDataService;
+
     @Before
     public void setUp() {
         when(referenceValidationService.validateAccountReferences(any())).thenReturn(ResponseObject.builder().build());
+        when(fundsConfirmationConsentDataService.getAspspConsentDataByConsentId(anyString())).thenReturn(getAspspConsentData());
 
         when(accountMapper.mapToSpiAccountReference(getSufficientFundsConfirmationRequest().getPsuAccount())).thenReturn(getValidSpiAccountReference());
-        when(accountMapper.mapToSpiAmount(getSufficientFundsConfirmationRequest().getInstructedAmount())).thenReturn(getSufficientSpiAmount());
-
         when(accountMapper.mapToSpiAccountReference(getInSufficientFundsConfirmationRequest().getPsuAccount())).thenReturn(getValidSpiAccountReference());
+        when(accountMapper.mapToSpiAmount(getSufficientFundsConfirmationRequest().getInstructedAmount())).thenReturn(getSufficientSpiAmount());
         when(accountMapper.mapToSpiAmount(getInSufficientFundsConfirmationRequest().getInstructedAmount())).thenReturn(getInsufficientSpiAmount());
 
-        when(fundsConfirmationSpi.peformFundsSufficientCheck(getValidSpiAccountReference(), getSufficientSpiAmount(), getAspspConsentData()))
+        when(fundsConfirmationSpi.peformFundsSufficientCheck(null, getValidSpiAccountReference(), getSufficientSpiAmount(), getAspspConsentData()))
             .thenReturn(new SpiResponse<>(Boolean.TRUE, getAspspConsentData()));
-        when(fundsConfirmationSpi.peformFundsSufficientCheck(getValidSpiAccountReference(), getInsufficientSpiAmount(), getAspspConsentData()))
+        when(fundsConfirmationSpi.peformFundsSufficientCheck(null, getValidSpiAccountReference(), getInsufficientSpiAmount(), getAspspConsentData()))
             .thenReturn(new SpiResponse<>(Boolean.FALSE, getAspspConsentData()));
     }
 
@@ -139,5 +144,9 @@ public class FundsConfirmationServiceTest {
             "0172/1111111",
             EUR
         );
+    }
+
+    private SpiFundsConfirmationConsent getSpiFundsConfirmationConsent() {
+        return new SpiFundsConfirmationConsent();
     }
 }

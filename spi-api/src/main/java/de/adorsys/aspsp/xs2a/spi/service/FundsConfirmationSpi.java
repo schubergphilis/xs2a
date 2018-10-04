@@ -20,6 +20,7 @@ import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountReference;
 import de.adorsys.aspsp.xs2a.spi.domain.common.SpiAmount;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
+import de.adorsys.aspsp.xs2a.spi.domain.fund.SpiFundsConfirmationConsent;
 
 public interface FundsConfirmationSpi {
     /**
@@ -31,5 +32,5 @@ public interface FundsConfirmationSpi {
      *                         May be null if consent does not contain such data, or request isn't done from a workflow with a consent
      * @return 'true' if the requested amount can be booked on the account, 'false' otherwise
      */
-    SpiResponse<Boolean> peformFundsSufficientCheck(SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData);
+    SpiResponse<Boolean> peformFundsSufficientCheck(SpiFundsConfirmationConsent consent, SpiAccountReference reference, SpiAmount amount, AspspConsentData aspspConsentData);
 }
