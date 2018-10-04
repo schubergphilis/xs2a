@@ -24,6 +24,7 @@ import de.adorsys.psd2.validator.common.RoleOfPSP;
 import de.adorsys.psd2.validator.common.RolesOfPSP;
 import lombok.extern.slf4j.Slf4j;
 import no.difi.certvalidator.api.CertificateValidationException;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x500.style.BCStyle;
 import org.bouncycastle.asn1.x500.style.IETFUtils;
@@ -63,34 +64,25 @@ public class CertificateExtractorUtil {
 
         try {
             X500Name x500name = new JcaX509CertificateHolder(cert).getSubject();
-            String pspAuthorisationNumber = IETFUtils
-                                                .valueToString(x500name.getRDNs(BCStyle.ORGANIZATION_IDENTIFIER)[0].getFirst().getValue());
-            tppCertData.setPspAuthorisationNumber(pspAuthorisationNumber);
 
-            String organisation = IETFUtils.valueToString(x500name.getRDNs(BCStyle.O)[0].getFirst().getValue());
-            tppCertData.setOrganisation(organisation);
+            tppCertData.setPspAuthorisationNumber(getValueFromX500Name(x500name, BCStyle.ORGANIZATION_IDENTIFIER));
+            tppCertData.setOrganisation(getValueFromX500Name(x500name, BCStyle.O));
+            tppCertData.setOrganisationUnit(getValueFromX500Name(x500name, BCStyle.OU));
+            tppCertData.setCity(getValueFromX500Name(x500name, BCStyle.L));
+            tppCertData.setState(getValueFromX500Name(x500name, BCStyle.ST));
+            tppCertData.setCountry(getValueFromX500Name(x500name, BCStyle.C));
+            tppCertData.setName(getValueFromX500Name(x500name, BCStyle.CN));
 
-            String organisationUnit = IETFUtils.valueToString(x500name.getRDNs(BCStyle.OU)[0].getFirst().getValue());
-            tppCertData.setOrganisationUnit(organisationUnit);
-
-            String city = IETFUtils.valueToString(x500name.getRDNs(BCStyle.L)[0].getFirst().getValue());
-            tppCertData.setCity(city);
-
-            String state = IETFUtils.valueToString(x500name.getRDNs(BCStyle.ST)[0].getFirst().getValue());
-            tppCertData.setState(state);
-
-            String country = IETFUtils.valueToString(x500name.getRDNs(BCStyle.C)[0].getFirst().getValue());
-            tppCertData.setCountry(country);
-
-            String name = IETFUtils
-                              .valueToString(x500name.getRDNs(BCStyle.CN)[0].getFirst().getValue());
-            tppCertData.setName(name);
         } catch (CertificateEncodingException e) {
             log.debug(e.getMessage());
             throw new CertificateValidationException(CertificateErrorMsgCode.CERTIFICATE_INVALID.toString());
         }
         return tppCertData;
 
+    }
+
+    private static String getValueFromX500Name(X500Name x500Name, ASN1ObjectIdentifier asn1ObjectIdentifier) {
+        return IETFUtils.valueToString(x500Name.getRDNs(asn1ObjectIdentifier)[0].getFirst().getValue());
     }
 
 }
