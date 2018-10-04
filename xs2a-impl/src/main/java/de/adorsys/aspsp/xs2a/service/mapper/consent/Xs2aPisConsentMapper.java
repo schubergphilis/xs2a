@@ -27,6 +27,7 @@ import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.CreatePisConsentAutho
 import de.adorsys.aspsp.xs2a.consent.api.pis.authorisation.UpdatePisConsentPsuDataResponse;
 import de.adorsys.aspsp.xs2a.consent.api.pis.proto.PisConsentRequest;
 import de.adorsys.aspsp.xs2a.domain.TppInfo;
+import de.adorsys.aspsp.xs2a.domain.Xs2aTppRole;
 import de.adorsys.aspsp.xs2a.domain.account.Xs2aAccountReference;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aAddress;
 import de.adorsys.aspsp.xs2a.domain.address.Xs2aCountryCode;
@@ -172,7 +173,12 @@ public class Xs2aPisConsentMapper {
 
                        cmsTppInfo.setRegistrationNumber(tpp.getAuthorisationNumber());
                        cmsTppInfo.setTppName(tpp.getTppName());
-                       cmsTppInfo.setTppRole(tpp.getTppRoles().get(0).name());
+
+                       List<Xs2aTppRole> tppRoles = tpp.getTppRoles();
+                       if (!tppRoles.isEmpty()) {
+                           cmsTppInfo.setTppRole(tppRoles.get(0).name());
+                       }
+
                        cmsTppInfo.setNationalCompetentAuthority(tpp.getAuthorityName());
                        cmsTppInfo.setRedirectUri(tpp.getRedirectUri());
                        cmsTppInfo.setNokRedirectUri(tpp.getNokRedirectUri());
