@@ -22,10 +22,10 @@ import org.bouncycastle.asn1.*;
 import java.util.Arrays;
 
 public enum RoleOfPSP {
-    PSP_AS(RoleOfPspOid.id_psd2_role_psp_as, RoleOfPspName.PSP_AS, TppRole.ASPSP.name()), PSP_PI(
-        RoleOfPspOid.id_psd2_role_psp_pi, RoleOfPspName.PSP_PI, TppRole.PISP.name()), PSP_AI(
-        RoleOfPspOid.id_psd2_role_psp_ai, RoleOfPspName.PSP_AI, TppRole.AISP.name()), PSP_IC(
-        RoleOfPspOid.id_psd2_role_psp_ic, RoleOfPspName.PSP_IC, TppRole.PIISP.name());
+    PSP_AS(RoleOfPspOid.id_psd2_role_psp_as, RoleOfPspName.PSP_AS, TppRole.ASPSP.name()),
+    PSP_PI(RoleOfPspOid.id_psd2_role_psp_pi, RoleOfPspName.PSP_PI, TppRole.PISP.name()),
+    PSP_AI(RoleOfPspOid.id_psd2_role_psp_ai, RoleOfPspName.PSP_AI, TppRole.AISP.name()),
+    PSP_IC(RoleOfPspOid.id_psd2_role_psp_ic, RoleOfPspName.PSP_IC, TppRole.PIISP.name());
 
     private ASN1ObjectIdentifier roleOfPspOid;
     private DERUTF8String roleOfPspName;
@@ -36,7 +36,7 @@ public enum RoleOfPSP {
         this.roleOfPspOid = roleOfPspOid;
         this.roleOfPspName = roleOfPspName;
         this.normalizedRoleName = normalizedRoleName;
-        sequence = new DERSequence(new ASN1Encodable[] { roleOfPspOid, roleOfPspName });
+        sequence = new DERSequence(new ASN1Encodable[]{roleOfPspOid, roleOfPspName});
     }
 
     public static RoleOfPSP getInstance(ASN1Encodable asn1Encodable) {
