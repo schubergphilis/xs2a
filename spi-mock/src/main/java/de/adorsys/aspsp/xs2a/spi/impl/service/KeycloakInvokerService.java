@@ -84,11 +84,11 @@ public class KeycloakInvokerService {
         ResponseEntity<HashMap<String, String>> response = keycloakRestTemplate.exchange(keycloakConfig.getRootPath() + "/protocol/openid-connect/token", HttpMethod.POST, new HttpEntity<>(params, headers),
             new ParameterizedTypeReference<HashMap<String, String>>() {
             });
-        if (response.getStatusCode()!=HttpStatus.OK){
+        if (response.getStatusCode() != HttpStatus.OK) {
             return Optional.empty();
         }
         return Optional.ofNullable(response.getBody())
-                   .filter(body->StringUtils.isNotBlank(body.get(ACCESS_TOKEN))||StringUtils.isNotBlank(body.get(REFRESH_TOKEN)))
+                   .filter(body -> StringUtils.isNotBlank(body.get(ACCESS_TOKEN)) || StringUtils.isNotBlank(body.get(REFRESH_TOKEN)))
                    .map(body -> new AspspAuthorisationData(psuId, password, body.get(ACCESS_TOKEN), body.get(REFRESH_TOKEN)));
     }
 }
