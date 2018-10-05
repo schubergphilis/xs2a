@@ -20,7 +20,6 @@ import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import lombok.NonNull;
 import lombok.Value;
 
-import static de.adorsys.aspsp.xs2a.spi.domain.SpiResponseStatus.FAILED;
 import static de.adorsys.aspsp.xs2a.spi.domain.SpiResponseStatus.SUCCESS;
 
 @Value
@@ -46,8 +45,10 @@ public class SpiResponse<T> {
      * An optional message that can be returned to explain response status in details.
      * XS2A Service may use it to provide the error explanation to TPP
      */
+    // TODO put a list here
     private String message;
 
+    // TODO document VOID use-cases
     public SpiResponse(T payload, AspspConsentData aspspConsentData, SpiResponseStatus responseStatus, String message) {
         this.payload = payload;
         this.aspspConsentData = aspspConsentData;
@@ -84,6 +85,8 @@ public class SpiResponse<T> {
         private SpiResponseStatus responseStatus = SUCCESS;
         private String message;
 
+        private SpiResponseBuilder() {}
+
         public SpiResponseBuilder<T> payload(T payload) {
             this.payload = payload;
             return this;
@@ -94,61 +97,20 @@ public class SpiResponse<T> {
             return this;
         }
 
-        public SpiResponseBuilder<T> responseStatus(SpiResponseStatus responseStatus) {
-            this.responseStatus = responseStatus;
-            return this;
-        }
-
         public SpiResponseBuilder<T> message(String message) {
             this.message = message;
             return this;
         }
 
         public SpiResponse<T> success() {
-            return new SpiResponse<>(this.responseStatus(SUCCESS));
+            this.responseStatus = SUCCESS;
+            return new SpiResponse<>(this);
         }
 
-        public SpiResponse<T> success(T payload, AspspConsentData aspspConsentData) {
-            return this
-                       .payload(payload)
-                       .aspspConsentData(aspspConsentData)
-                       .success();
-
+        public SpiResponse<T> fail(SpiResponseStatus responseStatus) {
+            this.responseStatus = responseStatus;
+            return new SpiResponse<T>(this);
         }
 
-        public SpiResponse<T> success(AspspConsentData aspspConsentData) {
-            return this
-                       .aspspConsentData(aspspConsentData)
-                       .success();
-        }
-
-        public SpiResponse<T> fail() {
-            return new SpiResponse<>(this.responseStatus(FAILED));
-        }
-
-        public SpiResponse<T> fail(T payload, AspspConsentData aspspConsentData, String message) {
-            this.payload = payload;
-            this.aspspConsentData = aspspConsentData;
-            this.responseStatus = FAILED;
-            this.message = message;
-            return this
-                       .payload(payload)
-                       .aspspConsentData(aspspConsentData)
-                       .message(message)
-                       .fail();
-        }
-
-        public SpiResponse<T> fail(T payload, AspspConsentData aspspConsentData) {
-            return this.fail(payload, aspspConsentData, null);
-        }
-
-        public SpiResponse<T> fail(AspspConsentData aspspConsentData, String message) {
-            return fail(null, aspspConsentData, message);
-
-        }
-
-        public SpiResponse<T> fail(AspspConsentData aspspConsentData) {
-            return fail(null, null, null);
-        }
     }
 }

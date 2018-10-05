@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.service;
+package de.adorsys.aspsp.xs2a.spi.service.v2;
 
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.SpiResponseStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 
+//TODO javadocs!
 public interface AisConsentSpi extends AuthorisationSpi<SpiAccountConsent> {
 
-    SpiResponse<Void> initiateAisConsent(SpiAccountConsent accountConsent);
+    default SpiResponse<Void> initiateAisConsent(SpiAccountConsent accountConsent, AspspConsentData initialAspspConsentData) {
+        return SpiResponse.<Void>builder()
+            .fail(SpiResponseStatus.NOT_SUPPORTED);
+    }
 
-    SpiResponse<Void> revokeAisConsent(SpiAccountConsent accountConsent, AspspConsentData aspspConsentData);
+    default SpiResponse<Void> revokeAisConsent(SpiAccountConsent accountConsent, AspspConsentData aspspConsentData){
+        return SpiResponse.<Void>builder()
+                   .fail(SpiResponseStatus.NOT_SUPPORTED);
+    }
 }

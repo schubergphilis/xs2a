@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package de.adorsys.aspsp.xs2a.spi.domain;
+package de.adorsys.aspsp.xs2a.spi.service.v2;
 
-public enum SpiResponseStatus {
-    SUCCESS,
-    TECHNICAL_FAILURE,
-    UNAUTHORIZED_FAILURE,
-    LOGICAL_FAILURE,
-    NOT_SUPPORTED
+//TODO javadocs!
+public interface AccountSpi {
+    //TODO getAccountDetails(List)
+    //TODO getAccountTranscations(List)
+    //TODO getAccountBalances(List)
 }

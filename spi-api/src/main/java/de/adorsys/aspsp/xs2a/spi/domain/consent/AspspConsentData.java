@@ -24,11 +24,22 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Value
-@RequiredArgsConstructor
-@NoArgsConstructor(force = true)
+@RequiredArgsConstructor // TODO make constructor package private and factory class for internal usage
+@NoArgsConstructor(force = true) // TODO remove it
+//TODO javadocs!
 public class AspspConsentData {
     private final byte[] aspspConsentData;
+    //TODO @Getter(AccessLevel.PRIVATE)
     private final String consentId;
+
+    /**
+     * TODO
+     * @param responseAspspConsentData
+     * @return
+     */
+    public final AspspConsentData respondWith(byte[] responseAspspConsentData) {
+        return new AspspConsentData(responseAspspConsentData, this.consentId);
+    }
 
     @Override
     public boolean equals(Object o) {
