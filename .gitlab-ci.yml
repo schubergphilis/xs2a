@@ -11,39 +11,49 @@ variables: &variables
   GITLAB_REGISTRY: "gitlab-registry.adorsys.de"
   GITLAB_NAMESPACE: "adorsys/xs2a/aspsp-xs2a"
 
+  DOCKER_NAMESPACE: "adorsys"
+
   OPENSHIFT_REGISTRY: "openshift-registry.adorsys.de:443"
   OPENSHIFT_NAMESPACE: "multibanking-xs2a"
 
   # XS2A Service
   GITLAB_IMAGE_NAME_XS2A: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}"
+  DOCKER_IMAGE_NAME_XS2A: "${DOCKER_NAMESPACE}/xs2a-service"
   OPENSHIFT_IMAGE_NAME_XS2A: "${OPENSHIFT_REGISTRY}/${OPENSHIFT_NAMESPACE}/aspsp-xs2a"
 
   # Content management service
   GITLAB_IMAGE_NAME_CNT_MGMNT: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}/cnt-mgmnt"
+  DOCKER_IMAGE_NAME_CNT_MGMNT: "${DOCKER_NAMESPACE}/xs2a-consent-management"
   OPENSHIFT_IMAGE_NAME_CNT_MGMNT: "${OPENSHIFT_REGISTRY}/${OPENSHIFT_NAMESPACE}/xs2a-cnt-mgmnt"
 
   # ASPSP Mock Server
   GITLAB_IMAGE_NAME_MOCKSRV: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}/aspsp-mock-server"
+  DOCKER_IMAGE_NAME_MOCKSRV: "${DOCKER_NAMESPACE}/xs2a-mock-server"
   OPENSHIFT_IMAGE_NAME_MOCKSRV: "${OPENSHIFT_REGISTRY}/${OPENSHIFT_NAMESPACE}/aspsp-mock-server"
 
   # XS2A IDP Keycloak
   GITLAB_IMAGE_NAME_KEYCLOAK: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}/keycloak-xs2a"
+  DOCKER_IMAGE_NAME_KEYCLOAK: "${DOCKER_NAMESPACE}/xs2a-idp"
   OPENSHIFT_IMAGE_NAME_KEYCLOAK: "${OPENSHIFT_REGISTRY}/${OPENSHIFT_NAMESPACE}/keycloak-xs2a"
 
   # XS2A IDP ASPSP Profile
   GITLAB_IMAGE_NAME_ASPSP_PROFILE: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}/xs2a-aspsp-profile"
+  DOCKER_IMAGE_NAME_ASPSP_PROFILE: "${DOCKER_NAMESPACE}/xs2a-aspsp-profile"
   OPENSHIFT_IMAGE_NAME_ASPSP_PROFILE: "${OPENSHIFT_REGISTRY}/${OPENSHIFT_NAMESPACE}/xs2a-aspsp-profile"
 
   # XS2A Integration Tests
   GITLAB_IMAGE_NAME_INTEG_TESTS: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}/xs2a-integtests"
+  DOCKER_IMAGE_NAME_INTEG_TESTS: "${DOCKER_NAMESPACE}/xs2a-integration-tests"
   OPENSHIFT_IMAGE_NAME_INTEG_TESTS: "${OPENSHIFT_REGISTRY}/${OPENSHIFT_NAMESPACE}/xs2a-integtests"
 
   # Online banking demo
   GITLAB_IMAGE_NAME_ONLINE_BANKING_DEMO: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}/online-banking-demo"
+  DOCKER_IMAGE_NAME_ONLINE_BANKING_DEMO: "${DOCKER_NAMESPACE}/xs2a-mock-online-banking-backend"
   OPENSHIFT_IMAGE_NAME_ONLINE_BANKING_DEMO: "${OPENSHIFT_REGISTRY}/${OPENSHIFT_NAMESPACE}/online-banking-demo"
 
   # Online banking UIapp
-  GITLAB_IMAGE_NAME_ONLINE_BANKING_UI: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}/online-banking-demo/src/main/ui"
+  GITLAB_IMAGE_NAME_ONLINE_BANKING_UI: "${GITLAB_REGISTRY}/${GITLAB_NAMESPACE}/online-banking-ui"
+  DOCKER_IMAGE_NAME_ONLINE_BANKING_UI: "${DOCKER_NAMESPACE}/xs2a-mock-online-banking-ui"
   OPENSHIFT_IMAGE_NAME_ONLINE_BANKING_UI: "${OPENSHIFT_REGISTRY}/${OPENSHIFT_NAMESPACE}/online-banking-ui"
 
 
@@ -87,6 +97,7 @@ variables: &variables
     - mvn -DskipTests clean install
 
 # Build docker images and put them to GITLAB repo
+# TODO remove when docker hub images work
 .build_docker_image: &build_docker_image
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $GITLAB_REGISTRY
@@ -112,7 +123,38 @@ variables: &variables
     - docker build -t "$GITLAB_IMAGE_NAME_ONLINE_BANKING_DEMO:$DOCKER_TAG" online-banking-demo
     - docker push "$GITLAB_IMAGE_NAME_ONLINE_BANKING_DEMO:$DOCKER_TAG"
 
+# Build docker images and put them to DOCKER HUB repo
+.build_dockerhub_image: &build_dockerhub_image
+  script:
+    - docker build -t "$DOCKER_IMAGE_NAME_XS2A:$DOCKER_TAG" spi-mock
+
+    - docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASS
+    - echo "DOCKER_IMAGE_NAME is ${DOCKER_IMAGE_NAME_XS2A}"
+    - echo "DOCKER_TAG is ${DOCKER_TAG}"
+    - docker push "$DOCKER_IMAGE_NAME_XS2A:$DOCKER_TAG"
+
+    - docker build -t "$DOCKER_IMAGE_NAME_MOCKSRV:$DOCKER_TAG" aspsp-mock-server
+    - docker push "$DOCKER_IMAGE_NAME_MOCKSRV:$DOCKER_TAG"
+
+    - docker build -t "$DOCKER_IMAGE_NAME_KEYCLOAK:$DOCKER_TAG" aspsp-idp
+    - docker push "$DOCKER_IMAGE_NAME_KEYCLOAK:$DOCKER_TAG"
+
+    - docker build -t "$DOCKER_IMAGE_NAME_CNT_MGMNT:$DOCKER_TAG" consent-management-system
+    - docker push "$DOCKER_IMAGE_NAME_CNT_MGMNT:$DOCKER_TAG"
+
+    - docker build -t "$DOCKER_IMAGE_NAME_ASPSP_PROFILE:$DOCKER_TAG" aspsp-profile/aspsp-profile-server
+    - docker push "$DOCKER_IMAGE_NAME_ASPSP_PROFILE:$DOCKER_TAG"
+
+    - docker build -t "$DOCKER_IMAGE_NAME_INTEG_TESTS:$DOCKER_TAG" integration-tests
+    - docker push "$DOCKER_IMAGE_NAME_INTEG_TESTS:$DOCKER_TAG"
+
+    - docker build -t "$DOCKER_IMAGE_NAME_ONLINE_BANKING_DEMO:$DOCKER_TAG" online-banking-demo
+    - docker push "$DOCKER_IMAGE_NAME_ONLINE_BANKING_DEMO:$DOCKER_TAG"
+
+    - docker logout
+
 # Pull docker images and put them to OPENSHIFT repo
+# TODO remove when docker hub images work
 .push_docker_openshift: &push_docker_openshift
   script:
     - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $GITLAB_REGISTRY
@@ -239,6 +281,21 @@ deploy_develop_stage:
     <<: *variables
     OPENSHIFT_NAMESPACE: "${DEV_NAMESPACE}"
     DOCKER_TAG: "${CI_COMMIT_REF_SLUG}"
+    HELM_RELEASE: "${CI_ENVIRONMENT_SLUG}-psd2"
+    HELM_VALUE: develop.yaml
+  environment:
+    name: dev
+    url: ~
+
+deploy_dockerhub_stage:
+  stage: "deploy:static"
+  <<: *build_dockerhub_image
+  only:
+    - dgo_push_images_docker_hub
+  variables:
+    <<: *variables
+    OPENSHIFT_NAMESPACE: "${DEV_NAMESPACE}"
+    DOCKER_TAG: develop
     HELM_RELEASE: "${CI_ENVIRONMENT_SLUG}-psd2"
     HELM_VALUE: develop.yaml
   environment:
