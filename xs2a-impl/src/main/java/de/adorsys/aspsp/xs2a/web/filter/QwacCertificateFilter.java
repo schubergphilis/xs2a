@@ -82,6 +82,7 @@ public class QwacCertificateFilter extends GenericFilterBean {
                     tppInfo.setOrganisation(tppCertificateData.getOrganisation());
                     tppInfo.setOrganisationUnit(tppCertificateData.getOrganisationUnit());
                     tppInfo.setCity(tppCertificateData.getCity());
+                    tppInfo.setState(tppCertificateData.getState());
 
                     List<TppRole> tppRoles = tppCertificateData.getPspRoles();
                     List<Xs2aTppRole> xs2aTppRoles = tppRoles.stream()
