@@ -75,13 +75,6 @@
             <artifactId>commons-lang3</artifactId>
             <version>${apache.commons.version}</version>
         </dependency>
-
-        <dependency> <!-- TODO move to global level-->
-            <groupId>org.jetbrains</groupId>
-            <artifactId>annotations</artifactId>
-            <version>15.0</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
 <!-- TODO enable and resolve problems

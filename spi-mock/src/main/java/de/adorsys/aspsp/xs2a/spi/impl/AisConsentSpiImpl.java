@@ -17,6 +17,7 @@
 package de.adorsys.aspsp.xs2a.spi.impl;
 
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse.VoidResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.authorisation.SpiAuthorisationStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.authorisation.SpiScaConfirmation;
@@ -32,12 +33,12 @@ import java.util.List;
 public class AisConsentSpiImpl implements AisConsentSpi {
 
     @Override
-    public SpiResponse<Void> initiateAisConsent(SpiAccountConsent accountConsent, AspspConsentData initialAspspConsentData) {
+    public SpiResponse<VoidResponse> initiateAisConsent(SpiAccountConsent accountConsent, AspspConsentData initialAspspConsentData) {
         return null;
     }
 
     @Override
-    public SpiResponse<Void> revokeAisConsent(SpiAccountConsent accountConsent, AspspConsentData aspspConsentData) {
+    public SpiResponse<VoidResponse> revokeAisConsent(SpiAccountConsent accountConsent, AspspConsentData aspspConsentData) {
         return null;
     }
 

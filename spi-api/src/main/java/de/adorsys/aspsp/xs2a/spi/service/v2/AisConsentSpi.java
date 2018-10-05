@@ -17,20 +17,23 @@
 package de.adorsys.aspsp.xs2a.spi.service.v2;
 
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse.VoidResponse;
 import de.adorsys.aspsp.xs2a.spi.domain.SpiResponseStatus;
 import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
 import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 
-//TODO javadocs!
+/**
+ * Spi interface to be used for AIS consent initiating and revoking, and authorising process through AuthorisationSpi interface.
+ */
 public interface AisConsentSpi extends AuthorisationSpi<SpiAccountConsent> {
 
-    default SpiResponse<Void> initiateAisConsent(SpiAccountConsent accountConsent, AspspConsentData initialAspspConsentData) {
-        return SpiResponse.<Void>builder()
+    default SpiResponse<VoidResponse> initiateAisConsent(SpiAccountConsent accountConsent, AspspConsentData initialAspspConsentData) {
+        return SpiResponse.<VoidResponse>builder()
             .fail(SpiResponseStatus.NOT_SUPPORTED);
     }
 
-    default SpiResponse<Void> revokeAisConsent(SpiAccountConsent accountConsent, AspspConsentData aspspConsentData){
-        return SpiResponse.<Void>builder()
+    default SpiResponse<VoidResponse> revokeAisConsent(SpiAccountConsent accountConsent, AspspConsentData aspspConsentData){
+        return SpiResponse.<VoidResponse>builder()
                    .fail(SpiResponseStatus.NOT_SUPPORTED);
     }
 }

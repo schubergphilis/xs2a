@@ -24,7 +24,12 @@ import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 
 import java.util.List;
 
-//TODO javadocs!
+/**
+ * Interface, that contains the method for the authorisation flow.
+ * To be used in SPI interfaces, that need authorisation functionality.
+ *
+ * @param <T> business object to be provided during the implementation
+ */
 interface AuthorisationSpi<T> {
 
     /**

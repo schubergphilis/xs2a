@@ -20,10 +20,14 @@ import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
 import lombok.NonNull;
 import lombok.Value;
 
+import java.util.List;
+
 import static de.adorsys.aspsp.xs2a.spi.domain.SpiResponseStatus.SUCCESS;
 
 @Value
 public class SpiResponse<T> {
+    private static final VoidResponse VOID_RESPONSE = new VoidResponse();
+
     /**
      * Business object that is returned in scope of request
      */
@@ -45,15 +49,13 @@ public class SpiResponse<T> {
      * An optional message that can be returned to explain response status in details.
      * XS2A Service may use it to provide the error explanation to TPP
      */
-    // TODO put a list here
-    private String message;
+    private List<String> messages;
 
-    // TODO document VOID use-cases
-    public SpiResponse(T payload, AspspConsentData aspspConsentData, SpiResponseStatus responseStatus, String message) {
+    public SpiResponse(T payload, AspspConsentData aspspConsentData, SpiResponseStatus responseStatus, List<String> messages) {
         this.payload = payload;
         this.aspspConsentData = aspspConsentData;
         this.responseStatus = responseStatus;
-        this.message = message;
+        this.messages = messages;
     }
 
     public SpiResponse(T payload, AspspConsentData aspspConsentData) {
@@ -72,7 +74,11 @@ public class SpiResponse<T> {
         this.payload = builder.payload;
         this.aspspConsentData = builder.aspspConsentData;
         this.responseStatus = builder.responseStatus;
-        this.message = builder.message;
+        this.messages = builder.messages;
+    }
+
+    public static VoidResponse voidResponse() {
+        return VOID_RESPONSE;
     }
 
     public static <T> SpiResponseBuilder<T> builder() {
@@ -83,9 +89,10 @@ public class SpiResponse<T> {
         private T payload;
         private AspspConsentData aspspConsentData;
         private SpiResponseStatus responseStatus = SUCCESS;
-        private String message;
+        private List<String> messages;
 
-        private SpiResponseBuilder() {}
+        private SpiResponseBuilder() {
+        }
 
         public SpiResponseBuilder<T> payload(T payload) {
             this.payload = payload;
@@ -97,8 +104,8 @@ public class SpiResponse<T> {
             return this;
         }
 
-        public SpiResponseBuilder<T> message(String message) {
-            this.message = message;
+        public SpiResponseBuilder<T> message(List<String> messages) {
+            this.messages = messages;
             return this;
         }
 
@@ -112,5 +119,13 @@ public class SpiResponse<T> {
             return new SpiResponse<T>(this);
         }
 
+    }
+
+    /**
+     * To be used for SpiResponse<Void> case
+     */
+    public static class VoidResponse {
+        private VoidResponse() {
+        }
     }
 }

@@ -16,9 +16,74 @@
 
 package de.adorsys.aspsp.xs2a.spi.service.v2;
 
-//TODO javadocs!
+import de.adorsys.aspsp.xs2a.spi.domain.SpiResponse;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountBalance;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountConsent;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiAccountDetails;
+import de.adorsys.aspsp.xs2a.spi.domain.account.SpiTransaction;
+import de.adorsys.aspsp.xs2a.spi.domain.consent.AspspConsentData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.time.LocalDate;
+import java.util.List;
+
 public interface AccountSpi {
-    //TODO getAccountDetails(List)
-    //TODO getAccountTranscations(List)
-    //TODO getAccountBalances(List)
+
+    /**
+     * Requests a list of account details
+     *
+     * @param withBalance      boolean representing if the responded AccountDetails should contain balance
+     * @param accountConsent   SpiAccountConsent
+     * @param aspspConsentData Encrypted data that may be stored in the consent management system in the consent linked to a request
+     * @return List of account details
+     */
+    SpiResponse<List<SpiAccountDetails>> requestAccountDetails(boolean withBalance, @NotNull SpiAccountConsent accountConsent, @NotNull AspspConsentData aspspConsentData);
+
+    /**
+     * Requests an account detail for account
+     *
+     * @param accountId        String representation of ASPSP account primary identifier
+     * @param withBalance      Boolean representing if the responded AccountDetails should contain balance
+     * @param accountConsent   SpiAccountConsent
+     * @param aspspConsentData Encrypted data that may be stored in the consent management system in the consent linked to a request
+     * @return Account detail
+     */
+    SpiResponse<SpiAccountDetails> requestAccountDetailForAccount(@NotNull String accountId, boolean withBalance, @NotNull SpiAccountConsent accountConsent, @NotNull AspspConsentData aspspConsentData);
+
+    /**
+     * Requests a list of transactions
+     *
+     * @param accountId        String representation of ASPSP account primary identifier
+     * @param withBalance      boolean representing if the responded AccountDetails should contain balance
+     * @param dateFrom         Date representing the beginning of the search period.<br>
+     *                         If null, transactions will not be limited by start date
+     * @param dateTo           Date representing the ending of the search period. <br>
+     *                         If null, transactions will not be limited by end date
+     * @param accountConsent   SpiAccountConsent
+     * @param aspspConsentData Encrypted data that may be stored in the consent management system in the consent linked to a request
+     * @return List of transactions
+     */
+    SpiResponse<List<SpiTransaction>> requestTransactionsForAccount(@NotNull String accountId, boolean withBalance, @Nullable LocalDate dateFrom, @Nullable LocalDate dateTo, @NotNull SpiAccountConsent accountConsent, @NotNull AspspConsentData aspspConsentData);
+
+    /**
+     * Requests an transaction by transactionId
+     *
+     * @param transactionId    String representation of ASPSP transaction primary identifier
+     * @param accountId        String representation of ASPSP account primary identifier
+     * @param accountConsent   SpiAccountConsent
+     * @param aspspConsentData Encrypted data that may be stored in the consent management system in the consent linked to a request
+     * @return Transaction
+     */
+    SpiResponse<SpiTransaction> requestTransactionForAccountByTransactionId(@NotNull String transactionId, @NotNull String accountId, @NotNull SpiAccountConsent accountConsent, @NotNull AspspConsentData aspspConsentData);
+
+    /**
+     * Requests a list of account balances
+     *
+     * @param accountId        String representation of ASPSP account primary identifier
+     * @param accountConsent   SpiAccountConsent
+     * @param aspspConsentData Encrypted data that may be stored in the consent management system in the consent linked to a request
+     * @return List of account balances
+     */
+    SpiResponse<List<SpiAccountBalance>> requestBalancesForAccount(@NotNull String accountId, @NotNull SpiAccountConsent accountConsent, @NotNull AspspConsentData aspspConsentData);
 }
