@@ -17,6 +17,11 @@
 package de.adorsys.psd2.consent.api;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public enum CmsScaMethod {
     SMS_OTP("SMS_OTP"),
@@ -25,22 +30,26 @@ public enum CmsScaMethod {
     PUSH_OTP("PUSH_OTP");
 
     private String authenticationMethodId;
+    private final static Map<String, CmsScaMethod> container = new HashMap<>();
 
+
+    @JsonCreator
     CmsScaMethod(String authenticationMethodId) {
         this.authenticationMethodId = authenticationMethodId;
     }
 
-    @JsonCreator
-    public static CmsScaMethod fromAuthenticationMethodId(String authenticationMethodId) {
-        for (CmsScaMethod cmsScaMethod: CmsScaMethod.values()) {
-            if (String.valueOf(cmsScaMethod.authenticationMethodId).equals(authenticationMethodId)) {
-                return cmsScaMethod;
-            }
+    static {
+        for (CmsScaMethod type : values()) {
+            container.put(type.getAuthenticationMethodId(), type);
         }
-        return null;
     }
 
     public String getAuthenticationMethodId() {
-        return  authenticationMethodId;
+        return authenticationMethodId;
+    }
+
+    @JsonIgnore
+    public static Optional<CmsScaMethod> getByAuthenticationMethodId(String name) {
+        return Optional.ofNullable(container.get(name));
     }
 }
