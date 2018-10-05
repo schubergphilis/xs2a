@@ -269,7 +269,8 @@ public class ConsentModelMapper {
         ScaMethods scaMethods = new ScaMethods();
         if (CollectionUtils.isNotEmpty(availableScaMethods)) {
             availableScaMethods.forEach(a -> scaMethods.add(new AuthenticationObject()
-                                                                .authenticationMethodId(a.name())));
+                                                                .authenticationType(AuthenticationType.valueOf(a.name()))
+                                                                .authenticationMethodId(a.getAuthenticationMethodId())));
         }
         return scaMethods;
     }

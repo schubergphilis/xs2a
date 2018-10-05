@@ -16,9 +16,31 @@
 
 package de.adorsys.psd2.consent.api;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum CmsScaMethod {
-    SMS_OTP,
-    CHIP_OTP,
-    PHOTO_OTP,
-    PUSH_OTP
+    SMS_OTP("SMS_OTP"),
+    CHIP_OTP("CHIP_OTP"),
+    PHOTO_OTP("PHOTO_OTP"),
+    PUSH_OTP("PUSH_OTP");
+
+    private String authenticationMethodId;
+
+    CmsScaMethod(String authenticationMethodId) {
+        this.authenticationMethodId = authenticationMethodId;
+    }
+
+    @JsonCreator
+    public static CmsScaMethod fromAuthenticationMethodId(String authenticationMethodId) {
+        for (CmsScaMethod cmsScaMethod: CmsScaMethod.values()) {
+            if (String.valueOf(cmsScaMethod.authenticationMethodId).equals(authenticationMethodId)) {
+                return cmsScaMethod;
+            }
+        }
+        return null;
+    }
+
+    public String getAuthenticationMethodId() {
+        return  authenticationMethodId;
+    }
 }
