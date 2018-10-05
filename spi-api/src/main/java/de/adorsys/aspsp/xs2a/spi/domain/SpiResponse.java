@@ -122,7 +122,7 @@ public class SpiResponse<T> {
     }
 
     /**
-     * To be used for SpiResponse<Void> case
+     * To be used for SpiResponse Void case
      */
     public static class VoidResponse {
         private VoidResponse() {
