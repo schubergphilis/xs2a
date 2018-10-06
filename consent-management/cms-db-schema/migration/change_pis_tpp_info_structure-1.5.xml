@@ -19,7 +19,7 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet author="ssh@adorsys.com.ua" id="2018-10-04-1">
+    <changeSet author="ssh@adorsys.com.ua" id="2018-10-06-1">
         <comment>Change structure of pis_tpp_info and add pis_tpp_info_role table</comment>
 
         <renameColumn columnDataType="VARCHAR(50)"
