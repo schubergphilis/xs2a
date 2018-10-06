@@ -90,15 +90,29 @@ public class PisConsentMapper {
         return Optional.ofNullable(tppInfo)
                    .map(tin -> {
                        PisTppInfo pisTppInfo = new PisTppInfo();
-                       pisTppInfo.setRegistrationNumber(tin.getRegistrationNumber());
+                       pisTppInfo.setAuthorisationNumber(tin.getAuthorisationNumber());
                        pisTppInfo.setTppName(tin.getTppName());
-                       pisTppInfo.setTppRole(tin.getTppRole());
-                       pisTppInfo.setNationalCompetentAuthority(tin.getNationalCompetentAuthority());
+                       pisTppInfo.setTppRoles(mapToPisTppRoles(tin.getTppRoles()));
+                       pisTppInfo.setAuthorityId(tin.getAuthorityId());
+                       pisTppInfo.setAuthorityName(tin.getAuthorityName());
+                       pisTppInfo.setCountry(tin.getCountry());
+                       pisTppInfo.setOrganisation(tin.getOrganisation());
+                       pisTppInfo.setOrganisationUnit(tin.getOrganisationUnit());
+                       pisTppInfo.setCity(tin.getCity());
+                       pisTppInfo.setState(tin.getState());
                        pisTppInfo.setRedirectUri(tin.getRedirectUri());
                        pisTppInfo.setNokRedirectUri(tin.getNokRedirectUri());
 
                        return pisTppInfo;
                    }).orElse(null);
+    }
+
+    private List<PisTppRole> mapToPisTppRoles(List<CmsTppRole> tppRoles) {
+        return Optional.ofNullable(tppRoles)
+                   .map(roles -> roles.stream()
+                                     .map(role -> PisTppRole.valueOf(role.name()))
+                                     .collect(Collectors.toList()))
+                   .orElse(null);
     }
 
     public GetPisConsentAuthorisationResponse mapToGetPisConsentAuthorizationResponse(PisConsentAuthorization pis) {
@@ -217,15 +231,29 @@ public class PisConsentMapper {
                    .map(tpp -> {
                        CmsTppInfo tppInfo = new CmsTppInfo();
 
-                       tppInfo.setRegistrationNumber(tpp.getRegistrationNumber());
+                       tppInfo.setAuthorisationNumber(tpp.getAuthorisationNumber());
                        tppInfo.setTppName(tpp.getTppName());
-                       tppInfo.setTppRole(tpp.getTppRole());
-                       tppInfo.setNationalCompetentAuthority(tpp.getNationalCompetentAuthority());
+                       tppInfo.setTppRoles(mapToCmsTppRoles(tpp.getTppRoles()));
+                       tppInfo.setAuthorityId(tpp.getAuthorityId());
+                       tppInfo.setAuthorityName(tpp.getAuthorityName());
+                       tppInfo.setCountry(tpp.getCountry());
+                       tppInfo.setOrganisation(tpp.getOrganisation());
+                       tppInfo.setOrganisationUnit(tpp.getOrganisationUnit());
+                       tppInfo.setCity(tpp.getCity());
+                       tppInfo.setState(tpp.getState());
                        tppInfo.setRedirectUri(tpp.getRedirectUri());
                        tppInfo.setNokRedirectUri(tpp.getNokRedirectUri());
-                       return tppInfo;
 
+                       return tppInfo;
                    }).orElse(null);
+    }
+
+    private List<CmsTppRole> mapToCmsTppRoles(List<PisTppRole> pisTppRoles) {
+        return Optional.ofNullable(pisTppRoles)
+                   .map(roles -> roles.stream()
+                                     .map(role -> CmsTppRole.valueOf(role.name()))
+                                     .collect(Collectors.toList()))
+                   .orElse(null);
     }
 
     private PisAccountReference mapToPisAccountReference(CmsAccountReference cmsAccountReference) {

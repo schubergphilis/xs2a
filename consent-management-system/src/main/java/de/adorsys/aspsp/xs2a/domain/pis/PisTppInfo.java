@@ -22,6 +22,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity(name = "pis_tpp_info")
@@ -34,27 +35,54 @@ public class PisTppInfo {
     @SequenceGenerator(name = "pis_tpp_info_generator", sequenceName = "pis_tpp_info_id_seq")
     private Long id;
 
-    @Column(name = "registration_number", nullable = false)
-    @ApiModelProperty(value = "Registration number", required = true, example = "1234_registrationNumber")
-    private String registrationNumber;
+    @Column(name = "authorisation_number", nullable = false)
+    @ApiModelProperty(value = "Authorisation number", required = true, example = "1234_authorisationNumber")
+    private String authorisationNumber;
 
     @Column(name = "tpp_name", nullable = false)
     @ApiModelProperty(value = "Tpp name", required = true, example = "Tpp company")
     private String tppName;
 
-    @Column(name = "tpp_role", nullable = false)
-    @ApiModelProperty(value = "Tpp role", required = true, example = "Tpp role")
-    private String tppRole;
+    @ElementCollection
+    @CollectionTable(name = "pis_tpp_info_role", joinColumns = @JoinColumn(name = "tpp_info_id"))
+    @Column(name = "tpp_role")
+    @Enumerated(value = EnumType.STRING)
+    @ApiModelProperty(value = "Tpp role", required = true)
+    private List<PisTppRole> tppRoles;
 
-    @Column(name = "national_competent_authority", nullable = false)
-    @ApiModelProperty(value = "National competent authority", required = true, example = "National competent authority")
-    private String nationalCompetentAuthority;
+    @Column(name = "authority_id", nullable = false)
+    @ApiModelProperty(value = "National competent authority id", required = true, example = "authority id")
+    private String authorityId;
+
+    @Column(name = "authority_name", nullable = false)
+    @ApiModelProperty(value = "National competent authority name", required = true, example = "authority name")
+    private String authorityName;
+
+    @Column(name = "country", nullable = false)
+    @ApiModelProperty(value = "Country", required = true, example = "Germany")
+    private String country;
+
+    @Column(name = "organisation", nullable = false)
+    @ApiModelProperty(value = "Organisation", required = true, example = "Organisation")
+    private String organisation;
+
+    @Column(name = "organisation_unit", nullable = false)
+    @ApiModelProperty(value = "Organisation unit", required = true, example = "Organisation unit")
+    private String organisationUnit;
+
+    @Column(name = "city", nullable = false)
+    @ApiModelProperty(value = "City", required = true, example = "Nuremberg")
+    private String city;
+
+    @Column(name = "state", nullable = false)
+    @ApiModelProperty(value = "State", required = true, example = "Bayern")
+    private String state;
 
     @Column(name = "redirect_uri", nullable = false)
-    @ApiModelProperty(value = "Redirect URI", required = true, example = "Redirect URI")
+    @ApiModelProperty(value = "Redirect URI", example = "Redirect URI")
     private String redirectUri;
 
     @Column(name = "nok_redirect_uri", nullable = false)
-    @ApiModelProperty(value = "Nok redirect URI", required = true, example = "Nok redirect URI")
+    @ApiModelProperty(value = "Nok redirect URI", example = "Nok redirect URI")
     private String nokRedirectUri;
 }
